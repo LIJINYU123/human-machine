@@ -1,11 +1,8 @@
-import { DefaultFooter, getMenuData, getPageTitle } from '@ant-design/pro-layout';
+import { getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet } from 'react-helmet';
-import Link from 'umi/link';
 import React from 'react';
 import { connect } from 'dva';
 import { formatMessage } from 'umi-plugin-react/locale';
-import SelectLang from '@/components/SelectLang';
-import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
 
 const UserLayout = props => {
@@ -31,27 +28,19 @@ const UserLayout = props => {
   return (
     <>
       <Helmet>
-        <title>{title}</title>
+        <title>{title.replace('- Ant Design Pro', '')}</title>
         <meta name="description" content={title} />
       </Helmet>
 
       <div className={styles.container}>
-        <div className={styles.lang}>
-          <SelectLang />
-        </div>
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
-              <Link to="/">
-                <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Ant Design</span>
-              </Link>
+              <span className={styles.title}>语料录入平台</span>
             </div>
-            <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
           </div>
           {children}
         </div>
-        <DefaultFooter />
       </div>
     </>
   );

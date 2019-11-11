@@ -1,11 +1,12 @@
 import { Alert, Checkbox, Icon } from 'antd';
 import React, { Component } from 'react';
+import { FormattedMessage } from 'umi-plugin-react/locale';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import LoginComponents from './components/Login';
 import styles from './style.less';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = LoginComponents;
+const { Tab, UserName, Password, Submit } = LoginComponents;
 
 @connect(({ userAndlogin, loading }) => ({
   userAndlogin,
@@ -134,12 +135,8 @@ class Login extends Component {
           </div>
           <Submit loading={submitting}>登录</Submit>
           <div className={styles.other}>
-            其他登录方式
-            <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
-            <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
-            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
             <Link className={styles.register} to="/user/register">
-              注册账户
+              <FormattedMessage id="userandlogin.login.signup" />
             </Link>
           </div>
         </LoginComponents>
