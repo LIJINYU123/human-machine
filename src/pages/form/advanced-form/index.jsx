@@ -174,7 +174,7 @@ class AdvancedForm extends Component {
           <Card title="仓库管理" className={styles.card} bordered={false}>
             <Form layout="vertical" hideRequiredMark>
               <Row gutter={16}>
-                <Col lg={6} md={12} sm={24}>
+                <Col xl={6} lg={6} md={12} sm={24}>
                   <Form.Item label={fieldLabels.name}>
                     {getFieldDecorator('name', {
                       rules: [
@@ -461,7 +461,7 @@ class AdvancedForm extends Component {
                     offset: 2,
                   }}
                   lg={{
-                    span: 10,
+                    span: 5,
                   }}
                   md={{
                     span: 24,

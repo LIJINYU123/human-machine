@@ -120,14 +120,17 @@ export default {
               component: './Welcome',
             },
             {
+              path: '/corpus',
+              name: 'corpus-form',
+              icon: 'form',
+              component: './corpus'
+            },
+            {
               path: '/admin',
               name: 'admin',
               icon: 'crown',
               component: './Admin',
               authority: ['admin'],
-            },
-            {
-              component: './404',
             },
             {
               path: '/form',
@@ -138,7 +141,7 @@ export default {
                   name: 'basic-form',
                   icon: 'smile',
                   path: '/form/basic-form',
-                  component: './form/basic-form'
+                  component: './form/basic-form',
                 },
                 {
                   name: 'step-form',
@@ -152,18 +155,16 @@ export default {
                   path: '/form/advanced-form',
                   component: './form/advanced-form',
                 },
-              ]
-            }
+              ],
+            },
+            {
+              component: '404',
+            },
           ],
         },
-        {
-          component: './404',
-        },
+
       ],
-    },
-    {
-      component: './404',
-    },
+    }
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
