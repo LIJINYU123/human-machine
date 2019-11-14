@@ -38,12 +38,13 @@ export default class EditableGroupTag extends Component {
 
   render() {
     const { inputValue, inputVisible, tags } = this.state;
-
+    const colorGroups = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
+    // message.info(colorGroups.length);
     return (
       <div>
         {
-          tags.map(tag => <Tag key={tag} closable
-                               onClose={() => this.handleClose(tag)}>{tag}</Tag>)
+          tags.map((tag, index) => <Tag key={tag} closable color={index > colorGroups.length - 1 ? colorGroups[index - colorGroups.length] : colorGroups[index]}
+                                        onClose={() => this.handleClose(tag)}>{tag}</Tag>)
         }
         {inputVisible && (
           <Input ref={this.saveInputRef} type="text" size="small" style={{ width: 78 }}
@@ -54,7 +55,7 @@ export default class EditableGroupTag extends Component {
         {
           !inputVisible && (<Tag onClick={this.showInput} style={{
             background: '#fff',
-            borderStyle: 'dashed'
+            borderStyle: 'dashed',
           }}><Icon type="plus"/>新标签</Tag>)
         }
       </div>

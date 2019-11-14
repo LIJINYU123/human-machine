@@ -4,6 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Form, Card, Row, Col, Input, Select, InputNumber, TreeSelect, Tag, Icon } from 'antd';
 import FooterToolbar from '../form/advanced-form/components/FooterToolbar';
 import EditableGroupTag from './components/EditableTagGroup';
+import DynamicFieldSet from './components/DynamicFieldSet';
 import styles from './style.less';
 
 const { Option } = Select;
@@ -53,6 +54,7 @@ class CorpusForm extends Component {
   };
 
   render() {
+    const { form } = this.props;
     const { form: { getFieldDecorator }, submitting } = this.props;
     const { width } = this.state;
     const treeData = [
@@ -259,7 +261,7 @@ class CorpusForm extends Component {
                     }
                   </Form.Item>
                 </Col>
-                <Col xl={{ span: 3, offset: 2 }} lg={3} md={24} sm={24}>
+                <Col xl={{ span: 14, offset: 2 }} lg={14} md={24} sm={24}>
                   <Form.Item label={fieldLabels.customize}>
                     {
                       getFieldDecorator('customize')(
@@ -268,6 +270,11 @@ class CorpusForm extends Component {
                   </Form.Item>
                 </Col>
               </Row>
+            </Form>
+          </Card>
+          <Card title="对话记录" className={styles.card} bordered={false} >
+            <Form hideRequiredMark>
+              <DynamicFieldSet form={form} groupNum={1} />
             </Form>
           </Card>
         </PageHeaderWrapper>
