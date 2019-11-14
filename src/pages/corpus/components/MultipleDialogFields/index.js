@@ -23,15 +23,14 @@ export default class MultipleDialogField extends Component {
   };
 
   getMulipleDialogField = () => {
-    const { getFieldValue, getFieldDecorator } = this.props.form;
+    const { getFieldValue } = this.props.form;
     const dialogKeys = getFieldValue('dialogKeys');
 
     return dialogKeys.map(dialogKey => (
       <Form.Item key={dialogKey}>
         {
-          getFieldDecorator(dialogKey, {})(
-            <DynamicFieldSet dialogId={dialogKey} {...this.props} onRemove={this.handleRemove} dialogLength={dialogKeys.length} />,
-          )
+          <DynamicFieldSet dialogId={dialogKey} {...this.props} onRemove={this.handleRemove}
+                           dialogLength={dialogKeys.length}/>
         }
       </Form.Item>
     ));

@@ -1,7 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Form, Card, Row, Col, Input, Select, InputNumber, TreeSelect, Tag, Icon } from 'antd';
+import {
+  Button,
+  Form,
+  Card,
+  Row,
+  Col,
+  Input,
+  Select,
+  InputNumber,
+  TreeSelect,
+  Tag,
+  Icon,
+  Divider,
+  DatePicker
+} from 'antd';
 import FooterToolbar from '../form/advanced-form/components/FooterToolbar';
 import EditableGroupTag from './components/EditableTagGroup';
 import MultipleDialogField from './components/MultipleDialogFields';
@@ -18,6 +32,8 @@ const fieldLabels = {
   attendant: '随从',
   customize: '自定义',
   dialog: '对话时间',
+  remark: '对话备注',
+  videoUrl: '视频链接',
 };
 
 @connect(({ loading }) => ({
@@ -49,6 +65,15 @@ class CorpusForm extends Component {
         if (stateWidth !== width) {
           this.setState({ width });
         }
+      }
+    });
+  };
+
+  validate = () => {
+    const { form: { validateFieldsAndScroll } } = this.props;
+    validateFieldsAndScroll((error, value) => {
+      if (!error) {
+        console.log(value);
       }
     });
   };
@@ -270,6 +295,33 @@ class CorpusForm extends Component {
                   </Form.Item>
                 </Col>
               </Row>
+              <Row gutter={16}>
+                <Divider/>
+                <Col xl={3} lg={6} md={12} sm={24}>
+                  <Form.Item label={fieldLabels.dialog}>
+                    {
+                      getFieldDecorator('dialogTime')(
+                        <DatePicker showTime placeholder="请选择时间" />)
+                    }
+                  </Form.Item>
+                </Col>
+                <Col xl={{ span: 6, offset: 2 }} lg={8} md={12} sm={24}>
+                  <Form.Item label={fieldLabels.videoUrl}>
+                    {
+                      getFieldDecorator('videoUrl')(
+                        <Input placeholder="请输入视频URL"/>)
+                    }
+                  </Form.Item>
+                </Col>
+                <Col xl={{ span: 6, offset: 2 }} lg={8} md={12} sm={24}>
+                  <Form.Item label={fieldLabels.remark}>
+                    {
+                      getFieldDecorator('remark')(
+                        <Input placeholder="备注信息，例如营销结果等信息"/>)
+                    }
+                  </Form.Item>
+                </Col>
+              </Row>
             </Form>
           </Card>
           <Card title="对话记录" className={styles.card} bordered={false} >
@@ -278,8 +330,8 @@ class CorpusForm extends Component {
             </Form>
           </Card>
         </PageHeaderWrapper>
-        <FooterToolbar>
-          <Button type="primary">提交</Button>
+        <FooterToolbar style={{ width }}>
+          <Button type="primary" onClick={this.validate}>提交</Button>
         </FooterToolbar>
       </>
     );
