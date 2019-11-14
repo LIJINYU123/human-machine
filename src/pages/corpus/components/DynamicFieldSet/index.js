@@ -2,39 +2,46 @@ import React, { Component } from 'react';
 import { Form, Input, Icon, Button, Row, Col, Popconfirm } from 'antd';
 import styles from './style.less';
 
-let userId = 0;
-let customId = 0;
-
 export default class DynamicFieldSet extends Component {
+  state = {
+    userId: 0,
+    customId: 0,
+  };
+
   handleUserRemove = userKey => {
     const { getFieldValue, setFieldsValue } = this.props.form;
-    const userKeys = getFieldValue('userKeys');
+    const { dialogId } = this.props;
+    const userKeys = getFieldValue(`${dialogId}-userKeys`);
 
     if (userKeys.length === 1) {
       return;
     }
 
-    setFieldsValue({
-      userKeys: userKeys.filter(key => key !== userKey),
-    });
+    const needSetFieldValue = {};
+    needSetFieldValue[`${dialogId}-userKeys`] = userKeys.filter(key => key !== userKey);
+
+    setFieldsValue(needSetFieldValue);
   };
 
   handleCustomerRemove = customKey => {
     const { getFieldValue, setFieldsValue } = this.props.form;
-    const customKeys = getFieldValue('customKeys');
+    const { dialogId } = this.props;
+    const customKeys = getFieldValue(`${dialogId}-customKeys`);
 
     if (customKeys.length === 1) {
       return;
     }
 
-    setFieldsValue({
-      customKeys: customKeys.filter(key => key !== customKey),
-    });
+    const needSetFieldValue = {};
+    needSetFieldValue[`${dialogId}-customKeys`] = customKeys.filter(key => key !== customKey);
+
+    setFieldsValue(needSetFieldValue);
   };
 
   getUserFields = () => {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const userKeys = getFieldValue('userKeys');
+    const { dialogId } = this.props;
+    const userKeys = getFieldValue(`${dialogId}-userKeys`);
 
     return userKeys.map((userKey, index) => (
       <Col span={8} style={{ height: '40px' }} key={userKey}>
@@ -60,7 +67,8 @@ export default class DynamicFieldSet extends Component {
 
   getCustomerFields = () => {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const customKeys = getFieldValue('customKeys');
+    const { dialogId } = this.props;
+    const customKeys = getFieldValue(`${dialogId}-customKeys`);
 
     return customKeys.map((customKey, index) => (
       <Col span={8} style={{ height: '40px' }} key={customKey}>
@@ -85,52 +93,73 @@ export default class DynamicFieldSet extends Component {
 
   handleUserAdd = () => {
     const { getFieldValue, setFieldsValue } = this.props.form;
-    const { groupNum } = this.props;
-    const userKeys = getFieldValue('userKeys');
+    const { dialogId } = this.props;
+    const userKeys = getFieldValue(`${dialogId}-userKeys`);
 
-    const nextUserKeys = userKeys.concat(`group-${groupNum}-user-${userId++}`);
-    setFieldsValue({
-      userKeys: nextUserKeys,
+    let { userId } = this.state;
+    userId += 1;
+    this.setState({
+      userId,
     });
+    const nextUserKeys = userKeys.concat(`${dialogId}-user-${userId}`);
+
+    const needSetFieldValue = {};
+    needSetFieldValue[`${dialogId}-userKeys`] = nextUserKeys;
+
+    setFieldsValue(needSetFieldValue);
   };
 
   handleCustomerAdd = () => {
     const { getFieldValue, setFieldsValue } = this.props.form;
-    const { groupNum } = this.props;
-    const customKeys = getFieldValue('customKeys');
+    const { dialogId } = this.props;
+    const customKeys = getFieldValue(`${dialogId}-customKeys`);
 
-    const nextCustomKeys = customKeys.concat(`group-${groupNum}-customer-${customId++}`);
-    setFieldsValue({
-      customKeys: nextCustomKeys,
+    let { customId } = this.state;
+    customId += 1;
+    this.setState({
+      customId,
     });
+
+    const nextCustomKeys = customKeys.concat(`${dialogId}-customer-${customId}`);
+    const needSetFieldsVaule = {};
+    needSetFieldsVaule[`${dialogId}-customKeys`] = nextCustomKeys;
+    setFieldsValue(needSetFieldsVaule);
   };
 
 
   render() {
-    const { getFieldDecorator, groupNum } = this.props.form;
-    getFieldDecorator('userKeys', { initialValue: [`group-${groupNum}-user-0`] });
-    getFieldDecorator('customKeys', { initialValue: [`group-${groupNum}-custom-0`] });
+    const { getFieldDecorator } = this.props.form;
+    const { onRemove, dialogId, dialogLength } = this.props;
+    getFieldDecorator(`${dialogId}-userKeys`, { initialValue: [`${dialogId}-user-0`] });
+    getFieldDecorator(`${dialogId}-customKeys`, { initialValue: [`${dialogId}-custom-0`] });
 
     return (
       <div className={styles.dialogForm}>
         <Row gutter={24} type="flex">
           {this.getUserFields()}
           <Col span={8}>
-            <Button type="dashed" onClick={this.handleUserAdd} style={{ width: '100%' }}><Icon type="plus" key="user" />新增</Button>
+            <div style={{ display: 'flex', flex: 1 }}>
+              <Button type="dashed" onClick={this.handleUserAdd}><Icon type="plus" key="user" />新增</Button>
+            </div>
           </Col>
         </Row>
         <br/>
         <Row gutter={24} type="flex">
           {this.getCustomerFields()}
           <Col span={8}>
-            <Button type="dashed" onClick={this.handleCustomerAdd} style={{ width: '100%' }}><Icon type="plus" key="customer" />新增</Button>
+            <div style={{ display: 'flex', flex: 1 }}>
+              <Button type="dashed" onClick={this.handleCustomerAdd}><Icon type="plus" key="customer" />新增</Button>
+            </div>
           </Col>
         </Row>
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
-            <Popconfirm title="你确定删除吗？" placement="top" okText="确认" cancelText="取消" >
-              <Button type="danger">删除</Button>
-            </Popconfirm>
+            {
+              dialogLength > 1 &&
+              <Popconfirm title="你确定删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => onRemove(dialogId)} >
+                <Button type="danger">删除</Button>
+              </Popconfirm>
+            }
           </Col>
         </Row>
       </div>

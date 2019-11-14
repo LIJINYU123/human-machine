@@ -4,7 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Form, Card, Row, Col, Input, Select, InputNumber, TreeSelect, Tag, Icon } from 'antd';
 import FooterToolbar from '../form/advanced-form/components/FooterToolbar';
 import EditableGroupTag from './components/EditableTagGroup';
-import DynamicFieldSet from './components/DynamicFieldSet';
+import MultipleDialogField from './components/MultipleDialogFields';
 import styles from './style.less';
 
 const { Option } = Select;
@@ -274,7 +274,7 @@ class CorpusForm extends Component {
           </Card>
           <Card title="对话记录" className={styles.card} bordered={false} >
             <Form hideRequiredMark>
-              <DynamicFieldSet form={form} groupNum={1} />
+              <MultipleDialogField form={form} />
             </Form>
           </Card>
         </PageHeaderWrapper>

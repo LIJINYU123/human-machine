@@ -126,13 +126,6 @@ export default {
               component: './corpus'
             },
             {
-              path: '/admin',
-              name: 'admin',
-              icon: 'crown',
-              component: './Admin',
-              authority: ['admin'],
-            },
-            {
               path: '/form',
               icon: 'form',
               name: 'form',
