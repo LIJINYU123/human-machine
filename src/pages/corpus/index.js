@@ -57,7 +57,7 @@ class CorpusForm extends Component {
 
   resizeFooterToolbar = () => {
     requestAnimationFrame(() => {
-      const sider = document.querySelectorAll('.ant-layout.sider')[0];
+      const sider = document.querySelectorAll('.ant-layout-sider')[0];
 
       if (sider) {
         const width = `calc(100% - ${sider.style.width})`;
