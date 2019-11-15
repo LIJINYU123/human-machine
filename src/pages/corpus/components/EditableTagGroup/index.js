@@ -15,10 +15,15 @@ export default class EditableGroupTag extends Component {
 
   handleInputConfirm = () => {
     const { inputValue } = this.state;
+    const { setFieldsValue } = this.props.form;
     let { tags } = this.state;
     if (inputValue && tags.indexOf(inputValue) === -1) {
       tags = [...tags, inputValue];
     }
+
+    setFieldsValue({
+      customize: tags,
+    });
 
     this.setState({
       tags,
@@ -28,8 +33,12 @@ export default class EditableGroupTag extends Component {
   };
 
   handleClose = removedTag => {
+    const { setFieldsValue } = this.props.form;
     const tags = this.state.tags.filter(tag => tag !== removedTag);
     this.setState({ tags });
+    setFieldsValue({
+      customize: tags,
+    });
   };
 
   showInput = () => this.setState({ inputVisible: true }, () => this.input.focus());

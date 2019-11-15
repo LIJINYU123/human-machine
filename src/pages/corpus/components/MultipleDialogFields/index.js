@@ -5,26 +5,27 @@ import DynamicFieldSet from '../DynamicFieldSet';
 let dialogId = 0;
 
 export default class MultipleDialogField extends Component {
+  state = {
+    dialogKeys: ['dialog-0'],
+  };
+
   handleClick = () => {
-    const { getFieldValue, setFieldsValue } = this.props.form;
-    const dialogKeys = getFieldValue('dialogKeys');
+    const { dialogKeys } = this.state;
     const nextDialogKey = dialogKeys.concat(`dialog-${++dialogId}`);
-    setFieldsValue({
+    this.setState({
       dialogKeys: nextDialogKey,
     });
   };
 
   handleRemove = dialogKey => {
-    const { getFieldValue, setFieldsValue } = this.props.form;
-    const dialogKeys = getFieldValue('dialogKeys');
-    setFieldsValue({
+    const { dialogKeys } = this.state;
+    this.setState({
       dialogKeys: dialogKeys.filter(key => key !== dialogKey),
     });
   };
 
   getMulipleDialogField = () => {
-    const { getFieldValue } = this.props.form;
-    const dialogKeys = getFieldValue('dialogKeys');
+    const { dialogKeys } = this.state;
 
     return dialogKeys.map(dialogKey => (
       <Form.Item key={dialogKey}>
@@ -37,9 +38,6 @@ export default class MultipleDialogField extends Component {
   };
 
   render() {
-    const { getFieldDecorator } = this.props.form;
-    getFieldDecorator('dialogKeys', { initialValue: ['dialog-0'] });
-
     return (
       <div>
         {this.getMulipleDialogField()}

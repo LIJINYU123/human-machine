@@ -70,10 +70,56 @@ class CorpusForm extends Component {
   };
 
   validate = () => {
-    const { form: { validateFieldsAndScroll } } = this.props;
-    validateFieldsAndScroll((error, value) => {
+    const { form: { validateFieldsAndScroll }, dispatch } = this.props;
+    validateFieldsAndScroll((error, values) => {
       if (!error) {
-        console.log(value);
+        const fieldValues = {};
+        const findDialogNumPattern = /dialog-(\d{1,})-userKeys/g;
+
+        fieldValues.dialogTime = values.dialogTime.format('YYYY-MM-DD HH:mm:ss');
+        fieldValues.appearance = values.appearance;
+        fieldValues.age = values.age;
+        fieldValues.attendant = values.attendant;
+
+        const dialogNumArray = [];
+        Object.keys(values)
+          .forEach(key => {
+            if (key.indexOf('-userKeys') > 0) {
+              findDialogNumPattern.lastIndex = 0;
+              const result = findDialogNumPattern.exec(key.toString());
+              dialogNumArray.push(result[1]);
+            }
+          });
+
+        console.log(dialogNumArray);
+        const dialogGroups = [];
+        dialogNumArray.forEach(dialogNum => {
+          const dialogUserKeys = `dialog-${dialogNum}-userKeys`;
+          const dialogUserValues = values[dialogUserKeys];
+
+          if (!values.hasOwnProperty(dialogUserValues[0])) {
+            return;
+          }
+
+          const userDialogs = dialogUserValues.map(key => values[key]);
+
+          const dialogCustomKeys = `dialog-${dialogNum}-customKeys`;
+          const dialogCustomValues = values[dialogCustomKeys];
+          const customDialogs = dialogCustomValues.map(key => values[key]);
+          dialogGroups.push({
+            user: userDialogs,
+            customer: customDialogs,
+          });
+        });
+
+        console.log(dialogGroups);
+
+        values.dialogTime = values.dialogTime.format('YYYY-MM-DD HH:mm:ss');
+        // console.log(values);
+        dispatch({
+          type: 'formCorpusForm/submitCorpusForm',
+          payload: values,
+        });
       }
     });
   };
@@ -216,7 +262,7 @@ class CorpusForm extends Component {
                           message: '请选择性别',
                         }],
                       })(
-                        <Select placeholder="请选择性别">
+                        <Select labelInValue placeholder="请选择性别">
                           <Option value="male">男</Option>
                           <Option value="female">女</Option>
                         </Select>)
@@ -246,7 +292,7 @@ class CorpusForm extends Component {
                         ],
                         initialValue: 'other',
                       })(
-                        <Select placeholder="请选择职业" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
+                        <Select labelInValue placeholder="请选择职业" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                           {professionData}
                         </Select>)
                     }
@@ -256,7 +302,7 @@ class CorpusForm extends Component {
                   <Form.Item label={fieldLabels.appearance}>
                     {
                       getFieldDecorator('appearance')(
-                        <TreeSelect placeholder="请选择外貌特征" treeData={treeData} allowClear multiple treeDefaultExpandAll />)
+                        <TreeSelect labelInValue placeholder="请选择外貌特征" treeData={treeData} allowClear multiple treeDefaultExpandAll />)
                     }
                   </Form.Item>
                 </Col>
@@ -268,7 +314,7 @@ class CorpusForm extends Component {
                       getFieldDecorator('attendant', {
                         initialValue: 'none',
                       })(
-                        <Select placeholder="请选择随从人员" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
+                        <Select labelInValue placeholder="请选择随从人员" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                           {attendantMember}
                         </Select>)
                     }
@@ -280,7 +326,7 @@ class CorpusForm extends Component {
                       getFieldDecorator('emotion', {
                         initialValue: 'neutral',
                       })(
-                        <Select placeholder="请选择情感" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
+                        <Select labelInValue placeholder="请选择情感" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                           {emotionOptions}
                         </Select>)
                     }
@@ -290,7 +336,7 @@ class CorpusForm extends Component {
                   <Form.Item label={fieldLabels.customize}>
                     {
                       getFieldDecorator('customize')(
-                        <EditableGroupTag />)
+                        <EditableGroupTag form={form} />)
                     }
                   </Form.Item>
                 </Col>
@@ -331,7 +377,7 @@ class CorpusForm extends Component {
           </Card>
         </PageHeaderWrapper>
         <FooterToolbar style={{ width }}>
-          <Button type="primary" onClick={this.validate}>提交</Button>
+          <Button type="primary" onClick={this.validate} loading={submitting}>提交</Button>
         </FooterToolbar>
       </>
     );
