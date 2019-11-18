@@ -123,7 +123,7 @@ export default {
               path: '/corpus',
               name: 'corpus-form',
               icon: 'form',
-              component: './corpus'
+              component: './corpus',
             },
             {
               path: '/form',
@@ -151,13 +151,18 @@ export default {
               ],
             },
             {
+              name: 'list',
+              icon: 'smile',
+              path: '/list/table/list',
+              component: './list/table/list',
+            },
+            {
               component: '404',
             },
           ],
         },
-
       ],
-    }
+    },
   ],
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
