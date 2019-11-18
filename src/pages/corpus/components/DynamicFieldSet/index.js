@@ -6,6 +6,7 @@ export default class DynamicFieldSet extends Component {
   state = {
     userId: 0,
     customId: 0,
+    isReverse: false,
   };
 
   handleUserRemove = userKey => {
@@ -91,6 +92,53 @@ export default class DynamicFieldSet extends Component {
     ));
   };
 
+  getDialogFields = isReverse => {
+    if (isReverse) {
+      return (
+        <div>
+          <Row gutter={24} type="flex">
+            {this.getUserFields()}
+            <Col span={8}>
+              <div style={{ display: 'flex', flex: 1 }}>
+                <Button type="dashed" onClick={this.handleUserAdd}><Icon type="plus" key="user" />新增</Button>
+              </div>
+            </Col>
+          </Row>
+          <br/>
+          <Row gutter={24} type="flex">
+            {this.getCustomerFields()}
+            <Col span={8}>
+              <div style={{ display: 'flex', flex: 1 }}>
+                <Button type="dashed" onClick={this.handleCustomerAdd}><Icon type="plus" key="customer" />新增</Button>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      );
+    }
+    return (
+      <div>
+        <Row gutter={24} type="flex">
+          {this.getCustomerFields()}
+          <Col span={8}>
+            <div style={{ display: 'flex', flex: 1 }}>
+              <Button type="dashed" onClick={this.handleCustomerAdd}><Icon type="plus" key="customer" />新增</Button>
+            </div>
+          </Col>
+        </Row>
+        <br/>
+        <Row gutter={24} type="flex">
+          {this.getUserFields()}
+          <Col span={8}>
+            <div style={{ display: 'flex', flex: 1 }}>
+              <Button type="dashed" onClick={this.handleUserAdd}><Icon type="plus" key="user" />新增</Button>
+            </div>
+          </Col>
+        </Row>
+      </div>
+    );
+  };
+
   handleUserAdd = () => {
     const { getFieldValue, setFieldsValue } = this.props.form;
     const { dialogId } = this.props;
@@ -126,38 +174,36 @@ export default class DynamicFieldSet extends Component {
     setFieldsValue(needSetFieldsVaule);
   };
 
+  handleReverse = () => {
+    const { setFieldsValue } = this.props.form;
+    const { dialogId } = this.props;
+
+    this.setState({
+      isReverse: !this.state.isReverse,
+    });
+    const needSetFieldsVaule = {};
+    needSetFieldsVaule[`${dialogId}-reverse`] = !this.state.isReverse;
+    setFieldsValue(needSetFieldsVaule);
+  };
+
 
   render() {
     const { getFieldDecorator } = this.props.form;
     const { onRemove, dialogId, dialogLength } = this.props;
     getFieldDecorator(`${dialogId}-userKeys`, { initialValue: [`${dialogId}-user-0`] });
     getFieldDecorator(`${dialogId}-customKeys`, { initialValue: [`${dialogId}-custom-0`] });
+    getFieldDecorator(`${dialogId}-reverse`, { initialValue: false });
 
     return (
       <div className={styles.dialogForm}>
-        <Row gutter={24} type="flex">
-          {this.getUserFields()}
-          <Col span={8}>
-            <div style={{ display: 'flex', flex: 1 }}>
-              <Button type="dashed" onClick={this.handleUserAdd}><Icon type="plus" key="user" />新增</Button>
-            </div>
-          </Col>
-        </Row>
-        <br/>
-        <Row gutter={24} type="flex">
-          {this.getCustomerFields()}
-          <Col span={8}>
-            <div style={{ display: 'flex', flex: 1 }}>
-              <Button type="dashed" onClick={this.handleCustomerAdd}><Icon type="plus" key="customer" />新增</Button>
-            </div>
-          </Col>
-        </Row>
+        {this.getDialogFields(this.state.isReverse)}
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
+            <Button onClick={() => this.handleReverse(this.state.isReverse)}>反转</Button>
             {
               dialogLength > 1 &&
               <Popconfirm title="你确定删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => onRemove(dialogId)} >
-                <Button type="danger">删除</Button>
+                <Button type="danger" style={{ marginLeft: '8px' }}>删除</Button>
               </Popconfirm>
             }
           </Col>

@@ -15,3 +15,7 @@ export async function deleteRecord(params) {
     },
   });
 }
+
+export async function queryEditors() {
+  return request('/api/query/editors');
+}

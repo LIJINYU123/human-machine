@@ -33,7 +33,7 @@ const fieldLabels = {
   customize: '自定义',
   dialog: '对话时间',
   remark: '对话备注',
-  videoUrl: '视频链接',
+  videoUrl: '视频编号',
 };
 
 @connect(({ loading }) => ({
@@ -106,9 +106,14 @@ class CorpusForm extends Component {
           const dialogCustomKeys = `dialog-${dialogNum}-customKeys`;
           const dialogCustomValues = values[dialogCustomKeys];
           const customDialogs = dialogCustomValues.map(key => values[key]);
+
+          const dialogReverse = values[`dialog-${dialogNum}-reverse`];
+
+          const questioner = dialogReverse === true ? 'user' : 'customer';
           dialogGroups.push({
             user: userDialogs,
             customer: customDialogs,
+            questioner,
           });
         });
 
@@ -290,7 +295,7 @@ class CorpusForm extends Component {
                           message: '请选择职业',
                         },
                         ],
-                        initialValue: 'other',
+                        initialValue: { key: 'other' },
                       })(
                         <Select labelInValue placeholder="请选择职业" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                           {professionData}
@@ -312,7 +317,7 @@ class CorpusForm extends Component {
                   <Form.Item label={fieldLabels.attendant}>
                     {
                       getFieldDecorator('attendant', {
-                        initialValue: 'none',
+                        initialValue: { key: 'none' },
                       })(
                         <Select labelInValue placeholder="请选择随从人员" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                           {attendantMember}
@@ -324,7 +329,7 @@ class CorpusForm extends Component {
                   <Form.Item label={fieldLabels.emotion}>
                     {
                       getFieldDecorator('emotion', {
-                        initialValue: 'neutral',
+                        initialValue: { key: 'neutral' },
                       })(
                         <Select labelInValue placeholder="请选择情感" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                           {emotionOptions}
@@ -346,7 +351,12 @@ class CorpusForm extends Component {
                 <Col xl={3} lg={6} md={12} sm={24}>
                   <Form.Item label={fieldLabels.dialog}>
                     {
-                      getFieldDecorator('dialogTime')(
+                      getFieldDecorator('dialogTime', {
+                        rules: [{
+                          required: true,
+                          message: '请选择对话开始时间',
+                        }],
+                      })(
                         <DatePicker showTime placeholder="请选择时间" />)
                     }
                   </Form.Item>

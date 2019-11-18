@@ -1,4 +1,4 @@
-import { queryRecord, deleteRecord } from './service'
+import { queryRecord, deleteRecord, queryEditors } from './service'
 
 const Model = {
   namespace: 'historyRecordList',
@@ -7,10 +7,19 @@ const Model = {
       list: [],
       pagination: {},
     },
+    editors: [],
   },
   effects: {
     * fetch({ payload }, { call, put }) {
       const response = yield call(queryRecord, payload);
+      yield put({
+        type: 'save',
+        payload: response,
+      });
+    },
+
+    * fetchName(_, { call, put }) {
+      const response = yield call(queryEditors);
       yield put({
         type: 'save',
         payload: response,
