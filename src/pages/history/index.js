@@ -2,14 +2,13 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import moment from 'moment';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Col, Form, Row, DatePicker, Select, Button } from 'antd';
+import { Card, Col, Form, Row, DatePicker, Button, Divider } from 'antd';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
 
 const { RangePicker } = DatePicker;
-const { Option } = Select;
 
-const getValue = obj => Object.keys(obj).map(key => obj[key]).join(',');
+const getValue = obj => obj.join(',');
 
 @connect(({ historyRecordList, loading }) => ({
   historyRecordList,
@@ -25,10 +24,14 @@ class HistoryList extends Component {
     {
       title: '录入时间',
       dataIndex: 'recordTime',
+      sorter: true,
+      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
       title: '对话时间',
       dataIndex: 'dialogTime',
+      sorter: true,
+      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
       title: '用户标签',
@@ -37,7 +40,7 @@ class HistoryList extends Component {
   ];
 
   componentDidMount() {
-    const { dispatch, historyRecordList: { editors } } = this.props;
+    const { dispatch } = this.props;
     dispatch({
       type: 'historyRecordList/fetch',
     });
@@ -45,29 +48,33 @@ class HistoryList extends Component {
     dispatch({
       type: 'historyRecordList/fetchName',
     });
-
-    const filterOptions = editors.map(editor => ({
-      text: editor.name,
-      value: editor.id,
-    }));
-    this.columns.push({
-      title: '录入者',
-      dataIndex: 'editor',
-      filters: filterOptions,
-    })
   }
+
+  handleReviewDetails = record => {
+    console.log(record);
+  };
 
   handleSearch = event => {
     event.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldValues) => {
       if (err) return;
+      console.log(fieldValues);
+      const values = {
+        // eslint-disable-next-line max-len
+        recordStartTime: fieldValues.recordTime && fieldValues.recordTime[0].valueOf(),
+        recordEndTime: fieldValues.recordTime && fieldValues.recordTime[1].valueOf(),
+        dialogStartTime: fieldValues.dialogTime && fieldValues.dialogTime[0].valueOf(),
+        dialogEndTime: fieldValues.dialogTime && fieldValues.dialogTime[1].valueOf(),
+      };
+
+      console.log(values);
       this.setState({
-        formValues: fieldValues,
+        formValues: values,
       });
       dispatch({
         type: 'historyRecordList/fetch',
-        payload: fieldValues,
+        payload: values,
       });
     });
   };
@@ -98,7 +105,7 @@ class HistoryList extends Component {
     }
 
     dispatch({
-      type: 'listAndtableAndlist/fetch',
+      type: 'historyRecordList/fetch',
       payload: params,
     });
   };
@@ -135,7 +142,7 @@ class HistoryList extends Component {
           <Col md={8} sm={24}>
             <Form.Item label="录入时间">
               {
-                getFieldDecorator('recordDate')(
+                getFieldDecorator('recordTime')(
                   <RangePicker style={{ width: '100%' }} placeholder={['开始时间', '结束时间']} />,
                 )
               }
@@ -144,7 +151,7 @@ class HistoryList extends Component {
           <Col md={8} sm={24}>
             <Form.Item label="对话时间">
               {
-                getFieldDecorator('dialogDate')(
+                getFieldDecorator('dialogTime')(
                   <RangePicker style={{ width: '100%' }} placeholder={['开始时间', '结束时间']} />,
                 )
               }
@@ -165,8 +172,32 @@ class HistoryList extends Component {
 
 
   render() {
-    const { historyRecordList: { data }, loading } = this.props;
+    const { historyRecordList: { data, editors }, loading } = this.props;
     const { selectedRows } = this.state;
+
+    if (this.columns.length === 3 && editors.length) {
+      const filterOptions = editors.map(editor => ({
+        text: editor.name,
+        value: editor.id,
+      }));
+
+      this.columns.push({
+          title: '录入者',
+          dataIndex: 'editor',
+          filters: filterOptions,
+        },
+        {
+          title: '操作',
+          render: (_, record) => (
+            <Fragment>
+              <a onClick={() => this.handleReviewDetails(record)}>查看详情</a>
+              <Divider type="vertical"/>
+              <a>导出</a>
+            </Fragment>
+          ),
+        },
+      );
+    }
 
     return (
       <PageHeaderWrapper>

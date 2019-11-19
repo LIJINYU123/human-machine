@@ -10,7 +10,7 @@ const Model = {
     editors: [],
   },
   effects: {
-    * fetch({ payload }, { call, put }) {
+    *fetch({ payload }, { call, put }) {
       const response = yield call(queryRecord, payload);
       yield put({
         type: 'save',
@@ -18,21 +18,29 @@ const Model = {
       });
     },
 
-    * fetchName(_, { call, put }) {
+    *fetchName(_, { call, put }) {
       const response = yield call(queryEditors);
       yield put({
-        type: 'save',
+        type: 'name',
         payload: response,
       });
     },
 
-    * delete({ payload, callback }, { call, put }) {
+    *delete({ payload, callback }, { call, put }) {
       const response = yield call(deleteRecord, payload);
       yield put({
         type: 'save',
         payload: response,
       });
       if (callback) callback();
+    },
+  },
+  reducers: {
+    save(state, action) {
+      return { ...state, data: action.payload };
+    },
+    name(state, action) {
+      return { ...state, editors: action.payload };
     },
   },
 };
