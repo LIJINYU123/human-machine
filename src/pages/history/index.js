@@ -203,8 +203,8 @@ class HistoryList extends Component {
           <div>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
-              <Button icon="export" type="primary">导出</Button>
-              <Button icon="delete" type="danger" disabled={!(selectedRows.length > 0)} onClick={this.handleDelete}>删除</Button>
+              <Button icon="export" type="primary" disabled={!selectedRows.length}>导出</Button>
+              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleDelete}>删除</Button>
             </div>
             <StandardTable
               selectedRows={selectedRows}
