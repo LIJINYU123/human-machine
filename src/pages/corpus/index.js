@@ -14,7 +14,7 @@ import {
   Tag,
   Icon,
   Divider,
-  DatePicker
+  DatePicker,
 } from 'antd';
 import FooterToolbar from '../form/advanced-form/components/FooterToolbar';
 import EditableGroupTag from './components/EditableTagGroup';
@@ -224,32 +224,32 @@ class CorpusForm extends Component {
           }] }];
 
     const professionData = [
-      <Option value="institution">企事业单位人员</Option>,
-      <Option value="technology">专业技术人员</Option>,
-      <Option value="officer">办事人员</Option>,
-      <Option value="server">服务人员</Option>,
-      <Option value="agriculture">农林牧渔业人员</Option>,
-      <Option value="prudctor">生产制造人员</Option>,
-      <Option value="soldier">军人</Option>,
-      <Option value="other">其他从业人员</Option>];
+      <Option key="institution">企事业单位人员</Option>,
+      <Option key="technology">专业技术人员</Option>,
+      <Option key="officer">办事人员</Option>,
+      <Option key="server">服务人员</Option>,
+      <Option key="agriculture">农林牧渔业人员</Option>,
+      <Option key="prudctor">生产制造人员</Option>,
+      <Option key="soldier">军人</Option>,
+      <Option key="other">其他从业人员</Option>];
 
     const attendantMember = [
-      <Option value="child">孩子</Option>,
-      <Option value="spouse">配偶</Option>,
-      <Option value="friend">朋友</Option>,
-      <Option value="parent">长辈</Option>,
-      <Option value="none">无</Option>,
+      <Option key="child">孩子</Option>,
+      <Option key="spouse">配偶</Option>,
+      <Option key="friend">朋友</Option>,
+      <Option key="parent">长辈</Option>,
+      <Option key="none">无</Option>,
     ];
 
     const emotionOptions = [
-      <Option value="anger">愤怒</Option>,
-      <Option value="hate">厌恶</Option>,
-      <Option value="fear">害怕</Option>,
-      <Option value="sad">悲伤</Option>,
-      <Option value="happy">高兴</Option>,
-      <Option value="like">喜欢</Option>,
-      <Option value="surprise">惊喜</Option>,
-      <Option value="neutral">中性</Option>,
+      <Option key="anger">愤怒</Option>,
+      <Option key="hate">厌恶</Option>,
+      <Option key="fear">害怕</Option>,
+      <Option key="sad">悲伤</Option>,
+      <Option key="happy">高兴</Option>,
+      <Option key="like">喜欢</Option>,
+      <Option key="surprise">惊喜</Option>,
+      <Option key="neutral">中性</Option>,
     ];
 
     return (
@@ -268,8 +268,8 @@ class CorpusForm extends Component {
                         }],
                       })(
                         <Select labelInValue placeholder="请选择性别">
-                          <Option value="male">男</Option>
-                          <Option value="female">女</Option>
+                          <Option key="male">男</Option>
+                          <Option key="female">女</Option>
                         </Select>)
                     }
                   </Form.Item>

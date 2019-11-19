@@ -126,6 +126,12 @@ export default {
               component: './corpus',
             },
             {
+              path: './history',
+              name: 'history',
+              icon: 'history',
+              component: './history',
+            },
+            {
               path: '/form',
               icon: 'form',
               name: 'form',

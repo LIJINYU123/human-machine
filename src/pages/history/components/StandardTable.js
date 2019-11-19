@@ -5,7 +5,7 @@ import { Alert, Table } from 'antd';
 
 class StandardTable extends Component {
   static getDerivedStateFromProps(nextProps) {
-    if (nextProps.selectedRows.length) {
+    if (nextProps.selectedRows.length === 0) {
       return {
         selectedRowKeys: [],
       }
@@ -14,9 +14,12 @@ class StandardTable extends Component {
     return null;
   }
 
-  state = {
-    selectedRowKeys: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedRowKeys: [],
+    };
+  }
 
   handleRowSelectChange = (selectedRowKeys, selectedRows) => {
     const { onSelectRow } = this.props;
@@ -75,10 +78,12 @@ class StandardTable extends Component {
           rowSelection={rowSelection}
           dataSource={list}
           pagination={paginationProps}
-          onChange={}
+          onChange={this.handleTableChange}
+          {...rest}
         />
       </div>
     );
   }
-
 }
+
+export default StandardTable;
