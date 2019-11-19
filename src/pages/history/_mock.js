@@ -1,6 +1,6 @@
 import { parse } from 'url';
 
-let tableListDataSource = [];
+const tableListDataSource = [];
 
 for (let i = 0; i < 4; i += 1) {
   tableListDataSource.push({
@@ -62,6 +62,28 @@ function getRecord(req, res, u) {
     let filterDataSource = [];
     editors.forEach(s => {
       filterDataSource = filterDataSource.concat(dataSource.filter(item => item.id === s));
+    });
+    dataSource = filterDataSource;
+  }
+
+  if (params.dialogStartTime && params.dialogEndTime) {
+    let filterDataSource = [];
+    dataSource.forEach(data => {
+      // eslint-disable-next-line max-len
+      if (data.dialogTime.valueOf() > params.dialogStartTime && data.dialogTime.valueOf() < params.dialogEndTime) {
+        filterDataSource = filterDataSource.concat(data);
+      }
+    });
+    dataSource = filterDataSource;
+  }
+
+  if (params.recordStartTime && params.recordEndTime) {
+    let filterDataSource = [];
+    dataSource.forEach(data => {
+      // eslint-disable-next-line max-len
+      if (data.recordTime.valueOf() > params.recordStartTime && data.dialogTime.valueOf() < params.recordEndTime) {
+        filterDataSource = filterDataSource.concat(data);
+      }
     });
     dataSource = filterDataSource;
   }

@@ -36,6 +36,7 @@ class HistoryList extends Component {
     {
       title: '用户标签',
       dataIndex: 'tag',
+      ellipsis: true,
     },
   ];
 
@@ -59,7 +60,6 @@ class HistoryList extends Component {
     const { dispatch, form } = this.props;
     form.validateFields((err, fieldValues) => {
       if (err) return;
-      console.log(fieldValues);
       const values = {
         // eslint-disable-next-line max-len
         recordStartTime: fieldValues.recordTime && fieldValues.recordTime[0].valueOf(),
@@ -67,8 +67,6 @@ class HistoryList extends Component {
         dialogStartTime: fieldValues.dialogTime && fieldValues.dialogTime[0].valueOf(),
         dialogEndTime: fieldValues.dialogTime && fieldValues.dialogTime[1].valueOf(),
       };
-
-      console.log(values);
       this.setState({
         formValues: values,
       });
@@ -143,7 +141,7 @@ class HistoryList extends Component {
             <Form.Item label="录入时间">
               {
                 getFieldDecorator('recordTime')(
-                  <RangePicker style={{ width: '100%' }} placeholder={['开始时间', '结束时间']} />,
+                  <RangePicker style={{ width: '100%' }} allowClear={false} placeholder={['开始时间', '结束时间']} />,
                 )
               }
             </Form.Item>
@@ -152,7 +150,7 @@ class HistoryList extends Component {
             <Form.Item label="对话时间">
               {
                 getFieldDecorator('dialogTime')(
-                  <RangePicker style={{ width: '100%' }} placeholder={['开始时间', '结束时间']} />,
+                  <RangePicker style={{ width: '100%' }} allowClear={false} placeholder={['开始时间', '结束时间']} />,
                 )
               }
             </Form.Item>
