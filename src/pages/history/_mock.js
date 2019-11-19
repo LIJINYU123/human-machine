@@ -1,6 +1,6 @@
 import { parse } from 'url';
 
-const tableListDataSource = [];
+let tableListDataSource = [];
 
 for (let i = 0; i < 4; i += 1) {
   tableListDataSource.push({
@@ -105,6 +105,22 @@ function getRecord(req, res, u) {
   return res.json(result);
 }
 
+function postRecord(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  const { method, keys } = body;
+  if (method === 'delete') {
+    tableListDataSource = tableListDataSource.filter(item => keys.indexOf(item.key) === -1);
+  }
+
+  const result = {
+    list: tableListDataSource,
+    pagination: {
+      total: tableListDataSource.length,
+    },
+  };
+  return res.json(result);
+}
+
 function getEditors(req, res) {
   const result = [
     {
@@ -127,4 +143,5 @@ function getEditors(req, res) {
 export default {
   'GET /api/record': getRecord,
   'GET /api/query/editors': getEditors,
+  'POST /api/record': postRecord,
 }

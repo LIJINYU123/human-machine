@@ -114,7 +114,7 @@ class HistoryList extends Component {
     dispatch({
       type: 'historyRecordList/delete',
       payload: {
-        key: selectedRows.map(row => row.key),
+        keys: selectedRows.map(row => row.key),
       },
       callback: () => {
         this.setState({
@@ -204,7 +204,7 @@ class HistoryList extends Component {
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
               <Button icon="export" type="primary">导出</Button>
-              <Button icon="delete" type="danger" onClick={this.handleDelete}>删除</Button>
+              <Button icon="delete" type="danger" disabled={!(selectedRows.length > 0)} onClick={this.handleDelete}>删除</Button>
             </div>
             <StandardTable
               selectedRows={selectedRows}
