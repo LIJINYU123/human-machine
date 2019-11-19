@@ -365,7 +365,7 @@ class CorpusForm extends Component {
                   <Form.Item label={fieldLabels.videoUrl}>
                     {
                       getFieldDecorator('videoUrl')(
-                        <Input placeholder="请输入视频URL"/>)
+                        <Input placeholder="请输入视频编号"/>)
                     }
                   </Form.Item>
                 </Col>

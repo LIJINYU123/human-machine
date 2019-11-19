@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Col, Form, Row, DatePicker, Select, Button } from 'antd';
 import styles from './style.less';
+import StandardTable from '../list/table/list/components/StandardTable';
 
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -45,7 +46,19 @@ class HistoryList extends Component {
   };
 
   handleDelete = () => {
-
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    dispatch({
+      type: 'historyRecordList/delete',
+      payload: {
+        key: selectedRows.map(row => row.key),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
   };
 
   handleFormRest = () => {
@@ -113,10 +126,14 @@ class HistoryList extends Component {
           <div>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
-              <Button icon="delete" type="danger" onClick={}>
-
-              </Button>
+              <Button icon="delete" type="danger" onClick={this.handleDelete}>删除</Button>
             </div>
+            <StandardTable
+              selectedRows={selectedRows}
+              loading={loading}
+              data={data}
+              columns={}
+            />
           </div>
         </Card>
       </PageHeaderWrapper>
