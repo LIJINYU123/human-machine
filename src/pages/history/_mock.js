@@ -40,7 +40,7 @@ const detailInfos = [
     id: 'SY0111',
     sex: { key: 'male', label: '男' },
     attendant: { key: 'none', label: '无' },
-    appearance: [{ key: 'bingle', label: '短发' }, { key: 'myopic', label: '近视镜' }],
+    appearance: [{ value: 'myopic', label: '近视镜' }, { value: 'bingle', label: '短发' }],
     age: 28,
     profession: { key: 'technology', label: '专业技术人员' },
     emotion: { key: 'hate', label: '厌恶' },
@@ -59,9 +59,9 @@ const detailInfos = [
   },
   {
     id: 'SY0112',
-    sex: { key: 'male', label: '女' },
+    sex: { key: 'female', label: '女' },
     attendant: { key: 'none', label: '无' },
-    appearance: [{ key: 'bingle', label: '短发' }, { key: 'myopic', label: '近视镜' }],
+    appearance: [{ value: 'myopic', label: '近视镜' }, { value: 'longhair', label: '长发' }],
     age: 23,
     profession: { key: 'officer', label: '办事人员' },
     emotion: { key: 'hate', label: '厌恶' },
@@ -160,7 +160,7 @@ function getDetailInfo(req, res, u) {
 
   const params = parse(url, true).query;
   if (params.key) {
-    const filterInfos = detailInfos.filter(detail => detail.id === params.key)
+    const filterInfos = detailInfos.filter(detail => detail.id === params.key);
     return res.json(filterInfos[0]);
   }
   return res.json(detailInfos[0]);

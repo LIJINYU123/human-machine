@@ -62,7 +62,7 @@ class CorpusDrawer extends Component {
     const { visible, onClose, form, detailInfo } = this.props;
     const { form: { getFieldDecorator }, submitting } = this.props;
     return (
-      <Drawer title="对话详情" width={this.state.width} visible={visible} onClose={onClose} bodyStyle={{ backgroundColor: '#f0f2f5' }}>
+      <Drawer title="对话详情" width={this.state.width} visible={visible} onClose={onClose} bodyStyle={{ backgroundColor: '#f0f2f5' }} destroyOnClose>
         <Card title="用户信息" className={styles.card} bordered={false}>
           <Form layout="vertical" hideRequiredMark>
             <Row gutter={16}>
@@ -152,8 +152,10 @@ class CorpusDrawer extends Component {
               <Col xl={{ span: 14, offset: 2 }} lg={14} md={24} sm={24}>
                 <Form.Item label={FieldLabels.customize}>
                   {
-                    getFieldDecorator('customize')(
-                      <EditableGroupTag form={form} tags={detailInfo.customize} />)
+                    getFieldDecorator('customize', {
+                      initialValue: detailInfo.customize,
+                    })(
+                      <EditableGroupTag form={form} />)
                   }
                 </Form.Item>
               </Col>

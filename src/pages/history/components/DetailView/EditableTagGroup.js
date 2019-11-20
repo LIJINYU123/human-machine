@@ -3,14 +3,11 @@ import { Tag, Input, Icon } from 'antd';
 
 
 export default class EditableGroupTag extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      inputVisible: false,
-      inputValue: '',
-      tags: props.tags,
-    };
-  }
+  state = {
+    inputVisible: false,
+    inputValue: '',
+    tags: [],
+  };
 
   handleInputChange = e => {
     this.setState({ inputValue: e.target.value });
