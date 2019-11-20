@@ -120,7 +120,6 @@ export default class DynamicFieldSet extends Component {
                   required: true,
                   message: '请输入客服回答',
                 }],
-              initialValue: 'acdfdsa',
             })(<span style={{ display: 'flex' }}>
                   <Input placeholder="请输入客服回答" value={detailDialogInfos[customKey]} />
               {customKeys.length > 1 ? (
