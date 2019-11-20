@@ -9,6 +9,13 @@ export default class EditableGroupTag extends Component {
     tags: [],
   };
 
+  componentWillReceiveProps(nextProps, _) {
+    const { mytags } = nextProps;
+    this.setState({
+      tags: mytags,
+    });
+  }
+
   handleInputChange = e => {
     this.setState({ inputValue: e.target.value });
   };

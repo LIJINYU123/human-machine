@@ -152,10 +152,8 @@ class CorpusDrawer extends Component {
               <Col xl={{ span: 14, offset: 2 }} lg={14} md={24} sm={24}>
                 <Form.Item label={FieldLabels.customize}>
                   {
-                    getFieldDecorator('customize', {
-                      initialValue: detailInfo.customize,
-                    })(
-                      <EditableGroupTag form={form} />)
+                    getFieldDecorator('customize')(
+                      <EditableGroupTag form={form} mytags={detailInfo.customize} />)
                   }
                 </Form.Item>
               </Col>

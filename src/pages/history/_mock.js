@@ -65,7 +65,7 @@ const detailInfos = [
     age: 23,
     profession: { key: 'officer', label: '办事人员' },
     emotion: { key: 'hate', label: '厌恶' },
-    customize: ['有房', '有车', '资产500万'],
+    customize: ['有房', '无车', '资产300万'],
     dialogTime: '2019-11-20 00:00:00',
     videoId: 'adbcd1234545',
     remark: '这是一段备注',
