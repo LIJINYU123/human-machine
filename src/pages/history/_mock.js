@@ -35,6 +35,51 @@ for (let i = 8; i < 12; i += 1) {
   });
 }
 
+const detailInfos = [
+  {
+    id: 'SY0111',
+    sex: { key: 'male', label: '男' },
+    attendant: { key: 'none', label: '无' },
+    appearance: [{ key: 'bingle', label: '短发' }, { key: 'myopic', label: '近视镜' }],
+    age: 28,
+    profession: { key: 'technology', label: '专业技术人员' },
+    emotion: { key: 'hate', label: '厌恶' },
+    customize: ['有房', '有车', '资产500万'],
+    dialogTime: '2019-11-20 00:00:00',
+    videoId: 'adbcd1234545',
+    remark: '这是一段备注',
+    dialogInfos: [{
+      user: ['这是第一轮对话，用户说话1', '这是第一轮对话，用户说话2'],
+      customer: ['这是第一轮对话，客服说话1', '这是第一轮对话，客服说话2'],
+      questioner: 'customer',
+    }, {
+      user: ['这是第二轮对话，用户说话1', '这是第二轮对话，用户说话2'],
+      customer: ['这是第二轮对话，客服说话1', '这是第二轮对话，客服说话2'],
+    }],
+  },
+  {
+    id: 'SY0112',
+    sex: { key: 'male', label: '女' },
+    attendant: { key: 'none', label: '无' },
+    appearance: [{ key: 'bingle', label: '短发' }, { key: 'myopic', label: '近视镜' }],
+    age: 23,
+    profession: { key: 'officer', label: '办事人员' },
+    emotion: { key: 'hate', label: '厌恶' },
+    customize: ['有房', '有车', '资产500万'],
+    dialogTime: '2019-11-20 00:00:00',
+    videoId: 'adbcd1234545',
+    remark: '这是一段备注',
+    dialogInfos: [{
+      user: ['这是第一轮对话，用户说话1', '这是第一轮对话，用户说话2'],
+      customer: ['这是第一轮对话，客服说话1', '这是第一轮对话，客服说话2'],
+      questioner: 'customer',
+    }, {
+      user: ['这是第二轮对话，用户说话1', '这是第二轮对话，用户说话2'],
+      customer: ['这是第二轮对话，客服说话1', '这是第二轮对话，客服说话2'],
+    }],
+  },
+];
+
 function getRecord(req, res, u) {
   let url = u;
 
@@ -105,6 +150,22 @@ function getRecord(req, res, u) {
   return res.json(result);
 }
 
+function getDetailInfo(req, res, u) {
+  let url = u;
+
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+
+  const params = parse(url, true).query;
+  if (params.key) {
+    const filterInfos = detailInfos.filter(detail => detail.id === params.key)
+    return res.json(filterInfos[0]);
+  }
+  return res.json(detailInfos[0]);
+}
+
 function postRecord(req, res, u, b) {
   const body = (b && b.body) || req.body;
   const { method, keys } = body;
@@ -142,6 +203,7 @@ function getEditors(req, res) {
 
 export default {
   'GET /api/record': getRecord,
+  'GET /api/detail/info': getDetailInfo,
   'GET /api/query/editors': getEditors,
   'POST /api/record': postRecord,
 }

@@ -5,6 +5,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Col, Form, Row, DatePicker, Button, Divider } from 'antd';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
+import CorpusDrawer from './components/DetailView';
 
 const { RangePicker } = DatePicker;
 
@@ -18,6 +19,7 @@ class HistoryList extends Component {
   state = {
     selectedRows: [],
     formValues: {},
+    drawerVisible: false,
   };
 
   columns = [
@@ -25,6 +27,7 @@ class HistoryList extends Component {
       title: '录入时间',
       dataIndex: 'recordTime',
       sorter: true,
+      defaultSortOrder: 'descend',
       render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
     },
     {
@@ -52,7 +55,21 @@ class HistoryList extends Component {
   }
 
   handleReviewDetails = record => {
-    console.log(record);
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'historyRecordList/fetchDetail',
+      payload: { key: record.id },
+    });
+
+    this.setState({
+      drawerVisible: true,
+    });
+  };
+
+  handleCloseDrawer = () => {
+    this.setState({
+      drawerVisible: false,
+    });
   };
 
   handleSearch = event => {
@@ -170,7 +187,7 @@ class HistoryList extends Component {
 
 
   render() {
-    const { historyRecordList: { data, editors }, loading } = this.props;
+    const { historyRecordList: { data, editors, detailInfo }, loading } = this.props;
     const { selectedRows } = this.state;
 
     if (this.columns.length === 3 && editors.length) {
@@ -216,6 +233,8 @@ class HistoryList extends Component {
             />
           </div>
         </Card>
+        <CorpusDrawer visible={this.state.drawerVisible} onClose={this.handleCloseDrawer}
+                      detailInfo={detailInfo}/>
       </PageHeaderWrapper>
     );
   }

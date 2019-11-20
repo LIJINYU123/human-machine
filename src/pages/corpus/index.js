@@ -33,7 +33,7 @@ const fieldLabels = {
   customize: '自定义',
   dialog: '对话时间',
   remark: '对话备注',
-  videoUrl: '视频编号',
+  videoId: '视频编号',
 };
 
 @connect(({ loading }) => ({
@@ -80,6 +80,11 @@ class CorpusForm extends Component {
         fieldValues.appearance = values.appearance;
         fieldValues.age = values.age;
         fieldValues.attendant = values.attendant;
+        fieldValues.emotion = values.emotion;
+        fieldValues.profession = values.profession;
+        fieldValues.remark = values.remark;
+        fieldValues.sex = values.sex;
+        fieldValues.videoId = values.videoId;
 
         const dialogNumArray = [];
         Object.keys(values)
@@ -91,7 +96,6 @@ class CorpusForm extends Component {
             }
           });
 
-        console.log(dialogNumArray);
         const dialogGroups = [];
         dialogNumArray.forEach(dialogNum => {
           const dialogUserKeys = `dialog-${dialogNum}-userKeys`;
@@ -117,13 +121,10 @@ class CorpusForm extends Component {
           });
         });
 
-        console.log(dialogGroups);
-
-        values.dialogTime = values.dialogTime.format('YYYY-MM-DD HH:mm:ss');
-        // console.log(values);
+        fieldValues.dialogInfos = dialogGroups;
         dispatch({
           type: 'formCorpusForm/submitCorpusForm',
-          payload: values,
+          payload: fieldValues,
         });
       }
     });
@@ -362,9 +363,9 @@ class CorpusForm extends Component {
                   </Form.Item>
                 </Col>
                 <Col xl={{ span: 6, offset: 2 }} lg={8} md={12} sm={24}>
-                  <Form.Item label={fieldLabels.videoUrl}>
+                  <Form.Item label={fieldLabels.videoId}>
                     {
-                      getFieldDecorator('videoUrl')(
+                      getFieldDecorator('videoId')(
                         <Input placeholder="请输入视频编号"/>)
                     }
                   </Form.Item>
