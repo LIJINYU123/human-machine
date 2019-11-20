@@ -7,7 +7,38 @@ export default class DynamicFieldSet extends Component {
     userId: 0,
     customId: 0,
     isReverse: false,
+    detailDialogInfos: {},
   };
+
+  componentWillReceiveProps(nextProps, _) {
+    const { dialogInfos } = nextProps;
+    const { dialogId } = this.props;
+
+    const findDialogNumPattern = /dialog-(\d{1,})/g;
+    findDialogNumPattern.lastIndex = 0;
+    const result = findDialogNumPattern.exec(dialogId);
+    const dialogInfo = dialogInfos[result[1].toString()];
+    const { user, customer, questioner } = dialogInfo;
+    const userKeys = user.map((_, index) => `${dialogId}-user-${index}`);
+    const customKeys = customer.map((_, index) => `${dialogId}-custom-${index}`);
+
+
+    const needSetFieldValue = {};
+    userKeys.forEach((userKey, index) => {
+      needSetFieldValue[userKey] = user[index];
+    });
+    customKeys.forEach((customKey, index) => {
+      needSetFieldValue[customKey] = customer[index];
+    });
+    needSetFieldValue[`${dialogId}-userKeys`] = userKeys;
+    needSetFieldValue[`${dialogId}-customKeys`] = customKeys;
+    this.setState({
+      userId: userKeys.length > 0 ? userKeys.length - 1 : 0,
+      customId: customKeys.length > 0 ? customKeys.length - 1 : 0,
+      isReverse: questioner !== 'customer',
+      detailDialogInfos: needSetFieldValue,
+    });
+  }
 
   handleUserRemove = userKey => {
     const { getFieldValue, setFieldsValue } = this.props.form;
@@ -41,8 +72,12 @@ export default class DynamicFieldSet extends Component {
 
   getUserFields = () => {
     const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { detailDialogInfos } = this.state;
     const { dialogId } = this.props;
-    const userKeys = getFieldValue(`${dialogId}-userKeys`);
+    let userKeys = getFieldValue(`${dialogId}-userKeys`);
+    if (Object.keys(detailDialogInfos).length > 0) {
+      userKeys = detailDialogInfos[`${dialogId}-userKeys`];
+    }
 
     return userKeys.map((userKey, index) => (
       <Col span={8} style={{ height: '40px' }} key={userKey}>
@@ -55,7 +90,7 @@ export default class DynamicFieldSet extends Component {
                   message: '请输入用户回答',
                 }],
             })(<div style={{ display: 'flex' }}>
-              <Input placeholder="请输入用户回答"/>
+              <Input placeholder="请输入用户回答" value={detailDialogInfos[userKey]} />
               {userKeys.length > 1 ? (
                 <Icon className={styles.dynamicDeleteButton} type="minus-circle"
                       onClick={() => this.handleUserRemove(userKey)}/>) : null}
@@ -68,8 +103,12 @@ export default class DynamicFieldSet extends Component {
 
   getCustomerFields = () => {
     const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { detailDialogInfos } = this.state;
     const { dialogId } = this.props;
-    const customKeys = getFieldValue(`${dialogId}-customKeys`);
+    let customKeys = getFieldValue(`${dialogId}-customKeys`);
+    if (Object.keys(detailDialogInfos).length > 0) {
+      customKeys = detailDialogInfos[`${dialogId}-customKeys`];
+    }
 
     return customKeys.map((customKey, index) => (
       <Col span={8} style={{ height: '40px' }} key={customKey}>
@@ -81,8 +120,9 @@ export default class DynamicFieldSet extends Component {
                   required: true,
                   message: '请输入客服回答',
                 }],
+              initialValue: 'acdfdsa',
             })(<span style={{ display: 'flex' }}>
-                  <Input placeholder="请输入客服回答" />
+                  <Input placeholder="请输入客服回答" value={detailDialogInfos[customKey]} />
               {customKeys.length > 1 ? (
                 <Icon className={styles.dynamicDeleteButton} type="minus-circle" onClick={() => this.handleCustomerRemove(customKey)}/>) : null}
                 </span>)

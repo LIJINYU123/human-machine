@@ -55,6 +55,11 @@ const detailInfos = [
     }, {
       user: ['这是第二轮对话，用户说话1', '这是第二轮对话，用户说话2'],
       customer: ['这是第二轮对话，客服说话1', '这是第二轮对话，客服说话2'],
+      questioner: 'user',
+    }, {
+      user: ['这是第三轮对话，用户说话1'],
+      customer: ['这是第三轮对话，客服说话1'],
+      questioner: 'user',
     }],
   },
   {

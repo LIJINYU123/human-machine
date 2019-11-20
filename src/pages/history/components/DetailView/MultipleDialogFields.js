@@ -9,6 +9,16 @@ export default class MultipleDialogField extends Component {
     dialogKeys: ['dialog-0'],
   };
 
+  componentWillReceiveProps(nextProps, _) {
+    const { dialogInfos } = nextProps;
+    // console.log(dialogInfos);
+    const dialogKeys = dialogInfos.map((_, index) => `dialog-${index}`);
+    this.setState({
+      dialogKeys,
+    });
+    dialogId = dialogInfos.length > 0 ? dialogInfos.length - 1 : 0;
+  }
+
   handleClick = () => {
     const { dialogKeys } = this.state;
     const nextDialogKey = dialogKeys.concat(`dialog-${++dialogId}`);
@@ -30,6 +40,7 @@ export default class MultipleDialogField extends Component {
     return dialogKeys.map(dialogKey => (
       <Form.Item key={dialogKey}>
         {
+          // eslint-disable-next-line max-len
           <DynamicFieldSet dialogId={dialogKey} {...this.props} onRemove={this.handleRemove}
                            dialogLength={dialogKeys.length}/>
         }

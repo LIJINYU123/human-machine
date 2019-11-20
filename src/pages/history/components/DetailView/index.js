@@ -199,7 +199,7 @@ class CorpusDrawer extends Component {
         </Card>
         <Card title="对话记录" className={styles.card} bordered={false}>
           <Form hideRequiredMark>
-            <MultipleDialogField form={form} />
+            <MultipleDialogField form={form} dialogInfos={detailInfo.dialogInfos} />
           </Form>
         </Card>
         <FooterToolbar style={{ width }}>
