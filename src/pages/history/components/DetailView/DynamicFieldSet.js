@@ -84,14 +84,11 @@ export default class DynamicFieldSet extends Component {
     const { detailDialogInfos } = this.state;
     const { dialogId } = this.props;
     let userKeys = [];
-    if (dialogId > 0) {
-      userKeys.push(`${dialogId}-user-0`);
-    }
     if (Object.keys(detailDialogInfos).length > 0) {
       userKeys = detailDialogInfos[`${dialogId}-userKeys`];
     }
 
-    return userKeys.map((userKey, index) => (
+    return typeof userKeys !== 'undefined' && userKeys.map((userKey, index) => (
       <Col span={8} style={{ height: '40px' }} key={userKey}>
         <Form.Item label={index === 0 ? '用户' : ''} key={userKey}>
           {
@@ -119,14 +116,11 @@ export default class DynamicFieldSet extends Component {
     const { detailDialogInfos } = this.state;
     const { dialogId } = this.props;
     let customKeys = [];
-    if (dialogId > 0) {
-      customKeys.push(`${dialogId}-custom-0`);
-    }
     if (Object.keys(detailDialogInfos).length > 0) {
       customKeys = detailDialogInfos[`${dialogId}-customKeys`];
     }
 
-    return customKeys.map((customKey, index) => (
+    return typeof customKeys !== 'undefined' && customKeys.map((customKey, index) => (
       <Col span={8} style={{ height: '40px' }} key={customKey}>
         <Form.Item label={index === 0 ? '客服' : ''} key={customKey}>
           {
@@ -199,6 +193,10 @@ export default class DynamicFieldSet extends Component {
     const { dialogId } = this.props;
     const { detailDialogInfos } = this.state;
 
+    if (!detailDialogInfos.hasOwnProperty(`${dialogId}-userKeys`)) {
+      detailDialogInfos[`${dialogId}-userKeys`] = [];
+    }
+
     const userKeys = detailDialogInfos[`${dialogId}-userKeys`];
 
     let { userId } = this.state;
@@ -206,9 +204,6 @@ export default class DynamicFieldSet extends Component {
 
     detailDialogInfos[`${dialogId}-userKeys`] = userKeys.concat(`${dialogId}-user-${userId}`);
     detailDialogInfos[`${dialogId}-user-${userId}`] = '';
-
-    console.log(dialogId);
-    console.log(detailDialogInfos);
 
     this.setState({
       userId,
@@ -219,6 +214,11 @@ export default class DynamicFieldSet extends Component {
   handleCustomerAdd = () => {
     const { dialogId } = this.props;
     const { detailDialogInfos } = this.state;
+
+    if (!detailDialogInfos.hasOwnProperty(`${dialogId}-customKeys`)) {
+      detailDialogInfos[`${dialogId}-customKeys`] = [];
+    }
+
     const customKeys = detailDialogInfos[`${dialogId}-customKeys`];
 
     let { customId } = this.state;
