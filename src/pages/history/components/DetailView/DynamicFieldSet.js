@@ -41,9 +41,9 @@ export default class DynamicFieldSet extends Component {
   }
 
   handleUserRemove = userKey => {
-    const { getFieldValue, setFieldsValue } = this.props.form;
     const { dialogId } = this.props;
-    const userKeys = getFieldValue(`${dialogId}-userKeys`);
+    const { detailDialogInfos } = this.state;
+    const userKeys = detailDialogInfos[`${dialogId}-userKeys`];
 
     if (userKeys.length === 1) {
       return;
@@ -51,14 +51,15 @@ export default class DynamicFieldSet extends Component {
 
     const needSetFieldValue = {};
     needSetFieldValue[`${dialogId}-userKeys`] = userKeys.filter(key => key !== userKey);
-
-    setFieldsValue(needSetFieldValue);
+    this.setState({
+      detailDialogInfos: needSetFieldValue,
+    });
   };
 
   handleCustomerRemove = customKey => {
-    const { getFieldValue, setFieldsValue } = this.props.form;
     const { dialogId } = this.props;
-    const customKeys = getFieldValue(`${dialogId}-customKeys`);
+    const { detailDialogInfos } = this.state;
+    const customKeys = detailDialogInfos[`${dialogId}-customKeys`];
 
     if (customKeys.length === 1) {
       return;
@@ -67,14 +68,16 @@ export default class DynamicFieldSet extends Component {
     const needSetFieldValue = {};
     needSetFieldValue[`${dialogId}-customKeys`] = customKeys.filter(key => key !== customKey);
 
-    setFieldsValue(needSetFieldValue);
+    this.setState({
+      detailDialogInfos: needSetFieldValue,
+    });
   };
 
   getUserFields = () => {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const { detailDialogInfos } = this.state;
     const { dialogId } = this.props;
-    let userKeys = getFieldValue(`${dialogId}-userKeys`);
+    let userKeys = [];
     if (Object.keys(detailDialogInfos).length > 0) {
       userKeys = detailDialogInfos[`${dialogId}-userKeys`];
     }
@@ -89,8 +92,9 @@ export default class DynamicFieldSet extends Component {
                   required: true,
                   message: '请输入用户回答',
                 }],
+              initialValue: detailDialogInfos[userKey],
             })(<div style={{ display: 'flex' }}>
-              <Input placeholder="请输入用户回答" value={detailDialogInfos[userKey]} />
+              <Input placeholder="请输入用户回答" defaultValue={detailDialogInfos[userKey]}/>
               {userKeys.length > 1 ? (
                 <Icon className={styles.dynamicDeleteButton} type="minus-circle"
                       onClick={() => this.handleUserRemove(userKey)}/>) : null}
@@ -102,10 +106,10 @@ export default class DynamicFieldSet extends Component {
   };
 
   getCustomerFields = () => {
-    const { getFieldDecorator, getFieldValue } = this.props.form;
+    const { getFieldDecorator } = this.props.form;
     const { detailDialogInfos } = this.state;
     const { dialogId } = this.props;
-    let customKeys = getFieldValue(`${dialogId}-customKeys`);
+    let customKeys = [];
     if (Object.keys(detailDialogInfos).length > 0) {
       customKeys = detailDialogInfos[`${dialogId}-customKeys`];
     }
@@ -120,8 +124,9 @@ export default class DynamicFieldSet extends Component {
                   required: true,
                   message: '请输入客服回答',
                 }],
+              initialValue: detailDialogInfos[customKey],
             })(<span style={{ display: 'flex' }}>
-                  <Input placeholder="请输入客服回答" value={detailDialogInfos[customKey]} />
+                  <Input placeholder="请输入客服回答" defaultValue={detailDialogInfos[customKey]} />
               {customKeys.length > 1 ? (
                 <Icon className={styles.dynamicDeleteButton} type="minus-circle" onClick={() => this.handleCustomerRemove(customKey)}/>) : null}
                 </span>)
@@ -214,31 +219,22 @@ export default class DynamicFieldSet extends Component {
   };
 
   handleReverse = () => {
-    const { setFieldsValue } = this.props.form;
-    const { dialogId } = this.props;
-
     this.setState({
       isReverse: !this.state.isReverse,
     });
-    const needSetFieldsVaule = {};
-    needSetFieldsVaule[`${dialogId}-reverse`] = !this.state.isReverse;
-    setFieldsValue(needSetFieldsVaule);
   };
 
 
   render() {
-    const { getFieldDecorator } = this.props.form;
     const { onRemove, dialogId, dialogLength } = this.props;
-    getFieldDecorator(`${dialogId}-userKeys`, { initialValue: [`${dialogId}-user-0`] });
-    getFieldDecorator(`${dialogId}-customKeys`, { initialValue: [`${dialogId}-custom-0`] });
-    getFieldDecorator(`${dialogId}-reverse`, { initialValue: false });
+    const { isReverse } = this.state;
 
     return (
       <div className={styles.dialogForm}>
-        {this.getDialogFields(this.state.isReverse)}
+        {this.getDialogFields(isReverse)}
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
-            <Button onClick={() => this.handleReverse(this.state.isReverse)}>反转</Button>
+            <Button onClick={() => this.handleReverse(isReverse)}>反转</Button>
             {
               dialogLength > 1 &&
               <Popconfirm title="你确定删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => onRemove(dialogId)} >
@@ -251,4 +247,3 @@ export default class DynamicFieldSet extends Component {
     );
   }
 }
-

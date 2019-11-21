@@ -57,6 +57,67 @@ class CorpusDrawer extends Component {
     });
   };
 
+  validate = () => {
+    const { form: { validateFieldsAndScroll }, dispatch } = this.props;
+    validateFieldsAndScroll((error, values) => {
+      if (!error) {
+        const fieldValues = {};
+        const findDialogNumPattern = /dialog-(\d{1,})-userKeys/g;
+
+        fieldValues.dialogTime = values.dialogTime.format('YYYY-MM-DD HH:mm:ss');
+        fieldValues.appearance = values.appearance;
+        fieldValues.age = values.age;
+        fieldValues.attendant = values.attendant;
+        fieldValues.emotion = values.emotion;
+        fieldValues.profession = values.profession;
+        fieldValues.remark = values.remark;
+        fieldValues.sex = values.sex;
+        fieldValues.videoId = values.videoId;
+
+        const dialogNumArray = [];
+        Object.keys(values)
+          .forEach(key => {
+            if (key.indexOf('-userKeys') > 0) {
+              findDialogNumPattern.lastIndex = 0;
+              const result = findDialogNumPattern.exec(key.toString());
+              dialogNumArray.push(result[1]);
+            }
+          });
+
+        const dialogGroups = [];
+        dialogNumArray.forEach(dialogNum => {
+          const dialogUserKeys = `dialog-${dialogNum}-userKeys`;
+          const dialogUserValues = values[dialogUserKeys];
+
+          if (!values.hasOwnProperty(dialogUserValues[0])) {
+            return;
+          }
+
+          const userDialogs = dialogUserValues.map(key => values[key]);
+
+          const dialogCustomKeys = `dialog-${dialogNum}-customKeys`;
+          const dialogCustomValues = values[dialogCustomKeys];
+          const customDialogs = dialogCustomValues.map(key => values[key]);
+
+          const dialogReverse = values[`dialog-${dialogNum}-reverse`];
+
+          const questioner = dialogReverse === true ? 'user' : 'customer';
+          dialogGroups.push({
+            user: userDialogs,
+            customer: customDialogs,
+            questioner,
+          });
+        });
+
+        fieldValues.dialogInfos = dialogGroups;
+        dispatch({
+          type: 'detailViewForm/submitDetailView',
+          payload: fieldValues,
+        });
+      }
+    });
+  };
+
   render() {
     const { width } = this.state;
     const { visible, onClose, form, detailInfo } = this.props;
