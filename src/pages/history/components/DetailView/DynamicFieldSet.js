@@ -8,12 +8,12 @@ export default class DynamicFieldSet extends Component {
     customId: 0,
     isReverse: false,
     detailDialogInfos: {},
+    isReceiveAllProps: false,
   };
 
   componentWillReceiveProps(nextProps, _) {
     const { dialogInfos } = nextProps;
     const { dialogId } = this.props;
-
     const findDialogNumPattern = /dialog-(\d{1,})/g;
     findDialogNumPattern.lastIndex = 0;
     const result = findDialogNumPattern.exec(dialogId);
@@ -23,21 +23,25 @@ export default class DynamicFieldSet extends Component {
     const customKeys = customer.map((_, index) => `${dialogId}-custom-${index}`);
 
 
-    const needSetFieldValue = {};
-    userKeys.forEach((userKey, index) => {
-      needSetFieldValue[userKey] = user[index];
-    });
-    customKeys.forEach((customKey, index) => {
-      needSetFieldValue[customKey] = customer[index];
-    });
-    needSetFieldValue[`${dialogId}-userKeys`] = userKeys;
-    needSetFieldValue[`${dialogId}-customKeys`] = customKeys;
-    this.setState({
-      userId: userKeys.length > 0 ? userKeys.length - 1 : 0,
-      customId: customKeys.length > 0 ? customKeys.length - 1 : 0,
-      isReverse: questioner !== 'customer',
-      detailDialogInfos: needSetFieldValue,
-    });
+    if (!this.state.isReceiveAllProps) {
+      const needSetFieldValue = {};
+      userKeys.forEach((userKey, index) => {
+        needSetFieldValue[userKey] = user[index];
+      });
+      customKeys.forEach((customKey, index) => {
+        needSetFieldValue[customKey] = customer[index];
+      });
+      needSetFieldValue[`${dialogId}-userKeys`] = userKeys;
+      needSetFieldValue[`${dialogId}-customKeys`] = customKeys;
+      this.setState({
+        userId: userKeys.length > 0 ? userKeys.length - 1 : 0,
+        customId: customKeys.length > 0 ? customKeys.length - 1 : 0,
+        isReverse: questioner !== 'customer',
+        detailDialogInfos: needSetFieldValue,
+        isReceiveAllProps: true,
+      });
+      console.log('call componentWillReceiveProps');
+    }
   }
 
   handleUserRemove = userKey => {
@@ -49,10 +53,12 @@ export default class DynamicFieldSet extends Component {
       return;
     }
 
-    const needSetFieldValue = {};
-    needSetFieldValue[`${dialogId}-userKeys`] = userKeys.filter(key => key !== userKey);
+    detailDialogInfos[`${dialogId}-userKeys`] = userKeys.filter(key => key !== userKey);
+    delete detailDialogInfos[userKey];
+
+    console.log(detailDialogInfos);
     this.setState({
-      detailDialogInfos: needSetFieldValue,
+      detailDialogInfos,
     });
   };
 
@@ -65,11 +71,11 @@ export default class DynamicFieldSet extends Component {
       return;
     }
 
-    const needSetFieldValue = {};
-    needSetFieldValue[`${dialogId}-customKeys`] = customKeys.filter(key => key !== customKey);
-
+    detailDialogInfos[`${dialogId}-customKeys`] = customKeys.filter(key => key !== customKey);
+    delete detailDialogInfos[customKey];
+    console.log(detailDialogInfos);
     this.setState({
-      detailDialogInfos: needSetFieldValue,
+      detailDialogInfos,
     });
   };
 
@@ -78,6 +84,9 @@ export default class DynamicFieldSet extends Component {
     const { detailDialogInfos } = this.state;
     const { dialogId } = this.props;
     let userKeys = [];
+    if (dialogId > 0) {
+      userKeys.push(`${dialogId}-user-0`);
+    }
     if (Object.keys(detailDialogInfos).length > 0) {
       userKeys = detailDialogInfos[`${dialogId}-userKeys`];
     }
@@ -110,6 +119,9 @@ export default class DynamicFieldSet extends Component {
     const { detailDialogInfos } = this.state;
     const { dialogId } = this.props;
     let customKeys = [];
+    if (dialogId > 0) {
+      customKeys.push(`${dialogId}-custom-0`);
+    }
     if (Object.keys(detailDialogInfos).length > 0) {
       customKeys = detailDialogInfos[`${dialogId}-customKeys`];
     }
@@ -184,27 +196,30 @@ export default class DynamicFieldSet extends Component {
   };
 
   handleUserAdd = () => {
-    const { getFieldValue, setFieldsValue } = this.props.form;
     const { dialogId } = this.props;
-    const userKeys = getFieldValue(`${dialogId}-userKeys`);
+    const { detailDialogInfos } = this.state;
+
+    const userKeys = detailDialogInfos[`${dialogId}-userKeys`];
 
     let { userId } = this.state;
     userId += 1;
+
+    detailDialogInfos[`${dialogId}-userKeys`] = userKeys.concat(`${dialogId}-user-${userId}`);
+    detailDialogInfos[`${dialogId}-user-${userId}`] = '';
+
+    console.log(dialogId);
+    console.log(detailDialogInfos);
+
     this.setState({
       userId,
+      detailDialogInfos,
     });
-    const nextUserKeys = userKeys.concat(`${dialogId}-user-${userId}`);
-
-    const needSetFieldValue = {};
-    needSetFieldValue[`${dialogId}-userKeys`] = nextUserKeys;
-
-    setFieldsValue(needSetFieldValue);
   };
 
   handleCustomerAdd = () => {
-    const { getFieldValue, setFieldsValue } = this.props.form;
     const { dialogId } = this.props;
-    const customKeys = getFieldValue(`${dialogId}-customKeys`);
+    const { detailDialogInfos } = this.state;
+    const customKeys = detailDialogInfos[`${dialogId}-customKeys`];
 
     let { customId } = this.state;
     customId += 1;
@@ -212,15 +227,19 @@ export default class DynamicFieldSet extends Component {
       customId,
     });
 
-    const nextCustomKeys = customKeys.concat(`${dialogId}-customer-${customId}`);
-    const needSetFieldsVaule = {};
-    needSetFieldsVaule[`${dialogId}-customKeys`] = nextCustomKeys;
-    setFieldsValue(needSetFieldsVaule);
+    detailDialogInfos[`${dialogId}-customKeys`] = customKeys.concat(`${dialogId}-customer-${customId}`);
+    detailDialogInfos[`${dialogId}-customer-${customId}`] = '';
+
+    this.setState({
+      customId,
+      detailDialogInfos,
+    });
   };
 
   handleReverse = () => {
+    const { isReverse } = this.state;
     this.setState({
-      isReverse: !this.state.isReverse,
+      isReverse: !isReverse,
     });
   };
 
