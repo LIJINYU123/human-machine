@@ -1,4 +1,5 @@
-import { queryRecord, deleteRecord, queryEditors, queryDetailInfo } from './service'
+import { queryRecord, deleteRecord, queryEditors, queryDetailInfo, fakeDetailViewForm } from './service'
+import { message } from 'antd';
 
 const Model = {
   namespace: 'historyRecordList',
@@ -42,6 +43,11 @@ const Model = {
         payload: response,
       });
       if (callback) callback();
+    },
+
+    *submitDetailView({ payload }, { call }) {
+      yield call(fakeDetailViewForm, payload);
+      message.success('提交成功');
     },
   },
   reducers: {

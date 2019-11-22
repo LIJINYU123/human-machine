@@ -211,4 +211,7 @@ export default {
   'GET /api/detail/info': getDetailInfo,
   'GET /api/query/editors': getEditors,
   'POST /api/record': postRecord,
+  'POST /api/detailview/form': (_, res) => {
+    res.send({ message: 'OK' });
+  },
 }

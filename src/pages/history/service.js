@@ -25,3 +25,10 @@ export async function deleteRecord(params) {
 export async function queryEditors() {
   return request('/api/query/editors');
 }
+
+export async function fakeDetailViewForm(params) {
+  return request('/api/detailview/form', {
+    method: 'POST',
+    data: params,
+  });
+}

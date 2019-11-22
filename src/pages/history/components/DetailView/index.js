@@ -25,7 +25,7 @@ const { Option } = Select;
 const { FieldLabels, TreeData, ProfessionData, AttendantMember, EmotionOptions } = ItemData;
 
 @connect(({ loading }) => ({
-  submitting: loading.effects['detailViewForm/submitDetailView'],
+  submitting: loading.effects['historyRecordList/submitDetailView'],
 }))
 class CorpusDrawer extends Component {
   state = {
@@ -115,7 +115,7 @@ class CorpusDrawer extends Component {
         fieldValues.dialogInfos = dialogGroups;
         console.log(fieldValues);
         dispatch({
-          type: 'detailViewForm/submitDetailView',
+          type: 'historyRecordList/submitDetailView',
           payload: fieldValues,
         });
       }
