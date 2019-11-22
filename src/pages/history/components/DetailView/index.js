@@ -266,7 +266,7 @@ class CorpusDrawer extends Component {
           </Form>
         </Card>
         <FooterToolbar style={{ width }}>
-          <Button type="primary" onClick={this.validate} loading={submitting}>提交</Button>
+          <Button type="primary" onClick={this.validate} loading={submitting}>更新</Button>
         </FooterToolbar>
       </Drawer>
     );

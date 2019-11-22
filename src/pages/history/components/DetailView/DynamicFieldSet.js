@@ -254,7 +254,7 @@ export default class DynamicFieldSet extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { onRemove, dialogId, dialogLength } = this.props;
+    const { dialogId } = this.props;
     const { isReverse } = this.state;
     getFieldDecorator(`${dialogId}-userKeys`, { initialValue: [`${dialogId}-user-0`] });
     getFieldDecorator(`${dialogId}-customKeys`, { initialValue: [`${dialogId}-custom-0`] });
@@ -266,12 +266,6 @@ export default class DynamicFieldSet extends Component {
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
             <Button onClick={() => this.handleReverse(isReverse)}>反转</Button>
-            {
-              dialogLength > 1 &&
-              <Popconfirm title="你确定删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => onRemove(dialogId)} >
-                <Button type="danger" style={{ marginLeft: '8px' }}>删除</Button>
-              </Popconfirm>
-            }
           </Col>
         </Row>
       </div>

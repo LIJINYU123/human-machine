@@ -55,7 +55,7 @@ export default class MultipleDialogField extends Component {
       <Form.Item key={dialogKey}>
         {
           // eslint-disable-next-line max-len
-          <NewDynamicFieldSet dialogId={dialogKey} {...this.props} onRemove={this.handleRemove} />
+          <NewDynamicFieldSet dialogId={dialogKey} {...this.props} onRemove={this.handleRemove} key={dialogKey} />
         }
       </Form.Item>
     ));

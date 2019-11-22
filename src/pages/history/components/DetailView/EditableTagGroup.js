@@ -7,13 +7,22 @@ export default class EditableGroupTag extends Component {
     inputVisible: false,
     inputValue: '',
     tags: [],
+    isReceiveAllProps: false,
   };
 
   componentWillReceiveProps(nextProps, _) {
     const { mytags } = nextProps;
-    this.setState({
-      tags: mytags,
-    });
+    const { setFieldsValue } = this.props.form;
+
+    if (!this.state.isReceiveAllProps) {
+      setFieldsValue({
+        customize: mytags,
+      });
+      this.setState({
+        tags: mytags,
+        isReceiveAllProps: true,
+      });
+    }
   }
 
   handleInputChange = e => {
