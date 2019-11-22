@@ -5,7 +5,7 @@ WORKDIR /usr/src/app/
 COPY ./ ./
 
 COPY package.json ./
-RUN yarn
+RUN tyarn
 
 RUN npm run build
 
