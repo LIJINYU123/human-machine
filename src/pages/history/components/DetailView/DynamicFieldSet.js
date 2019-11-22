@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import styles from './DynamicFieldStyle.less';
 import { Button, Col, Form, Icon, Input, Popconfirm, Row } from 'antd';
+import styles from './DynamicFieldStyle.less';
 
 export default class DynamicFieldSet extends Component {
   state = {
@@ -14,6 +14,7 @@ export default class DynamicFieldSet extends Component {
   componentWillReceiveProps(nextProps, _) {
     const { dialogInfos } = nextProps;
     const { dialogId } = this.props;
+    const { setFieldsValue } = this.props.form;
     const findDialogNumPattern = /dialog-(\d{1,})/g;
     findDialogNumPattern.lastIndex = 0;
     const result = findDialogNumPattern.exec(dialogId);
@@ -31,8 +32,12 @@ export default class DynamicFieldSet extends Component {
       customKeys.forEach((customKey, index) => {
         needSetFieldValue[customKey] = customer[index];
       });
-      needSetFieldValue[`${dialogId}-userKeys`] = userKeys;
-      needSetFieldValue[`${dialogId}-customKeys`] = customKeys;
+      const temp = {};
+      temp[`${dialogId}-userKeys`] = userKeys;
+      temp[`${dialogId}-customKeys`] = customKeys;
+      temp[`${dialogId}-reverse`] = questioner !== 'customer';
+      setFieldsValue(temp);
+
       this.setState({
         userId: userKeys.length > 0 ? userKeys.length - 1 : 0,
         customId: customKeys.length > 0 ? customKeys.length - 1 : 0,
@@ -46,49 +51,44 @@ export default class DynamicFieldSet extends Component {
 
   handleUserRemove = userKey => {
     const { dialogId } = this.props;
-    const { detailDialogInfos } = this.state;
-    const userKeys = detailDialogInfos[`${dialogId}-userKeys`];
+    const { getFieldValue, setFieldsValue } = this.props.form;
+    const userKeys = getFieldValue(`${dialogId}-userKeys`);
 
     if (userKeys.length === 1) {
       return;
     }
 
-    detailDialogInfos[`${dialogId}-userKeys`] = userKeys.filter(key => key !== userKey);
-    delete detailDialogInfos[userKey];
+    const needSetFieldValue = {};
+    needSetFieldValue[`${dialogId}-userKeys`] = userKeys.filter(key => key !== userKey);
 
-    console.log(detailDialogInfos);
-    this.setState({
-      detailDialogInfos,
-    });
+    setFieldsValue(needSetFieldValue);
   };
 
   handleCustomerRemove = customKey => {
+    const { getFieldValue, setFieldsValue } = this.props.form;
     const { dialogId } = this.props;
-    const { detailDialogInfos } = this.state;
-    const customKeys = detailDialogInfos[`${dialogId}-customKeys`];
+    const customKeys = getFieldValue(`${dialogId}-customKeys`);
 
     if (customKeys.length === 1) {
       return;
     }
 
-    detailDialogInfos[`${dialogId}-customKeys`] = customKeys.filter(key => key !== customKey);
-    delete detailDialogInfos[customKey];
-    console.log(detailDialogInfos);
-    this.setState({
-      detailDialogInfos,
-    });
+    const needSetFieldValue = {};
+    needSetFieldValue[`${dialogId}-customKeys`] = customKeys.filter(key => key !== customKey);
+
+    setFieldsValue(needSetFieldValue);
   };
 
   getUserFields = () => {
-    const { getFieldDecorator } = this.props.form;
-    const { detailDialogInfos } = this.state;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
     const { dialogId } = this.props;
+    const { detailDialogInfos } = this.state;
     let userKeys = [];
     if (Object.keys(detailDialogInfos).length > 0) {
-      userKeys = detailDialogInfos[`${dialogId}-userKeys`];
+      userKeys = getFieldValue(`${dialogId}-userKeys`);
     }
 
-    return typeof userKeys !== 'undefined' && userKeys.map((userKey, index) => (
+    return userKeys.map((userKey, index) => (
       <Col span={8} style={{ height: '40px' }} key={userKey}>
         <Form.Item label={index === 0 ? '用户' : ''} key={userKey}>
           {
@@ -112,15 +112,16 @@ export default class DynamicFieldSet extends Component {
   };
 
   getCustomerFields = () => {
-    const { getFieldDecorator } = this.props.form;
-    const { detailDialogInfos } = this.state;
+    const { getFieldDecorator, getFieldValue } = this.props.form;
     const { dialogId } = this.props;
+    const { detailDialogInfos } = this.state;
+
     let customKeys = [];
     if (Object.keys(detailDialogInfos).length > 0) {
-      customKeys = detailDialogInfos[`${dialogId}-customKeys`];
+      customKeys = getFieldValue(`${dialogId}-customKeys`);
     }
 
-    return typeof customKeys !== 'undefined' && customKeys.map((customKey, index) => (
+    return customKeys.map((customKey, index) => (
       <Col span={8} style={{ height: '40px' }} key={customKey}>
         <Form.Item label={index === 0 ? '客服' : ''} key={customKey}>
           {
@@ -190,19 +191,19 @@ export default class DynamicFieldSet extends Component {
   };
 
   handleUserAdd = () => {
+    const { getFieldValue, setFieldsValue } = this.props.form;
     const { dialogId } = this.props;
     const { detailDialogInfos } = this.state;
-
-    if (!detailDialogInfos.hasOwnProperty(`${dialogId}-userKeys`)) {
-      detailDialogInfos[`${dialogId}-userKeys`] = [];
-    }
-
-    const userKeys = detailDialogInfos[`${dialogId}-userKeys`];
+    const userKeys = getFieldValue(`${dialogId}-userKeys`);
 
     let { userId } = this.state;
     userId += 1;
 
-    detailDialogInfos[`${dialogId}-userKeys`] = userKeys.concat(`${dialogId}-user-${userId}`);
+    const nextUserKeys = userKeys.concat(`${dialogId}-user-${userId}`);
+    const needSetFieldValue = {};
+    needSetFieldValue[`${dialogId}-userKeys`] = nextUserKeys;
+    setFieldsValue(needSetFieldValue);
+
     detailDialogInfos[`${dialogId}-user-${userId}`] = '';
 
     this.setState({
@@ -212,23 +213,24 @@ export default class DynamicFieldSet extends Component {
   };
 
   handleCustomerAdd = () => {
+    const { getFieldValue, setFieldsValue } = this.props.form;
     const { dialogId } = this.props;
     const { detailDialogInfos } = this.state;
-
-    if (!detailDialogInfos.hasOwnProperty(`${dialogId}-customKeys`)) {
-      detailDialogInfos[`${dialogId}-customKeys`] = [];
-    }
-
-    const customKeys = detailDialogInfos[`${dialogId}-customKeys`];
+    const customKeys = getFieldValue(`${dialogId}-customKeys`);
 
     let { customId } = this.state;
     customId += 1;
+
+    const nextCustomKeys = customKeys.concat(`${dialogId}-custom-${customId}`);
+    const needSetFieldsVaule = {};
+    needSetFieldsVaule[`${dialogId}-customKeys`] = nextCustomKeys;
+    setFieldsValue(needSetFieldsVaule);
+
     this.setState({
       customId,
     });
 
-    detailDialogInfos[`${dialogId}-customKeys`] = customKeys.concat(`${dialogId}-customer-${customId}`);
-    detailDialogInfos[`${dialogId}-customer-${customId}`] = '';
+    detailDialogInfos[`${dialogId}-custom-${customId}`] = '';
 
     this.setState({
       customId,
@@ -237,7 +239,13 @@ export default class DynamicFieldSet extends Component {
   };
 
   handleReverse = () => {
+    const { setFieldsValue } = this.props.form;
+    const { dialogId } = this.props;
     const { isReverse } = this.state;
+    const needSetFieldsVaule = {};
+
+    needSetFieldsVaule[`${dialogId}-reverse`] = !isReverse;
+    setFieldsValue(needSetFieldsVaule);
     this.setState({
       isReverse: !isReverse,
     });
@@ -245,8 +253,12 @@ export default class DynamicFieldSet extends Component {
 
 
   render() {
+    const { getFieldDecorator } = this.props.form;
     const { onRemove, dialogId, dialogLength } = this.props;
     const { isReverse } = this.state;
+    getFieldDecorator(`${dialogId}-userKeys`, { initialValue: [`${dialogId}-user-0`] });
+    getFieldDecorator(`${dialogId}-customKeys`, { initialValue: [`${dialogId}-custom-0`] });
+    getFieldDecorator(`${dialogId}-reverse`, { initialValue: false });
 
     return (
       <div className={styles.dialogForm}>

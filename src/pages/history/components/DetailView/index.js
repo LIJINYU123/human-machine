@@ -58,11 +58,13 @@ class CorpusDrawer extends Component {
   };
 
   validate = () => {
-    const { form: { validateFieldsAndScroll }, dispatch } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
     validateFieldsAndScroll((error, values) => {
       if (!error) {
         const fieldValues = {};
         const findDialogNumPattern = /dialog-(\d{1,})-userKeys/g;
+
+        console.log(getFieldsValue());
 
         fieldValues.dialogTime = values.dialogTime.format('YYYY-MM-DD HH:mm:ss');
         fieldValues.appearance = values.appearance;

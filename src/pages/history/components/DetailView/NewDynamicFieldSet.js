@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Form, Input, Icon, Button, Row, Col, Popconfirm } from 'antd';
-import styles from './style.less';
+import styles from './DynamicFieldStyle.less';
 
-export default class DynamicFieldSet extends Component {
+export default class NewDynamicFieldSet extends Component {
   state = {
     userId: 0,
     customId: 0,
@@ -168,7 +168,7 @@ export default class DynamicFieldSet extends Component {
       customId,
     });
 
-    const nextCustomKeys = customKeys.concat(`${dialogId}-custom-${customId}`);
+    const nextCustomKeys = customKeys.concat(`${dialogId}-customer-${customId}`);
     const needSetFieldsVaule = {};
     needSetFieldsVaule[`${dialogId}-customKeys`] = nextCustomKeys;
     setFieldsValue(needSetFieldsVaule);
@@ -189,7 +189,7 @@ export default class DynamicFieldSet extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { onRemove, dialogId, dialogLength } = this.props;
+    const { onRemove, dialogId } = this.props;
     getFieldDecorator(`${dialogId}-userKeys`, { initialValue: [`${dialogId}-user-0`] });
     getFieldDecorator(`${dialogId}-customKeys`, { initialValue: [`${dialogId}-custom-0`] });
     getFieldDecorator(`${dialogId}-reverse`, { initialValue: false });
@@ -201,7 +201,6 @@ export default class DynamicFieldSet extends Component {
           <Col span={24} style={{ textAlign: 'right' }}>
             <Button onClick={() => this.handleReverse(this.state.isReverse)}>反转</Button>
             {
-              dialogLength > 1 &&
               <Popconfirm title="你确定删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => onRemove(dialogId)} >
                 <Button type="danger" style={{ marginLeft: '8px' }}>删除</Button>
               </Popconfirm>
