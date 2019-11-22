@@ -11,8 +11,6 @@ import {
   Select,
   InputNumber,
   TreeSelect,
-  Tag,
-  Icon,
   Divider,
   DatePicker,
 } from 'antd';

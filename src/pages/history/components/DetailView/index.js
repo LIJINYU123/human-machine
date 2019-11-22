@@ -59,12 +59,12 @@ class CorpusDrawer extends Component {
 
   validate = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
-    validateFieldsAndScroll((error, values) => {
+    validateFieldsAndScroll(error => {
       if (!error) {
         const fieldValues = {};
         const findDialogNumPattern = /dialog-(\d{1,})-userKeys/g;
 
-        console.log(getFieldsValue());
+        const values = getFieldsValue();
 
         fieldValues.dialogTime = values.dialogTime.format('YYYY-MM-DD HH:mm:ss');
         fieldValues.appearance = values.appearance;
@@ -75,6 +75,7 @@ class CorpusDrawer extends Component {
         fieldValues.remark = values.remark;
         fieldValues.sex = values.sex;
         fieldValues.videoId = values.videoId;
+        fieldValues.customize = values.customize;
 
         const dialogNumArray = [];
         Object.keys(values)
@@ -112,6 +113,7 @@ class CorpusDrawer extends Component {
         });
 
         fieldValues.dialogInfos = dialogGroups;
+        console.log(fieldValues);
         dispatch({
           type: 'detailViewForm/submitDetailView',
           payload: fieldValues,
