@@ -1,0 +1,11 @@
+version: '2.1'
+services:
+  human-machine:
+    image: docker-reg.ecovacs.com/library/human-machine:20191122-0ffd121
+    container_name: human-machine
+    restart: always
+    logging:
+      options:
+        max-size: "5M"
+        max-file: "10"
+      driver: json-file
