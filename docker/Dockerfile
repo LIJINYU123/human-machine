@@ -2,6 +2,8 @@ FROM circleci/node:latest-browsers as builder
 
 WORKDIR /usr/src/app/
 
+USER root
+
 COPY ./ ./
 
 COPY package.json ./
