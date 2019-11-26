@@ -6,8 +6,10 @@ USER root
 
 COPY ./ ./
 
+RUN npm install tyarn -g
+
 COPY package.json ./
-RUN yarn
+RUN tyarn
 
 RUN npm run build
 
