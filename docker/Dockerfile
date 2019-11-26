@@ -3,13 +3,12 @@ FROM circleci/node:latest-browsers as builder
 WORKDIR /usr/src/app/
 
 USER root
-
-COPY ./ ./
-
 RUN npm install tyarn -g
 
 COPY package.json ./
 RUN tyarn
+
+COPY ./ ./
 
 RUN npm run build
 

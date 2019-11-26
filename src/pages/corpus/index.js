@@ -85,6 +85,7 @@ class CorpusForm extends Component {
         fieldValues.remark = values.remark;
         fieldValues.sex = values.sex;
         fieldValues.videoId = values.videoId;
+        fieldValues.customize = values.customize;
 
         const dialogNumArray = [];
         Object.keys(values)
