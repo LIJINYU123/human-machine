@@ -143,6 +143,7 @@ const BasicLayout = props => {
       rightContentRender={rightProps => <RightContent {...rightProps} />}
       {...props}
       {...settings}
+      style={{ transform: 'none' }}
     >
       <Authorized authority={authorized.authority} noMatch={noMatch}>
         {children}
