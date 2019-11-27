@@ -111,13 +111,14 @@ export default {
           routes: [
             {
               path: '/',
-              redirect: '/welcome',
+              redirect: '/corpus',
             },
             {
               path: '/welcome',
               name: 'welcome',
               icon: 'smile',
               component: './Welcome',
+              hideInMenu: true,
             },
             {
               path: '/corpus',
@@ -135,6 +136,7 @@ export default {
               path: '/form',
               icon: 'form',
               name: 'form',
+              hideInMenu: true,
               routes: [
                 {
                   name: 'basic-form',
@@ -161,6 +163,7 @@ export default {
               icon: 'smile',
               path: '/list/table/list',
               component: './list/table/list',
+              hideInMenu: true,
             },
             {
               component: '404',
