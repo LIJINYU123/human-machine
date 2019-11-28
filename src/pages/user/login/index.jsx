@@ -44,27 +44,6 @@ class Login extends Component {
     });
   };
 
-  onGetCaptcha = () =>
-    new Promise((resolve, reject) => {
-      if (!this.loginForm) {
-        return;
-      }
-
-      this.loginForm.validateFields(['mobile'], {}, (err, values) => {
-        if (err) {
-          reject(err);
-        } else {
-          const { dispatch } = this.props;
-          dispatch({
-            type: 'userAndlogin/getCaptcha',
-            payload: values.mobile,
-          })
-            .then(resolve)
-            .catch(reject);
-        }
-      });
-    });
-
   renderMessage = content => (
     <Alert
       style={{
