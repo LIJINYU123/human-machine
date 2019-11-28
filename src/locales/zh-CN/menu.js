@@ -5,6 +5,7 @@ export default {
   'menu.admin': '管理页',
   'menu.login': '登录',
   'menu.register': '注册',
+  'menu.reset': '重置',
   'menu.register.result': '注册结果',
   'menu.dashboard': 'Dashboard',
   'menu.dashboard.analysis': '分析页',

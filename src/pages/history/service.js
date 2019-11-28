@@ -23,7 +23,7 @@ export async function deleteRecord(params) {
 }
 
 export async function queryEditors() {
-  return request('/api/query/editors');
+  return request('/api/editors');
 }
 
 export async function fakeDetailViewForm(params) {

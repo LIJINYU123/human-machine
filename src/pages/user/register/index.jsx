@@ -182,18 +182,25 @@ class Register extends Component {
         <h3>注册</h3>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
-            {getFieldDecorator('mail', {
+            {getFieldDecorator('jobNumber', {
               rules: [
                 {
                   required: true,
-                  message: '请输入邮箱地址！',
-                },
-                {
-                  type: 'email',
-                  message: '邮箱地址格式错误！',
+                  message: '请输入工号，必须以大写SY开头',
                 },
               ],
-            })(<Input size="large" placeholder="邮箱" />)}
+            })(<Input size="large" placeholder="工号，例如SY0111" />)}
+          </FormItem>
+          <FormItem>
+            {
+              getFieldDecorator('name', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入真实姓名',
+                  }],
+              })(<Input size="large" placeholder="真实姓名" />)
+            }
           </FormItem>
           <FormItem help={help}>
             <Popover
@@ -248,65 +255,6 @@ class Register extends Component {
                 },
               ],
             })(<Input size="large" type="password" placeholder="确认密码" />)}
-          </FormItem>
-          <FormItem>
-            <InputGroup compact>
-              <Select
-                size="large"
-                value={prefix}
-                onChange={this.changePrefix}
-                style={{
-                  width: '20%',
-                }}
-              >
-                <Option value="86">+86</Option>
-                <Option value="87">+87</Option>
-              </Select>
-              {getFieldDecorator('mobile', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入手机号！',
-                  },
-                  {
-                    pattern: /^\d{11}$/,
-                    message: '手机号格式错误！',
-                  },
-                ],
-              })(
-                <Input
-                  size="large"
-                  style={{
-                    width: '80%',
-                  }}
-                  placeholder="手机号"
-                />,
-              )}
-            </InputGroup>
-          </FormItem>
-          <FormItem>
-            <Row gutter={8}>
-              <Col span={16}>
-                {getFieldDecorator('captcha', {
-                  rules: [
-                    {
-                      required: true,
-                      message: '请输入验证码！',
-                    },
-                  ],
-                })(<Input size="large" placeholder="验证码" />)}
-              </Col>
-              <Col span={8}>
-                <Button
-                  size="large"
-                  disabled={!!count}
-                  className={styles.getCaptcha}
-                  onClick={this.onGetCaptcha}
-                >
-                  {count ? `${count} s` : '获取验证码'}
-                </Button>
-              </Col>
-            </Row>
           </FormItem>
           <FormItem>
             <Button

@@ -297,7 +297,7 @@ class CorpusForm extends Component {
                           message: '请选择职业',
                         },
                         ],
-                        initialValue: { key: 'other' },
+                        initialValue: { key: 'other', label: '其他从业人员' },
                       })(
                         <Select labelInValue placeholder="请选择职业" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                           {professionData}

@@ -124,14 +124,7 @@ class Login extends Component {
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               自动登录
             </Checkbox>
-            <a
-              style={{
-                float: 'right',
-              }}
-              href=""
-            >
-              忘记密码
-            </a>
+            <Link className={styles.reset} to="/user/reset" >忘记密码</Link>
           </div>
           <Submit loading={submitting}>登录</Submit>
           <div className={styles.other}>

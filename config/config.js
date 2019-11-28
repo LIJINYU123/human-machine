@@ -83,21 +83,19 @@ export default {
       routes: [
         {
           name: 'login',
-          icon: 'smile',
-          path: '/user/login',
-          component: './user/login',
-        },
-        {
-          name: 'login',
           path: '/user/login',
           component: './user/login',
         },
         {
           name: 'register',
-          icon: 'smile',
           path: '/user/register',
           component: './user/register',
         },
+        {
+          name: 'reset',
+          path: '/user/reset',
+          component: './user/reset',
+        }
       ],
     },
     {

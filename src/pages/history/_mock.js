@@ -209,7 +209,7 @@ function getEditors(req, res) {
 export default {
   'GET /api/record': getRecord,
   'GET /api/detail/info': getDetailInfo,
-  'GET /api/query/editors': getEditors,
+  'GET /api/editors': getEditors,
   'POST /api/record': postRecord,
   'POST /api/detailview/form': (_, res) => {
     res.send({ message: 'OK' });
