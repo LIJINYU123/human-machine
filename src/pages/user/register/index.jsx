@@ -6,8 +6,6 @@ import router from 'umi/router';
 import styles from './style.less';
 
 const FormItem = Form.Item;
-const { Option } = Select;
-const InputGroup = Input.Group;
 const passwordStatusMap = {
   ok: <div className={styles.success}>强度：强</div>,
   pass: <div className={styles.warning}>强度：中</div>,
@@ -36,7 +34,7 @@ class Register extends Component {
 
   componentDidUpdate() {
     const { userAndregister, form } = this.props;
-    const account = form.getFieldValue('mail');
+    const account = form.getFieldValue('jobNumber');
 
     if (userAndregister.status === 'ok') {
       message.success('注册成功！');
@@ -150,6 +148,16 @@ class Register extends Component {
     }
   };
 
+  checkJobNumber = (_, value, callback) => {
+    if (!value) {
+      callback('请输入工号')
+    } else if (value.indexOf('SY') !== 0) {
+      callback('必须以SY开头');
+    } else {
+      callback();
+    }
+  };
+
   changePrefix = value => {
     this.setState({
       prefix: value,
@@ -176,7 +184,7 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible } = this.state;
+    const { help, visible } = this.state;
     return (
       <div className={styles.main}>
         <h3>注册</h3>
@@ -185,8 +193,7 @@ class Register extends Component {
             {getFieldDecorator('jobNumber', {
               rules: [
                 {
-                  required: true,
-                  message: '请输入工号，必须以大写SY开头',
+                  validator: this.checkJobNumber,
                 },
               ],
             })(<Input size="large" placeholder="工号，例如SY0111" />)}

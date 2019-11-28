@@ -92,6 +92,11 @@ export default {
           component: './user/register',
         },
         {
+          name: 'register-result',
+          path: '/user/register-result',
+          component: './user/register-result',
+        },
+        {
           name: 'reset',
           path: '/user/reset',
           component: './user/reset',
