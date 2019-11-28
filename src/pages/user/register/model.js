@@ -6,12 +6,16 @@ const Model = {
     status: undefined,
   },
   effects: {
-    *submit({ payload }, { call, put }) {
+    * submit({ payload, callback }, { call, put }) {
       const response = yield call(fakeRegister, payload);
       yield put({
         type: 'registerHandle',
         payload: response,
       });
+
+      if (callback) {
+        callback()
+      }
     },
   },
   reducers: {

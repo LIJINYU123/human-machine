@@ -1,4 +1,4 @@
-import { Button, Col, Form, Input, Popover, Progress, Row, Select, message } from 'antd';
+import { Button, Form, Input, Popover, Progress } from 'antd';
 import React, { Component } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
@@ -32,12 +32,15 @@ class Register extends Component {
 
   interval = undefined;
 
-  componentDidUpdate() {
+  componentWillUnmount() {
+    clearInterval(this.interval);
+  }
+
+  jumpToResult = () => {
     const { userAndregister, form } = this.props;
     const account = form.getFieldValue('jobNumber');
 
     if (userAndregister.status === 'ok') {
-      message.success('注册成功！');
       router.push({
         pathname: '/user/register-result',
         state: {
@@ -45,11 +48,7 @@ class Register extends Component {
         },
       });
     }
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
+  };
 
   onGetCaptcha = () => {
     let count = 59;
@@ -96,6 +95,7 @@ class Register extends Component {
           dispatch({
             type: 'userAndregister/submit',
             payload: { ...values, prefix },
+            callback: this.jumpToResult,
           });
         }
       },

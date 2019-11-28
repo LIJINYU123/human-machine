@@ -100,6 +100,11 @@ export default {
           name: 'reset',
           path: '/user/reset',
           component: './user/reset',
+        },
+        {
+          name: 'reset-result',
+          path: '/user/reset-result',
+          component: './user/reset-result',
         }
       ],
     },
