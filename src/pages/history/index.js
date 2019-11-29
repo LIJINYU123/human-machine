@@ -79,10 +79,10 @@ class HistoryList extends Component {
       if (err) return;
       const values = {
         // eslint-disable-next-line max-len
-        recordStartTime: fieldValues.recordTime && fieldValues.recordTime[0].valueOf(),
-        recordEndTime: fieldValues.recordTime && fieldValues.recordTime[1].valueOf(),
-        dialogStartTime: fieldValues.dialogTime && fieldValues.dialogTime[0].valueOf(),
-        dialogEndTime: fieldValues.dialogTime && fieldValues.dialogTime[1].valueOf(),
+        recordStartTime: fieldValues.recordTime && fieldValues.recordTime[0].format('YYYY-MM-DD HH:mm:ss'),
+        recordEndTime: fieldValues.recordTime && fieldValues.recordTime[1].format('YYYY-MM-DD HH:mm:ss'),
+        dialogStartTime: fieldValues.dialogTime && fieldValues.dialogTime[0].format('YYYY-MM-DD HH:mm:ss'),
+        dialogEndTime: fieldValues.dialogTime && fieldValues.dialogTime[1].format('YYYY-MM-DD HH:mm:ss'),
       };
       this.setState({
         formValues: values,
