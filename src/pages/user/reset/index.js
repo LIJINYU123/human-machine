@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import Link from 'umi/link';
 import router from 'umi/router';
+import md5 from 'md5';
 import { connect } from 'dva';
 import { Button, Form, Input, Popover, Progress, message } from 'antd';
 import styles from './style.less';
-
 
 const passwordStatusMap = {
   ok: <div className={styles.success}>强度：强</div>,
@@ -34,6 +34,8 @@ class ResetPassword extends Component {
           account,
         },
       });
+    } else {
+      message.error(resetPassword.message);
     }
   };
 
@@ -48,7 +50,7 @@ class ResetPassword extends Component {
         if (!err) {
           dispatch({
             type: 'resetPassword/submit',
-            payload: values,
+            payload: { ...values, password: md5(values.password), confirm: md5(values.confirm) },
             callback: this.jumpToResult,
           });
         }
@@ -58,8 +60,8 @@ class ResetPassword extends Component {
 
   checkJobNumber = (_, value, callback) => {
     if (!value) {
-      callback('请输入工号')
-    } else if (value.indexOf('SY') !== 0) {
+      callback('请输入工号');
+    } else if (value.indexOf('SY') !== 0 || value.length < 3) {
       callback('必须以SY开头');
     } else {
       callback();
@@ -150,24 +152,23 @@ class ResetPassword extends Component {
         <h3>重置密码</h3>
         <Form onSubmit={this.handleSubmit}>
           <Form.Item>
-            {
-              getFieldDecorator('jobNumber', {
-                rules: [
-                  {
-                    validator: this.checkJobNumber,
-                  }],
-              })(<Input size="large" placeholder="工号" />)
-            }
+            {getFieldDecorator('jobNumber', {
+              rules: [
+                {
+                  validator: this.checkJobNumber,
+                },
+              ],
+            })(<Input size="large" placeholder="工号" />)}
           </Form.Item>
           <Form.Item>
-            {
-              getFieldDecorator('name', {
-                rules: [{
+            {getFieldDecorator('name', {
+              rules: [
+                {
                   required: true,
                   message: '请输入真实姓名',
-                }],
-              })(<Input size="large" placeholder="真实姓名" />)
-            }
+                },
+              ],
+            })(<Input size="large" placeholder="真实姓名" />)}
           </Form.Item>
           <Form.Item help={help}>
             <Popover
@@ -191,34 +192,36 @@ class ResetPassword extends Component {
               placement="right"
               visible={popVisible}
             >
-              {
-                getFieldDecorator('password', {
-                  rules: [
-                    {
-                      validator: this.checkPassword,
-                    },
-                  ],
-                })(<Input size="large" type="password" placeholder="至少6位密码，区分大小写" />)
-              }
+              {getFieldDecorator('password', {
+                rules: [
+                  {
+                    validator: this.checkPassword,
+                  },
+                ],
+              })(<Input size="large" type="password" placeholder="至少6位密码，区分大小写" />)}
             </Popover>
           </Form.Item>
           <Form.Item>
-            {
-              getFieldDecorator('confirm', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请确认密码！',
-                  },
-                  {
-                    validator: this.checkConfirm,
-                  },
-                ],
-              })(<Input size="large" type="password" placeholder="确认密码" />)
-            }
+            {getFieldDecorator('confirm', {
+              rules: [
+                {
+                  required: true,
+                  message: '请确认密码！',
+                },
+                {
+                  validator: this.checkConfirm,
+                },
+              ],
+            })(<Input size="large" type="password" placeholder="确认密码" />)}
           </Form.Item>
           <Form.Item>
-            <Button size="large" loading={submitting} style={{ width: '50%' }} type="primary" htmlType="submit">
+            <Button
+              size="large"
+              loading={submitting}
+              style={{ width: '50%' }}
+              type="primary"
+              htmlType="submit"
+            >
               重置密码
             </Button>
             <Link className={styles.login} to="/user/login">
@@ -229,7 +232,6 @@ class ResetPassword extends Component {
       </div>
     );
   }
-
 }
 
 export default Form.create()(ResetPassword);

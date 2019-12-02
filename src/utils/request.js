@@ -60,4 +60,32 @@ const request = extend({
   // 默认错误处理
   credentials: 'include', // 默认请求是否带上cookie
 });
+
+request.interceptors.request.use(async (url, options) => {
+  const token = localStorage.getItem('Authorization');
+  const userid = localStorage.getItem('UserID');
+  if (token && userid) {
+    const { headers } = options;
+    return {
+      url,
+      options: { ...options, headers: { ...headers, Authorization: token, UserID: userid } },
+    };
+  }
+  return {
+    url,
+    options: { ...options },
+  };
+});
+
+request.interceptors.response.use((response, _) => {
+  const token = response.headers.get('Authorization');
+  const userid = response.headers.get('UserID');
+  if (token && userid) {
+    localStorage.setItem('Authorization', token);
+    localStorage.setItem('UserID', userid);
+  }
+
+  return response;
+});
+
 export default request;

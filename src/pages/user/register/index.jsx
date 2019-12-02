@@ -1,8 +1,9 @@
-import { Button, Form, Input, Popover, Progress } from 'antd';
+import { Button, Form, Input, Popover, Progress, message } from 'antd';
 import React, { Component } from 'react';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import router from 'umi/router';
+import md5 from 'md5';
 import styles from './style.less';
 
 const FormItem = Form.Item;
@@ -47,6 +48,8 @@ class Register extends Component {
           account,
         },
       });
+    } else {
+      message.error('该账户已经存在！');
     }
   };
 
@@ -91,10 +94,9 @@ class Register extends Component {
       },
       (err, values) => {
         if (!err) {
-          const { prefix } = this.state;
           dispatch({
             type: 'userAndregister/submit',
-            payload: { ...values, prefix },
+            payload: { ...values, password: md5(values.password), confirm: md5(values.password) },
             callback: this.jumpToResult,
           });
         }
@@ -150,8 +152,8 @@ class Register extends Component {
 
   checkJobNumber = (_, value, callback) => {
     if (!value) {
-      callback('请输入工号')
-    } else if (value.indexOf('SY') !== 0) {
+      callback('请输入工号');
+    } else if (value.indexOf('SY') !== 0 || value.length < 3) {
       callback('必须以SY开头');
     } else {
       callback();
@@ -199,15 +201,14 @@ class Register extends Component {
             })(<Input size="large" placeholder="工号，例如SY0111" />)}
           </FormItem>
           <FormItem>
-            {
-              getFieldDecorator('name', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入真实姓名',
-                  }],
-              })(<Input size="large" placeholder="真实姓名" />)
-            }
+            {getFieldDecorator('name', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入真实姓名',
+                },
+              ],
+            })(<Input size="large" placeholder="真实姓名" />)}
           </FormItem>
           <FormItem help={help}>
             <Popover
