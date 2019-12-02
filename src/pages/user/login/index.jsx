@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'umi-plugin-react/locale';
 import Link from 'umi/link';
 import { connect } from 'dva';
+import md5 from 'md5';
 import LoginComponents from './components/Login';
 import styles from './style.less';
 
@@ -27,13 +28,11 @@ class Login extends Component {
   };
 
   handleSubmit = (err, values) => {
-    const { type } = this.state;
-
     if (!err) {
       const { dispatch } = this.props;
       dispatch({
         type: 'userAndlogin/login',
-        payload: { ...values, type },
+        payload: { ...values, password: md5(values.password) },
       });
     }
   };
@@ -103,7 +102,9 @@ class Login extends Component {
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               自动登录
             </Checkbox>
-            <Link className={styles.reset} to="/user/reset" >忘记密码</Link>
+            <Link className={styles.reset} to="/user/reset">
+              忘记密码
+            </Link>
           </div>
           <Submit loading={submitting}>登录</Submit>
           <div className={styles.other}>
