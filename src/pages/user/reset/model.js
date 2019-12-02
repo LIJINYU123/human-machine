@@ -1,13 +1,13 @@
-import { fakeResetPassword } from './service'
-
+import { fakeResetPassword } from './service';
 
 const Model = {
   namespace: 'resetPassword',
   state: {
     status: undefined,
+    message: undefined,
   },
   effects: {
-    * submit({ payload, callback }, { call, put }) {
+    *submit({ payload, callback }, { call, put }) {
       const response = yield call(fakeResetPassword, payload);
       yield put({
         type: 'resetPassHandle',
@@ -21,7 +21,7 @@ const Model = {
   },
   reducers: {
     resetPassHandle(state, { payload }) {
-      return { ...state, status: payload.status };
+      return { ...state, status: payload.status, message: payload.message };
     },
   },
 };
