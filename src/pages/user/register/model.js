@@ -4,6 +4,7 @@ const Model = {
   namespace: 'userAndregister',
   state: {
     status: undefined,
+    message: undefined,
   },
   effects: {
     * submit({ payload, callback }, { call, put }) {
@@ -20,7 +21,7 @@ const Model = {
   },
   reducers: {
     registerHandle(state, { payload }) {
-      return { ...state, status: payload.status };
+      return { ...state, status: payload.status, message: payload.message };
     },
   },
 };

@@ -49,7 +49,7 @@ class Register extends Component {
         },
       });
     } else {
-      message.error('该账户已经存在！');
+      message.error(userAndregister.message);
     }
   };
 

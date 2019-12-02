@@ -86,6 +86,7 @@ export default {
       res.header('UserID', 'admin');
       res.send({
         status: 'ok',
+        message: 'success',
         currentAuthority: 'admin',
       });
       return;
@@ -107,6 +108,7 @@ export default {
   'POST /api/register': (req, res) => {
     res.send({
       status: 'ok',
+      message: 'success',
       currentAuthority: 'admin',
     });
   },
