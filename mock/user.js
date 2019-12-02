@@ -78,7 +78,12 @@ export default {
   'POST /api/login/account': (req, res) => {
     const { password, userName } = req.body;
 
-    if (password === '123456' && userName === 'admin') {
+    if (userName === 'admin') {
+      res.header(
+        'Authorization',
+        'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE1NzUwMzkzMjQsInVzZXJuYW1lIjoiYWRtaW4ifQ.eqcIWCQO5z_dU1purEKr66VkMPC6q8WEn4h2DEquOkA',
+      );
+      res.header('UserID', 'admin');
       res.send({
         status: 'ok',
         currentAuthority: 'admin',

@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { fakeAccountLogin, getFakeCaptcha } from './service';
-import { getPageQuery, setAuthority } from './utils/utils';
+import { getPageQuery } from './utils/utils';
 
 const Model = {
   namespace: 'userAndlogin',
@@ -45,7 +45,6 @@ const Model = {
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
-      setAuthority(payload.currentAuthority);
       return { ...state, status: payload.status };
     },
   },
