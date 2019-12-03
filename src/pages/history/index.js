@@ -141,6 +141,22 @@ class HistoryList extends Component {
     });
   };
 
+  handleBatchExport = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    dispatch({
+      type: 'historyRecordList/export',
+      payload: {
+        keys: selectedRows.map(row => row.key),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   handleFormRest = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -220,7 +236,7 @@ class HistoryList extends Component {
           <div>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
-              <Button icon="export" type="primary" disabled={!selectedRows.length}>导出</Button>
+              <Button icon="export" type="primary" disabled={!selectedRows.length} onClick={this.handleBatchExport}>导出</Button>
               <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleDelete}>删除</Button>
             </div>
             <StandardTable

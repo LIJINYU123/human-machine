@@ -22,6 +22,13 @@ export async function deleteRecord(params) {
   });
 }
 
+export async function exportRecord(params) {
+  return request('/api/export', {
+    method: 'POST',
+    data: params,
+  })
+}
+
 export async function queryEditors() {
   return request('/api/editors');
 }

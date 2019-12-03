@@ -1,4 +1,4 @@
-import { queryRecord, deleteRecord, queryEditors, queryDetailInfo, fakeDetailViewForm } from './service'
+import { queryRecord, deleteRecord, exportRecord, queryEditors, queryDetailInfo, fakeDetailViewForm } from './service'
 import { message } from 'antd';
 
 const Model = {
@@ -12,7 +12,7 @@ const Model = {
     detailInfo: {},
   },
   effects: {
-    *fetch({ payload }, { call, put }) {
+    * fetch({ payload }, { call, put }) {
       const response = yield call(queryRecord, payload);
       yield put({
         type: 'save',
@@ -20,7 +20,7 @@ const Model = {
       });
     },
 
-    *fetchName(_, { call, put }) {
+    * fetchName(_, { call, put }) {
       const response = yield call(queryEditors);
       yield put({
         type: 'name',
@@ -28,7 +28,7 @@ const Model = {
       });
     },
 
-    *fetchDetail({ payload }, { call, put }) {
+    * fetchDetail({ payload }, { call, put }) {
       const response = yield call(queryDetailInfo, payload);
       yield put({
         type: 'saveDetail',
@@ -36,12 +36,17 @@ const Model = {
       });
     },
 
-    *delete({ payload, callback }, { call, put }) {
+    * delete({ payload, callback }, { call, put }) {
       const response = yield call(deleteRecord, payload);
       yield put({
         type: 'save',
         payload: response,
       });
+      if (callback) callback();
+    },
+
+    * export({ payload, callback }, { call }) {
+      const response = yield call(exportRecord, payload);
       if (callback) callback();
     },
 

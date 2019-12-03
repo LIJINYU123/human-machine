@@ -189,6 +189,19 @@ function postRecord(req, res, u, b) {
   return res.json(result);
 }
 
+function postExport(req, res, u, b) {
+  // const body = (b && b.body) || req.body;
+  const options = {
+    headers: {
+      'Content-Disposition': 'attachment;filename=abcd.xlsx',
+      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'Transfer-Encoding': 'chunked',
+    },
+  };
+  res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/history/导出模板.xlsx', options);
+  // res.send({ message: __dirname });
+}
+
 function getEditors(req, res) {
   const result = [
     {
@@ -213,6 +226,7 @@ export default {
   'GET /api/detail/info': getDetailInfo,
   'GET /api/editors': getEditors,
   'POST /api/record': postRecord,
+  'POST /api/export': postExport,
   'POST /api/detailview/form': (_, res) => {
     res.send({ message: 'OK' });
   },
