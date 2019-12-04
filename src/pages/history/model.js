@@ -45,8 +45,12 @@ const Model = {
       if (callback) callback();
     },
 
-    * export({ payload, callback }, { call }) {
+    * export({ payload, callback }, { call, put }) {
       const response = yield call(exportRecord, payload);
+      yield put({
+        type: 'saveFile',
+        payload: response,
+      });
       if (callback) callback();
     },
 
@@ -64,6 +68,17 @@ const Model = {
     },
     saveDetail(state, action) {
       return { ...state, detailInfo: action.payload };
+    },
+    saveFile(state, action) {
+      const link = document.createElement('a');
+      link.download = 'abcd.txt';
+      link.style.display = 'none';
+      const blob = new Blob([action.payload]);
+      link.href = URL.createObjectURL(blob);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      return { ...state };
     },
   },
 };

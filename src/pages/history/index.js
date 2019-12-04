@@ -58,7 +58,7 @@ class HistoryList extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'historyRecordList/fetchDetail',
-      payload: { key: record.id },
+      payload: { key: record.key },
     });
 
     this.setState({

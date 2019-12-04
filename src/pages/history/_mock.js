@@ -84,6 +84,27 @@ const detailInfos = [
       customer: ['这是第二轮对话，客服说话1', '这是第二轮对话，客服说话2'],
     }],
   },
+  {
+    id: 'SY0113',
+    sex: { key: 'female', label: '女' },
+    attendant: { key: 'none', label: '无' },
+    appearance: [{ value: 'myopic', label: '近视镜' }, { value: 'longhair', label: '长发' }],
+    age: 23,
+    profession: { key: 'officer', label: '办事人员' },
+    emotion: { key: 'hate', label: '厌恶' },
+    customize: ['有房', '无车', '资产300万'],
+    dialogTime: '2019-11-20 00:00:00',
+    videoId: 'adbcd1234545',
+    remark: '这是一段备注',
+    dialogInfos: [{
+      user: ['这是第一轮对话，用户说话1', '这是第一轮对话，用户说话2'],
+      customer: ['这是第一轮对话，客服说话1', '这是第一轮对话，客服说话2'],
+      questioner: 'customer',
+    }, {
+      user: ['这是第二轮对话，用户说话1', '这是第二轮对话，用户说话2'],
+      customer: ['这是第二轮对话，客服说话1', '这是第二轮对话，客服说话2'],
+    }],
+  },
 ];
 
 function getRecord(req, res, u) {
@@ -189,17 +210,8 @@ function postRecord(req, res, u, b) {
   return res.json(result);
 }
 
-function postExport(req, res, u, b) {
-  // const body = (b && b.body) || req.body;
-  const options = {
-    headers: {
-      'Content-Disposition': 'attachment;filename=abcd.xlsx',
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Transfer-Encoding': 'chunked',
-    },
-  };
-  res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/history/导出模板.xlsx', options);
-  // res.send({ message: __dirname });
+function postExport(req, res) {
+  res.download('/Users/mac/Documents/work/prj/react/human-machine/src/pages/history/导出模板.xlsx', '导出模板.xlsx');
 }
 
 function getEditors(req, res) {
