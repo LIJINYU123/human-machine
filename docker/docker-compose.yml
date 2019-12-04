@@ -1,7 +1,7 @@
 version: '2.1'
 services:
   human-machine:
-    image: docker-reg.ecovacs.com/library/human-machine:20191204-39b611e
+    image: docker-reg.ecovacs.com/library/human-machine:20191204-cd77c2a
     container_name: human-machine
     ports:
       - "8000:8000"
