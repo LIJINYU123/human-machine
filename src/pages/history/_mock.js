@@ -38,7 +38,7 @@ for (let i = 8; i < 12; i += 1) {
 
 const detailInfos = [
   {
-    id: 'SY0111',
+    id: '0',
     sex: { key: 'male', label: '男' },
     attendant: { key: 'none', label: '无' },
     appearance: [{ value: 'myopic', label: '近视镜' }, { value: 'bingle', label: '短发' }],
@@ -211,7 +211,7 @@ function postRecord(req, res, u, b) {
 }
 
 function postExport(req, res) {
-  res.download('/Users/mac/Documents/work/prj/react/human-machine/src/pages/history/导出模板.xlsx', '导出模板.xlsx');
+  res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/history/SQ-Export.csv');
 }
 
 function getEditors(req, res) {

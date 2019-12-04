@@ -71,7 +71,7 @@ const Model = {
     },
     saveFile(state, action) {
       const link = document.createElement('a');
-      link.download = 'abcd.txt';
+      link.download = `${new Date().getTime()}.csv`;
       link.style.display = 'none';
       const blob = new Blob([action.payload]);
       link.href = URL.createObjectURL(blob);
