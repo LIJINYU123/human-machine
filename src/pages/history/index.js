@@ -157,6 +157,21 @@ class HistoryList extends Component {
     });
   };
 
+  handleExport = record => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'historyRecordList/export',
+      payload: {
+        keys: [record.key],
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   handleFormRest = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
@@ -223,7 +238,7 @@ class HistoryList extends Component {
             <Fragment>
               <a onClick={() => this.handleReviewDetails(record)}>查看详情</a>
               <Divider type="vertical"/>
-              <a>导出</a>
+              <a onClick={() => this.handleExport(record)}>导出</a>
             </Fragment>
           ),
         },
