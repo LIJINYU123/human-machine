@@ -1,4 +1,5 @@
 import { routerRedux } from 'dva/router';
+import router from 'umi/router';
 import { fakeAccountLogin, getFakeCaptcha } from './service';
 import { getPageQuery } from './utils/utils';
 
@@ -19,7 +20,7 @@ const Model = {
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;
-
+        console.log(redirect);
         if (redirect) {
           const redirectUrlParams = new URL(redirect);
 
@@ -33,8 +34,10 @@ const Model = {
             window.location.href = redirect;
             return;
           }
+          yield put(routerRedux.replace(redirect))
+        } else {
+          window.location.href = `${urlParams.origin}/`;
         }
-
         yield put(routerRedux.replace(redirect || '/'));
       }
     },
