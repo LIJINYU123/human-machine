@@ -342,7 +342,9 @@ class CorpusForm extends Component {
                 <Col xl={{ span: 14, offset: 2 }} lg={14} md={24} sm={24}>
                   <Form.Item label={fieldLabels.customize}>
                     {
-                      getFieldDecorator('customize')(
+                      getFieldDecorator('customize', {
+                        initialValue: [],
+                      })(
                         <EditableGroupTag form={form} />)
                     }
                   </Form.Item>

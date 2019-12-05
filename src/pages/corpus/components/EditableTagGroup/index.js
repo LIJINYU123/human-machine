@@ -52,6 +52,7 @@ export default class EditableGroupTag extends Component {
     return (
       <div>
         {
+          // eslint-disable-next-line max-len
           tags.map((tag, index) => <Tag key={tag} closable color={index > colorGroups.length - 1 ? colorGroups[index - colorGroups.length] : colorGroups[index]}
                                         onClose={() => this.handleClose(tag)}>{tag}</Tag>)
         }
