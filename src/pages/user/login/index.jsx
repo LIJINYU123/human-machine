@@ -75,7 +75,7 @@ class Login extends Component {
               this.renderMessage('账户或密码错误')}
             <UserName
               name="userName"
-              placeholder="用户名: admin"
+              placeholder="用户名"
               rules={[
                 {
                   required: true,
@@ -85,7 +85,7 @@ class Login extends Component {
             />
             <Password
               name="password"
-              placeholder="密码: 123456"
+              placeholder="密码"
               rules={[
                 {
                   required: true,
