@@ -1,4 +1,4 @@
-FROM circleci/node:latest-browsers as builder
+FROM docker-reg.ecovacs.com/library/node:latest-browsers as builder
 
 WORKDIR /usr/src/app/
 
