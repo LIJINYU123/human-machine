@@ -57,6 +57,7 @@ export default {
 
     res.send({
       status: 'error',
+      message: '用户名或密码错误',
       currentAuthority: 'guest',
     });
   },
