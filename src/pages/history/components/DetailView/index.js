@@ -78,7 +78,7 @@ class CorpusDrawer extends Component {
         fieldValues.sex = values.sex;
         fieldValues.videoId = values.videoId;
         fieldValues.customize = values.customize;
-        fieldValues.key = key;
+        fieldValues.uniqueId = key;
 
         const dialogNumArray = [];
         Object.keys(values)
