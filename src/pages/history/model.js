@@ -10,6 +10,7 @@ const Model = {
     },
     editors: [],
     detailInfo: {},
+    key: undefined,
   },
   effects: {
     * fetch({ payload }, { call, put }) {
@@ -30,6 +31,7 @@ const Model = {
 
     * fetchDetail({ payload }, { call, put }) {
       const response = yield call(queryDetailInfo, payload);
+      response.key = payload.key;
       yield put({
         type: 'saveDetail',
         payload: response,
@@ -67,7 +69,8 @@ const Model = {
       return { ...state, editors: action.payload };
     },
     saveDetail(state, action) {
-      return { ...state, detailInfo: action.payload };
+      const { key, ...rest } = action.payload;
+      return { ...state, detailInfo: rest, key };
     },
     saveFile(state, action) {
       const link = document.createElement('a');

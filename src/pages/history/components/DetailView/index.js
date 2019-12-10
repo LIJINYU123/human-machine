@@ -24,7 +24,8 @@ import FooterToolbar from '../../../form/advanced-form/components/FooterToolbar'
 const { Option } = Select;
 const { FieldLabels, TreeData, ProfessionData, AttendantMember, EmotionOptions } = ItemData;
 
-@connect(({ loading }) => ({
+@connect(({ historyRecordList, loading }) => ({
+  historyRecordList,
   submitting: loading.effects['historyRecordList/submitDetailView'],
 }))
 class CorpusDrawer extends Component {
@@ -58,7 +59,8 @@ class CorpusDrawer extends Component {
   };
 
   validate = () => {
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
+    // eslint-disable-next-line max-len
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, historyRecordList: { key } } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const fieldValues = {};
@@ -76,9 +78,11 @@ class CorpusDrawer extends Component {
         fieldValues.sex = values.sex;
         fieldValues.videoId = values.videoId;
         fieldValues.customize = values.customize;
+        fieldValues.key = key;
 
         const dialogNumArray = [];
         Object.keys(values)
+        // eslint-disable-next-line no-shadow
           .forEach(key => {
             if (key.indexOf('-userKeys') > 0) {
               findDialogNumPattern.lastIndex = 0;
