@@ -47,12 +47,13 @@ const Model = {
       if (callback) callback();
     },
 
-    * export({ payload, callback }, { call, put }) {
-      const response = yield call(exportRecord, payload);
-      yield put({
-        type: 'saveFile',
-        payload: response,
-      });
+    * export({ _, callback }) {
+      // const response = yield call(exportRecord, payload);
+      // yield put({
+      //   type: 'saveFile',
+      //   payload: response,
+      // });
+      yield window.open(exportRecord);
       if (callback) callback();
     },
 

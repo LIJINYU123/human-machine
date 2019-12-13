@@ -23,10 +23,7 @@ export async function deleteRecord(params) {
 }
 
 export async function exportRecord(params) {
-  return request('/api/export', {
-    method: 'POST',
-    data: params,
-  })
+  return request('/api/export')
 }
 
 export async function queryEditors() {
