@@ -149,6 +149,7 @@ class HistoryList extends Component {
       body: JSON.stringify({ keys: selectedRows.map(row => row.key) }),
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: localStorage.getItem('Authorization'),
       },
     }).then(response => response.blob()).then(blob => {
       const link = document.createElement('a');
@@ -169,6 +170,7 @@ class HistoryList extends Component {
       body: JSON.stringify({ keys: [record.key] }),
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
+        Authorization: localStorage.getItem('Authorization'),
       },
     }).then(response => response.blob()).then(blob => {
       const link = document.createElement('a');
