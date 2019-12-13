@@ -211,7 +211,7 @@ function postRecord(req, res, u, b) {
 }
 
 function postExport(req, res) {
-  res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/history/SQ-Export.csv');
+  res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/history/knowledge_template.xlsx');
 }
 
 function getEditors(req, res) {

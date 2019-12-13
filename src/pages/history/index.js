@@ -142,33 +142,44 @@ class HistoryList extends Component {
   };
 
   handleBatchExport = () => {
-    const { dispatch } = this.props;
     const { selectedRows } = this.state;
-    dispatch({
-      type: 'historyRecordList/export',
-      payload: {
-        keys: selectedRows.map(row => row.key),
+
+    fetch('/api/export', {
+      method: 'POST',
+      body: JSON.stringify({ keys: selectedRows.map(row => row.key) }),
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
       },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
+    }).then(response => response.blob()).then(blob => {
+      const link = document.createElement('a');
+      link.download = `corpus_${new Date().getTime()}.xlsx`;
+      link.style.display = 'none';
+      link.href = URL.createObjectURL(blob);
+      document.body.appendChild(link);
+      link.click();
+      // 释放的 URL 对象以及移除 a 标签
+      URL.revokeObjectURL(link.href);
+      document.body.removeChild(link);
     });
   };
 
   handleExport = record => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'historyRecordList/export',
-      payload: {
-        keys: [record.key],
+    fetch('/api/export', {
+      method: 'POST',
+      body: JSON.stringify({ keys: [record.key] }),
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
       },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
+    }).then(response => response.blob()).then(blob => {
+      const link = document.createElement('a');
+      link.download = `corpus_${new Date().getTime()}.xlsx`;
+      link.style.display = 'none';
+      link.href = URL.createObjectURL(blob);
+      document.body.appendChild(link);
+      link.click();
+      // 释放的 URL 对象以及移除 a 标签
+      URL.revokeObjectURL(link.href);
+      document.body.removeChild(link);
     });
   };
 
