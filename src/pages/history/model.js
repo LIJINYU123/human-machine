@@ -74,6 +74,7 @@ const Model = {
     },
     saveFile(state, action) {
       const link = document.createElement('a');
+      link.download = `${new Date().getTime()}.xlsx`;
       link.style.display = 'none';
       const blob = new Blob([action.payload]);
       link.href = URL.createObjectURL(blob);
