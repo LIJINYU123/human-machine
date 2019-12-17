@@ -45,8 +45,13 @@ class HistoryList extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
+
+    const params = {
+      sorter: 'recordTime_descend',
+    };
     dispatch({
       type: 'historyRecordList/fetch',
+      payload: params,
     });
 
     dispatch({
