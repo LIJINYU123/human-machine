@@ -65,7 +65,7 @@ request.interceptors.request.use(async (url, options) => {
   const token = localStorage.getItem('Authorization');
   const userid = localStorage.getItem('UserID');
 
-  if (url.indexOf('login/account') !== -1 && !token) {
+  if ((url.indexOf('login/account') !== -1 || url.indexOf('register') !== -1 || url.indexOf('reset/password') !== -1) && !token) {
     const { headers } = options;
     return {
       url,
