@@ -36,7 +36,7 @@ const UserLayout = props => {
         <div className={styles.content}>
           <div className={styles.top}>
             <div className={styles.header}>
-              <span className={styles.title}>语料录入平台</span>
+              <span className={styles.title}>标注平台</span>
             </div>
           </div>
           {children}

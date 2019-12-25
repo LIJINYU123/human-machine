@@ -10,7 +10,7 @@ export default {
   menu: {
     locale: true,
   },
-  title: '语料平台',
+  title: '标注平台',
   pwa: false,
   iconfontUrl: '',
 };
