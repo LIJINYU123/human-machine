@@ -1,6 +1,6 @@
 import { parse } from 'url';
 
-const mockData = [
+let mockData = [
   {
     roleId: 'administrator',
     roleName: '管理员',
@@ -24,24 +24,25 @@ const mockData = [
 ];
 
 function getRoles(req, res) {
-  const result = [
-    {
-      roleId: 'administrator',
-      roleName: mockData[0].roleName,
-      createdTime: '2019-12-26 00:00:00',
-      // eslint-disable-next-line max-len
-        privileges: { historyRecord: mockData[0].historyRecord, dialogInput: mockData[0].dialogInput, roleManage: mockData[0].roleManage, userManage: mockData[0].userManage },
+  const result = mockData.map(item => ({
+    roleId: item.roleId,
+    roleName: item.roleName,
+    createdTime: '2019-12-26 00:00:00',
+    privileges: {
+      historyRecord: item.historyRecord,
+      dialogInput: item.dialogInput,
+      roleManage: item.roleManage,
+      userManage: item.userManage,
     },
-    {
-      roleId: 'user',
-      roleName: mockData[1].roleName,
-      createdTime: '2019-12-25 00:00:00',
-      // eslint-disable-next-line max-len
-      privileges: { historyRecord: mockData[1].historyRecord, dialogInput: mockData[1].dialogInput, roleManage: mockData[1].roleManage, userManage: mockData[1].userManage },
-    },
-  ];
+  }));
 
   return res.json(result);
+}
+
+function deleteRole(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  mockData = mockData.filter(item => item.roleId !== body.roleId);
+  return res.json({ message: '删除成功', status: 'ok' });
 }
 
 function getRoleDetail(req, res, u) {
@@ -84,6 +85,7 @@ function updateRoleDetail(req, res, u, b) {
 
 export default {
   'GET /api/roles': getRoles,
+  'DELETE /api/roles': deleteRole,
   'GET /api/role/detail': getRoleDetail,
   'POST /api/role/detail': updateRoleDetail,
 }

@@ -33,7 +33,7 @@ class RoleList extends Component {
         <Fragment>
           <a onClick={() => this.handleModify(role)}>编辑</a>
           <Divider type="vertical"/>
-          <a>删除</a>
+          <a onClick={() => this.handleDelete(role)}>删除</a>
         </Fragment>
       ),
     },
@@ -43,7 +43,7 @@ class RoleList extends Component {
     const { dispatch } = this.props;
 
     dispatch({
-      type: 'roleList/fetch',
+      type: 'roleList/fetchRole',
     });
   }
 
@@ -57,6 +57,15 @@ class RoleList extends Component {
     });
     this.setState({
       modalVisible: true,
+    });
+  };
+
+  handleDelete = role => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'roleList/deleteRole',
+      payload: { roleId: role.roleId },
     });
   };
 

@@ -1,4 +1,4 @@
-import { queryRoleList, queryRoleDetail, updateRoleDetail } from './service';
+import { queryRoleList, deleteRole, queryRoleDetail, updateRoleDetail } from './service';
 import { message } from 'antd';
 
 const Model = {
@@ -9,12 +9,26 @@ const Model = {
     key: undefined,
   },
   effects: {
-    * fetch(_, { call, put }) {
+    * fetchRole(_, { call, put }) {
       const response = yield call(queryRoleList);
       yield put({
         type: 'role',
         payload: response,
       });
+    },
+
+    * deleteRole({ payload }, { call, put }) {
+      const response = yield call(deleteRole, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+        const result = yield call(queryRoleList);
+        yield put({
+          type: 'role',
+          payload: result,
+        });
+      } else {
+        message.error(response.message);
+      }
     },
 
     * fetchDetail({ payload }, { call, put }) {
