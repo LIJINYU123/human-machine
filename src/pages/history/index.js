@@ -20,28 +20,8 @@ class HistoryList extends Component {
     selectedRows: [],
     formValues: {},
     drawerVisible: false,
+    filteredInfo: null,
   };
-
-  columns = [
-    {
-      title: '录入时间',
-      dataIndex: 'recordTime',
-      sorter: true,
-      defaultSortOrder: 'descend',
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-    },
-    {
-      title: '对话时间',
-      dataIndex: 'dialogTime',
-      sorter: true,
-      render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
-    },
-    {
-      title: '用户标签',
-      dataIndex: 'tag',
-      ellipsis: true,
-    },
-  ];
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -108,6 +88,9 @@ class HistoryList extends Component {
   handleStandardTableChange = (pagination, filterArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
+    this.setState({
+      filteredInfo: filterArg,
+    });
     const filters = Object.keys(filterArg).reduce((obj, key) => {
       const newObj = { ...obj };
       newObj[key] = getValue(filterArg[key]);
@@ -193,6 +176,9 @@ class HistoryList extends Component {
   handleFormRest = () => {
     const { form, dispatch } = this.props;
     form.resetFields();
+    this.setState({
+      filteredInfo: null,
+    });
     dispatch({
       type: 'historyRecordList/fetch',
     });
@@ -238,30 +224,49 @@ class HistoryList extends Component {
   render() {
     const { historyRecordList: { data, editors, detailInfo }, loading } = this.props;
     const { selectedRows } = this.state;
+    let { filteredInfo } = this.state;
 
-    if (this.columns.length === 3 && editors.length) {
-      const filterOptions = editors.map(editor => ({
-        text: editor.name,
-        value: editor.id,
-      }));
+    filteredInfo = filteredInfo || {};
 
-      this.columns.push({
-          title: '录入者',
-          dataIndex: 'editor',
-          filters: filterOptions,
-        },
-        {
-          title: '操作',
-          render: (_, record) => (
-            <Fragment>
-              <a onClick={() => this.handleReviewDetails(record)}>查看详情</a>
-              <Divider type="vertical"/>
-              <a onClick={() => this.handleExport(record)}>导出</a>
-            </Fragment>
-          ),
-        },
-      );
-    }
+    const columns = [
+      {
+        title: '录入时间',
+        dataIndex: 'recordTime',
+        sorter: true,
+        defaultSortOrder: 'descend',
+        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      },
+      {
+        title: '对话时间',
+        dataIndex: 'dialogTime',
+        sorter: true,
+        render: val => <span>{moment(val).format('YYYY-MM-DD HH:mm:ss')}</span>,
+      },
+      {
+        title: '用户标签',
+        dataIndex: 'tag',
+        ellipsis: true,
+      },
+      {
+        title: '录入者',
+        dataIndex: 'editor',
+        filters: editors.map(editor => ({
+          text: editor.name,
+          value: editor.id,
+        })),
+        filteredValue: filteredInfo.editor || null,
+      },
+      {
+        title: '操作',
+        render: (_, record) => (
+          <Fragment>
+            <a onClick={() => this.handleReviewDetails(record)}>查看详情</a>
+            <Divider type="vertical"/>
+            <a onClick={() => this.handleExport(record)}>导出</a>
+          </Fragment>
+        ),
+      },
+    ];
 
     return (
       <PageHeaderWrapper>
@@ -276,7 +281,7 @@ class HistoryList extends Component {
               selectedRows={selectedRows}
               loading={loading}
               data={data}
-              columns={this.columns}
+              columns={columns}
               onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
