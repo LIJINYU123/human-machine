@@ -41,7 +41,7 @@ class StandardTable extends Component {
     if (onChange) {
       onChange(pagination, filters, sorter, ...rest);
     }
-  }
+  };
 
   cleanSelectedKeys = () => {
     if (this.handleRowSelectChange) {

@@ -141,6 +141,12 @@ export default {
               component: './history',
             },
             {
+              path: './role',
+              name: 'role',
+              icon: 'team',
+              component: './role',
+            },
+            {
               path: '/form',
               icon: 'form',
               name: 'form',
