@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Modal, Button, Form, Input, Divider, Checkbox } from 'antd';
+import { Modal, Form, Input, Divider, Checkbox } from 'antd';
 import ItemData from './map';
 
 const { TextArea } = Input;

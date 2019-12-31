@@ -37,10 +37,6 @@ class StandardTable extends Component {
     if (onChange) {
       onChange(pagination, filters, sorter, ...rest);
     }
-
-    if (onChange) {
-      onChange(pagination, filters, sorter, ...rest);
-    }
   };
 
   cleanSelectedKeys = () => {

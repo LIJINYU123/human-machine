@@ -16,6 +16,7 @@ export default {
   'menu.exception.500': '500',
   'menu.corpus-form': '对话录入',
   'menu.history': '历史记录',
+  'menu.user-manage': '用户管理',
   'menu.role': '角色管理',
   'menu.form': '表单页',
   'menu.form.basic-form': '基础表单',

@@ -8,7 +8,7 @@ export async function deleteRole(params) {
   return request('/api/roles', {
     method: 'DELETE',
     data: params,
-  })
+  });
 }
 
 export async function queryRoleDetail(params) {

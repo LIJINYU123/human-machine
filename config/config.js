@@ -135,13 +135,19 @@ export default {
               component: './corpus',
             },
             {
-              path: './history',
+              path: '/history',
               name: 'history',
               icon: 'history',
               component: './history',
             },
             {
-              path: './role',
+              path: '/account',
+              name: 'user-manage',
+              icon: 'user',
+              component: './account',
+            },
+            {
+              path: '/role',
               name: 'role',
               icon: 'team',
               component: './role',

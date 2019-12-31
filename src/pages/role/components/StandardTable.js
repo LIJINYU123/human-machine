@@ -14,7 +14,7 @@ const options = {
 };
 
 function StandardTable(props) {
-  const { data, rowKey, ...rest } = props;
+  const { data, ...rest } = props;
 
   const renderPrivileges = privileges => (
       <Row type="flex" gutter={[16, 16]}>

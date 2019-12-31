@@ -6,7 +6,6 @@ const Model = {
   state: {
     data: [],
     roleInfo: {},
-    key: undefined,
   },
   effects: {
     * fetchRole(_, { call, put }) {

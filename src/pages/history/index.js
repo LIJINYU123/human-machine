@@ -9,7 +9,7 @@ import CorpusDrawer from './components/DetailView';
 
 const { RangePicker } = DatePicker;
 
-const getValue = obj => obj.join(',');
+const getValue = obj => (obj ? obj.join(',') : []);
 
 @connect(({ historyRecordList, loading }) => ({
   historyRecordList,

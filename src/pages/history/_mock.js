@@ -1,5 +1,4 @@
 import { parse } from 'url';
-import mockjs from 'mockjs';
 
 let tableListDataSource = [];
 
