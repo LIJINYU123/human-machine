@@ -5,28 +5,33 @@ let mockData = [
   {
     userId: 'SY0111',
     name: '李雷',
-    roleName: 'administrator',
+    roleName: '管理员',
     registerTime: '2019-12-20 10:00:00',
   },
   {
     userId: 'SY0112',
     name: '张三',
-    roleName: 'administrator',
+    roleName: '管理员',
     registerTime: '2019-12-21 09:00:00',
   },
   {
     userId: 'SY0113',
     name: '李四',
-    roleName: 'user',
+    roleName: '普通用户',
     registerTime: '2019-12-22 13:00:00',
   },
   {
     userId: 'SY0114',
     name: '王五',
-    roleName: 'user',
+    roleName: '普通用户',
     registerTime: '2019-12-25 16:00:00',
   },
 ];
+
+const roleMap = {
+  administrator: '管理员',
+  user: '普通用户',
+};
 
 function getUsers(req, res, u) {
   let url = u;
@@ -91,7 +96,7 @@ function updateUser(req, res, u, b) {
   const body = (b && b.body) || req.body;
   mockData.forEach(item => {
     if (body.userId === item.userId) {
-      item.roleName = body.roleName;
+      item.roleName = roleMap[body.roleId];
     }
   });
 

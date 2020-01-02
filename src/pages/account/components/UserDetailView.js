@@ -69,7 +69,7 @@ class UserDetailView extends Component {
           </Form.Item>
           <Form.Item label={FieldLabels.roleName}>
             {
-              getFieldDecorator('roleName', {
+              getFieldDecorator('roleId', {
                 initialValue: userInfo.roleName,
               })(
                 <Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
