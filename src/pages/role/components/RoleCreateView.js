@@ -35,6 +35,28 @@ class RoleCreateView extends Component {
     });
   };
 
+  checkRoleId = (rule, value, callback) => {
+    const { roles } = this.props;
+    if (!value) {
+      callback('请输入角色唯一标识');
+    } else if (roles.filter(role => role.roleId === value).length) {
+      callback('该角色唯一标识已经存在');
+    } else {
+      callback();
+    }
+  };
+
+  checkRoleName = (rule, value, callback) => {
+    const { roles } = this.props;
+    if (!value) {
+      callback('请输入角色名称');
+    } else if (roles.filter(role => role.roleName === value).length) {
+      callback('该角色名称已经存在');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     const { visible, onCancel, form: { getFieldDecorator }, submitting } = this.props;
 
@@ -65,8 +87,7 @@ class RoleCreateView extends Component {
               getFieldDecorator('roleId', {
                 rules: [
                   {
-                    required: true,
-                    message: '请输入角色唯一标识',
+                    validator: this.checkRoleId,
                   },
                 ],
               })(<Input/>)
@@ -77,8 +98,7 @@ class RoleCreateView extends Component {
               getFieldDecorator('roleName', {
                 rules: [
                   {
-                    required: true,
-                    message: '请输入角色名称',
+                    validator: this.checkRoleName,
                   },
                 ],
               })(<Input/>)

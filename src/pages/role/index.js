@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Modal } from 'antd';
+import { Button, Card, Divider, Modal, Popconfirm } from 'antd';
 import StandardTable from './components/StandardTable';
 import RoleDetailView from './components/RoleDetailView';
 import RoleCreateView from './components/RoleCreateView';
@@ -37,7 +37,9 @@ class RoleList extends Component {
         <Fragment>
           <a onClick={() => this.handleModify(role)}>编辑</a>
           <Divider type="vertical"/>
-          <a onClick={() => this.handleDelete(role)}>删除</a>
+          <Popconfirm title="确认删除该角色吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(role)}>
+            <a>删除</a>
+          </Popconfirm>
         </Fragment>
       ),
     },
@@ -106,7 +108,8 @@ class RoleList extends Component {
         </Card>
         {/* eslint-disable-next-line max-len */}
         <RoleDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} roleInfo={this.state.roleInfo} />
-        <RoleCreateView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} />
+        {/* eslint-disable-next-line max-len */}
+        <RoleCreateView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} roles={data} />
       </PageHeaderWrapper>
     );
   }
