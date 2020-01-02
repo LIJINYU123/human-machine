@@ -1,4 +1,4 @@
-import { queryRoleList, deleteRole, queryRoleDetail, updateRoleDetail } from './service';
+import { queryRoleList, deleteRole, createRole, queryRoleDetail, updateRoleDetail } from './service';
 import { message } from 'antd';
 
 const Model = {
@@ -27,6 +27,24 @@ const Model = {
         });
       } else {
         message.error(response.message);
+      }
+    },
+
+    * createRole({ payload, callback }, { call, put }) {
+      const response = yield call(createRole, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+        const result = yield call(queryRoleList);
+        yield put({
+          type: 'role',
+          payload: result,
+        });
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
       }
     },
 

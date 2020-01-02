@@ -11,6 +11,13 @@ export async function deleteRole(params) {
   });
 }
 
+export async function createRole(params) {
+  return request('/api/roles', {
+    method: 'PUT',
+    data: params,
+  });
+}
+
 export async function queryRoleDetail(params) {
   return request('/api/role/detail', { params });
 }

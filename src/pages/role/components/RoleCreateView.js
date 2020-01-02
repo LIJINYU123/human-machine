@@ -4,14 +4,15 @@ import { Modal, Form, Input, Divider, Checkbox } from 'antd';
 import ItemData from './map';
 
 const { TextArea } = Input;
+
 // eslint-disable-next-line max-len
 const { FieldLabels, dialogInputOptions, historyRecordOptions, roleManageOptions, userManageOptions } = ItemData;
 
 @connect(({ roleList, loading }) => ({
   roleList,
-  submitting: loading.effects['roleList/updateDetail'],
+  submitting: loading.effects['roleList/createRole'],
 }))
-class RoleDetailView extends Component {
+class RoleCreateView extends Component {
   handleConfirm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
     validateFieldsAndScroll(error => {
@@ -26,7 +27,7 @@ class RoleDetailView extends Component {
         };
 
         dispatch({
-          type: 'roleList/updateDetail',
+          type: 'roleList/createRole',
           payload: fieldValues,
           callback: onCancel,
         });
@@ -35,9 +36,8 @@ class RoleDetailView extends Component {
   };
 
   render() {
-    const { visible, onCancel, roleInfo, form: { getFieldDecorator }, submitting } = this.props;
+    const { visible, onCancel, form: { getFieldDecorator }, submitting } = this.props;
 
-    const { privileges } = roleInfo;
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -48,21 +48,28 @@ class RoleDetailView extends Component {
         sm: { span: 20 },
       },
     };
+
     return (
       <Modal
-        title="角色详情"
+        title="创建角色"
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}
         onOk={this.handleConfirm}
         confirmLoading={submitting}
+        destroyOnClose
       >
         <Form {...formItemLayout} hideRequiredMark>
           <Form.Item label={FieldLabels.roleId}>
             {
               getFieldDecorator('roleId', {
-                initialValue: roleInfo.roleId,
-              })(<Input disabled/>)
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入角色唯一标识',
+                  },
+                ],
+              })(<Input/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.roleName}>
@@ -74,14 +81,13 @@ class RoleDetailView extends Component {
                     message: '请输入角色名称',
                   },
                 ],
-                initialValue: roleInfo.roleName,
               })(<Input/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.description}>
             {
               getFieldDecorator('description', {
-                initialValue: roleInfo.description,
+                initialValue: '',
               })(<TextArea rows={3}/>)
             }
           </Form.Item>
@@ -89,28 +95,28 @@ class RoleDetailView extends Component {
           <Form.Item label={FieldLabels.dialogInput}>
             {
               getFieldDecorator('dialogInput', {
-                initialValue: privileges ? privileges.dialogInput : [],
+                initialValue: [],
               })(<Checkbox.Group options={dialogInputOptions} style={{ width: '100%' }} />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.historyRecord}>
             {
               getFieldDecorator('historyRecord', {
-                initialValue: privileges ? privileges.historyRecord : [],
+                initialValue: [],
               })(<Checkbox.Group options={historyRecordOptions} style={{ width: '100%' }} />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.roleManage}>
             {
               getFieldDecorator('roleManage', {
-                initialValue: privileges ? privileges.roleManage : [],
+                initialValue: [],
               })(<Checkbox.Group options={roleManageOptions} style={{ width: '100%' }} />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.userManage}>
             {
               getFieldDecorator('userManage', {
-                initialValue: privileges ? privileges.userManage : [],
+                initialValue: [],
               })(<Checkbox.Group options={userManageOptions} style={{ width: '100%' }} />)
             }
           </Form.Item>
@@ -120,4 +126,4 @@ class RoleDetailView extends Component {
   }
 }
 
-export default Form.create()(RoleDetailView);
+export default Form.create()(RoleCreateView);

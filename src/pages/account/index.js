@@ -152,19 +152,15 @@ class UserManage extends Component {
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <div>
-            <div className={styles.tableLitOperator}>
-              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
-            </div>
-            <StandardTable
-              selectedRows={selectedRows}
-              loading={loading}
-              data={data}
-              columns={columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
-            />
-          </div>
+          <Button className={styles.tableLitOperator} icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
+          <StandardTable
+            selectedRows={selectedRows}
+            loading={loading}
+            data={data}
+            columns={columns}
+            onSelectRow={this.handleSelectRows}
+            onChange={this.handleStandardTableChange}
+          />
         </Card>
         {/* eslint-disable-next-line max-len */}
         <UserDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} userInfo={userInfo} roleInfos={roleInfos} />

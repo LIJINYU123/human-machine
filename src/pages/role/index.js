@@ -1,9 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Divider } from 'antd';
+import { Button, Card, Divider, Modal } from 'antd';
 import StandardTable from './components/StandardTable';
 import RoleDetailView from './components/RoleDetailView';
+import RoleCreateView from './components/RoleCreateView';
+import styles from './style.less';
 
 @connect(({ roleList, loading }) => ({
   roleList,
@@ -12,6 +14,8 @@ import RoleDetailView from './components/RoleDetailView';
 class RoleList extends Component {
   state = {
     modalVisible: false,
+    addModalVisible: false,
+    roleInfo: {},
   };
 
   columns = [
@@ -49,11 +53,11 @@ class RoleList extends Component {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleModify = role => {
-    const { dispatch } = this.props;
+    const { roleList: { data } } = this.props;
 
-    dispatch({
-      type: 'roleList/fetchDetail',
-      payload: { roleId: role.roleId },
+    const result = data.filter(item => item.roleId === role.roleId);
+    this.setState({
+      roleInfo: result.length ? result[0] : {},
     });
     this.setState({
       modalVisible: true,
@@ -75,11 +79,24 @@ class RoleList extends Component {
     });
   };
 
+  handleAdd = () => {
+    this.setState({
+      addModalVisible: true,
+    });
+  };
+
+  handleCancelAddModal = () => {
+    this.setState({
+      addModalVisible: false,
+    });
+  };
+
   render() {
-    const { roleList: { data, roleInfo }, loading } = this.props;
+    const { roleList: { data }, loading } = this.props;
 
     return (
       <PageHeaderWrapper>
+        <Button className={styles.tableLitOperator} icon="plus" type="primary" onClick={this.handleAdd}>新增</Button>
         <Card bordered={false}>
           <StandardTable
             loading={loading}
@@ -88,7 +105,8 @@ class RoleList extends Component {
           />
         </Card>
         {/* eslint-disable-next-line max-len */}
-        <RoleDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} roleInfo={roleInfo} />
+        <RoleDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} roleInfo={this.state.roleInfo} />
+        <RoleCreateView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} />
       </PageHeaderWrapper>
     );
   }
