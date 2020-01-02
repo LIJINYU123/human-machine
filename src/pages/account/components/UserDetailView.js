@@ -29,6 +29,8 @@ class UserDetailView extends Component {
   render() {
     // eslint-disable-next-line max-len
     const { visible, onCancel, userInfo, roleInfos, form: { getFieldDecorator }, submitting } = this.props;
+    // eslint-disable-next-line max-len
+    const roleSelects = roleInfos.map(roleInfo => <Option key={roleInfo.roleId}>{roleInfo.roleName}</Option>);
 
     const formItemLayout = {
       labelCol: {
@@ -40,9 +42,6 @@ class UserDetailView extends Component {
         sm: { span: 20 },
       },
     };
-
-    // eslint-disable-next-line max-len
-    const roleSelects = roleInfos.map(roleInfo => <Option key={roleInfo.roleId}>{roleInfo.roleName}</Option>);
 
     return (
       <Modal
@@ -91,4 +90,4 @@ class UserDetailView extends Component {
   }
 }
 
-export default Form.create(UserDetailView);
+export default Form.create()(UserDetailView);

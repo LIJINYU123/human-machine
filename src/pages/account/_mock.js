@@ -87,8 +87,20 @@ function deleteUser(req, res, u, b) {
   return res.json({ message: '删除成功', status: 'ok' });
 }
 
+function updateUser(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  mockData.forEach(item => {
+    if (body.userId === item.userId) {
+      item.roleName = body.roleName;
+    }
+  });
+
+  return res.json({ message: '更新成功', status: 'ok' });
+}
+
 export default {
   'GET /api/users': getUsers,
   'GET /api/user/detail': getUserDetail,
   'DELETE /api/users': deleteUser,
+  'POST /api/user/detail': updateUser,
 };
