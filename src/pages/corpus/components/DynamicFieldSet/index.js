@@ -202,7 +202,7 @@ export default class DynamicFieldSet extends Component {
             <Button onClick={() => this.handleReverse(this.state.isReverse)}>反转</Button>
             {
               dialogLength > 1 &&
-              <Popconfirm title="你确定删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => onRemove(dialogId)} >
+              <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => onRemove(dialogId)} >
                 <Button type="danger" style={{ marginLeft: '8px' }}>删除</Button>
               </Popconfirm>
             }

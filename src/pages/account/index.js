@@ -1,11 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider } from 'antd';
+import { Button, Card, Divider, Popconfirm, Modal } from 'antd';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
 import UserDetailView from './components/UserDetailView';
 
+const { confirm } = Modal;
 
 @connect(({ userList, loading }) => ({
   userList,
@@ -43,6 +44,16 @@ class UserManage extends Component {
           selectedRows: [],
         });
       },
+    });
+  };
+
+  showDeleteConfirm = () => {
+    confirm({
+      title: '确认删除这些用户吗？',
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: this.handleBatchDelete,
     });
   };
 
@@ -130,7 +141,9 @@ class UserManage extends Component {
           <Fragment>
             <a onClick={() => this.handleModify(user)}>编辑</a>
             <Divider type="vertical"/>
-            <a onClick={() => this.handleDelete(user)}>删除</a>
+            <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(user)}>
+              <a>删除</a>
+            </Popconfirm>
           </Fragment>
         ),
       },
@@ -141,7 +154,7 @@ class UserManage extends Component {
         <Card bordered={false}>
           <div>
             <div className={styles.tableLitOperator}>
-              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
+              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
             </div>
             <StandardTable
               selectedRows={selectedRows}
