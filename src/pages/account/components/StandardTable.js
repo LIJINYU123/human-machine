@@ -1,64 +1,85 @@
-import React, { useState, Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import styles from './style.less';
 import { Table, Alert } from 'antd';
 
 
-function StandardTable(props) {
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+class StandardTable extends Component {
+  static getDerivedStateFromProps(nextProps) {
+    if (nextProps.selectedRows.length === 0) {
+      return {
+        selectedRowKeys: [],
+      }
+    }
 
-  const { data, ...rest } = props;
-  const { list = [], pagination = false } = data || {};
-  const paginationProps = pagination ? {
-    showSizeChanger: true, showQuickJumper: true, ...pagination,
-  } : false;
+    return null;
+  }
 
-  const handleRowSelectChange = (rowKeys, selectedRows) => {
-    const { onSelectRow } = props;
+  constructor(props) {
+    super(props);
+    this.state = {
+      selectedRowKeys: [],
+    };
+  }
+
+  handleRowSelectChange = (selectedRowKeys, selectedRows) => {
+    const { onSelectRow } = this.props;
     if (onSelectRow) {
       onSelectRow(selectedRows);
     }
 
-    setSelectedRowKeys(rowKeys);
+    this.setState({
+      selectedRowKeys,
+    });
   };
 
-  const handleTableChange = (page, filters, sorters, ...argRest) => {
-    const { onChange } = props;
+  handleTableChange = (pagination, filters, sorter, ...rest) => {
+    const { onChange } = this.props;
     if (onChange) {
-      onChange(page, filters, sorters, ...argRest);
+      onChange(pagination, filters, sorter, ...rest);
     }
   };
 
-  const cleanSelectedKeys = () => {
-    if (handleRowSelectChange) {
-      handleRowSelectChange([], []);
+  cleanSelectedKeys = () => {
+    if (this.handleRowSelectChange) {
+      this.handleRowSelectChange([], []);
     }
   };
 
-  const rowSelection = {
-    selectedRowKeys,
-    onChange: handleRowSelectChange,
-  };
+  render() {
+    const { selectedRowKeys } = this.state;
+    const { data, ...rest } = this.props;
+    const { list = [], pagination = false } = data || {};
+    const paginationProps = pagination ? {
+      showSizeChanger: true, showQuickJumper: true, ...pagination,
+    } : false;
 
-  return (
-    <div className={styles.standardTable}>
-      <div className={styles.tableAlert}>
-        <Alert message={
-          <Fragment>
-            已选择{' '}
-            <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a>{' '}项&nbsp;&nbsp;<a onClick={cleanSelectedKeys}>清空</a>
-          </Fragment>
-        } type="info" showIcon />
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.handleRowSelectChange,
+    };
+
+    return (
+      <div className={styles.standardTable}>
+        <div className={styles.tableAlert}>
+          <Alert message={
+            <Fragment>
+              已选择{' '}
+              <a style={{ fontWeight: 600 }}>{selectedRowKeys.length}</a>{' '}项&nbsp;&nbsp;<a
+              onClick={this.cleanSelectedKeys}>清空</a>
+            </Fragment>
+          } type="info" showIcon/>
+        </div>
+        <Table
+          rowKey="userId"
+          rowSelection={rowSelection}
+          dataSource={list}
+          pagination={paginationProps}
+          onChange={this.handleTableChange}
+          {...rest}
+        />
       </div>
-      <Table
-        rowKey="userId"
-        rowSelection={rowSelection}
-        dataSource={list}
-        pagination={paginationProps}
-        onChange={handleTableChange}
-        {...rest}
-      />
-    </div>
-  );
+    );
+  }
 }
 
 export default StandardTable;

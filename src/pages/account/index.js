@@ -36,7 +36,7 @@ class UserManage extends Component {
     dispatch({
       type: 'userList/deleteUsers',
       payload: {
-        userIds: selectedRows.map(row => row.key),
+        userIds: selectedRows.map(row => row.userId),
       },
       callback: () => {
         this.setState({
@@ -148,7 +148,7 @@ class UserManage extends Component {
               loading={loading}
               data={data}
               columns={columns}
-              onSelectedRow={this.handleSelectRows}
+              onSelectRow={this.handleSelectRows}
               onChange={this.handleStandardTableChange}
             />
           </div>

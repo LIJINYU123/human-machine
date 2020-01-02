@@ -20,7 +20,7 @@ const Model = {
       });
     },
 
-    * deleteUsers({ payload }, { call, put }) {
+    * deleteUsers({ payload, callback }, { call, put }) {
       const response = yield call(deleteUser, payload);
       if (response.status === 'ok') {
         message.success(response.message);
@@ -29,6 +29,9 @@ const Model = {
           type: 'user',
           payload: result,
         });
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
       }
