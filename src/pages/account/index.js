@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Popconfirm, Modal } from 'antd';
+import { Button, Card, Divider, Popconfirm, Modal, Input, Icon } from 'antd';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
 import UserDetailView from './components/UserDetailView';
+import Highlighter from 'react-highlight-words';
 
 const { confirm } = Modal;
 
@@ -16,6 +17,8 @@ class UserManage extends Component {
   state = {
     modalVisible: false,
     selectedRows: [],
+    searchText: '',
+    searchedColumn: '',
   };
 
   componentDidMount() {
@@ -74,6 +77,9 @@ class UserManage extends Component {
       params.sorter = `${sorter.field}_${sorter.order}`;
     }
 
+    if (this.state.searchText !== '') {
+      params[this.state.searchedColumn] = this.state.searchText;
+    }
     dispatch({
       type: 'userList/fetchUsers',
       payload: params,
@@ -112,6 +118,66 @@ class UserManage extends Component {
     });
   };
 
+  getColumnSearchProps = dataIndex => ({
+    // eslint-disable-next-line no-shadow
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input ref={node => { this.searchInput = node; }}
+               placeholder={`搜索 ${dataIndex}`}
+               value={selectedKeys[0]}
+               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+               onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+               style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          搜索
+        </Button>
+        <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }} >
+          重置
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (
+      <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
+    ),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text => (this.state.searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[this.state.searchText]}
+        autoEscape
+        textToHighlight={text.toString()}
+      />
+    ) : (text)),
+  });
+
+  // eslint-disable-next-line no-shadow
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({
+      searchText: '',
+    });
+  };
+
   render() {
     const { userList: { data, userInfo, roleInfos }, loading } = this.props;
     const { selectedRows } = this.state;
@@ -120,10 +186,12 @@ class UserManage extends Component {
       {
         title: '用户名',
         dataIndex: 'userId',
+        ...this.getColumnSearchProps('userId'),
       },
       {
         title: '真实姓名',
         dataIndex: 'name',
+        ...this.getColumnSearchProps('name'),
       },
       {
         title: '角色名称',

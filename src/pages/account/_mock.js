@@ -55,6 +55,16 @@ function getUsers(req, res, u) {
     });
   }
 
+  if (params.userId) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.userId.toLowerCase().includes(params.userId.toLowerCase()));
+  }
+
+  if (params.name) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.name.toLowerCase().includes(params.name.toLowerCase()));
+  }
+
   let pageSize = 10;
   if (params.pageSize) {
     pageSize = parseInt(`${params.pageSize}`, 0);
