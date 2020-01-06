@@ -56,6 +56,7 @@ class RoleDetailView extends Component {
         onCancel={onCancel}
         onOk={this.handleConfirm}
         confirmLoading={submitting}
+        destroyOnClose
       >
         <Form {...formItemLayout} hideRequiredMark>
           <Form.Item label={FieldLabels.roleId}>

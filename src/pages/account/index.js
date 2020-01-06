@@ -2,10 +2,10 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Divider, Popconfirm, Modal, Input, Icon } from 'antd';
+import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
 import UserDetailView from './components/UserDetailView';
-import Highlighter from 'react-highlight-words';
 
 const { confirm } = Modal;
 
@@ -18,6 +18,7 @@ class UserManage extends Component {
     modalVisible: false,
     selectedRows: [],
     searchText: '',
+    userInfo: {},
     searchedColumn: '',
   };
 
@@ -87,11 +88,12 @@ class UserManage extends Component {
   };
 
   handleModify = user => {
-    const { dispatch } = this.props;
+    const { dispatch, userList: { data } } = this.props;
 
-    dispatch({
-      type: 'userList/fetchDetail',
-      payload: { userId: user.userId },
+    const { list } = data;
+    const result = list.filter(item => item.userId === user.userId);
+    this.setState({
+      userInfo: result[0],
     });
 
     dispatch({
@@ -179,8 +181,8 @@ class UserManage extends Component {
   };
 
   render() {
-    const { userList: { data, userInfo, roleInfos }, loading } = this.props;
-    const { selectedRows } = this.state;
+    const { userList: { data, roleInfos }, loading } = this.props;
+    const { selectedRows, userInfo } = this.state;
 
     const columns = [
       {

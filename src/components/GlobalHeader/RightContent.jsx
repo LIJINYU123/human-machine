@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'dva';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
+import NoticeIconView from './NoticeIconView';
 
 const GlobalHeaderRight = props => {
   const { theme, layout } = props;
@@ -13,6 +14,7 @@ const GlobalHeaderRight = props => {
 
   return (
     <div className={className}>
+      <NoticeIconView />
       <Avatar />
     </div>
   );

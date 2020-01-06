@@ -1,4 +1,4 @@
-import { queryUserList, queryUserDetail, deleteUser, queryRoleList, updateUserDetail } from './service';
+import { queryUserList, deleteUser, queryRoleList, updateUserDetail } from './service';
 import { message } from 'antd';
 
 const Model = {
@@ -8,7 +8,6 @@ const Model = {
       list: [],
       pagination: {},
     },
-    userInfo: {},
     roleInfos: [],
   },
   effects: {
@@ -35,14 +34,6 @@ const Model = {
       } else {
         message.error(response.message);
       }
-    },
-
-    * fetchDetail({ payload }, { call, put }) {
-      const response = yield call(queryUserDetail, payload);
-      yield put({
-        type: 'saveDetail',
-        payload: response,
-      });
     },
 
     * updateDetail({ payload, callback }, { call, put }) {
@@ -74,9 +65,6 @@ const Model = {
   reducers: {
     user(state, action) {
       return { ...state, data: action.payload };
-    },
-    saveDetail(state, action) {
-      return { ...state, userInfo: action.payload };
     },
     saveRoles(state, action) {
       return { ...state, roleInfos: action.payload };

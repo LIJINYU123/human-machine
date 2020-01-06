@@ -29,6 +29,7 @@ class GlobalHeaderRight extends Component {
       });
     }
   };
+
   handleNoticeClear = (title, key) => {
     const { dispatch } = this.props;
     message.success(
@@ -44,6 +45,7 @@ class GlobalHeaderRight extends Component {
       });
     }
   };
+
   getNoticeData = () => {
     const { notices = [] } = this.props;
 
@@ -85,6 +87,7 @@ class GlobalHeaderRight extends Component {
     });
     return groupBy(newNotices, 'type');
   };
+
   getUnreadData = noticeData => {
     const unreadMsg = {};
     Object.keys(noticeData).forEach(key => {
@@ -133,18 +136,6 @@ class GlobalHeaderRight extends Component {
           })}
           emptyText={formatMessage({
             id: 'component.globalHeader.notification.empty',
-          })}
-          showViewMore
-        />
-        <NoticeIcon.Tab
-          tabKey="message"
-          count={unreadMsg.message}
-          list={noticeData.message}
-          title={formatMessage({
-            id: 'component.globalHeader.message',
-          })}
-          emptyText={formatMessage({
-            id: 'component.globalHeader.message.empty',
           })}
           showViewMore
         />

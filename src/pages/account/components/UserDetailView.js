@@ -51,6 +51,7 @@ class UserDetailView extends Component {
         onCancel={onCancel}
         onOk={this.handleConfirm}
         confirmLoading={submitting}
+        destroyOnClose
       >
         <Form {...formItemLayout}>
           <Form.Item label={FieldLabels.userId}>
