@@ -8,6 +8,8 @@ export default {
     name: '李锦宇',
     avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
     userid: 'SY0111',
+    unreadCount: 8,
+    notifyCount: 9,
   },
   // GET POST 可省略
   'GET /api/users': [
