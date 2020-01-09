@@ -41,7 +41,7 @@ export default {
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE1NzUwMzkzMjQsInVzZXJuYW1lIjoiYWRtaW4ifQ.eqcIWCQO5z_dU1purEKr66VkMPC6q8WEn4h2DEquOkA',
       );
       res.header('UserID', 'SYECO');
-      res.header('DepartmentId', 'superDep');
+      res.header('DepartmentId', 'operation');
       res.header('Privileges', JSON.stringify({
         dialogInput: ['add'],
         historyRecord: ['modify', 'query', 'delete'],

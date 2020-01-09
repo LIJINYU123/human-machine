@@ -12,14 +12,18 @@ const { FieldLabels } = ItemData;
 }))
 class UserDetailView extends Component {
   handleConfirm = () => {
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    // eslint-disable-next-line max-len
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel, userInfo } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-
+        const fieldValues = {
+          ...values,
+          departmentId: userInfo.departmentId,
+        };
         dispatch({
           type: 'userList/updateDetail',
-          payload: values,
+          payload: fieldValues,
           callback: onCancel,
         })
       }
@@ -30,7 +34,9 @@ class UserDetailView extends Component {
     // eslint-disable-next-line max-len
     const { visible, onCancel, userInfo, roleInfos, form: { getFieldDecorator }, submitting } = this.props;
     // eslint-disable-next-line max-len
-    const roleSelects = roleInfos.map(roleInfo => <Option key={roleInfo.roleId}>{`${roleInfo.roleId}(${roleInfo.roleName})`}</Option>);
+    const roleSelects = roleInfos.map(roleInfo => <Option key={roleInfo.roleId}>{roleInfo.roleName}</Option>);
+
+    const filterResult = roleInfos.filter(roleInfo => roleInfo.roleName === userInfo.roleName);
 
     const formItemLayout = {
       labelCol: {
@@ -71,7 +77,7 @@ class UserDetailView extends Component {
           <Form.Item label={FieldLabels.roleName}>
             {
               getFieldDecorator('roleId', {
-                initialValue: userInfo.roleName,
+                initialValue: filterResult.length ? filterResult[0].roleId : '',
               })(
                 <Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                   {roleSelects}

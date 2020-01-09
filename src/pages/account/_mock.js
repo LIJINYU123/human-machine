@@ -1,4 +1,5 @@
 import { parse } from 'url';
+import moment from 'moment';
 
 
 let mockData = [
@@ -7,24 +8,49 @@ let mockData = [
     name: '李雷',
     roleName: '管理员',
     registerTime: '2019-12-20 10:00:00',
+    departmentId: 'development',
   },
   {
     userId: 'SY0112',
     name: '张三',
     roleName: '管理员',
     registerTime: '2019-12-21 09:00:00',
+    departmentId: 'development',
   },
   {
     userId: 'SY0113',
     name: '李四',
     roleName: '普通用户',
     registerTime: '2019-12-22 13:00:00',
+    departmentId: 'development',
   },
   {
     userId: 'SY0114',
     name: '王五',
     roleName: '普通用户',
     registerTime: '2019-12-25 16:00:00',
+    departmentId: 'development',
+  },
+  {
+    userId: 'SY0115',
+    name: '杨六',
+    roleName: '管理员',
+    registerTime: '2020-01-08 09:00:00',
+    departmentId: 'operation',
+  },
+  {
+    userId: 'SY0116',
+    name: '顾七',
+    roleName: '普通用户',
+    registerTime: '2020-01-09 13:00:00',
+    departmentId: 'operation',
+  },
+  {
+    userId: 'SY0117',
+    name: '何九',
+    roleName: '普通用户',
+    registerTime: '2019-12-25 16:00:00',
+    departmentId: 'operation',
   },
 ];
 
@@ -34,6 +60,7 @@ const roleMap = {
 };
 
 function getUsers(req, res, u) {
+  const departmentId = req.get('DepartmentId');
   let url = u;
 
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
@@ -42,7 +69,7 @@ function getUsers(req, res, u) {
   }
 
   const params = parse(url, true).query;
-  let dataSource = mockData;
+  let dataSource = mockData.filter(item => item.departmentId === departmentId);
 
   if (params.sorter) {
     const s = params.sorter.split('_');
@@ -104,11 +131,24 @@ function deleteUser(req, res, u, b) {
 
 function updateUser(req, res, u, b) {
   const body = (b && b.body) || req.body;
+  const accounts = [];
   mockData.forEach(item => {
     if (body.userId === item.userId) {
       item.roleName = roleMap[body.roleId];
+      item.departmentId = body.departmentId;
     }
+    accounts.push(item.userId);
   });
+
+  if (!accounts.includes(body.userId)) {
+    mockData.push({
+      userId: body.userId,
+      name: 'XXX',
+      roleName: roleMap[body.roleId],
+      registerTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+      departmentId: body.departmentId,
+    });
+  }
 
   return res.json({ message: '更新成功', status: 'ok' });
 }

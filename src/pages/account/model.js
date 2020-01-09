@@ -1,4 +1,5 @@
 import { queryUserList, deleteUser, queryRoleList, updateUserDetail } from './service';
+import { queryNoDepAccounts } from '../department/service';
 import { message } from 'antd';
 
 const Model = {
@@ -9,6 +10,7 @@ const Model = {
       pagination: {},
     },
     roleInfos: [],
+    accounts: [],
   },
   effects: {
     * fetchUsers({ payload }, { call, put }) {
@@ -61,6 +63,14 @@ const Model = {
         payload: response,
       });
     },
+
+    * fetchNoDepAccounts(_, { call, put }) {
+      const response = yield call(queryNoDepAccounts);
+      yield put({
+        type: 'saveAccounts',
+        payload: response,
+      });
+    },
   },
   reducers: {
     user(state, action) {
@@ -68,6 +78,9 @@ const Model = {
     },
     saveRoles(state, action) {
       return { ...state, roleInfos: action.payload };
+    },
+    saveAccounts(state, action) {
+      return { ...state, accounts: action.payload };
     },
   },
 };

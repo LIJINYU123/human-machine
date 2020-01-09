@@ -6,6 +6,7 @@ import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
 import UserDetailView from './components/UserDetailView';
+import UserAddView from './components/UserAddView';
 
 const { confirm } = Modal;
 
@@ -16,6 +17,7 @@ const { confirm } = Modal;
 class UserManage extends Component {
   state = {
     modalVisible: false,
+    addModalVisible: false,
     selectedRows: [],
     searchText: '',
     userInfo: {},
@@ -105,6 +107,27 @@ class UserManage extends Component {
     });
   };
 
+  handleAddto = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userList/fetchNoDepAccounts',
+    });
+
+    dispatch({
+      type: 'userList/fetchRoles',
+    });
+
+    this.setState({
+      addModalVisible: true,
+    });
+  };
+
+  handleCancelAddModal = () => {
+    this.setState({
+      addModalVisible: false,
+    });
+  };
+
   handleDelete = user => {
     const { dispatch } = this.props;
 
@@ -181,7 +204,7 @@ class UserManage extends Component {
   };
 
   render() {
-    const { userList: { data, roleInfos }, loading } = this.props;
+    const { userList: { data, roleInfos, accounts }, loading } = this.props;
     const { selectedRows, userInfo } = this.state;
 
     const columns = [
@@ -223,7 +246,7 @@ class UserManage extends Component {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary">添加</Button>
+            <Button icon="plus" type="primary" onClick={this.handleAddto}>添加</Button>
             <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
           </div>
           <StandardTable
@@ -237,6 +260,8 @@ class UserManage extends Component {
         </Card>
         {/* eslint-disable-next-line max-len */}
         <UserDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} userInfo={userInfo} roleInfos={roleInfos} />
+        {/* eslint-disable-next-line max-len */}
+        <UserAddView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} roleInfos={roleInfos} noDepAccounts={accounts} />
       </PageHeaderWrapper>
     );
   }
