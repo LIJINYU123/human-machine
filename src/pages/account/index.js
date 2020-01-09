@@ -222,7 +222,10 @@ class UserManage extends Component {
     return (
       <PageHeaderWrapper>
         <Card bordered={false}>
-          <Button className={styles.tableLitOperator} icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
+          <div className={styles.tableListOperator}>
+            <Button icon="plus" type="primary">添加</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
+          </div>
           <StandardTable
             selectedRows={selectedRows}
             loading={loading}

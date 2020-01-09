@@ -64,6 +64,7 @@ const request = extend({
 request.interceptors.request.use(async (url, options) => {
   const token = localStorage.getItem('Authorization');
   const userid = localStorage.getItem('UserID');
+  const departmentId = localStorage.getItem('DepartmentId');
 
   if ((url.indexOf('login/account') !== -1 || url.indexOf('register') !== -1 || url.indexOf('reset/password') !== -1) && !token) {
     const { headers } = options;
@@ -87,6 +88,7 @@ request.interceptors.request.use(async (url, options) => {
           ...headers,
           Authorization: token,
           UserID: userid,
+          DepartmentId: departmentId,
         },
       },
     };
@@ -100,9 +102,13 @@ request.interceptors.request.use(async (url, options) => {
 request.interceptors.response.use((response, _) => {
   const token = response.headers.get('Authorization');
   const userid = response.headers.get('UserID');
-  if (token && userid) {
+  const departmentId = response.headers.get('DepartmentId');
+  const privileges = response.headers.get('Privileges');
+  if (token && userid && departmentId && privileges) {
     localStorage.setItem('Authorization', token);
     localStorage.setItem('UserID', userid);
+    localStorage.setItem('DepartmentId', departmentId);
+    localStorage.setItem('Privileges', privileges);
   }
 
   return response;

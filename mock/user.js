@@ -33,26 +33,25 @@ export default {
     },
   ],
   'POST /api/login/account': (req, res) => {
-    const { password, userName } = req.body;
+    const { userName } = req.body;
 
-    if (userName === 'admin') {
+    if (userName === 'SYECO') {
       res.header(
         'Authorization',
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE1NzUwMzkzMjQsInVzZXJuYW1lIjoiYWRtaW4ifQ.eqcIWCQO5z_dU1purEKr66VkMPC6q8WEn4h2DEquOkA',
       );
-      res.header('UserID', 'admin');
+      res.header('UserID', 'SYECO');
+      res.header('DepartmentId', 'superDep');
+      res.header('Privileges', JSON.stringify({
+        dialogInput: ['add'],
+        historyRecord: ['modify', 'query', 'delete'],
+        roleManage: ['add', 'modify', 'query', 'delete'],
+        userManage: ['add', 'modify', 'query', 'delete'],
+      }));
       res.send({
         status: 'ok',
         message: 'success',
-        currentAuthority: 'admin',
-      });
-      return;
-    }
-
-    if (password === 'ant.design' && userName === 'user') {
-      res.send({
-        status: 'ok',
-        currentAuthority: 'user',
+        currentAuthority: 'superAdmin',
       });
       return;
     }
