@@ -141,16 +141,29 @@ export default {
               component: './history',
             },
             {
-              path: '/account',
-              name: 'user-manage',
-              icon: 'user',
-              component: './account',
-            },
-            {
-              path: '/role',
-              name: 'role',
-              icon: 'team',
-              component: './role',
+              path: '/agency',
+              name: 'agency',
+              icon: 'audit',
+              routes: [
+                {
+                  name: 'department',
+                  icon: 'audit',
+                  path: '/agency/department',
+                  component: './department',
+                },
+                {
+                  name: 'user-manage',
+                  icon: 'user',
+                  path: '/agency/account',
+                  component: './account',
+                },
+                {
+                  name: 'role',
+                  icon: 'team',
+                  path: '/agency/role',
+                  component: './role',
+                }
+              ],
             },
             {
               path: '/form',

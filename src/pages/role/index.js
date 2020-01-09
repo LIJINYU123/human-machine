@@ -98,7 +98,7 @@ class RoleList extends Component {
 
     return (
       <PageHeaderWrapper>
-        <Button className={styles.tableLitOperator} icon="plus" type="primary" onClick={this.handleAdd}>新增</Button>
+        <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAdd}>新增</Button>
         <Card bordered={false}>
           <StandardTable
             loading={loading}
