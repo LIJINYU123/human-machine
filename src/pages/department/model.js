@@ -1,4 +1,4 @@
-import { queryDepList, createDepartment, queryNoDepAccounts, deleteDepartment } from './service';
+import { queryDepList, createDepartment, queryNoDepAccounts, deleteDepartment, updateDepartment } from './service';
 import { message } from 'antd';
 
 
@@ -46,6 +46,24 @@ const Model = {
 
     * deleteDepartment({ payload, callback }, { call, put }) {
       const response = yield call(deleteDepartment, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+        const result = yield call(queryDepList);
+        yield put({
+          type: 'department',
+          payload: result,
+        });
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
+    },
+
+    * updateDepartment({ payload, callback }, { call, put }) {
+      const response = yield call(updateDepartment, payload);
       if (response.status === 'ok') {
         message.success(response.message);
         const result = yield call(queryDepList);

@@ -21,3 +21,10 @@ export async function deleteDepartment(params) {
     data: params,
   });
 }
+
+export async function updateDepartment(params) {
+  return request('/api/department', {
+    method: 'POST',
+    data: params,
+  });
+}

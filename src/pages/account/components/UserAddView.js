@@ -13,17 +13,12 @@ const { FieldLabels } = ItemData;
 class UserAddView extends Component {
   handleConfirm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
-    const departmentId = localStorage.getItem('DepartmentId');
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        const fieldValues = {
-          ...values,
-          departmentId,
-        };
         dispatch({
           type: 'userList/updateDetail',
-          payload: fieldValues,
+          payload: values,
           callback: onCancel,
         })
       }

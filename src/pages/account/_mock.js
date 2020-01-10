@@ -130,12 +130,13 @@ function deleteUser(req, res, u, b) {
 }
 
 function updateUser(req, res, u, b) {
+  const departmentId = req.get('DepartmentId');
   const body = (b && b.body) || req.body;
   const accounts = [];
   mockData.forEach(item => {
     if (body.userId === item.userId) {
       item.roleName = roleMap[body.roleId];
-      item.departmentId = body.departmentId;
+      item.departmentId = departmentId;
     }
     accounts.push(item.userId);
   });
@@ -146,7 +147,7 @@ function updateUser(req, res, u, b) {
       name: 'XXX',
       roleName: roleMap[body.roleId],
       registerTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
-      departmentId: body.departmentId,
+      departmentId,
     });
   }
 

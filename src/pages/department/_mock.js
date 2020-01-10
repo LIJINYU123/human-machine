@@ -5,6 +5,7 @@ let mockData = [
     departmentId: 'deveopment',
     departmentName: '研发部门',
     administrator: 'SYDEV',
+    adminName: '研发部管理员',
     userAmount: 10,
     createdTime: '2020-01-08 00:00:00',
   },
@@ -12,6 +13,7 @@ let mockData = [
     departmentId: 'operation',
     departmentName: '运营部门',
     administrator: 'SYOPE',
+    adminName: '运营部管理员',
     userAmount: 20,
     createdTime: '2020-01-06 00:00:00',
   },
@@ -40,6 +42,20 @@ function createDepartment(req, res, u, b) {
   return res.json({ message: '创建成功', status: 'ok' });
 }
 
+function updateDepartment(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  mockData.forEach(item => {
+    if (body.departmentId === item.departmentId) {
+      item.departmentName = body.departmentName;
+      item.administrator = body.administrator;
+      const result = mockAccounts.filter(account => account.userId === body.administrator);
+      item.adminName = result.length ? result[0].name : '';
+    }
+  });
+
+  return res.json({ message: '更新成功', status: 'ok' });
+}
+
 function getNoDepAccounts(req, res) {
   return res.json(mockAccounts);
 }
@@ -54,5 +70,6 @@ export default {
   'GET /api/department': getDepartment,
   'PUT /api/department': createDepartment,
   'DELETE /api/department': deleteDepartment,
+  'POST /api/department': updateDepartment,
   'GET /api/no-dep-accounts': getNoDepAccounts,
 }

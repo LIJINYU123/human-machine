@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Divider, Popconfirm, Table } from 'antd';
 import DepCreateView from './component/DepCreateView';
+import DepDetailView from './component/DepDetailView';
 import styles from './style.less';
 
 @connect(({ departmentList, loading }) => ({
@@ -44,7 +45,7 @@ class DepartmentList extends Component {
       title: '操作',
       render: (_, department) => (
         <Fragment>
-          <a>编辑</a>
+          <a onClick={() => this.handleModify(department)}>编辑</a>
           <Divider type="vertical" />
           <Popconfirm title="确定删除该部门吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(department)}>
             <a>删除</a>
@@ -60,6 +61,12 @@ class DepartmentList extends Component {
       type: 'departmentList/fetchDepartment',
     });
   }
+
+  handleCancelModal = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
 
   handleDelete = department => {
     const { dispatch } = this.props;
@@ -77,6 +84,23 @@ class DepartmentList extends Component {
 
     this.setState({
       addModalVisible: true,
+    });
+  };
+
+  handleModify = department => {
+    const { dispatch, departmentList: { data } } = this.props;
+
+    const result = data.filter(item => item.departmentId === department.departmentId);
+    this.setState({
+      departmentInfo: result[0],
+    });
+
+    dispatch({
+      type: 'departmentList/fetchNoDepAccounts',
+    });
+
+    this.setState({
+      modalVisible: true,
     });
   };
 
@@ -101,6 +125,8 @@ class DepartmentList extends Component {
             columns={this.columns}
           />
         </Card>
+        {/* eslint-disable-next-line max-len */}
+        <DepDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} departmentInfo={this.state.departmentInfo} noDepAccounts={accounts} />
         {/* eslint-disable-next-line max-len */}
         <DepCreateView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} noDepAccounts={accounts} />
       </PageHeaderWrapper>

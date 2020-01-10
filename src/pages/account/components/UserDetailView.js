@@ -17,8 +17,10 @@ class UserDetailView extends Component {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
+        const { userId, roleId } = values;
         const fieldValues = {
-          ...values,
+          userId,
+          roleId,
           departmentId: userInfo.departmentId,
         };
         dispatch({
