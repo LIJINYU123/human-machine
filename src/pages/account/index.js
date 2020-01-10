@@ -234,8 +234,8 @@ class UserManage extends Component {
           <Fragment>
             <a onClick={() => this.handleModify(user)}>编辑</a>
             <Divider type="vertical"/>
-            <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(user)}>
-              <a>删除</a>
+            <Popconfirm title="确认移除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(user)}>
+              <a>移除</a>
             </Popconfirm>
           </Fragment>
         ),
@@ -247,7 +247,7 @@ class UserManage extends Component {
         <Card bordered={false}>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={this.handleAddto}>添加</Button>
-            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>移除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}
