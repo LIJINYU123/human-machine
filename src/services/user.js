@@ -8,3 +8,7 @@ export async function queryCurrent() {
 export async function queryNotices() {
   return request('/api/notices');
 }
+
+export async function queryDirectory() {
+  return request('/api/directory');
+}

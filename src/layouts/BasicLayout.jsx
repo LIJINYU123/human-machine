@@ -75,6 +75,9 @@ const BasicLayout = props => {
     dispatch,
     children,
     settings,
+    user = {
+      directory: [],
+    },
     location = {
       pathname: '/',
     },
@@ -87,6 +90,9 @@ const BasicLayout = props => {
     if (dispatch) {
       dispatch({
         type: 'user/fetchCurrent',
+      });
+      dispatch({
+        type: 'user/fetchDirectory',
       });
       dispatch({
         type: 'settings/getSetting',
@@ -140,7 +146,7 @@ const BasicLayout = props => {
           );
         }}
         footerRender={footerRender}
-        menuDataRender={menuDataRender}
+        menuDataRender={() => user.directory }
         formatMessage={formatMessage}
         rightContentRender={rightProps => <RightContent {...rightProps} />}
         {...props}
@@ -155,7 +161,8 @@ const BasicLayout = props => {
   );
 };
 
-export default connect(({ global, settings }) => ({
+export default connect(({ global, settings, user }) => ({
   collapsed: global.collapsed,
   settings,
+  user,
 }))(BasicLayout);

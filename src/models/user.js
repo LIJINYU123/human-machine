@@ -1,8 +1,9 @@
-import { queryCurrent, query as queryUsers } from '@/services/user';
+import { queryCurrent, queryDirectory, query as queryUsers } from '@/services/user';
 const UserModel = {
   namespace: 'user',
   state: {
     currentUser: {},
+    directory: [],
   },
   effects: {
     *fetch(_, { call, put }) {
@@ -20,10 +21,21 @@ const UserModel = {
         payload: response,
       });
     },
+
+    * fetchDirectory(_, { call, put }) {
+      const response = yield call(queryDirectory);
+      yield put({
+        type: 'saveDirectory',
+        payload: response,
+      });
+    },
   },
   reducers: {
     saveCurrentUser(state, action) {
       return { ...state, currentUser: action.payload || {} };
+    },
+    saveDirectory(state, action) {
+      return { ...state, directory: action.payload || [] };
     },
 
     changeNotifyCount(
