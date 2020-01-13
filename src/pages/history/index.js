@@ -22,7 +22,6 @@ class HistoryList extends Component {
     drawerVisible: false,
     filteredInfo: null,
     modifyAuthority: false,
-    queryAuthority: false,
     deleteAuthority: false,
     exportAuthority: false,
   };
@@ -47,7 +46,6 @@ class HistoryList extends Component {
     const { historyRecord } = privileges;
     this.setState({
       modifyAuthority: historyRecord.includes('modify'),
-      queryAuthority: historyRecord.includes('query'),
       deleteAuthority: historyRecord.includes('delete'),
       exportAuthority: historyRecord.includes('export'),
     });
@@ -222,11 +220,11 @@ class HistoryList extends Component {
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
-            <Button type="primary" htmlType="submit" disabled={!this.state.queryAuthority}>
+            <Button type="primary" htmlType="submit">
               查询
             </Button>
             {/* eslint-disable-next-line max-len */}
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormRest} disabled={!this.state.queryAuthority}>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleFormRest}>
               重置
             </Button>
           </Col>
@@ -238,7 +236,7 @@ class HistoryList extends Component {
 
   render() {
     const { historyRecordList: { data, editors, detailInfo }, loading } = this.props;
-    const { selectedRows, drawerVisible, queryAuthority, exportAuthority, deleteAuthority, modifyAuthority } = this.state;
+    const { selectedRows, drawerVisible, exportAuthority, deleteAuthority, modifyAuthority } = this.state;
     let { filteredInfo } = this.state;
 
     filteredInfo = filteredInfo || {};
@@ -275,11 +273,9 @@ class HistoryList extends Component {
         title: '操作',
         render: (_, record) => (
           <Fragment>
+            <a onClick={() => this.handleReviewDetails(record)}>查看详情</a>
             {
-              queryAuthority && <a onClick={() => this.handleReviewDetails(record)}>查看详情</a>
-            }
-            {
-              queryAuthority && exportAuthority && <Divider type="vertical"/>
+              exportAuthority && <Divider type="vertical"/>
             }
             {
               exportAuthority && <a onClick={() => this.handleExport(record)}>导出</a>

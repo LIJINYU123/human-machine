@@ -16,40 +16,27 @@ class RoleList extends Component {
     modalVisible: false,
     addModalVisible: false,
     roleInfo: {},
+    addAuthority: false,
+    modifyAuthority: false,
+    deleteAuthority: false,
   };
 
-  columns = [
-    {
-      title: '角色标识',
-      dataIndex: 'roleId',
-    },
-    {
-      title: '角色名称',
-      dataIndex: 'roleName',
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'createdTime',
-    },
-    {
-      title: '操作',
-      render: (_, role) => (
-        <Fragment>
-          <a onClick={() => this.handleModify(role)}>编辑</a>
-          <Divider type="vertical"/>
-          <Popconfirm title="确认删除该角色吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(role)}>
-            <a>删除</a>
-          </Popconfirm>
-        </Fragment>
-      ),
-    },
-  ];
+
 
   componentDidMount() {
     const { dispatch } = this.props;
 
     dispatch({
       type: 'roleList/fetchRole',
+    });
+
+    const privilegeStr = localStorage.getItem('Privileges');
+    const privileges = JSON.parse(privilegeStr);
+    const { roleManage } = privileges;
+    this.setState({
+      addAuthority: roleManage.includes('add'),
+      modifyAuthority: roleManage.includes('modify'),
+      deleteAuthority: roleManage.includes('delete'),
     });
   }
 
@@ -95,15 +82,43 @@ class RoleList extends Component {
 
   render() {
     const { roleList: { data }, loading } = this.props;
+    const { addAuthority, modifyAuthority, deleteAuthority } = this.state;
+
+    const columns = [
+      {
+        title: '角色标识',
+        dataIndex: 'roleId',
+      },
+      {
+        title: '角色名称',
+        dataIndex: 'roleName',
+      },
+      {
+        title: '创建时间',
+        dataIndex: 'createdTime',
+      },
+      {
+        title: '操作',
+        render: (_, role) => (
+          <Fragment>
+            { modifyAuthority && <a onClick={() => this.handleModify(role)}>编辑</a> }
+            { modifyAuthority && deleteAuthority && <Divider type="vertical"/> }
+            <Popconfirm title="确认删除该角色吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(role)}>
+              { deleteAuthority && <a>删除</a> }
+            </Popconfirm>
+          </Fragment>
+        ),
+      },
+    ];
 
     return (
       <PageHeaderWrapper>
-        <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAdd}>新增</Button>
+        <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAdd} disabled={!addAuthority}>新增</Button>
         <Card bordered={false}>
           <StandardTable
             loading={loading}
             data={data}
-            columns={this.columns}
+            columns={columns}
           />
         </Card>
         {/* eslint-disable-next-line max-len */}

@@ -22,6 +22,9 @@ class UserManage extends Component {
     searchText: '',
     userInfo: {},
     searchedColumn: '',
+    addAuthority: false,
+    modifyAuthority: false,
+    deleteAuthority: false,
   };
 
   componentDidMount() {
@@ -34,6 +37,15 @@ class UserManage extends Component {
     dispatch({
       type: 'userList/fetchUsers',
       payload: params,
+    });
+
+    const privilegeStr = localStorage.getItem('Privileges');
+    const privileges = JSON.parse(privilegeStr);
+    const { userManage } = privileges;
+    this.setState({
+      addAuthority: userManage.includes('add'),
+      modifyAuthority: userManage.includes('modify'),
+      deleteAuthority: userManage.includes('delete'),
     });
   }
 
@@ -205,7 +217,7 @@ class UserManage extends Component {
 
   render() {
     const { userList: { data, roleInfos, accounts }, loading } = this.props;
-    const { selectedRows, userInfo } = this.state;
+    const { selectedRows, userInfo, addAuthority, modifyAuthority, deleteAuthority } = this.state;
 
     const columns = [
       {
@@ -232,10 +244,10 @@ class UserManage extends Component {
         title: '操作',
         render: (_, user) => (
           <Fragment>
-            <a onClick={() => this.handleModify(user)}>编辑</a>
-            <Divider type="vertical"/>
+            { modifyAuthority && <a onClick={() => this.handleModify(user)}>编辑</a> }
+            { modifyAuthority && deleteAuthority && <Divider type="vertical"/> }
             <Popconfirm title="确认移除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(user)}>
-              <a>移除</a>
+              { deleteAuthority && <a>移除</a> }
             </Popconfirm>
           </Fragment>
         ),
@@ -246,8 +258,8 @@ class UserManage extends Component {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={this.handleAddto}>添加</Button>
-            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>移除</Button>
+            <Button icon="plus" type="primary" onClick={this.handleAddto} disabled={!addAuthority}>添加</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length || !deleteAuthority} onClick={this.showDeleteConfirm}>移除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}
