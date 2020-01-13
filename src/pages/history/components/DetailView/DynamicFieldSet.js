@@ -81,7 +81,7 @@ export default class DynamicFieldSet extends Component {
 
   getUserFields = () => {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { dialogId } = this.props;
+    const { dialogId, disabled } = this.props;
     const { detailDialogInfos } = this.state;
     let userKeys = [];
     if (Object.keys(detailDialogInfos).length > 0) {
@@ -100,8 +100,8 @@ export default class DynamicFieldSet extends Component {
                 }],
               initialValue: detailDialogInfos[userKey],
             })(<div style={{ display: 'flex' }}>
-              <Input placeholder="请输入用户回答" defaultValue={detailDialogInfos[userKey]}/>
-              {userKeys.length > 1 ? (
+              <Input placeholder="请输入用户回答" defaultValue={detailDialogInfos[userKey]} disabled={disabled}/>
+              {userKeys.length > 1 ? (!disabled &&
                 <Icon className={styles.dynamicDeleteButton} type="minus-circle"
                       onClick={() => this.handleUserRemove(userKey)}/>) : null}
             </div>)
@@ -113,7 +113,7 @@ export default class DynamicFieldSet extends Component {
 
   getCustomerFields = () => {
     const { getFieldDecorator, getFieldValue } = this.props.form;
-    const { dialogId } = this.props;
+    const { dialogId, disabled } = this.props;
     const { detailDialogInfos } = this.state;
 
     let customKeys = [];
@@ -133,8 +133,8 @@ export default class DynamicFieldSet extends Component {
                 }],
               initialValue: detailDialogInfos[customKey],
             })(<span style={{ display: 'flex' }}>
-                  <Input placeholder="请输入客服回答" defaultValue={detailDialogInfos[customKey]} />
-              {customKeys.length > 1 ? (
+                  <Input placeholder="请输入客服回答" defaultValue={detailDialogInfos[customKey]} disabled={disabled}/>
+              {customKeys.length > 1 ? (!disabled &&
                 <Icon className={styles.dynamicDeleteButton} type="minus-circle" onClick={() => this.handleCustomerRemove(customKey)}/>) : null}
                 </span>)
           }
@@ -143,7 +143,7 @@ export default class DynamicFieldSet extends Component {
     ));
   };
 
-  getDialogFields = isReverse => {
+  getDialogFields = (disabled, isReverse) => {
     if (isReverse) {
       return (
         <div>
@@ -151,7 +151,7 @@ export default class DynamicFieldSet extends Component {
             {this.getUserFields()}
             <Col span={8}>
               <div style={{ display: 'flex', flex: 1 }}>
-                <Button type="dashed" onClick={this.handleUserAdd}><Icon type="plus" key="user" />新增</Button>
+                <Button type="dashed" onClick={this.handleUserAdd} icon="plus" disabled={disabled}>新增</Button>
               </div>
             </Col>
           </Row>
@@ -160,7 +160,7 @@ export default class DynamicFieldSet extends Component {
             {this.getCustomerFields()}
             <Col span={8}>
               <div style={{ display: 'flex', flex: 1 }}>
-                <Button type="dashed" onClick={this.handleCustomerAdd}><Icon type="plus" key="customer" />新增</Button>
+                <Button type="dashed" onClick={this.handleCustomerAdd} icon="plus" disabled={disabled}>新增</Button>
               </div>
             </Col>
           </Row>
@@ -173,7 +173,7 @@ export default class DynamicFieldSet extends Component {
           {this.getCustomerFields()}
           <Col span={8}>
             <div style={{ display: 'flex', flex: 1 }}>
-              <Button type="dashed" onClick={this.handleCustomerAdd}><Icon type="plus" key="customer" />新增</Button>
+              <Button type="dashed" onClick={this.handleCustomerAdd} icon="plus" disabled={disabled}>新增</Button>
             </div>
           </Col>
         </Row>
@@ -182,7 +182,7 @@ export default class DynamicFieldSet extends Component {
           {this.getUserFields()}
           <Col span={8}>
             <div style={{ display: 'flex', flex: 1 }}>
-              <Button type="dashed" onClick={this.handleUserAdd}><Icon type="plus" key="user" />新增</Button>
+              <Button type="dashed" onClick={this.handleUserAdd} icon="plus" disabled={disabled}>新增</Button>
             </div>
           </Col>
         </Row>
@@ -254,7 +254,7 @@ export default class DynamicFieldSet extends Component {
 
   render() {
     const { getFieldDecorator } = this.props.form;
-    const { dialogId } = this.props;
+    const { dialogId, disabled } = this.props;
     const { isReverse } = this.state;
     getFieldDecorator(`${dialogId}-userKeys`, { initialValue: [`${dialogId}-user-0`] });
     getFieldDecorator(`${dialogId}-customKeys`, { initialValue: [`${dialogId}-custom-0`] });
@@ -262,10 +262,10 @@ export default class DynamicFieldSet extends Component {
 
     return (
       <div className={styles.dialogForm}>
-        {this.getDialogFields(isReverse)}
+        {this.getDialogFields(disabled, isReverse)}
         <Row>
           <Col span={24} style={{ textAlign: 'right' }}>
-            <Button onClick={() => this.handleReverse(isReverse)}>反转</Button>
+            <Button onClick={() => this.handleReverse(isReverse)} disabled={disabled}>反转</Button>
           </Col>
         </Row>
       </div>

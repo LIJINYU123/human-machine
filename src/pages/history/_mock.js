@@ -37,7 +37,7 @@ for (let i = 8; i < 12; i += 1) {
 
 const detailInfos = [
   {
-    id: '0',
+    id: '10',
     sex: { key: 'male', label: '男' },
     attendant: { key: 'none', label: '无' },
     appearance: [{ value: 'myopic', label: '近视镜' }, { value: 'bingle', label: '短发' }],
@@ -63,7 +63,7 @@ const detailInfos = [
     }],
   },
   {
-    id: 'SY0112',
+    id: '11',
     sex: { key: 'female', label: '女' },
     attendant: { key: 'none', label: '无' },
     appearance: [{ value: 'myopic', label: '近视镜' }, { value: 'longhair', label: '长发' }],
@@ -84,7 +84,7 @@ const detailInfos = [
     }],
   },
   {
-    id: 'SY0113',
+    id: '8',
     sex: { key: 'female', label: '女' },
     attendant: { key: 'none', label: '无' },
     appearance: [{ value: 'myopic', label: '近视镜' }, { value: 'longhair', label: '长发' }],

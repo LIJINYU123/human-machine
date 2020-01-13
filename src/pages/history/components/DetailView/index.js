@@ -128,8 +128,8 @@ class CorpusDrawer extends Component {
 
   render() {
     const { width } = this.state;
-    const { visible, onClose, form, detailInfo } = this.props;
-    const { form: { getFieldDecorator }, submitting } = this.props;
+    // eslint-disable-next-line max-len
+    const { visible, onClose, form, detailInfo, disabled, form: { getFieldDecorator }, submitting } = this.props;
     return (
       <Drawer title="对话详情" width={this.state.width} visible={visible} onClose={onClose} bodyStyle={{ backgroundColor: '#f0f2f5' }} destroyOnClose>
         <Card title="用户信息" className={styles.card} bordered={false}>
@@ -145,7 +145,7 @@ class CorpusDrawer extends Component {
                       }],
                       initialValue: detailInfo.sex,
                     })(
-                      <Select labelInValue placeholder="请选择性别">
+                      <Select labelInValue placeholder="请选择性别" disabled={disabled}>
                         <Option key="male">男</Option>
                         <Option key="female">女</Option>
                       </Select>)
@@ -161,7 +161,7 @@ class CorpusDrawer extends Component {
                         message: '请输入年龄',
                       }],
                       initialValue: detailInfo.age,
-                    })(<InputNumber style={{ width: '100%' }}/>)
+                    })(<InputNumber style={{ width: '100%' }} disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -176,7 +176,7 @@ class CorpusDrawer extends Component {
                       ],
                       initialValue: detailInfo.profession,
                     })(
-                      <Select labelInValue placeholder="请选择职业" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
+                      <Select labelInValue placeholder="请选择职业" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} disabled={disabled}>
                         {ProfessionData}
                       </Select>)
                   }
@@ -188,7 +188,7 @@ class CorpusDrawer extends Component {
                     getFieldDecorator('appearance', {
                       initialValue: detailInfo.appearance,
                     })(
-                      <TreeSelect labelInValue placeholder="请选择外貌特征" treeData={TreeData} allowClear multiple treeDefaultExpandAll />)
+                      <TreeSelect labelInValue placeholder="请选择外貌特征" treeData={TreeData} allowClear multiple treeDefaultExpandAll disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -200,7 +200,7 @@ class CorpusDrawer extends Component {
                     getFieldDecorator('attendant', {
                       initialValue: detailInfo.attendant,
                     })(
-                      <Select labelInValue placeholder="请选择随从人员" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
+                      <Select labelInValue placeholder="请选择随从人员" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} disabled={disabled}>
                         {AttendantMember}
                       </Select>)
                   }
@@ -212,7 +212,7 @@ class CorpusDrawer extends Component {
                     getFieldDecorator('emotion', {
                       initialValue: detailInfo.emotion,
                     })(
-                      <Select labelInValue placeholder="请选择情感" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
+                      <Select labelInValue placeholder="请选择情感" dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} disabled={disabled}>
                         {EmotionOptions}
                       </Select>)
                   }
@@ -222,7 +222,8 @@ class CorpusDrawer extends Component {
                 <Form.Item label={FieldLabels.customize}>
                   {
                     getFieldDecorator('customize')(
-                      <EditableGroupTag form={form} mytags={detailInfo.customize} />)
+                      // eslint-disable-next-line max-len
+                      <EditableGroupTag form={form} mytags={detailInfo.customize} disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -239,7 +240,7 @@ class CorpusDrawer extends Component {
                       }],
                       initialValue: moment(detailInfo.dialogTime, 'YYYY-MM-DD HH:mm:ss'),
                     })(
-                      <DatePicker showTime placeholder="请选择时间" />)
+                      <DatePicker showTime placeholder="请选择时间" disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -249,7 +250,7 @@ class CorpusDrawer extends Component {
                     getFieldDecorator('videoId', {
                       initialValue: detailInfo.videoId,
                     })(
-                      <Input placeholder="请输入视频编号"/>)
+                      <Input placeholder="请输入视频编号" disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -259,7 +260,7 @@ class CorpusDrawer extends Component {
                     getFieldDecorator('remark', {
                       initialValue: detailInfo.remark,
                     })(
-                      <Input placeholder="备注信息，例如营销结果等信息"/>)
+                      <Input placeholder="备注信息，例如营销结果等信息" disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -268,11 +269,11 @@ class CorpusDrawer extends Component {
         </Card>
         <Card title="对话记录" className={styles.card} bordered={false}>
           <Form hideRequiredMark>
-            <MultipleDialogField form={form} dialogInfos={detailInfo.dialogInfos} />
+            <MultipleDialogField form={form} dialogInfos={detailInfo.dialogInfos} disabled={disabled}/>
           </Form>
         </Card>
         <FooterToolbar style={{ width }}>
-          <Button type="primary" onClick={this.validate} loading={submitting}>更新</Button>
+          <Button type="primary" onClick={this.validate} loading={submitting} disabled={disabled}>更新</Button>
         </FooterToolbar>
       </Drawer>
     );

@@ -54,29 +54,22 @@ export default {
           component: './history',
         },
         {
-          path: '/agency',
-          name: '机构管理',
+          name: '部门管理',
           icon: 'audit',
-          children: [
-            {
-              name: '部门管理',
-              icon: 'audit',
-              path: '/agency/department',
-              component: './department',
-            },
-            {
-              name: '用户管理',
-              icon: 'user',
-              path: '/agency/account',
-              component: './account',
-            },
-            {
-              name: '角色管理',
-              icon: 'team',
-              path: '/agency/role',
-              component: './role',
-            },
-          ],
+          path: '/agency/department',
+          component: './department',
+        },
+        {
+          name: '用户管理',
+          icon: 'user',
+          path: '/agency/account',
+          component: './account',
+        },
+        {
+          name: '角色管理',
+          icon: 'team',
+          path: '/agency/role',
+          component: './role',
         },
       ],
       SYDEV: [
@@ -114,7 +107,7 @@ export default {
       res.header('DepartmentId', 'operation');
       res.header('Privileges', JSON.stringify({
         dialogInput: ['add'],
-        historyRecord: ['modify', 'query', 'delete'],
+        historyRecord: ['modify', 'query', 'delete', 'export'],
         roleManage: ['add', 'modify', 'query', 'delete'],
         userManage: ['add', 'modify', 'query', 'delete'],
       }));

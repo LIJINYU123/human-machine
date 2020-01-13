@@ -66,10 +66,11 @@ export default class MultipleDialogField extends Component {
   };
 
   render() {
+    const { disabled } = this.props;
     return (
       <div>
         {this.getMulipleDialogField()}
-        <Button type="primary" style={{ float: 'right', marginRight: '24px' }} onClick={this.handleAdd}>新增</Button>
+        <Button type="primary" style={{ float: 'right', marginRight: '24px' }} onClick={this.handleAdd} disabled={disabled}>新增</Button>
       </div>
 
     );

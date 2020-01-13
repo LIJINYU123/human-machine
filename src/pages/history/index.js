@@ -21,6 +21,10 @@ class HistoryList extends Component {
     formValues: {},
     drawerVisible: false,
     filteredInfo: null,
+    modifyAuthority: false,
+    queryAuthority: false,
+    deleteAuthority: false,
+    exportAuthority: false,
   };
 
   componentDidMount() {
@@ -36,6 +40,16 @@ class HistoryList extends Component {
 
     dispatch({
       type: 'historyRecordList/fetchName',
+    });
+
+    const privilegeStr = localStorage.getItem('Privileges');
+    const privileges = JSON.parse(privilegeStr);
+    const { historyRecord } = privileges;
+    this.setState({
+      modifyAuthority: historyRecord.includes('modify'),
+      queryAuthority: historyRecord.includes('query'),
+      deleteAuthority: historyRecord.includes('delete'),
+      exportAuthority: historyRecord.includes('export'),
     });
   }
 
@@ -208,10 +222,11 @@ class HistoryList extends Component {
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" htmlType="submit" disabled={!this.state.queryAuthority}>
               查询
             </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormRest}>
+            {/* eslint-disable-next-line max-len */}
+            <Button style={{ marginLeft: 8 }} onClick={this.handleFormRest} disabled={!this.state.queryAuthority}>
               重置
             </Button>
           </Col>
@@ -223,7 +238,7 @@ class HistoryList extends Component {
 
   render() {
     const { historyRecordList: { data, editors, detailInfo }, loading } = this.props;
-    const { selectedRows } = this.state;
+    const { selectedRows, drawerVisible, queryAuthority, exportAuthority, deleteAuthority, modifyAuthority } = this.state;
     let { filteredInfo } = this.state;
 
     filteredInfo = filteredInfo || {};
@@ -260,9 +275,15 @@ class HistoryList extends Component {
         title: '操作',
         render: (_, record) => (
           <Fragment>
-            <a onClick={() => this.handleReviewDetails(record)}>查看详情</a>
-            <Divider type="vertical"/>
-            <a onClick={() => this.handleExport(record)}>导出</a>
+            {
+              queryAuthority && <a onClick={() => this.handleReviewDetails(record)}>查看详情</a>
+            }
+            {
+              queryAuthority && exportAuthority && <Divider type="vertical"/>
+            }
+            {
+              exportAuthority && <a onClick={() => this.handleExport(record)}>导出</a>
+            }
           </Fragment>
         ),
       },
@@ -274,8 +295,8 @@ class HistoryList extends Component {
           <div>
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
-              <Button icon="export" type="primary" disabled={!selectedRows.length} onClick={this.handleBatchExport}>导出</Button>
-              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleDelete}>删除</Button>
+              <Button icon="export" type="primary" disabled={!selectedRows.length || !exportAuthority} onClick={this.handleBatchExport}>导出</Button>
+              <Button icon="delete" type="danger" disabled={!selectedRows.length || !deleteAuthority} onClick={this.handleDelete}>删除</Button>
             </div>
             <StandardTable
               selectedRows={selectedRows}
@@ -287,8 +308,8 @@ class HistoryList extends Component {
             />
           </div>
         </Card>
-        <CorpusDrawer visible={this.state.drawerVisible} onClose={this.handleCloseDrawer}
-                      detailInfo={detailInfo}/>
+        <CorpusDrawer visible={drawerVisible} onClose={this.handleCloseDrawer}
+                      detailInfo={detailInfo} disabled={!modifyAuthority} />
       </PageHeaderWrapper>
     );
   }

@@ -64,6 +64,7 @@ export default class EditableGroupTag extends Component {
 
   render() {
     const { inputValue, inputVisible, tags } = this.state;
+    const { disabled } = this.props;
     const colorGroups = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
     return (
       <div>
@@ -79,7 +80,7 @@ export default class EditableGroupTag extends Component {
                  onPressEnter={this.handleInputConfirm}/>
         )}
         {
-          !inputVisible && (<Tag onClick={this.showInput} style={{
+          !inputVisible && (!disabled && <Tag onClick={this.showInput} style={{
             background: '#fff',
             borderStyle: 'dashed',
           }}><Icon type="plus"/>新标签</Tag>)
