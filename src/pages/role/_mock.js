@@ -8,7 +8,7 @@ let mockData = [
     description: '这是管理员的描述',
     privileges: {
       dialogInput: ['add'],
-      historyRecord: ['modify', 'query', 'delete'],
+      historyRecord: ['modify', 'query', 'delete', 'export'],
       roleManage: ['add', 'modify', 'query', 'delete'],
       userManage: ['add', 'modify', 'query', 'delete'],
     },

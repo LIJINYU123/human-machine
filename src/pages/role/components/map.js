@@ -15,6 +15,7 @@ export default {
     { label: '修改', value: 'modify' },
     { label: '查询', value: 'query' },
     { label: '删除', value: 'delete' },
+    { label: '导出', value: 'export' },
   ],
   roleManageOptions: [
     { label: '新增', value: 'add' },
