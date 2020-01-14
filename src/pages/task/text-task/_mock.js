@@ -1,10 +1,11 @@
 import { parse } from 'url';
+import { typeCastExpression } from '@babel/types';
 
 const mockData = [
   {
     taskId: '1',
     taskName: '文本分类_0123',
-    taskType: '文本分类',
+    taskType: 'textClassify',
     labeler: '李锦宇',
     schedule: 60,
     status: 'initial',
@@ -15,7 +16,7 @@ const mockData = [
   {
     taskId: '2',
     taskName: '文本分类_0124',
-    taskType: '文本匹配',
+    taskType: 'textMatch',
     labeler: '张三',
     schedule: 70,
     status: 'labeling',
@@ -26,7 +27,7 @@ const mockData = [
   {
     taskId: '3',
     taskName: '文本分类_0125',
-    taskType: '实体识别',
+    taskType: 'ner',
     labeler: '王五',
     schedule: 80,
     status: 'firstTrial',
@@ -37,7 +38,7 @@ const mockData = [
   {
     taskId: '4',
     taskName: '文本分类_0126',
-    taskType: '实体识别',
+    taskType: 'ner',
     labeler: '杨六',
     schedule: 90,
     status: 'reject',
@@ -48,7 +49,7 @@ const mockData = [
   {
     taskId: '5',
     taskName: '文本分类_0127',
-    taskType: '文本匹配',
+    taskType: 'textMatch',
     labeler: '王七',
     schedule: 100,
     status: 'complete',
@@ -59,7 +60,7 @@ const mockData = [
   {
     taskId: '6',
     taskName: '文本分类_0128',
-    taskType: '文本匹配',
+    taskType: 'textMatch',
     labeler: '杨七',
     schedule: 100,
     status: 'review',
@@ -97,6 +98,16 @@ function getTasks(req, res, u) {
     let filterDataSource = [];
     statuses.forEach(status => {
       filterDataSource = filterDataSource.concat(dataSource.filter(item => item.status === status));
+    });
+
+    dataSource = filterDataSource;
+  }
+
+  if (params.taskType) {
+    const types = params.taskType.split(',');
+    let filterDataSource = [];
+    types.forEach(type => {
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.taskType === type));
     });
 
     dataSource = filterDataSource;

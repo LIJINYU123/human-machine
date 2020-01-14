@@ -5,31 +5,21 @@ import { Form, Row, Col, DatePicker, Button, Divider, Card, Progress, Badge, Inp
 import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
+import ItemData from './map';
 
 const { RangePicker } = DatePicker;
 
+const { statusMap, statusName, taskName } = ItemData;
+
 const getValue = obj => (obj ? obj.join(',') : []);
-
-const statusMap = {
-  initial: 'default',
-  labeling: 'processing',
-  firstTrial: 'processing',
-  review: 'processing',
-  reject: 'warning',
-  complete: 'success',
-};
-
-const statusName = {
-  initial: '未开始',
-  labeling: '标注中',
-  firstTrial: '初审中',
-  review: '复审中',
-  reject: '驳回待修改',
-  complete: '完成',
-};
 
 const statusFilters = Object.keys(statusName).map(key => ({
   text: statusName[key],
+  value: key,
+}));
+
+const taskTypeFilters = Object.keys(taskName).map(key => ({
+  text: taskName[key],
   value: key,
 }));
 
@@ -214,6 +204,9 @@ class TextTaskList extends Component {
       {
         title: '任务类型',
         dataIndex: 'taskType',
+        render: val => taskName[val],
+        filters: taskTypeFilters,
+        filteredValue: filteredInfo.taskType || null,
       },
       {
         title: '标注员',
@@ -260,7 +253,7 @@ class TextTaskList extends Component {
           <div className={styles.tableListForm}>{this.renderForm()}</div>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary">新增</Button>
-            <Button icon="delete">删除</Button>
+            <Button icon="delete" type="danger">删除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}
