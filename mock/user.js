@@ -54,6 +54,12 @@ export default {
           component: './history',
         },
         {
+          path: '/task/text-task',
+          name: '任务管理',
+          icon: 'schedule',
+          component: './task/text-task',
+        },
+        {
           name: '部门管理',
           icon: 'audit',
           path: '/agency/department',

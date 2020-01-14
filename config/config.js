@@ -140,29 +140,28 @@ export default {
               component: './history',
             },
             {
-              path: '/agency',
-              name: 'agency',
+              path: '/task/text-task',
+              name: '任务管理',
+              icon: 'schedule',
+              component: './task/text-task',
+            },
+            {
+              name: 'department',
               icon: 'audit',
-              routes: [
-                {
-                  name: 'department',
-                  icon: 'audit',
-                  path: '/agency/department',
-                  component: './department',
-                },
-                {
-                  name: 'user-manage',
-                  icon: 'user',
-                  path: '/agency/account',
-                  component: './account',
-                },
-                {
-                  name: 'role',
-                  icon: 'team',
-                  path: '/agency/role',
-                  component: './role',
-                }
-              ],
+              path: '/agency/department',
+              component: './department',
+            },
+            {
+              name: 'user-manage',
+              icon: 'user',
+              path: '/agency/account',
+              component: './account',
+            },
+            {
+              name: 'role',
+              icon: 'team',
+              path: '/agency/role',
+              component: './role',
             },
             {
               path: '/form',
