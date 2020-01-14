@@ -1,11 +1,37 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Form, Row, Col, DatePicker, Button, Divider, Card } from 'antd';
+import { Form, Row, Col, DatePicker, Button, Divider, Card, Progress, Badge, Input, Icon } from 'antd';
+import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
 
 const { RangePicker } = DatePicker;
+
+const getValue = obj => (obj ? obj.join(',') : []);
+
+const statusMap = {
+  initial: 'default',
+  labeling: 'processing',
+  firstTrial: 'processing',
+  review: 'processing',
+  reject: 'warning',
+  complete: 'success',
+};
+
+const statusName = {
+  initial: '未开始',
+  labeling: '标注中',
+  firstTrial: '初审中',
+  review: '复审中',
+  reject: '驳回待修改',
+  complete: '完成',
+};
+
+const statusFilters = Object.keys(statusName).map(key => ({
+  text: statusName[key],
+  value: key,
+}));
 
 @connect(({ textTaskList, loading }) => ({
   textTaskList,
@@ -14,6 +40,9 @@ const { RangePicker } = DatePicker;
 class TextTaskList extends Component {
   state = {
     selectedRows: [],
+    filteredInfo: null,
+    searchText: '',
+    searchedColumn: '',
   };
 
   componentDidMount() {
@@ -34,8 +63,107 @@ class TextTaskList extends Component {
     });
   };
 
+  handleStandardTableChange = (pagination, filterArg, sorter) => {
+    const { dispatch } = this.props;
+    const { formValues } = this.state;
+    this.setState({
+      filteredInfo: filterArg,
+    });
+
+    const filters = Object.keys(filterArg).reduce((obj, key) => {
+      const newObj = { ...obj };
+      newObj[key] = getValue(filterArg[key]);
+      return newObj;
+    }, {});
+    const params = {
+      currentPage: pagination.current,
+      pageSize: pagination.pageSize,
+      ...formValues,
+      ...filters,
+    };
+
+    if (sorter.field) {
+      params.sorter = `${sorter.field}_${sorter.order}`;
+    }
+
+    dispatch({
+      type: 'textTaskList/fetchTask',
+      payload: params,
+    });
+  };
+
   handleReviewDetails = task => {
     console.log(task);
+  };
+
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input ref={node => { this.searchInput = node; }}
+               placeholder={`搜索 ${dataIndex}`}
+               value={selectedKeys[0]}
+               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+               onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+               style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          搜索
+        </Button>
+        <Button
+          onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}
+        >
+          重置
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (<Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text => (this.state.searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[this.state.searchText]}
+        autoEscape
+        textToHighlight={text.toString()}
+      />
+    ) : text),
+  });
+
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({
+      searchText: '',
+    });
+  };
+
+  handleFormReset = () => {
+    const { form, dispatch } = this.props;
+    form.resetFields();
+    this.setState({
+      filteredInfo: null,
+    });
+
+    dispatch({
+      type: 'textTaskList/fetchTask',
+    });
   };
 
   renderForm() {
@@ -63,7 +191,7 @@ class TextTaskList extends Component {
             <Button type="primary" htmlType="submit">
               查询
             </Button>
-            <Button style={{ marginLeft: 8 }}>重置</Button>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
           </Col>
         </Row>
       </Form>
@@ -74,10 +202,14 @@ class TextTaskList extends Component {
     const { textTaskList: { data }, loading } = this.props;
     const { selectedRows } = this.state;
 
+    let { filteredInfo } = this.state;
+    filteredInfo = filteredInfo || {};
+
     const columns = [
       {
         title: '任务名称',
         dataIndex: 'taskName',
+        ...this.getColumnSearchProps('taskName'),
       },
       {
         title: '任务类型',
@@ -90,10 +222,14 @@ class TextTaskList extends Component {
       {
         title: '标注进度',
         dataIndex: 'schedule',
+        render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
       },
       {
         title: '任务状态',
         dataIndex: 'status',
+        filters: statusFilters,
+        filteredValue: filteredInfo.status || null,
+        render: val => <Badge status={statusMap[val]} text={statusName[val]}/>,
       },
       {
         title: '创建时间',
@@ -132,6 +268,7 @@ class TextTaskList extends Component {
             data={data}
             columns={columns}
             onSelectRow={this.handleSelectRows}
+            onChange={this.handleStandardTableChange}
           />
         </Card>
       </PageHeaderWrapper>
