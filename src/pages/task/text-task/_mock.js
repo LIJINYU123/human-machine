@@ -6,7 +6,8 @@ const mockData = [
     taskId: '1',
     taskName: '文本分类_0123',
     taskType: 'textClassify',
-    labeler: '李锦宇',
+    labelerName: '李锦宇',
+    labelerId: 'SY0976',
     schedule: 60,
     status: 'initial',
     createdTime: '2020-01-13 10:00:00',
@@ -17,7 +18,8 @@ const mockData = [
     taskId: '2',
     taskName: '文本分类_0124',
     taskType: 'textMatch',
-    labeler: '张三',
+    labelerName: '张三',
+    labelerId: 'SY0111',
     schedule: 70,
     status: 'labeling',
     createdTime: '2020-01-14 10:00:00',
@@ -28,7 +30,8 @@ const mockData = [
     taskId: '3',
     taskName: '文本分类_0125',
     taskType: 'ner',
-    labeler: '王五',
+    labelerName: '王五',
+    labelerId: 'SY0112',
     schedule: 80,
     status: 'firstTrial',
     createdTime: '2020-01-15 10:00:00',
@@ -39,7 +42,8 @@ const mockData = [
     taskId: '4',
     taskName: '文本分类_0126',
     taskType: 'ner',
-    labeler: '杨六',
+    labelerName: '杨六',
+    labelerId: 'SY0113',
     schedule: 90,
     status: 'reject',
     createdTime: '2020-01-16 10:00:00',
@@ -50,7 +54,8 @@ const mockData = [
     taskId: '5',
     taskName: '文本分类_0127',
     taskType: 'textMatch',
-    labeler: '王七',
+    labelerName: '王七',
+    labelerId: 'SY0114',
     schedule: 100,
     status: 'complete',
     createdTime: '2020-01-17 10:00:00',
@@ -61,7 +66,8 @@ const mockData = [
     taskId: '6',
     taskName: '文本分类_0128',
     taskType: 'textMatch',
-    labeler: '杨七',
+    labelerName: '杨七',
+    labelerId: 'SY0115',
     schedule: 100,
     status: 'review',
     createdTime: '2020-01-18 10:00:00',
@@ -113,6 +119,16 @@ function getTasks(req, res, u) {
     dataSource = filterDataSource;
   }
 
+  if (params.labelerName) {
+    const labelerNames = params.labelerName.split(',');
+    let filterDataSource = [];
+    labelerNames.forEach(laberName => {
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.labelerName === laberName));
+    });
+
+    dataSource = filterDataSource;
+  }
+
   if (params.taskName) {
     // eslint-disable-next-line max-len
     dataSource = dataSource.filter(item => item.taskName.toLowerCase().includes(params.taskName.toLowerCase()));
@@ -123,6 +139,11 @@ function getTasks(req, res, u) {
     pageSize = parseInt(`${params.pageSize}`, 0);
   }
 
+  const labelers = dataSource.map(item => ({
+    labelerName: item.labelerName,
+    labelerId: item.labelerId,
+  }));
+
   const result = {
     list: dataSource,
     pagination: {
@@ -130,6 +151,7 @@ function getTasks(req, res, u) {
       pageSize,
       current: parseInt(`${params.currentPage}`, 10) || 1,
     },
+    labelers,
   };
 
   return res.json(result);

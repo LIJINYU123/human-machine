@@ -8,6 +8,7 @@ const Model = {
       list: [],
       pagination: {},
     },
+    labelers: [],
   },
   effects: {
     * fetchTask({ payload }, { call, put }) {
@@ -21,7 +22,8 @@ const Model = {
 
   reducers: {
     task(state, action) {
-      return { ...state, data: action.payload };
+      const { list, paginatioin, labelers } = action.payload;
+      return { ...state, data: { list, paginatioin }, labelers };
     },
   },
 };

@@ -189,11 +189,16 @@ class TextTaskList extends Component {
   }
 
   render() {
-    const { textTaskList: { data }, loading } = this.props;
+    const { textTaskList: { data, labelers }, loading } = this.props;
     const { selectedRows } = this.state;
 
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
+
+    const labelerFilters = labelers.map(labeler => ({
+      text: labeler.labelerName,
+      value: labeler.labelerName,
+    }));
 
     const columns = [
       {
@@ -210,7 +215,9 @@ class TextTaskList extends Component {
       },
       {
         title: '标注员',
-        dataIndex: 'labeler',
+        dataIndex: 'labelerName',
+        filters: labelerFilters,
+        filteredValue: filteredInfo.labelerName || null,
       },
       {
         title: '标注进度',
