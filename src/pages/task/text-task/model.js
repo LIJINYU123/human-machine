@@ -9,6 +9,7 @@ const Model = {
       pagination: {},
     },
     labelers: [],
+    current: 0,
   },
   effects: {
     * fetchTask({ payload }, { call, put }) {

@@ -22,4 +22,10 @@ export default {
     textMatch: '文本匹配',
     ner: '实体识别',
   },
+
+  FieldLabels: {
+    taskName: '任务名称',
+    taskType: '任务类型',
+    markTool: '标注工具',
+  },
 }

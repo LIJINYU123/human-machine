@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Modal, Popconfirm } from 'antd';
+import { Button, Card, Divider, Popconfirm } from 'antd';
 import StandardTable from './components/StandardTable';
 import RoleDetailView from './components/RoleDetailView';
 import RoleCreateView from './components/RoleCreateView';
@@ -20,8 +20,6 @@ class RoleList extends Component {
     modifyAuthority: false,
     deleteAuthority: false,
   };
-
-
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -82,7 +80,7 @@ class RoleList extends Component {
 
   render() {
     const { roleList: { data }, loading } = this.props;
-    const { addAuthority, modifyAuthority, deleteAuthority } = this.state;
+    const { modalVisible, addModalVisible, roleInfo, addAuthority, modifyAuthority, deleteAuthority } = this.state;
 
     const columns = [
       {
@@ -122,9 +120,9 @@ class RoleList extends Component {
           />
         </Card>
         {/* eslint-disable-next-line max-len */}
-        <RoleDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} roleInfo={this.state.roleInfo} />
+        <RoleDetailView visible={modalVisible} onCancel={this.handleCancelModal} roleInfo={roleInfo} />
         {/* eslint-disable-next-line max-len */}
-        <RoleCreateView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} roles={data} />
+        <RoleCreateView visible={addModalVisible} onCancel={this.handleCancelAddModal} roles={data} />
       </PageHeaderWrapper>
     );
   }

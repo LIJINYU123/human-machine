@@ -5,6 +5,7 @@ import { Form, Row, Col, DatePicker, Button, Divider, Card, Progress, Badge, Inp
 import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
+import TaskCreateView from './component/TaskCreateView';
 import ItemData from './map';
 
 const { RangePicker } = DatePicker;
@@ -33,6 +34,7 @@ class TextTaskList extends Component {
     filteredInfo: null,
     searchText: '',
     searchedColumn: '',
+    addModalVisible: false,
   };
 
   componentDidMount() {
@@ -79,6 +81,18 @@ class TextTaskList extends Component {
     dispatch({
       type: 'textTaskList/fetchTask',
       payload: params,
+    });
+  };
+
+  handleAdd = () => {
+    this.setState({
+      addModalVisible: true,
+    });
+  };
+
+  handleCancelAddModal = () => {
+    this.setState({
+      addModalVisible: false,
     });
   };
 
@@ -190,7 +204,7 @@ class TextTaskList extends Component {
 
   render() {
     const { textTaskList: { data, labelers }, loading } = this.props;
-    const { selectedRows } = this.state;
+    const { selectedRows, addModalVisible } = this.state;
 
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -259,7 +273,7 @@ class TextTaskList extends Component {
         <Card bordered={false}>
           <div className={styles.tableListForm}>{this.renderForm()}</div>
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary">新增</Button>
+            <Button icon="plus" type="primary" onClick={this.handleAdd}>新增</Button>
             <Button icon="delete" type="danger">删除</Button>
           </div>
           <StandardTable
@@ -271,6 +285,7 @@ class TextTaskList extends Component {
             onChange={this.handleStandardTableChange}
           />
         </Card>
+        <TaskCreateView visible={addModalVisible} onCancel={this.handleCancelAddModal}/>
       </PageHeaderWrapper>
     );
   }
