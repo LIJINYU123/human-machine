@@ -6,7 +6,6 @@ const Model = {
   namespace: 'departmentList',
   state: {
     data: [],
-    departmentInfo: {},
     accounts: [],
   },
   effects: {

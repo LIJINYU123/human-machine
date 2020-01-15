@@ -39,7 +39,7 @@ const menuDataRender = menuList =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright="2019 科沃斯商用机器人出品"
+    copyright="2020 科沃斯商用机器人出品"
     links={[]}
   />
 );

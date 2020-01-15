@@ -8,7 +8,7 @@ const { FieldLabels } = ItemData;
 
 @connect(({ departmentList, loading }) => ({
   departmentList,
-  submitting: loading.effects['departmentList/'],
+  submitting: loading.effects['departmentList/updateDepartment'],
 }))
 class DepDetailView extends Component {
   handleConfirm = () => {
