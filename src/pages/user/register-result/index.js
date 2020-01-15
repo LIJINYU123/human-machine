@@ -17,7 +17,7 @@ const RegisterResult = ({ location }) => (
     status="success"
     title={
       <div className={styles.title} >
-        你的账户：{location.state ? location.state.account : 'SY0111'}&nbsp;注册成功
+        你的账户：{location.state ? location.state.account : 'SY0111'}&nbsp;注册成功，请联系管理员添加到某一部门下
       </div>
     }
     extra={actions}
