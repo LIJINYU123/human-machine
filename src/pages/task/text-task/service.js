@@ -5,3 +5,11 @@ export async function queryTaskList(params) {
     params,
   });
 }
+
+export async function queryMembers() {
+  return request('/api/text-task/members');
+}
+
+export async function queryMarkTools() {
+  return request('/api/text-task/marktools');
+}

@@ -10,7 +10,7 @@ import ItemData from './map';
 
 const { RangePicker } = DatePicker;
 
-const { statusMap, statusName, taskName } = ItemData;
+const { statusMap, statusName, taskTypeMap } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -19,14 +19,14 @@ const statusFilters = Object.keys(statusName).map(key => ({
   value: key,
 }));
 
-const taskTypeFilters = Object.keys(taskName).map(key => ({
-  text: taskName[key],
+const taskTypeFilters = Object.keys(taskTypeMap).map(key => ({
+  text: taskTypeMap[key],
   value: key,
 }));
 
-@connect(({ textTaskList, loading }) => ({
-  textTaskList,
-  loading: loading.models.textTaskList,
+@connect(({ textTask, loading }) => ({
+  textTask,
+  loading: loading.models.textTask,
 }))
 class TextTaskList extends Component {
   state = {
@@ -44,7 +44,7 @@ class TextTaskList extends Component {
       sorter: 'createdTime_descend',
     };
     dispatch({
-      type: 'textTaskList/fetchTask',
+      type: 'textTask/fetchTask',
       payload: params,
     });
   }
@@ -79,7 +79,7 @@ class TextTaskList extends Component {
     }
 
     dispatch({
-      type: 'textTaskList/fetchTask',
+      type: 'textTask/fetchTask',
       payload: params,
     });
   };
@@ -166,7 +166,7 @@ class TextTaskList extends Component {
     });
 
     dispatch({
-      type: 'textTaskList/fetchTask',
+      type: 'textTask/fetchTask',
     });
   };
 
@@ -203,7 +203,7 @@ class TextTaskList extends Component {
   }
 
   render() {
-    const { textTaskList: { data, labelers }, loading } = this.props;
+    const { textTask: { data, labelers }, loading } = this.props;
     const { selectedRows, addModalVisible } = this.state;
 
     let { filteredInfo } = this.state;
@@ -223,7 +223,7 @@ class TextTaskList extends Component {
       {
         title: '任务类型',
         dataIndex: 'taskType',
-        render: val => taskName[val],
+        render: val => taskTypeMap[val],
         filters: taskTypeFilters,
         filteredValue: filteredInfo.taskType || null,
       },

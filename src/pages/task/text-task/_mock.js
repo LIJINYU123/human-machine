@@ -157,6 +157,41 @@ function getTasks(req, res, u) {
   return res.json(result);
 }
 
+function getRoleMembers(req, res) {
+  const response = {
+    labelers: [{ userId: 'SY0111', userName: '张三' }, { userId: 'SY0112', userName: '王五' }, { userId: 'SY0113', userName: '杨六' }],
+    assessors: [{ userId: 'SY0114', userName: '初审员1' }, { userId: 'SY0115', userName: '初审员2' }, { userId: 'SY0116', userName: '初审员3' }],
+    acceptors: [{ userId: 'SY0117', userName: '复审员1' }, { userId: 'SY0118', userName: '复审员2' }, { userId: 'SY0119', userName: '复审员3' }],
+  };
+  return res.json(response);
+}
+
+function getMarkTools(req, res) {
+  const response = {
+    textClassify: [{
+      classifyId: 'emotion',
+      classifyName: '情感',
+    }, {
+      classifyId: 'sentenceType',
+      classifyName: '句式',
+    }],
+    textMatch: [{
+      classifyId: 'similarity',
+      classifyName: '相似度',
+    }],
+    ner: [{
+      classifyId: 'singer',
+      classifyName: '歌手',
+    }, {
+      classifyId: 'country',
+      classifyName: '国家',
+    }],
+  };
+  return res.json(response);
+}
+
 export default {
   'GET /api/text-tasks': getTasks,
+  'GET /api/text-task/members': getRoleMembers,
+  'GET /api/text-task/marktools': getMarkTools,
 };

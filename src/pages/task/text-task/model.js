@@ -1,14 +1,30 @@
-import { queryTaskList } from './service';
+import { queryTaskList, queryMembers, queryMarkTools } from './service';
 import { message } from 'antd';
 
 const Model = {
-  namespace: 'textTaskList',
+  namespace: 'textTask',
   state: {
     data: {
       list: [],
       pagination: {},
     },
     labelers: [],
+    stepOne: {
+      taskName: '',
+      taskType: 'textClassify',
+      markTool: [],
+    },
+    stepTwo: {
+      labeler: '',
+      assessor: '',
+      acceptor: '',
+    },
+    allMarkTools: {},
+    members: {
+      labelers: [],
+      assessors: [],
+      acceptors: [],
+    },
     current: 0,
   },
   effects: {
@@ -19,12 +35,64 @@ const Model = {
         payload: response,
       });
     },
+
+    * fetchMarkTool(_, { call, put }) {
+      const response = yield call(queryMarkTools);
+      yield put({
+        type: 'saveMarkToolOptions',
+        payload: response,
+      });
+    },
+
+    * saveStepOneData({ payload }, { put }) {
+      yield put({
+        type: 'saveStepOne',
+        payload,
+      });
+    },
+
+    * saveStepTwoData({ payload }, { put }) {
+      yield put({
+        type: 'saveStepTwo',
+        payload,
+      });
+    },
+
+    * stepTwoPrevious(_, { put }) {
+      yield put({
+        type: 'stepTwoPrev',
+        payload: 0,
+      });
+    },
+
+    * fetchMembers({ payload }, { call, put }) {
+      const response = yield call(queryMembers, payload);
+      yield put({
+        type: 'saveMembers',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
     task(state, action) {
       const { list, paginatioin, labelers } = action.payload;
       return { ...state, data: { list, paginatioin }, labelers };
+    },
+    saveMarkToolOptions(state, action) {
+      return { ...state, allMarkTools: action.payload };
+    },
+    saveStepOne(state, action) {
+      return { ...state, stepOne: action.payload, current: 1 };
+    },
+    saveStepTwo(state, action) {
+      return { ...state, stepTwo: action.payload, current: 2 };
+    },
+    saveMembers(state, action) {
+      return { ...state, members: action.payload };
+    },
+    stepTwoPrev(state, action) {
+      return { ...state, current: action.payload };
     },
   },
 };

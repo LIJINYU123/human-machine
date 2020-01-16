@@ -140,10 +140,17 @@ export default {
               component: './history',
             },
             {
-              path: '/task/text-task',
+              path: '/task',
               name: '任务管理',
               icon: 'schedule',
-              component: './task/text-task',
+              routes: [
+                {
+                  name: '文本标注',
+                  icon: 'container',
+                  path: '/task/text-task',
+                  component: './task/text-task',
+                },
+              ],
             },
             {
               name: 'department',

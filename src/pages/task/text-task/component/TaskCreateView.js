@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import { Button, Modal, Form, Steps } from 'antd';
 import { connect } from 'dva';
 import Step1 from './Step1';
+import Step2 from './Step2';
 import styles from './style.less';
 
 const { Step } = Steps;
 
-@connect(({ textTaskList }) => ({
-  current: textTaskList.current,
+@connect(({ textTask }) => ({
+  current: textTask.current,
 }))
 class TaskCreateView extends Component {
   render() {
@@ -15,6 +16,8 @@ class TaskCreateView extends Component {
     let stepComponent;
     if (current === 0) {
       stepComponent = <Step1/>
+    } else if (current === 1) {
+      stepComponent = <Step2/>
     }
 
     return (
@@ -27,7 +30,7 @@ class TaskCreateView extends Component {
           <Button key="back" onClick={onCancel}>
             返回
           </Button>]}
-        style={{ minWidth: '600px' }}
+        style={{ minWidth: '700px' }}
         destroyOnClose
       >
         <Steps current={current} className={styles.steps}>

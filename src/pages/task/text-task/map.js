@@ -17,7 +17,7 @@ export default {
     complete: '完成',
   },
 
-  taskName: {
+  taskTypeMap: {
     textClassify: '文本分类',
     textMatch: '文本匹配',
     ner: '实体识别',
@@ -27,5 +27,8 @@ export default {
     taskName: '任务名称',
     taskType: '任务类型',
     markTool: '标注工具',
+    labeler: '标注员',
+    assessor: '初审员',
+    acceptor: '复审员',
   },
 }
