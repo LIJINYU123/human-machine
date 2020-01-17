@@ -25,7 +25,8 @@ const taskTypeFilters = Object.keys(taskTypeMap).map(key => ({
 }));
 
 @connect(({ textTask, loading }) => ({
-  textTask,
+  data: textTask.data,
+  labelers: textTask.labelers,
   loading: loading.models.textTask,
 }))
 class TextTaskList extends Component {
@@ -203,7 +204,7 @@ class TextTaskList extends Component {
   }
 
   render() {
-    const { textTask: { data, labelers }, loading } = this.props;
+    const { data, labelers, loading } = this.props;
     const { selectedRows, addModalVisible } = this.state;
 
     let { filteredInfo } = this.state;

@@ -10,9 +10,9 @@ const { FieldLabels, taskTypeMap } = ItemData;
 // eslint-disable-next-line max-len
 const taskTypeOptions = Object.keys(taskTypeMap).map(key => <Option key={key}>{taskTypeMap[key]}</Option>);
 
-@connect(({ textTask, loading }) => ({
-  textTask,
-  submitting: loading.effects['textTask/saveStepOneData'],
+@connect(({ textFormData, loading }) => ({
+  textFormData,
+  submitting: loading.effects['textFormData/saveStepOneData'],
 }))
 class Step1 extends Component {
   state = {
@@ -22,7 +22,7 @@ class Step1 extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'textTask/fetchMarkTool',
+      type: 'textFormData/fetchMarkTool',
     });
   }
 
@@ -42,7 +42,7 @@ class Step1 extends Component {
         const values = getFieldsValue();
 
         dispatch({
-          type: 'textTask/saveStepOneData',
+          type: 'textFormData/saveStepOneData',
           payload: values,
         });
       }
@@ -50,10 +50,9 @@ class Step1 extends Component {
   };
 
   render() {
-    const { textTask: { stepOne, allMarkTools }, form: { getFieldDecorator }, submitting } = this.props;
+    const { textFormData: { stepOne, allMarkTools }, form: { getFieldDecorator }, submitting } = this.props;
     const { taskName, taskType, markTool } = stepOne;
     const { selectTaskType } = this.state;
-    console.log(allMarkTools);
     let markToolOptions;
     if (selectTaskType === '') {
       markToolOptions = Object.keys(allMarkTools).length ? allMarkTools[taskType].map(option => <Option key={option.classifyId}>{option.classifyName}</Option>) : [];

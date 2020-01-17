@@ -1,14 +1,8 @@
-import { queryTaskList, queryMembers, queryMarkTools } from './service';
-import { message } from 'antd';
+import { queryMarkTools, queryMembers } from '../service';
 
-const Model = {
-  namespace: 'textTask',
+const TextFormData = {
+  namespace: 'textFormData',
   state: {
-    data: {
-      list: [],
-      pagination: {},
-    },
-    labelers: [],
     stepOne: {
       taskName: '',
       taskType: 'textClassify',
@@ -28,14 +22,6 @@ const Model = {
     current: 0,
   },
   effects: {
-    * fetchTask({ payload }, { call, put }) {
-      const response = yield call(queryTaskList, payload);
-      yield put({
-        type: 'task',
-        payload: response,
-      });
-    },
-
     * fetchMarkTool(_, { call, put }) {
       const response = yield call(queryMarkTools);
       yield put({
@@ -65,6 +51,17 @@ const Model = {
       });
     },
 
+    * stepThreePrevious(_, { put }) {
+      yield put({
+        type: 'stepThreePrev',
+        payload: 1,
+      });
+    },
+
+    * createTask({ payload }, { call, put }) {
+
+    },
+
     * fetchMembers({ payload }, { call, put }) {
       const response = yield call(queryMembers, payload);
       yield put({
@@ -75,10 +72,6 @@ const Model = {
   },
 
   reducers: {
-    task(state, action) {
-      const { list, paginatioin, labelers } = action.payload;
-      return { ...state, data: { list, paginatioin }, labelers };
-    },
     saveMarkToolOptions(state, action) {
       return { ...state, allMarkTools: action.payload };
     },
@@ -94,7 +87,10 @@ const Model = {
     stepTwoPrev(state, action) {
       return { ...state, current: action.payload };
     },
+    stepThreePrev(state, action) {
+      return { ...state, current: action.payload };
+    },
   },
 };
 
-export default Model;
+export default TextFormData;

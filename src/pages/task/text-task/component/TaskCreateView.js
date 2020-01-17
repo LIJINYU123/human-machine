@@ -3,12 +3,13 @@ import { Button, Modal, Form, Steps } from 'antd';
 import { connect } from 'dva';
 import Step1 from './Step1';
 import Step2 from './Step2';
+import Step3 from './Step3';
 import styles from './style.less';
 
 const { Step } = Steps;
 
-@connect(({ textTask }) => ({
-  current: textTask.current,
+@connect(({ textFormData }) => ({
+  current: textFormData.current,
 }))
 class TaskCreateView extends Component {
   render() {
@@ -18,6 +19,8 @@ class TaskCreateView extends Component {
       stepComponent = <Step1/>
     } else if (current === 1) {
       stepComponent = <Step2/>
+    } else {
+      stepComponent = <Step3/>
     }
 
     return (

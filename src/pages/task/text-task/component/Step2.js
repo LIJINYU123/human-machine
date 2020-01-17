@@ -6,16 +6,16 @@ import ItemData from '../map';
 const { Option } = Select;
 const { FieldLabels } = ItemData;
 
-@connect(({ textTask, loading }) => ({
-  stepTwo: textTask.stepTwo,
-  members: textTask.members,
-  submitting: loading.effects['textTask/saveStepTwoData'],
+@connect(({ textFormData, loading }) => ({
+  stepTwo: textFormData.stepTwo,
+  members: textFormData.members,
+  submitting: loading.effects['textFormData/saveStepTwoData'],
 }))
 class Step2 extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'textTask/fetchMembers',
+      type: 'textFormData/fetchMembers',
     });
   }
 
@@ -25,7 +25,7 @@ class Step2 extends Component {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
-          type: 'textTask/saveStepTwoData',
+          type: 'textFormData/saveStepTwoData',
           payload: values,
         });
       }
@@ -35,7 +35,7 @@ class Step2 extends Component {
   onPrev = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'textTask/stepTwoPrevious',
+      type: 'textFormData/stepTwoPrevious',
     });
   };
 
@@ -43,11 +43,11 @@ class Step2 extends Component {
     const { stepTwo: { labeler, assessor, acceptor }, form: { getFieldDecorator }, members: { labelers, assessors, acceptors }, submitting } = this.props;
 
     // eslint-disable-next-line max-len
-    const markerOptions = labelers.map(marker => <Option key={marker.userId}>{marker.userName}</Option>);
+    const markerOptions = labelers.map(item => <Option key={item.userId}>{item.userName}</Option>);
     // eslint-disable-next-line max-len
-    const assessorOptions = assessors.map(assessor => <Option key={assessor.userId}>{assessor.userName}</Option>);
+    const assessorOptions = assessors.map(item => <Option key={item.userId}>{item.userName}</Option>);
     // eslint-disable-next-line max-len
-    const acceptorOptions = acceptors.map(acceptor => <Option key={acceptor.userId}>{acceptor.userName}</Option>);
+    const acceptorOptions = acceptors.map(item => <Option key={item.userId}>{item.userName}</Option>);
 
     const formItemLayout = {
       labelCol: {
