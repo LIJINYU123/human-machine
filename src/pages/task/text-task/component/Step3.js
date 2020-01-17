@@ -59,7 +59,7 @@ class Step3 extends Component {
       uploading: true,
     });
     reqwest({
-      url: '/api/text-task/upload',
+      url: '/api/text-task/create',
       method: 'post',
       processData: false,
       data: formData,

@@ -190,8 +190,13 @@ function getMarkTools(req, res) {
   return res.json(response);
 }
 
+function createTask(req, res) {
+  return res.json({ status: 'ok', message: '创建成功' });
+}
+
 export default {
   'GET /api/text-tasks': getTasks,
   'GET /api/text-task/members': getRoleMembers,
   'GET /api/text-task/marktools': getMarkTools,
+  'POST /api/text-task/create': createTask,
 };
