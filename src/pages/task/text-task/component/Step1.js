@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Input, Select } from 'antd';
+import { Button, Form, Input, Select, DatePicker } from 'antd';
 import { connect } from 'dva';
 import ItemData from '../map';
 import styles from './style.less';
@@ -64,7 +64,7 @@ class Step1 extends Component {
 
   render() {
     const { textFormData: { stepOne, allMarkTools }, form: { getFieldDecorator }, submitting } = this.props;
-    const { taskName, taskType, markTool } = stepOne;
+    const { taskName, taskType, markTool, deadline } = stepOne;
     const { selectTaskType } = this.state;
     let markToolOptions;
     if (selectTaskType === '') {
@@ -134,6 +134,17 @@ class Step1 extends Component {
               >
                 {markToolOptions}
               </Select>)
+          }
+        </Form.Item>
+        <Form.Item label={FieldLabels.deadline}>
+          {
+            getFieldDecorator('deadline', {
+              rules: [{
+                required: true,
+                message: '请选择截止时间',
+              }],
+              initialValue: deadline,
+            })(<DatePicker showTime style={{ width: '70%' }} />)
           }
         </Form.Item>
         <Form.Item

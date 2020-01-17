@@ -5,7 +5,9 @@ import reqwest from 'reqwest';
 
 const { Dragger } = Upload;
 
-@connect(({ loading }) => ({
+@connect(({ textFormData, loading }) => ({
+  stepOne: textFormData.stepOne,
+  stepTwo: textFormData.stepTwo,
   submitting: loading.effects['textFormData/createTask'],
 }))
 class Step3 extends Component {
@@ -39,8 +41,20 @@ class Step3 extends Component {
 
   handleUpload = () => {
     const { fileList } = this.state;
+    const { stepOne, stepTwo } = this.props;
+    const { taskName, taskType, markTool, deadline } = stepOne;
+    const { labeler, assessor, acceptor } = stepTwo;
     const formData = new FormData();
     formData.append('file', fileList[0]);
+    formData.append('taskName', taskName);
+    formData.append('taskType', taskType);
+    markTool.forEach(item => {
+      formData.append('markTool[]', item);
+    });
+    formData.append('deadline', deadline.format('YYYY-MM-DD HH:mm:ss'));
+    formData.append('labeler', labeler);
+    formData.append('assessor', assessor);
+    formData.append('acceptor', acceptor);
     this.setState({
       uploading: true,
     });

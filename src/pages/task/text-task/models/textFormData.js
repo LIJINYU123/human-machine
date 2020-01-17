@@ -7,6 +7,7 @@ const TextFormData = {
       taskName: '',
       taskType: 'textClassify',
       markTool: [],
+      deadline: '',
     },
     stepTwo: {
       labeler: '',

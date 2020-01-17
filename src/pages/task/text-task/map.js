@@ -27,6 +27,7 @@ export default {
     taskName: '任务名称',
     taskType: '任务类型',
     markTool: '标注工具',
+    deadline: '截止时间',
     labeler: '标注员',
     assessor: '初审员',
     acceptor: '复审员',
