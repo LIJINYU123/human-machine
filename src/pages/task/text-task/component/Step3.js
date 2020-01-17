@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Form, Row, Col, Upload, Icon } from 'antd';
+import { Button, Form, Row, Col, Upload, Icon, message } from 'antd';
 import { connect } from 'dva';
+import reqwest from 'reqwest';
 
 const { Dragger } = Upload;
 
@@ -8,6 +9,62 @@ const { Dragger } = Upload;
   submitting: loading.effects['textFormData/createTask'],
 }))
 class Step3 extends Component {
+  state = {
+    fileList: [],
+    uploading: false,
+  };
+
+  handleChange = info => {
+    const fileList = [...info.fileList];
+    if (fileList.length === 2) {
+      const newFileList = fileList.slice(1);
+      this.setState({
+        fileList: newFileList,
+      });
+    }
+  };
+
+  handleBeforeUpload = file => {
+    this.setState({
+      fileList: [file],
+    });
+    return false;
+  };
+
+  handleRemove = file => {
+    this.setState({
+      fileList: [],
+    });
+  };
+
+  handleUpload = () => {
+    const { fileList } = this.state;
+    const formData = new FormData();
+    formData.append('file', fileList[0]);
+    this.setState({
+      uploading: true,
+    });
+    reqwest({
+      url: '/api/text-task/upload',
+      method: 'post',
+      processData: false,
+      data: formData,
+      success: () => {
+        this.setState({
+          fileList: [],
+          uploading: false,
+        });
+        message.success('任务创建成功');
+      },
+      error: () => {
+        this.setState({
+          uploading: false,
+        });
+        message.error('任务创建失败');
+      },
+    });
+  };
+
   onPrev = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -16,12 +73,17 @@ class Step3 extends Component {
   };
 
   render() {
-    const formData = new FormData();
+    const { uploading, fileList } = this.state;
     return (
       <div>
         <Row gutter={[16, 16]}>
           <Col>
-            <Dragger>
+            <Dragger
+              onChange={this.handleChange}
+              beforeUpload={this.handleBeforeUpload}
+              onRemove={this.handleRemove}
+              fileList={fileList}
+            >
               <p className="ant-upload-drag-icon">
                 <Icon type="inbox" />
               </p>
@@ -31,7 +93,14 @@ class Step3 extends Component {
         </Row>
         <Row gutter={[16, 16]}>
           <Col>
-            <Button type="primary">完成</Button>
+            <Button
+              type="primary"
+              onClick={this.handleUpload}
+              disabled={fileList.length === 0}
+              loading={uploading}
+            >
+              {uploading ? '上传中' : '创建'}
+            </Button>
             <Button style={{ marginLeft: '8px' }} onClick={this.onPrev}>上一步</Button>
           </Col>
         </Row>

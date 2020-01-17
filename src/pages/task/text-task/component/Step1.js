@@ -1,8 +1,9 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { Button, Form, Input, Select } from 'antd';
 import { connect } from 'dva';
 import ItemData from '../map';
 import styles from './style.less';
+import moment from 'moment';
 
 const { Option } = Select;
 const { FieldLabels, taskTypeMap } = ItemData;
@@ -49,6 +50,18 @@ class Step1 extends Component {
     });
   };
 
+  autoComplete = () => {
+    const { textFormData: { stepOne }, form: { setFieldsValue } } = this.props;
+    const { taskType } = stepOne;
+    const { selectTaskType } = this.state;
+
+    if (selectTaskType === '') {
+      setFieldsValue({ taskName: `${taskTypeMap[taskType]}_${moment().local('zh-cn').format('YYYYMMDDHHmm')}` })
+    } else {
+      setFieldsValue({ taskName: `${taskTypeMap[selectTaskType]}_${moment().local('zh-cn').format('YYYYMMDDHHmm')}` })
+    }
+  };
+
   render() {
     const { textFormData: { stepOne, allMarkTools }, form: { getFieldDecorator }, submitting } = this.props;
     const { taskName, taskType, markTool } = stepOne;
@@ -86,7 +99,7 @@ class Step1 extends Component {
             })(<Input className={styles.formItem}/>)
           }
           {
-            <a style={{ marginLeft: '10px' }} >自动生成</a>
+            <a style={{ marginLeft: '10px' }} onClick={this.autoComplete}>自动生成</a>
           }
         </Form.Item>
         <Form.Item label={FieldLabels.taskType}>
