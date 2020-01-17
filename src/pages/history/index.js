@@ -261,7 +261,7 @@ class HistoryList extends Component {
         ellipsis: true,
       },
       {
-        title: '录入者',
+        title: '录入员',
         dataIndex: 'editor',
         filters: editors.map(editor => ({
           text: editor.name,

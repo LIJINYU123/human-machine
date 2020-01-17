@@ -22,6 +22,7 @@ import FooterToolbar from '../../../form/advanced-form/components/FooterToolbar'
 
 
 const { Option } = Select;
+const { TextArea } = Input;
 const { FieldLabels, TreeData, ProfessionData, AttendantMember, EmotionOptions } = ItemData;
 
 @connect(({ historyRecordList, loading }) => ({
@@ -60,7 +61,7 @@ class CorpusDrawer extends Component {
 
   validate = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, historyRecordList: { key } } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, onClose, dispatch, historyRecordList: { key } } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const fieldValues = {};
@@ -121,6 +122,7 @@ class CorpusDrawer extends Component {
         dispatch({
           type: 'historyRecordList/submitDetailView',
           payload: fieldValues,
+          callback: onClose,
         });
       }
     });
@@ -260,7 +262,7 @@ class CorpusDrawer extends Component {
                     getFieldDecorator('remark', {
                       initialValue: detailInfo.remark,
                     })(
-                      <Input placeholder="备注信息，例如营销结果等信息" disabled={disabled}/>)
+                      <TextArea placeholder="备注信息，例如营销结果等信息" disabled={disabled} autoSize/>)
                   }
                 </Form.Item>
               </Col>

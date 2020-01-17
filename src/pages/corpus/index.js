@@ -20,6 +20,7 @@ import MultipleDialogField from './components/MultipleDialogFields';
 import styles from './style.less';
 
 const { Option } = Select;
+const { TextArea } = Input;
 
 const fieldLabels = {
   sex: '性别',
@@ -377,7 +378,7 @@ class CorpusForm extends Component {
                   <Form.Item label={fieldLabels.remark}>
                     {
                       getFieldDecorator('remark')(
-                        <Input placeholder="备注信息，例如营销结果等信息"/>)
+                        <TextArea placeholder="备注信息，例如营销结果等信息" autoSize/>)
                     }
                   </Form.Item>
                 </Col>

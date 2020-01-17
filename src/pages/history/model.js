@@ -56,9 +56,22 @@ const Model = {
       if (callback) callback();
     },
 
-    *submitDetailView({ payload }, { call }) {
-      yield call(fakeDetailViewForm, payload);
-      message.success('提交成功');
+    *submitDetailView({ payload, callback }, { call, put }) {
+      const response = yield call(fakeDetailViewForm, payload);
+      if (response.message === 'success') {
+        message.success('更新成功');
+        const result = yield call(queryRecord, payload);
+        yield put({
+          type: 'save',
+          payload: result,
+        });
+      } else {
+        message.error('更新失败');
+      }
+
+      if (callback) {
+        callback();
+      }
     },
   },
   reducers: {

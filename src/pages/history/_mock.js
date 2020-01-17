@@ -239,6 +239,6 @@ export default {
   'POST /api/record': postRecord,
   'POST /api/export': postExport,
   'POST /api/detailview/form': (_, res) => {
-    res.send({ message: 'OK' });
+    res.send({ message: 'success' });
   },
 }
