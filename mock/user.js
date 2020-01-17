@@ -42,6 +42,12 @@ export default {
           redirect: '/corpus',
         },
         {
+          path: '/analysis',
+          name: '数据分析',
+          icon: 'dashboard',
+          component: './statistic',
+        },
+        {
           path: '/corpus',
           name: '对话录入',
           icon: 'form',

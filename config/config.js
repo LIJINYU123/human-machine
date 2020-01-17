@@ -118,14 +118,13 @@ export default {
           routes: [
             {
               path: '/',
-              redirect: '/corpus',
+              redirect: '/analysis',
             },
             {
-              path: '/welcome',
-              name: 'welcome',
-              icon: 'smile',
-              component: './Welcome',
-              hideInMenu: true,
+              path: '/analysis',
+              name: '数据分析',
+              icon: 'dashboard',
+              component: './statistic',
             },
             {
               path: '/corpus',
@@ -169,39 +168,6 @@ export default {
               icon: 'team',
               path: '/agency/role',
               component: './role',
-            },
-            {
-              path: '/form',
-              icon: 'form',
-              name: 'form',
-              hideInMenu: true,
-              routes: [
-                {
-                  name: 'basic-form',
-                  icon: 'smile',
-                  path: '/form/basic-form',
-                  component: './form/basic-form',
-                },
-                {
-                  name: 'step-form',
-                  icon: 'smile',
-                  path: '/form/step-form',
-                  component: './form/step-form',
-                },
-                {
-                  name: 'advanced-form',
-                  icon: 'smile',
-                  path: '/form/advanced-form',
-                  component: './form/advanced-form',
-                },
-              ],
-            },
-            {
-              name: 'list',
-              icon: 'smile',
-              path: '/list/table/list',
-              component: './list/table/list',
-              hideInMenu: true,
             },
             {
               component: '404',
