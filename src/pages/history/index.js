@@ -125,7 +125,7 @@ class HistoryList extends Component {
     });
   };
 
-  handleDelete = () => {
+  handleBatchDelete = () => {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
     dispatch({
@@ -292,7 +292,7 @@ class HistoryList extends Component {
             <div className={styles.tableListForm}>{this.renderForm()}</div>
             <div className={styles.tableListOperator}>
               <Button icon="export" type="primary" disabled={!selectedRows.length || !exportAuthority} onClick={this.handleBatchExport}>导出</Button>
-              <Button icon="delete" type="danger" disabled={!selectedRows.length || !deleteAuthority} onClick={this.handleDelete}>删除</Button>
+              <Button icon="delete" type="danger" disabled={!selectedRows.length || !deleteAuthority} onClick={this.handleBatchDelete}>删除</Button>
             </div>
             <StandardTable
               selectedRows={selectedRows}

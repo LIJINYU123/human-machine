@@ -1,4 +1,4 @@
-import { queryTaskList } from '../service';
+import { queryTaskList, deleteTaskList } from '../service';
 import { message } from 'antd/lib/index';
 
 const TextTask = {
@@ -17,6 +17,24 @@ const TextTask = {
         type: 'task',
         payload: response,
       });
+    },
+
+    * deleteTask({ payload, callback }, { call, put }) {
+      const response = yield call(deleteTaskList, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+        const result = yield call(queryTaskList);
+        yield put({
+          type: 'task',
+          payload: result,
+        });
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
     },
 
   },

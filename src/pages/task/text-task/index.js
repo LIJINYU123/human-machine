@@ -171,6 +171,37 @@ class TextTaskList extends Component {
     });
   };
 
+  handleDelete = task => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textTask/deleteTask',
+      payload: {
+        taskIds: [task.taskId],
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
+  handleBatchDelete = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    dispatch({
+      type: 'textTask/deleteTask',
+      payload: {
+        taskIds: selectedRows.map(row => row.taskId),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   renderForm() {
     const { form: { getFieldDecorator } } = this.props;
     return (
@@ -263,7 +294,7 @@ class TextTaskList extends Component {
           <Fragment>
             <a onClick={() => this.handleReviewDetails(task)}>详情</a>
             <Divider type="vertical"/>
-            <a>删除</a>
+            <a onClick={() => this.handleDelete(task)}>删除</a>
           </Fragment>
         ),
       },
@@ -275,7 +306,7 @@ class TextTaskList extends Component {
           <div className={styles.tableListForm}>{this.renderForm()}</div>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={this.handleAdd}>新增</Button>
-            <Button icon="delete" type="danger" disabled={!selectedRows.length}>删除</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}

@@ -1,6 +1,6 @@
 import { parse } from 'url';
 
-const mockData = [
+let mockData = [
   {
     taskId: '1',
     taskName: '文本分类_0123',
@@ -156,6 +156,12 @@ function getTasks(req, res, u) {
   return res.json(result);
 }
 
+function deleteTasks(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  mockData = mockData.filter(item => !body.taskIds.includes(item.taskId));
+  return res.json({ message: '删除成功', status: 'ok' });
+}
+
 function getRoleMembers(req, res) {
   const response = {
     labelers: [{ userId: 'SY0111', userName: '张三' }, { userId: 'SY0112', userName: '王五' }, { userId: 'SY0113', userName: '杨六' }],
@@ -195,6 +201,7 @@ function createTask(req, res) {
 
 export default {
   'GET /api/text-tasks': getTasks,
+  'DELETE /api/text-tasks': deleteTasks,
   'GET /api/text-task/members': getRoleMembers,
   'GET /api/text-task/marktools': getMarkTools,
   'POST /api/text-task/create': createTask,

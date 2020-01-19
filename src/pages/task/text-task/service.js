@@ -6,6 +6,13 @@ export async function queryTaskList(params) {
   });
 }
 
+export async function deleteTaskList(params) {
+  return request('/api/text-tasks', {
+    method: 'DELETE',
+    data: params,
+  });
+}
+
 export async function queryMembers() {
   return request('/api/text-task/members');
 }
