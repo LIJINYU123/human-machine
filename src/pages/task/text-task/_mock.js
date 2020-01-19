@@ -1,5 +1,4 @@
 import { parse } from 'url';
-import { typeCastExpression } from '@babel/types';
 
 const mockData = [
   {

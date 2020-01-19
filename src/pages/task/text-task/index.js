@@ -275,7 +275,7 @@ class TextTaskList extends Component {
           <div className={styles.tableListForm}>{this.renderForm()}</div>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={this.handleAdd}>新增</Button>
-            <Button icon="delete" type="danger">删除</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length}>删除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}

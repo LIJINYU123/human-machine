@@ -23,8 +23,8 @@ const TextTask = {
 
   reducers: {
     task(state, action) {
-      const { list, paginatioin, labelers } = action.payload;
-      return { ...state, data: { list, paginatioin }, labelers };
+      const { list, pagination, labelers } = action.payload;
+      return { ...state, data: { list, pagination }, labelers };
     },
   },
 };
