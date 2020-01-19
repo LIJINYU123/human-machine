@@ -190,6 +190,7 @@ class HistoryList extends Component {
     form.resetFields();
     this.setState({
       filteredInfo: null,
+      formValues: {},
     });
     dispatch({
       type: 'historyRecordList/fetch',

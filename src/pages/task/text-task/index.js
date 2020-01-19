@@ -1,7 +1,20 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Form, Row, Col, DatePicker, Button, Divider, Card, Progress, Badge, Input, Icon } from 'antd';
+import {
+  Form,
+  Row,
+  Col,
+  DatePicker,
+  Button,
+  Divider,
+  Card,
+  Progress,
+  Badge,
+  Input,
+  Icon,
+  Popconfirm,
+} from 'antd';
 import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
@@ -32,6 +45,7 @@ const taskTypeFilters = Object.keys(taskTypeMap).map(key => ({
 class TextTaskList extends Component {
   state = {
     selectedRows: [],
+    formValues: {},
     filteredInfo: null,
     searchText: '',
     searchedColumn: '',
@@ -164,6 +178,7 @@ class TextTaskList extends Component {
     form.resetFields();
     this.setState({
       filteredInfo: null,
+      formValues: {},
     });
 
     dispatch({
@@ -202,10 +217,32 @@ class TextTaskList extends Component {
     });
   };
 
+  handleFormSearch = event => {
+    event.preventDefault();
+    const { dispatch, form } = this.props;
+    form.validateFields((err, fieldValues) => {
+      if (err) return;
+      const values = {
+        createdStartTime: fieldValues.createdTime && fieldValues.createdTime[0].format('YYYY-MM-DD HH:mm:ss'),
+        createdEndTime: fieldValues.createdTime && fieldValues.createdTime[1].format('YYYY-MM-DD HH:mm:ss'),
+        deadlineStartTime: fieldValues.deadline && fieldValues.deadline[0].format('YYYY-MM-DD HH:mm:ss'),
+        deadlineEndTime: fieldValues.deadline && fieldValues.deadline[1].format('YYYY-MM-DD HH:mm:ss'),
+      };
+      this.setState({
+        formValues: values,
+      });
+
+      dispatch({
+        type: 'textTask/fetchTask',
+        payload: values,
+      });
+    });
+  };
+
   renderForm() {
     const { form: { getFieldDecorator } } = this.props;
     return (
-      <Form layout="inline">
+      <Form onSubmit={this.handleFormSearch} layout="inline">
         <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
           <Col md={8} sm={24}>
             <Form.Item label="创建时间">
@@ -294,7 +331,9 @@ class TextTaskList extends Component {
           <Fragment>
             <a onClick={() => this.handleReviewDetails(task)}>详情</a>
             <Divider type="vertical"/>
-            <a onClick={() => this.handleDelete(task)}>删除</a>
+            <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(task)}>
+              <a>删除</a>
+            </Popconfirm>
           </Fragment>
         ),
       },
