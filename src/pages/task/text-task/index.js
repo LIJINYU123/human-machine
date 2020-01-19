@@ -40,7 +40,7 @@ const taskTypeFilters = Object.keys(taskTypeMap).map(key => ({
 @connect(({ textTask, loading }) => ({
   data: textTask.data,
   labelers: textTask.labelers,
-  loading: loading.models.textTask,
+  loading: loading.effects['textTask/fetchTask'],
 }))
 class TextTaskList extends Component {
   state = {

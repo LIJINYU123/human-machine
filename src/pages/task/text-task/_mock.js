@@ -75,6 +75,33 @@ let mockData = [
   },
 ];
 
+const markData = [
+  {
+    sentence: ['出差怎么预定酒店呢'],
+    result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
+    firstTrial: 'accept',
+    review: 'reject',
+  },
+  {
+    sentence: ['出差住的酒店是自己订好吗'],
+    result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
+    firstTrial: 'accept',
+    review: 'reject',
+  },
+  {
+    sentence: ['自己能够去订酒店吗'],
+    result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
+    firstTrial: 'accept',
+    review: 'reject',
+  },
+  {
+    sentence: ['员工自己可以挑选喜欢的酒店订吗'],
+    result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
+    firstTrial: 'accept',
+    review: 'reject',
+  },
+];
+
 
 function getTasks(req, res, u) {
   const departmentId = req.get('DepartmentId');
@@ -165,8 +192,8 @@ function deleteTasks(req, res, u, b) {
 function getRoleMembers(req, res) {
   const response = {
     labelers: [{ userId: 'SY0111', userName: '张三' }, { userId: 'SY0112', userName: '王五' }, { userId: 'SY0113', userName: '杨六' }],
-    assessors: [{ userId: 'SY0114', userName: '初审员1' }, { userId: 'SY0115', userName: '初审员2' }, { userId: 'SY0116', userName: '初审员3' }],
-    acceptors: [{ userId: 'SY0117', userName: '复审员1' }, { userId: 'SY0118', userName: '复审员2' }, { userId: 'SY0119', userName: '复审员3' }],
+    assessors: [{ userId: 'SY0114', userName: '审核员1' }, { userId: 'SY0115', userName: '审核员2' }, { userId: 'SY0116', userName: '审核员3' }],
+    acceptors: [{ userId: 'SY0117', userName: '验收员1' }, { userId: 'SY0118', userName: '验收员2' }, { userId: 'SY0119', userName: '验收员3' }],
   };
   return res.json(response);
 }
@@ -199,10 +226,44 @@ function createTask(req, res) {
   return res.json({ status: 'ok', message: '创建成功' });
 }
 
+function getTaskDetail(req, res, u) {
+  const departmentId = req.get('DepartmentId');
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+  const { taskId } = req.params;
+  const params = parse(url, true).query;
+
+  // eslint-disable-next-line max-len
+  const dataSource = mockData.filter(item => item.departmentId === departmentId && item.taskId === taskId);
+
+  const basicInfo = { ...dataSource[0], assessorName: '审核员1', acceptor: '验收员1' };
+
+  let pageSize = 10;
+  if (params.pageSize) {
+    pageSize = parseInt(`${params.pageSize}`, 0);
+  }
+
+  const result = {
+    list: markData,
+    pagination: {
+      total: markData.length,
+      pageSize,
+      current: parseInt(`${params.currentPage}`, 10) || 1,
+    },
+    basicInfo,
+  };
+
+  return res.json(result);
+}
+
 export default {
   'GET /api/text-tasks': getTasks,
   'DELETE /api/text-tasks': deleteTasks,
   'GET /api/text-task/members': getRoleMembers,
   'GET /api/text-task/marktools': getMarkTools,
   'POST /api/text-task/create': createTask,
+  'GET /api/text-task/detail/:taskId': getTaskDetail,
 };

@@ -24,3 +24,26 @@
   max-width: 500px;
   margin: 40px auto 0;
 }
+
+.pageHeader {
+  :global {
+    .ant-page-header-heading-extra > * + * {
+      margin-left: 8px;
+    }
+  }
+
+  .moreInfo {
+    display: flex;
+    justify-content: space-between;
+    width: 200px;
+  }
+}
+
+.headerList {
+  margin-bottom: 4px;
+  :global {
+    .ant-descriptions-row > td {
+      padding-bottom: 8px;
+    }
+  }
+}

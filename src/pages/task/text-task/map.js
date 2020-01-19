@@ -11,8 +11,8 @@ export default {
   statusName: {
     initial: '未开始',
     labeling: '标注中',
-    firstTrial: '初审中',
-    review: '复审中',
+    firstTrial: '审核中',
+    review: '验收中',
     reject: '驳回待修改',
     complete: '完成',
   },
@@ -29,7 +29,7 @@ export default {
     markTool: '标注工具',
     deadline: '截止时间',
     labeler: '标注员',
-    assessor: '初审员',
-    acceptor: '复审员',
+    assessor: '审核员',
+    acceptor: '验收员',
   },
 }

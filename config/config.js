@@ -149,6 +149,13 @@ export default {
                   path: '/task/text-task',
                   component: './task/text-task',
                 },
+                {
+                  name: '任务详情页',
+                  icon: 'container',
+                  path: '/task/text-detail',
+                  component: './task/text-task/component/Detail',
+                  hideInMenu: true,
+                },
               ],
             },
             {

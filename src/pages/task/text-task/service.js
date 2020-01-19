@@ -20,3 +20,7 @@ export async function queryMembers() {
 export async function queryMarkTools() {
   return request('/api/text-task/marktools');
 }
+
+export async function queryTaskDetail(taskId) {
+  return request(`/api/text-task/detail/${taskId}`);
+}

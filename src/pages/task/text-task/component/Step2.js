@@ -87,7 +87,7 @@ class Step2 extends Component {
               rules: [
                 {
                   required: true,
-                  message: '请选择初审员',
+                  message: '请选择审核员',
                 },
               ],
               initialValue: assessor,
@@ -106,7 +106,7 @@ class Step2 extends Component {
               rules: [
                 {
                   required: true,
-                  message: '请选择复审员',
+                  message: '请选择验收员',
                 },
               ],
               initialValue: acceptor,
