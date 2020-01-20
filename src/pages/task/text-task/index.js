@@ -1,4 +1,5 @@
 import React, { Component, Fragment } from 'react';
+import router from 'umi/router';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import {
@@ -112,7 +113,12 @@ class TextTaskList extends Component {
   };
 
   handleReviewDetails = task => {
-    console.log(task);
+    router.push({
+      pathname: '/task/text-detail',
+      state: {
+        taskId: task.taskId,
+      },
+    });
   };
 
   getColumnSearchProps = dataIndex => ({

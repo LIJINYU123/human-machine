@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { GridContent, PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Button, Descriptions, Statistic, Steps, Input, Icon } from 'antd';
+import Link from 'umi/link';
 import { connect } from 'dva';
 import StandardTable from './StandardTable';
 import Highlighter from 'react-highlight-words';
@@ -8,7 +9,7 @@ import styles from './style.less';
 import ItemData from '../map';
 
 const { Step } = Steps;
-const { ApproveLabel } = ItemData;
+const { ApproveLabel, statusName, taskTypeMap } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -31,11 +32,11 @@ class TextTaskDetail extends Component {
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, location } = this.props;
 
     dispatch({
       type: 'textTaskDetail/fetchDetail',
-      payload: '1',
+      payload: location.state.taskId,
     });
   }
 
@@ -127,6 +128,10 @@ class TextTaskDetail extends Component {
     });
   };
 
+  handleComeBack = () => {
+
+  };
+
   render() {
     const { data, basicInfo, loading } = this.props;
     const { selectedRows } = this.state;
@@ -135,14 +140,14 @@ class TextTaskDetail extends Component {
 
     const extra = (
       <div className={styles.moreInfo}>
-        <Statistic title="状态" value="待审批" />
-        <Statistic title="标注进度" value="60" suffix="%"/>
+        <Statistic title="状态" value={statusName[basicInfo.status]} />
+        <Statistic title="标注进度" value={basicInfo.schedule} suffix="%"/>
       </div>
     );
 
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
-        <Descriptions.Item label="任务类型">文本分类</Descriptions.Item>
+        <Descriptions.Item label="任务类型">{}</Descriptions.Item>
         <Descriptions.Item label="创建时间">2020-01-20 10:00:00</Descriptions.Item>
         <Descriptions.Item label="截止时间">2020-01-30 10:00:00</Descriptions.Item>
         <Descriptions.Item label="标注员">张三</Descriptions.Item>
@@ -162,7 +167,9 @@ class TextTaskDetail extends Component {
     const action = (
       <Fragment>
         <Button>编辑</Button>
-        <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
+        <Link to="/task/text-task">
+          <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
+        </Link>
       </Fragment>
     );
 
