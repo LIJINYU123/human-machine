@@ -6,10 +6,10 @@ import styles from './style.less';
 import moment from 'moment';
 
 const { Option } = Select;
-const { FieldLabels, taskTypeMap } = ItemData;
+const { FieldLabels, taskTypeName } = ItemData;
 
 // eslint-disable-next-line max-len
-const taskTypeOptions = Object.keys(taskTypeMap).map(key => <Option key={key}>{taskTypeMap[key]}</Option>);
+const taskTypeOptions = Object.keys(taskTypeName).map(key => <Option key={key}>{taskTypeName[key]}</Option>);
 
 @connect(({ textFormData, loading }) => ({
   textFormData,
@@ -56,9 +56,9 @@ class Step1 extends Component {
     const { selectTaskType } = this.state;
 
     if (selectTaskType === '') {
-      setFieldsValue({ taskName: `${taskTypeMap[taskType]}_${moment().local('zh-cn').format('YYYYMMDDHHmm')}` })
+      setFieldsValue({ taskName: `${taskTypeName[taskType]}_${moment().local('zh-cn').format('YYYYMMDDHHmm')}` })
     } else {
-      setFieldsValue({ taskName: `${taskTypeMap[selectTaskType]}_${moment().local('zh-cn').format('YYYYMMDDHHmm')}` })
+      setFieldsValue({ taskName: `${taskTypeName[selectTaskType]}_${moment().local('zh-cn').format('YYYYMMDDHHmm')}` })
     }
   };
 

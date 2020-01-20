@@ -15,10 +15,10 @@ let mockData = [
   },
   {
     taskId: '2',
-    taskName: '文本分类_0124',
+    taskName: '文本匹配_0124',
     taskType: 'textMatch',
     labelerName: '张三',
-    labelerId: 'SY0111',
+    labelerId: 'SY0223',
     schedule: 70,
     status: 'labeling',
     createdTime: '2020-01-14 10:00:00',
@@ -27,7 +27,7 @@ let mockData = [
   },
   {
     taskId: '3',
-    taskName: '文本分类_0125',
+    taskName: '实体识别_0125',
     taskType: 'ner',
     labelerName: '王五',
     labelerId: 'SY0112',
@@ -39,7 +39,7 @@ let mockData = [
   },
   {
     taskId: '4',
-    taskName: '文本分类_0126',
+    taskName: '实体识别_0126',
     taskType: 'ner',
     labelerName: '杨六',
     labelerId: 'SY0113',
@@ -51,7 +51,7 @@ let mockData = [
   },
   {
     taskId: '5',
-    taskName: '文本分类_0127',
+    taskName: '文本匹配_0127',
     taskType: 'textMatch',
     labelerName: '王七',
     labelerId: 'SY0114',
@@ -63,7 +63,7 @@ let mockData = [
   },
   {
     taskId: '6',
-    taskName: '文本分类_0128',
+    taskName: '文本匹配_0128',
     taskType: 'textMatch',
     labelerName: '杨七',
     labelerId: 'SY0115',
@@ -71,6 +71,140 @@ let mockData = [
     status: 'review',
     createdTime: '2020-01-18 10:00:00',
     deadline: '2020-02-25 10:00:00',
+    departmentId: 'operation',
+  },
+  {
+    taskId: '7',
+    taskName: '文本匹配_0129',
+    taskType: 'textMatch',
+    labelerName: '顾八',
+    labelerId: 'SY0116',
+    schedule: 100,
+    status: 'deny',
+    createdTime: '2020-01-18 10:00:00',
+    deadline: '2020-02-25 10:00:00',
+    departmentId: 'operation',
+  },
+];
+
+const detailMockData = [
+  {
+    taskId: '1',
+    taskName: '文本分类_0123',
+    taskType: 'textClassify',
+    labelerName: '李锦宇',
+    labelerId: 'SY0976',
+    assessorName: '审核员tom',
+    assessorId: 'SY0123',
+    acceptorName: '验收员lily',
+    acceptorId: 'SY0125',
+    markTool: [{ classifyId: 'emotion', classifyName: '情感' }, { classifyId: 'sentenceType', classifyName: '句式' }],
+    schedule: 60,
+    status: 'initial',
+    createdTime: '2020-01-13 10:00:00',
+    deadline: '2020-02-20 10:00:00',
+    departmentId: 'operation',
+  },
+  {
+    taskId: '2',
+    taskName: '文本匹配_0124',
+    taskType: 'textMatch',
+    labelerName: '张三',
+    labelerId: 'SY0223',
+    assessorName: '审核员tony',
+    assessorId: 'SY0225',
+    acceptorName: '验收员jack',
+    acceptorId: 'SY0125',
+    markTool: [{ classifyId: 'similarity', classifyName: '相似度' }],
+    schedule: 70,
+    status: 'labeling',
+    createdTime: '2020-01-14 10:00:00',
+    deadline: '2020-02-21 10:00:00',
+    departmentId: 'operation',
+  },
+  {
+    taskId: '3',
+    taskName: '实体识别_0125',
+    taskType: 'ner',
+    labelerName: '王五',
+    labelerId: 'SY0112',
+    assessorName: '审核员grace',
+    assessorId: 'SY0226',
+    acceptorName: '验收员jim',
+    acceptorId: 'SY0127',
+    markTool: [{ classifyId: 'singer', classifyName: '歌手' }, { classifyId: 'song', classifyName: '歌曲' }],
+    schedule: 100,
+    status: 'firstTrial',
+    createdTime: '2020-01-15 10:00:00',
+    deadline: '2020-02-22 10:00:00',
+    departmentId: 'operation',
+  },
+  {
+    taskId: '4',
+    taskName: '实体识别_0126',
+    taskType: 'ner',
+    labelerName: '杨六',
+    labelerId: 'SY0113',
+    assessorName: '审核员tim',
+    assessorId: 'SY0228',
+    acceptorName: '验收员sean',
+    acceptorId: 'SY0129',
+    markTool: [{ classifyId: 'country', classifyName: '国家' }, { classifyId: 'area', classifyName: '地名' }],
+    schedule: 100,
+    status: 'reject',
+    createdTime: '2020-01-16 10:00:00',
+    deadline: '2020-02-23 10:00:00',
+    departmentId: 'operation',
+  },
+  {
+    taskId: '5',
+    taskName: '文本匹配_0127',
+    taskType: 'textMatch',
+    labelerName: '王七',
+    labelerId: 'SY0114',
+    assessorName: '审核员chaim',
+    assessorId: 'SY0229',
+    acceptorName: '验收员lei',
+    acceptorId: 'SY0130',
+    markTool: [{ classifyId: 'similarity', classifyName: '相似度' }],
+    schedule: 100,
+    status: 'complete',
+    createdTime: '2020-01-17 10:00:00',
+    deadline: '2020-02-24 10:00:00',
+    departmentId: 'operation',
+  },
+  {
+    taskId: '6',
+    taskName: '文本匹配_0128',
+    taskType: 'textMatch',
+    labelerName: '杨七',
+    labelerId: 'SY0115',
+    assessorName: '审核员john',
+    assessorId: 'SY0230',
+    acceptorName: '验收员mike',
+    acceptorId: 'SY0131',
+    markTool: [{ classifyId: 'similarity', classifyName: '相似度' }],
+    schedule: 100,
+    status: 'review',
+    createdTime: '2020-01-18 10:00:00',
+    deadline: '2020-02-25 10:00:00',
+    departmentId: 'operation',
+  },
+  {
+    taskId: '7',
+    taskName: '文本匹配_0129',
+    taskType: 'textMatch',
+    labelerName: '顾八',
+    labelerId: 'SY0116',
+    assessorName: '审核员kim',
+    assessorId: 'SY0231',
+    acceptorName: '验收员moke',
+    acceptorId: 'SY0132',
+    markTool: [{ classifyId: 'similarity', classifyName: '相似度' }],
+    schedule: 100,
+    status: 'deny',
+    createdTime: '2020-01-19 10:00:00',
+    deadline: '2020-02-26 10:00:00',
     departmentId: 'operation',
   },
 ];
@@ -226,21 +360,25 @@ function createTask(req, res) {
   return res.json({ status: 'ok', message: '创建成功' });
 }
 
-function getTaskDetail(req, res, u) {
+function getTaskDetail(req, res) {
   const departmentId = req.get('DepartmentId');
+
+  const { taskId } = req.params;
+
+  // eslint-disable-next-line max-len
+  const dataSource = detailMockData.filter(item => item.departmentId === departmentId && item.taskId === taskId);
+
+  const basicInfo = dataSource[0];
+  return res.json(basicInfo);
+}
+
+function getLabelData(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     // eslint-disable-next-line prefer-destructuring
     url = req.url;
   }
-  const { taskId } = req.params;
   const params = parse(url, true).query;
-
-  // eslint-disable-next-line max-len
-  const dataSource = mockData.filter(item => item.departmentId === departmentId && item.taskId === taskId);
-
-  const basicInfo = { ...dataSource[0], assessorName: '审核员1', acceptor: '验收员1' };
-
   let pageSize = 10;
   if (params.pageSize) {
     pageSize = parseInt(`${params.pageSize}`, 0);
@@ -253,10 +391,9 @@ function getTaskDetail(req, res, u) {
       pageSize,
       current: parseInt(`${params.currentPage}`, 10) || 1,
     },
-    basicInfo,
   };
 
-  return res.json(result);
+  res.json(result);
 }
 
 export default {
@@ -266,4 +403,5 @@ export default {
   'GET /api/text-task/marktools': getMarkTools,
   'POST /api/text-task/create': createTask,
   'GET /api/text-task/detail/:taskId': getTaskDetail,
+  'GET /api/text-task/label-data': getLabelData,
 };

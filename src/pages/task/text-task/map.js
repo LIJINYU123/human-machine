@@ -5,6 +5,7 @@ export default {
     firstTrial: 'processing',
     review: 'processing',
     reject: 'warning',
+    deny: 'warning',
     complete: 'success',
   },
 
@@ -13,11 +14,12 @@ export default {
     labeling: '标注中',
     firstTrial: '审核中',
     review: '验收中',
-    reject: '驳回待修改',
+    reject: '审核未通过',
+    deny: '验收未通过',
     complete: '完成',
   },
 
-  taskTypeMap: {
+  taskTypeName: {
     textClassify: '文本分类',
     textMatch: '文本匹配',
     ner: '实体识别',

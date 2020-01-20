@@ -24,3 +24,9 @@ export async function queryMarkTools() {
 export async function queryTaskDetail(taskId) {
   return request(`/api/text-task/detail/${taskId}`);
 }
+
+export async function queryLabelData(params) {
+  return request('/api/text-task/label-data', {
+    params,
+  });
+}

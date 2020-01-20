@@ -1,4 +1,5 @@
-import { queryTaskDetail } from '../service';
+// eslint-disable-next-line import/named
+import { queryTaskDetail, queryLabelData } from '../service';
 
 
 const TaskDetail = {
@@ -18,12 +19,22 @@ const TaskDetail = {
         payload: response,
       });
     },
+
+    * fetchLabelData({ payload }, { call, put }) {
+      const response = yield call(queryLabelData, payload);
+      yield put({
+        type: 'labelData',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
     detail(state, action) {
-      const { list, pagination, basicInfo } = action.payload;
-      return { ...state, data: { list, pagination }, basicInfo };
+      return { ...state, basicInfo: action.payload };
+    },
+    labelData(state, action) {
+      return { ...state, data: action.payload };
     },
   },
 };

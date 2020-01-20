@@ -3,13 +3,13 @@ import { GridContent, PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Button, Descriptions, Statistic, Steps, Input, Icon } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
-import StandardTable from './StandardTable';
 import Highlighter from 'react-highlight-words';
+import StandardTable from './StandardTable';
 import styles from './style.less';
 import ItemData from '../map';
 
 const { Step } = Steps;
-const { ApproveLabel, statusName, taskTypeMap } = ItemData;
+const { ApproveLabel, statusName, taskTypeName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -29,6 +29,7 @@ class TextTaskDetail extends Component {
     filteredInfo: {},
     searchText: '',
     searchedColumn: '',
+    taskId: undefined,
   };
 
   componentDidMount() {
@@ -37,6 +38,15 @@ class TextTaskDetail extends Component {
     dispatch({
       type: 'textTaskDetail/fetchDetail',
       payload: location.state.taskId,
+    });
+
+    dispatch({
+      type: 'textTaskDetail/fetchLabelData',
+      payload: { taskId: location.state.taskId },
+    });
+
+    this.setState({
+      taskId: location.state.taskId,
     });
   }
 
@@ -59,13 +69,14 @@ class TextTaskDetail extends Component {
     }, {});
 
     const params = {
+      taskId: this.state.taskId,
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...filters,
     };
 
     dispatch({
-      type: 'textTaskDetail/fetchDetail',
+      type: 'textTaskDetail/fetchLabelData',
       payload: params,
     });
   };
@@ -128,10 +139,6 @@ class TextTaskDetail extends Component {
     });
   };
 
-  handleComeBack = () => {
-
-  };
-
   render() {
     const { data, basicInfo, loading } = this.props;
     const { selectedRows } = this.state;
@@ -147,22 +154,83 @@ class TextTaskDetail extends Component {
 
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
-        <Descriptions.Item label="任务类型">{}</Descriptions.Item>
-        <Descriptions.Item label="创建时间">2020-01-20 10:00:00</Descriptions.Item>
-        <Descriptions.Item label="截止时间">2020-01-30 10:00:00</Descriptions.Item>
-        <Descriptions.Item label="标注员">张三</Descriptions.Item>
-        <Descriptions.Item label="审核员">王五</Descriptions.Item>
-        <Descriptions.Item label="验收员">杨六</Descriptions.Item>
-        <Descriptions.Item label="标注工具">情感，句式，用户行为</Descriptions.Item>
+        <Descriptions.Item label="任务类型">{taskTypeName[basicInfo.taskType]}</Descriptions.Item>
+        <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
+        <Descriptions.Item label="截止时间">{basicInfo.deadline}</Descriptions.Item>
+        <Descriptions.Item label="标注员">{basicInfo.labelerName}</Descriptions.Item>
+        <Descriptions.Item label="审核员">{basicInfo.assessorName}</Descriptions.Item>
+        <Descriptions.Item label="验收员">{basicInfo.acceptorName}</Descriptions.Item>
+        <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.classifyName).join('，') : ''}</Descriptions.Item>
       </Descriptions>
     );
 
-    const stepDesc1 = (
-      <div>
-        张三
-        <div><a>催一下</a></div>
-      </div>
-    );
+    const stepDesc1 = () => {
+      if (basicInfo.status === 'labeling' || basicInfo.status === 'reject') {
+        return (
+          <div>
+            {basicInfo.labelerName}
+            <div><a>催一下</a></div>
+          </div>
+        );
+      }
+
+      return (
+        <div>
+          {basicInfo.labelerName}
+        </div>
+      );
+    };
+
+    const stepDesc2 = () => {
+      if (basicInfo.status === 'firstTrial' || basicInfo.status === 'deny') {
+       return (
+         <div>
+           {basicInfo.assessorName}
+           <div><a>催一下</a></div>
+         </div>
+       )
+      }
+      return (
+        <div>
+          {basicInfo.assessorName}
+        </div>
+      );
+    };
+
+    const stepDesc3 = () => {
+      if (basicInfo.status === 'review') {
+        return (
+          <div>
+            {basicInfo.acceptorName}
+            <div><a>催一下</a></div>
+          </div>
+        );
+      }
+      return (
+        <div>
+          {basicInfo.acceptorName}
+        </div>
+      );
+    };
+
+    const stepCurrent = () => {
+      if (basicInfo.status === 'initial') {
+        return 0;
+      }
+
+      if (['labeling', 'reject'].includes(basicInfo.status)) {
+        return 1;
+      }
+
+      if (['firstTrial', 'deny'].includes(basicInfo.status)) {
+        return 2;
+      }
+
+      if (basicInfo.status === 'review') {
+        return 3
+      }
+      return 4;
+    };
 
     const action = (
       <Fragment>
@@ -210,7 +278,7 @@ class TextTaskDetail extends Component {
 
     return (
       <PageHeaderWrapper
-        title="任务名称: abcd1234"
+        title={basicInfo.taskName}
         extra={action}
         className={styles.pageHeader}
         content={description}
@@ -219,12 +287,12 @@ class TextTaskDetail extends Component {
         <Card title="流程进度" className={styles.card} bordered={false}>
           <Steps
             progressDot
-            current={2}
+            current={stepCurrent()}
           >
             <Step title="创建任务"/>
-            <Step title="文本标注" description={stepDesc1}/>
-            <Step title="标注审核" description="王五"/>
-            <Step title="标注验收" description="杨六"/>
+            <Step title="标注" description={stepDesc1()}/>
+            <Step title="审核" description={stepDesc2()}/>
+            <Step title="验收" description={stepDesc3()}/>
             <Step title="完成"/>
           </Steps>
         </Card>

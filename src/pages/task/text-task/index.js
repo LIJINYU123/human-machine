@@ -24,7 +24,7 @@ import ItemData from './map';
 
 const { RangePicker } = DatePicker;
 
-const { statusMap, statusName, taskTypeMap } = ItemData;
+const { statusMap, statusName, taskTypeName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -33,8 +33,8 @@ const statusFilters = Object.keys(statusName).map(key => ({
   value: key,
 }));
 
-const taskTypeFilters = Object.keys(taskTypeMap).map(key => ({
-  text: taskTypeMap[key],
+const taskTypeFilters = Object.keys(taskTypeName).map(key => ({
+  text: taskTypeName[key],
   value: key,
 }));
 
@@ -298,7 +298,7 @@ class TextTaskList extends Component {
       {
         title: '任务类型',
         dataIndex: 'taskType',
-        render: val => taskTypeMap[val],
+        render: val => taskTypeName[val],
         filters: taskTypeFilters,
         filteredValue: filteredInfo.taskType || null,
       },
