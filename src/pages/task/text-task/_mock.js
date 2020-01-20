@@ -99,7 +99,7 @@ const detailMockData = [
     acceptorName: '验收员lily',
     acceptorId: 'SY0125',
     markTool: [{ classifyId: 'emotion', classifyName: '情感' }, { classifyId: 'sentenceType', classifyName: '句式' }],
-    schedule: 60,
+    schedule: 0,
     status: 'initial',
     createdTime: '2020-01-13 10:00:00',
     deadline: '2020-02-20 10:00:00',
