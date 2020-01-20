@@ -38,5 +38,6 @@ export default {
   ApproveLabel: {
     approve: '通过',
     reject: '拒绝',
+    unprocess: '未处理',
   },
 }

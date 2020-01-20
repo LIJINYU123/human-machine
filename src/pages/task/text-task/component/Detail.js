@@ -250,7 +250,7 @@ class TextTaskDetail extends Component {
       {
         title: '标注结果',
         dataIndex: 'result',
-        render: val => val.map(item => item.classifyName).join('，'),
+        render: val => val.map(item => item.join('，')).join(' | '),
       },
       {
         title: '审核结果',

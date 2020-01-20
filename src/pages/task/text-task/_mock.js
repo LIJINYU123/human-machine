@@ -7,7 +7,7 @@ let mockData = [
     taskType: 'textClassify',
     labelerName: '李锦宇',
     labelerId: 'SY0976',
-    schedule: 60,
+    schedule: 0,
     status: 'initial',
     createdTime: '2020-01-13 10:00:00',
     deadline: '2020-02-20 10:00:00',
@@ -211,26 +211,30 @@ const detailMockData = [
 
 const markData = [
   {
+    sentenceId: '1',
     sentence: ['出差怎么预定酒店呢'],
-    result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
+    result: [['高兴', '愤怒'], ['疑问句']],
     firstTrial: 'approve',
     review: 'reject',
   },
   {
+    sentenceId: '2',
     sentence: ['出差住的酒店是自己订好吗'],
-    result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
+    result: [['高兴', '愤怒'], ['疑问句']],
     firstTrial: 'approve',
     review: 'reject',
   },
   {
+    sentenceId: '3',
     sentence: ['自己能够去订酒店吗'],
-    result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
+    result: [['高兴', '愤怒'], ['疑问句']],
     firstTrial: 'approve',
     review: 'reject',
   },
   {
+    sentenceId: '4',
     sentence: ['员工自己可以挑选喜欢的酒店订吗'],
-    result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
+    result: [['高兴', '愤怒'], ['疑问句']],
     firstTrial: 'approve',
     review: 'reject',
   },
@@ -279,6 +283,7 @@ function getTasks(req, res, u) {
     dataSource = filterDataSource;
   }
 
+  // 根据标注员姓名进行筛选
   if (params.labelerName) {
     const labelerNames = params.labelerName.split(',');
     let filterDataSource = [];
@@ -288,7 +293,7 @@ function getTasks(req, res, u) {
 
     dataSource = filterDataSource;
   }
-
+  // 根据任务名称进行筛选
   if (params.taskName) {
     // eslint-disable-next-line max-len
     dataSource = dataSource.filter(item => item.taskName.toLowerCase().includes(params.taskName.toLowerCase()));
@@ -379,15 +384,42 @@ function getLabelData(req, res, u) {
     url = req.url;
   }
   const params = parse(url, true).query;
+  let dataSource = markData;
+
+  if (params.firstTrial) {
+    const results = params.firstTrial.split(',');
+    let filterDataSource = [];
+    results.forEach(result => {
+      // eslint-disable-next-line max-len
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.firstTrial === result));
+    });
+
+    dataSource = filterDataSource;
+  }
+
+  if (params.review) {
+    const results = params.review.split(',');
+    let filterDataSource = [];
+    results.forEach(result => {
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.review === result));
+    });
+
+    dataSource = filterDataSource;
+  }
+
+  if (params.sentence) {
+    dataSource = dataSource.filter(item => item.sentence.join('|').toLowerCase().includes(params.sentence.toLowerCase()));
+  }
+
   let pageSize = 10;
   if (params.pageSize) {
     pageSize = parseInt(`${params.pageSize}`, 0);
   }
 
   const result = {
-    list: markData,
+    list: dataSource,
     pagination: {
-      total: markData.length,
+      total: dataSource.length,
       pageSize,
       current: parseInt(`${params.currentPage}`, 10) || 1,
     },
