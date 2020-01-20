@@ -79,25 +79,25 @@ const markData = [
   {
     sentence: ['出差怎么预定酒店呢'],
     result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
-    firstTrial: 'accept',
+    firstTrial: 'approve',
     review: 'reject',
   },
   {
     sentence: ['出差住的酒店是自己订好吗'],
     result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
-    firstTrial: 'accept',
+    firstTrial: 'approve',
     review: 'reject',
   },
   {
     sentence: ['自己能够去订酒店吗'],
     result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
-    firstTrial: 'accept',
+    firstTrial: 'approve',
     review: 'reject',
   },
   {
     sentence: ['员工自己可以挑选喜欢的酒店订吗'],
     result: [{ classifyId: 'neutral', classifyName: '中性' }, { classifyId: 'interrogative', classifyName: '疑问句' }],
-    firstTrial: 'accept',
+    firstTrial: 'approve',
     review: 'reject',
   },
 ];

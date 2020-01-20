@@ -32,4 +32,9 @@ export default {
     assessor: '审核员',
     acceptor: '验收员',
   },
+
+  ApproveLabel: {
+    approve: '通过',
+    reject: '拒绝',
+  },
 }

@@ -2,12 +2,20 @@ import React, { Component, Fragment } from 'react';
 import { GridContent, PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Button, Descriptions, Statistic, Steps, Input, Icon } from 'antd';
 import { connect } from 'dva';
+import StandardTable from './StandardTable';
 import Highlighter from 'react-highlight-words';
 import styles from './style.less';
+import ItemData from '../map';
 
 const { Step } = Steps;
+const { ApproveLabel } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
+
+const approveFilters = Object.keys(ApproveLabel).map(key => ({
+  text: ApproveLabel[key],
+  value: key,
+}));
 
 @connect(({ textTaskDetail, loading }) => ({
   data: textTaskDetail.data,
@@ -22,13 +30,22 @@ class TextTaskDetail extends Component {
     searchedColumn: '',
   };
 
+  componentDidMount() {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'textTaskDetail/fetchDetail',
+      payload: '1',
+    });
+  }
+
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
     });
   };
 
-  handleStandardTableChange = (pagination, filterArg, sorter) => {
+  handleStandardTableChange = (pagination, filterArg, _) => {
     const { dispatch } = this.props;
     this.setState({
       filteredInfo: filterArg,
@@ -111,6 +128,11 @@ class TextTaskDetail extends Component {
   };
 
   render() {
+    const { data, basicInfo, loading } = this.props;
+    const { selectedRows } = this.state;
+    let { filteredInfo } = this.state;
+    filteredInfo = filteredInfo || {};
+
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value="待审批" />
@@ -153,11 +175,30 @@ class TextTaskDetail extends Component {
       {
         title: '标注结果',
         dataIndex: 'result',
+        render: val => val.map(item => item.classifyName).join('，'),
       },
       {
         title: '审核结果',
-
-      }
+        dataIndex: 'firstTrial',
+        render: val => ApproveLabel[val],
+        filters: approveFilters,
+        filteredValue: filteredInfo.firstTrial || null,
+      },
+      {
+        title: '验收结果',
+        dataIndex: 'review',
+        render: val => ApproveLabel[val],
+        filters: approveFilters,
+        filteredValue: filteredInfo.review || null,
+      },
+      {
+        title: '操作',
+        render: (_, task) => (
+          <Fragment>
+            <a>删除</a>
+          </Fragment>
+        ),
+      },
     ];
 
     return (
@@ -168,9 +209,7 @@ class TextTaskDetail extends Component {
         content={description}
         extraContent={extra}
       >
-        <Card
-          title="流程进度"
-        >
+        <Card title="流程进度" className={styles.card} bordered={false}>
           <Steps
             progressDot
             current={2}
@@ -182,10 +221,18 @@ class TextTaskDetail extends Component {
             <Step title="完成"/>
           </Steps>
         </Card>
-        <Card
-          title="标注数据"
-        >
-
+        <Card title="标注数据" className={styles.card} bordered={false}>
+          <div className={styles.tableListOperator}>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length}>删除</Button>
+          </div>
+          <StandardTable
+            selectedRows={selectedRows}
+            loading={loading}
+            data={data}
+            columns={columns}
+            onSelectRow={this.handleSelectRows}
+            onChange={this.handleStandardTableChange}
+          />
         </Card>
       </PageHeaderWrapper>
     );
