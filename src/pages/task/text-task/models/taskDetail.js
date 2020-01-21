@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/named
-import { queryTaskDetail, queryLabelData } from '../service';
-
+import { queryTaskDetail, queryLabelData, deleteLabelData } from '../service';
+import { message } from 'antd';
 
 const TaskDetail = {
   namespace: 'textTaskDetail',
@@ -26,6 +26,24 @@ const TaskDetail = {
         type: 'labelData',
         payload: response,
       });
+    },
+
+    * deleteLabelData({ payload, callback }, { call, put }) {
+      const response = yield call(deleteLabelData, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+        const result = yield call(queryLabelData, { taskId: payload.taskId });
+        yield put({
+          type: 'labelData',
+          payload: result,
+        });
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+       callback();
+      }
     },
   },
 

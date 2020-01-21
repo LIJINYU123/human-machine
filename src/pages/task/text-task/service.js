@@ -30,3 +30,10 @@ export async function queryLabelData(params) {
     params,
   });
 }
+
+export async function deleteLabelData(params) {
+  return request('/api/text-task/label-data', {
+    method: 'DELETE',
+    data: params,
+  });
+}

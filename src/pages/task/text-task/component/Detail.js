@@ -139,6 +139,40 @@ class TextTaskDetail extends Component {
     });
   };
 
+  handleDelete = sentenceInfo => {
+    const { dispatch } = this.props;
+    const { taskId } = this.state;
+    dispatch({
+      type: 'textTaskDetail/deleteLabelData',
+      payload: {
+        taskId,
+        sentenceIds: [sentenceInfo.sentenceId],
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
+  handleBatchDelete = () => {
+    const { dispatch } = this.props;
+    const { taskId, selectedRows } = this.state;
+    dispatch({
+      type: 'textTaskDetail/deleteLabelData',
+      payload: {
+        taskId,
+        sentenceIds: selectedRows.map(row => row.sentenceId),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   render() {
     const { data, basicInfo, loading } = this.props;
     const { selectedRows } = this.state;
@@ -268,10 +302,8 @@ class TextTaskDetail extends Component {
       },
       {
         title: '操作',
-        render: (_, task) => (
-          <Fragment>
-            <a>删除</a>
-          </Fragment>
+        render: (_, sentenceInfo) => (
+          <a onClick={() => this.handleDelete(sentenceInfo)}>删除</a>
         ),
       },
     ];
@@ -298,7 +330,7 @@ class TextTaskDetail extends Component {
         </Card>
         <Card title="标注数据" className={styles.card} bordered={false}>
           <div className={styles.tableListOperator}>
-            <Button icon="delete" type="danger" disabled={!selectedRows.length}>删除</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}

@@ -209,7 +209,7 @@ const detailMockData = [
   },
 ];
 
-const markData = [
+let markData = [
   {
     sentenceId: '1',
     sentence: ['出差怎么预定酒店呢'],
@@ -428,6 +428,12 @@ function getLabelData(req, res, u) {
   res.json(result);
 }
 
+function deleteLabelData(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  markData = markData.filter(item => !body.sentenceIds.includes(item.sentenceId));
+  return res.json({ message: '删除成功', status: 'ok' });
+}
+
 export default {
   'GET /api/text-tasks': getTasks,
   'DELETE /api/text-tasks': deleteTasks,
@@ -436,4 +442,5 @@ export default {
   'POST /api/text-task/create': createTask,
   'GET /api/text-task/detail/:taskId': getTaskDetail,
   'GET /api/text-task/label-data': getLabelData,
+  'DELETE /api/text-task/label-data': deleteLabelData,
 };
