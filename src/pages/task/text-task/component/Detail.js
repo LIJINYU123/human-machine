@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { GridContent, PageHeaderWrapper } from '@ant-design/pro-layout';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Button, Descriptions, Statistic, Steps, Input, Icon } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
