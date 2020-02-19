@@ -137,7 +137,7 @@ class CorpusDrawer extends Component {
         <Card title="用户信息" className={styles.card} bordered={false}>
           <Form layout="vertical" hideRequiredMark>
             <Row gutter={16}>
-              <Col xl={3} lg={6} md={12} sm={24}>
+              <Col xl={6} lg={6} md={12} sm={24}>
                 <Form.Item label={FieldLabels.sex}>
                   {
                     getFieldDecorator('sex', {
@@ -154,7 +154,7 @@ class CorpusDrawer extends Component {
                   }
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 3, offset: 2 }} lg={8} md={8} sm={24}>
+              <Col xl={6} lg={8} md={8} sm={24}>
                 <Form.Item label={FieldLabels.age}>
                   {
                     getFieldDecorator('age', {
@@ -167,7 +167,7 @@ class CorpusDrawer extends Component {
                   }
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 3, offset: 2 }} lg={2} md={8} sm={24}>
+              <Col xl={6} lg={2} md={8} sm={24}>
                 <Form.Item label={FieldLabels.profession}>
                   {
                     getFieldDecorator('profession', {
@@ -184,19 +184,19 @@ class CorpusDrawer extends Component {
                   }
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 6, offset: 2 }} lg={10} md={24} sm={24}>
+              <Col xl={6} lg={10} md={24} sm={24}>
                 <Form.Item label={FieldLabels.appearance}>
                   {
                     getFieldDecorator('appearance', {
                       initialValue: detailInfo.appearance,
                     })(
-                      <TreeSelect labelInValue placeholder="请选择外貌特征" treeData={TreeData} allowClear multiple treeDefaultExpandAll disabled={disabled}/>)
+                      <TreeSelect labelInValue placeholder="请选择外貌特征" treeData={TreeData} allowClear multiple disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
             </Row>
             <Row gutter={16}>
-              <Col xl={3} lg={6} md={12} sm={24}>
+              <Col xl={6} lg={6} md={12} sm={24}>
                 <Form.Item label={FieldLabels.attendant}>
                   {
                     getFieldDecorator('attendant', {
@@ -208,7 +208,7 @@ class CorpusDrawer extends Component {
                   }
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 3, offset: 2 }} lg={3} md={24} sm={24}>
+              <Col xl={6} lg={3} md={24} sm={24}>
                 <Form.Item label={FieldLabels.emotion}>
                   {
                     getFieldDecorator('emotion', {
@@ -220,7 +220,7 @@ class CorpusDrawer extends Component {
                   }
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 14, offset: 2 }} lg={14} md={24} sm={24}>
+              <Col xl={12} lg={12} md={24} sm={24}>
                 <Form.Item label={FieldLabels.customize}>
                   {
                     getFieldDecorator('customize')(
@@ -232,7 +232,7 @@ class CorpusDrawer extends Component {
             </Row>
             <Row gutter={16}>
               <Divider/>
-              <Col xl={3} lg={6} md={12} sm={24}>
+              <Col xl={6} lg={6} md={12} sm={24}>
                 <Form.Item label={FieldLabels.dialog}>
                   {
                     getFieldDecorator('dialogTime', {
@@ -242,11 +242,11 @@ class CorpusDrawer extends Component {
                       }],
                       initialValue: moment(detailInfo.dialogTime, 'YYYY-MM-DD HH:mm:ss'),
                     })(
-                      <DatePicker showTime placeholder="请选择时间" disabled={disabled}/>)
+                      <DatePicker showTime placeholder="请选择时间" disabled={disabled} style={{ width: '100%' }}/>)
                   }
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 6, offset: 2 }} lg={8} md={12} sm={24}>
+              <Col xl={6} lg={8} md={12} sm={24}>
                 <Form.Item label={FieldLabels.videoId}>
                   {
                     getFieldDecorator('videoId', {
@@ -256,7 +256,7 @@ class CorpusDrawer extends Component {
                   }
                 </Form.Item>
               </Col>
-              <Col xl={{ span: 6, offset: 2 }} lg={8} md={12} sm={24}>
+              <Col xl={12} lg={12} md={12} sm={24}>
                 <Form.Item label={FieldLabels.remark}>
                   {
                     getFieldDecorator('remark', {
@@ -271,6 +271,7 @@ class CorpusDrawer extends Component {
         </Card>
         <Card title="对话记录" className={styles.card} bordered={false}>
           <Form hideRequiredMark>
+            {/* eslint-disable-next-line max-len */}
             <MultipleDialogField form={form} dialogInfos={detailInfo.dialogInfos} disabled={disabled}/>
           </Form>
         </Card>
