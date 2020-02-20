@@ -60,6 +60,26 @@ export default {
           component: './history',
         },
         {
+          path: '/project',
+          name: '项目管理',
+          icon: 'schedule',
+          children: [
+            {
+              name: '文本标注',
+              icon: 'container',
+              path: '/project/text-project',
+              component: './project/text-project',
+            },
+            {
+              name: '项目详情页',
+              icon: 'container',
+              path: '/project/text-detail',
+              component: './project/text-project/component/ProjectDetail',
+              hideInMenu: true,
+            },
+          ],
+        },
+        {
           path: '/task',
           name: '任务管理',
           icon: 'schedule',
