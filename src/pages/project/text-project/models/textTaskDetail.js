@@ -1,9 +1,8 @@
-// eslint-disable-next-line import/named
-import { queryTaskDetail, queryLabelData, deleteLabelData } from '../service';
+import { queryTaskDetail, queryLabelData, deleteLabelData } from '../service'
 import { message } from 'antd';
 
-const TaskDetail = {
-  namespace: 'textTaskDetail1',
+const TextTaskDetail = {
+  namespace: 'textTaskDetail',
   state: {
     data: {
       list: [],
@@ -11,6 +10,7 @@ const TaskDetail = {
     },
     basicInfo: {},
   },
+
   effects: {
     * fetchDetail({ payload }, { call, put }) {
       const response = yield call(queryTaskDetail, payload);
@@ -42,7 +42,7 @@ const TaskDetail = {
       }
 
       if (callback) {
-       callback();
+        callback();
       }
     },
   },
@@ -57,4 +57,4 @@ const TaskDetail = {
   },
 };
 
-export default TaskDetail;
+export default TextTaskDetail;

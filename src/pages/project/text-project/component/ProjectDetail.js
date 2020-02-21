@@ -120,10 +120,12 @@ class TextProjectDetail extends Component {
   };
 
   handleReviewDetails = task => {
+    const { projectId } = this.state;
     router.push({
       pathname: '/project/text/task-detail',
       state: {
         taskId: task.taskId,
+        projectId,
       },
     });
   };

@@ -1,52 +1,55 @@
 import React, { Component, Fragment } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Descriptions, Statistic, Steps, Input, Icon } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
-import Highlighter from 'react-highlight-words';
+import { Input, Button, Icon, Statistic, Descriptions, Card, Steps } from 'antd';
 import StandardTable from './StandardTable';
 import styles from './style.less';
+import Highlighter from 'react-highlight-words';
 import ItemData from '../map';
+import router from 'umi/router';
 
 const { Step } = Steps;
-const { ApproveLabel, statusName, taskTypeName } = ItemData;
+
+const { reviewLabel, taskStatusName, labelTypeName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
-const approveFilters = Object.keys(ApproveLabel).map(key => ({
-  text: ApproveLabel[key],
+const reviewFilters = Object.keys(reviewLabel).map(key => ({
+  text: reviewLabel[key],
   value: key,
 }));
 
-@connect(({ textTaskDetail1, loading }) => ({
-  data: textTaskDetail1.data,
-  basicInfo: textTaskDetail1.basicInfo,
-  loading: loading.effects['textTaskDetail1/fetchDetail'],
+@connect(({ textTaskDetail, loading }) => ({
+  data: textTaskDetail.data,
+  basicInfo: textTaskDetail.basicInfo,
+  loading: loading.effects['textTaskDetail/fetchDetail'],
 }))
 class TextTaskDetail extends Component {
   state = {
+    taskId: undefined,
+    projectId: undefined,
     selectedRows: [],
     filteredInfo: {},
     searchText: '',
     searchedColumn: '',
-    taskId: undefined,
   };
 
   componentDidMount() {
     const { dispatch, location } = this.props;
-
     dispatch({
-      type: 'textTaskDetail1/fetchDetail',
+      type: 'textTaskDetail/fetchDetail',
       payload: location.state.taskId,
     });
 
     dispatch({
-      type: 'textTaskDetail1/fetchLabelData',
-      payload: { taskId: location.state.taskId },
+      type: 'textTaskDetail/fetchLabelData',
+      payload: location.state.taskId,
     });
 
     this.setState({
       taskId: location.state.taskId,
+      projectId: location.state.projectId,
     });
   }
 
@@ -76,7 +79,7 @@ class TextTaskDetail extends Component {
     };
 
     dispatch({
-      type: 'textTaskDetail1/fetchLabelData',
+      type: 'textTaskDetail/fetchLabelData',
       payload: params,
     });
   };
@@ -143,7 +146,7 @@ class TextTaskDetail extends Component {
     const { dispatch } = this.props;
     const { taskId } = this.state;
     dispatch({
-      type: 'textTaskDetail1/deleteLabelData',
+      type: 'textTaskDetail/deleteLabelData',
       payload: {
         taskId,
         sentenceIds: [sentenceInfo.sentenceId],
@@ -160,7 +163,7 @@ class TextTaskDetail extends Component {
     const { dispatch } = this.props;
     const { taskId, selectedRows } = this.state;
     dispatch({
-      type: 'textTaskDetail1/deleteLabelData',
+      type: 'textTaskDetail/deleteLabelData',
       payload: {
         taskId,
         sentenceIds: selectedRows.map(row => row.sentenceId),
@@ -173,6 +176,16 @@ class TextTaskDetail extends Component {
     });
   };
 
+  handleGoBack = () => {
+    const { projectId } = this.state;
+    router.push({
+      pathname: '/project/text-detail',
+      state: {
+        projectId,
+      },
+    });
+  };
+
   render() {
     const { data, basicInfo, loading } = this.props;
     const { selectedRows } = this.state;
@@ -181,20 +194,19 @@ class TextTaskDetail extends Component {
 
     const extra = (
       <div className={styles.moreInfo}>
-        <Statistic title="状态" value={statusName[basicInfo.status]} />
+        <Statistic title="状态" value={taskStatusName[basicInfo.status]}/>
         <Statistic title="标注进度" value={basicInfo.schedule} suffix="%"/>
       </div>
     );
 
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
-        <Descriptions.Item label="任务类型">{taskTypeName[basicInfo.taskType]}</Descriptions.Item>
+        <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
-        <Descriptions.Item label="截止时间">{basicInfo.deadline}</Descriptions.Item>
+        <Descriptions.Item label="任务周期">{basicInfo.startTime}</Descriptions.Item>
         <Descriptions.Item label="标注员">{basicInfo.labelerName}</Descriptions.Item>
-        <Descriptions.Item label="审核员">{basicInfo.assessorName}</Descriptions.Item>
-        <Descriptions.Item label="验收员">{basicInfo.acceptorName}</Descriptions.Item>
-        <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.classifyName).join('，') : ''}</Descriptions.Item>
+        <Descriptions.Item label="质检员">{basicInfo.assessorName}</Descriptions.Item>
+        <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.toolName).join('，') : ''}</Descriptions.Item>
       </Descriptions>
     );
 
@@ -216,33 +228,17 @@ class TextTaskDetail extends Component {
     };
 
     const stepDesc2 = () => {
-      if (basicInfo.status === 'firstTrial' || basicInfo.status === 'deny') {
-       return (
-         <div>
-           {basicInfo.assessorName}
-           <div><a>催一下</a></div>
-         </div>
-       )
+      if (basicInfo.status === 'review') {
+        return (
+          <div>
+            {basicInfo.assessorName}
+            <div><a>催一下</a></div>
+          </div>
+        )
       }
       return (
         <div>
           {basicInfo.assessorName}
-        </div>
-      );
-    };
-
-    const stepDesc3 = () => {
-      if (basicInfo.status === 'review') {
-        return (
-          <div>
-            {basicInfo.acceptorName}
-            <div><a>催一下</a></div>
-          </div>
-        );
-      }
-      return (
-        <div>
-          {basicInfo.acceptorName}
         </div>
       );
     };
@@ -256,57 +252,79 @@ class TextTaskDetail extends Component {
         return 1;
       }
 
-      if (['firstTrial', 'deny'].includes(basicInfo.status)) {
+      if (basicInfo.status === 'review') {
         return 2;
       }
 
-      if (basicInfo.status === 'review') {
-        return 3
-      }
-      return 4;
+      return 3;
     };
 
     const action = (
-      <Fragment>
-        <Button>编辑</Button>
-        <Link to="/task/text-task">
-          <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
-        </Link>
-      </Fragment>
+      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoBack}>返回</Button>
     );
 
-    const columns = [
-      {
-        title: 'sentence',
-        dataIndex: 'sentence',
-        ...this.getColumnSearchProps('sentence'),
-      },
-      {
-        title: '标注结果',
-        dataIndex: 'result',
-        render: val => val.map(item => item.join('，')).join(' | '),
-      },
-      {
-        title: '审核结果',
-        dataIndex: 'firstTrial',
-        render: val => ApproveLabel[val],
-        filters: approveFilters,
-        filteredValue: filteredInfo.firstTrial || null,
-      },
-      {
-        title: '验收结果',
-        dataIndex: 'review',
-        render: val => ApproveLabel[val],
-        filters: approveFilters,
-        filteredValue: filteredInfo.review || null,
-      },
-      {
-        title: '操作',
-        render: (_, sentenceInfo) => (
-          <a onClick={() => this.handleDelete(sentenceInfo)}>删除</a>
-        ),
-      },
-    ];
+    let columns = [];
+    if (basicInfo.labelType !== 'textMatch') {
+      columns = [
+        {
+          title: 'sentence',
+          dataIndex: 'sentence',
+          ...this.getColumnSearchProps('sentence'),
+        },
+        {
+          title: '标注结果',
+          dataIndex: 'labelResult',
+          render: val => val.map(item => item.join('，')).join(' | '),
+        },
+        {
+          title: '质检结果',
+          dataIndex: 'reviewResult',
+          render: val => reviewLabel[val],
+          filters: reviewFilters,
+          filteredValue: filteredInfo.review || null,
+        },
+        {
+          title: '备注',
+          dataIndex: 'remark',
+        },
+        {
+          title: '操作',
+          render: (_, sentenceInfo) => (
+            <a onClick={() => this.handleDelete(sentenceInfo)}>删除</a>
+          ),
+        },
+      ];
+    } else {
+      columns = [
+        {
+          title: 'sentence1',
+          dataIndex: 'sentence1',
+          ...this.getColumnSearchProps('sentence1'),
+        },
+        {
+          title: 'sentence2',
+          dataIndex: 'sentence2',
+          ...this.getColumnSearchProps('sentence2'),
+        },
+        {
+          title: '标注结果',
+          dataIndex: 'labelResult',
+          render: val => val.map(item => item.join('，')).join(' | '),
+        },
+        {
+          title: '质检结果',
+          dataIndex: 'reviewResult',
+          filters: reviewFilters,
+          filteredValue: filteredInfo.review || null,
+        },
+        {
+          title: '操作',
+          render: (_, sentenceInfo) => (
+            <a onClick={() => this.handleDelete(sentenceInfo)}>删除</a>
+          ),
+        },
+      ];
+    }
 
     return (
       <PageHeaderWrapper
@@ -321,10 +339,9 @@ class TextTaskDetail extends Component {
             progressDot
             current={stepCurrent()}
           >
-            <Step title="创建任务"/>
+            <Step title="未领取"/>
             <Step title="标注" description={stepDesc1()}/>
-            <Step title="审核" description={stepDesc2()}/>
-            <Step title="验收" description={stepDesc3()}/>
+            <Step title="质检" description={stepDesc2()}/>
             <Step title="完成"/>
           </Steps>
         </Card>

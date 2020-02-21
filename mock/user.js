@@ -77,6 +77,13 @@ export default {
               component: './project/text-project/component/ProjectDetail',
               hideInMenu: true,
             },
+            {
+              name: '任务详情页',
+              icon: 'container',
+              path: '/project/text/task-detail',
+              component: './project/text-project/component/TaskDetail',
+              hideInMenu: true,
+            },
           ],
         },
         {

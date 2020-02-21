@@ -32,4 +32,10 @@ export default {
     textMatch: '文本匹配',
     ner: '实体识别',
   },
+
+  reviewLabel: {
+    approve: '通过',
+    reject: '拒绝',
+    unreview: '未质检',
+  },
 }
