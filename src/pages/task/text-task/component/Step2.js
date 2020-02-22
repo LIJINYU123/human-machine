@@ -40,12 +40,12 @@ class Step2 extends Component {
   };
 
   render() {
-    const { stepTwo: { labeler, assessor, acceptor }, form: { getFieldDecorator }, members: { labelers, assessors, acceptors }, submitting } = this.props;
+    const { stepTwo: { labeler, inspector, acceptor }, form: { getFieldDecorator }, members: { labelers, inspectors, acceptors }, submitting } = this.props;
 
     // eslint-disable-next-line max-len
     const markerOptions = labelers.map(item => <Option key={item.userId}>{item.userName}</Option>);
     // eslint-disable-next-line max-len
-    const assessorOptions = assessors.map(item => <Option key={item.userId}>{item.userName}</Option>);
+    const assessorOptions = inspectors.map(item => <Option key={item.userId}>{item.userName}</Option>);
     // eslint-disable-next-line max-len
     const acceptorOptions = acceptors.map(item => <Option key={item.userId}>{item.userName}</Option>);
 
@@ -81,16 +81,16 @@ class Step2 extends Component {
               </Select>)
           }
         </Form.Item>
-        <Form.Item label={FieldLabels.assessor}>
+        <Form.Item label={FieldLabels.inspector}>
           {
-            getFieldDecorator('assessor', {
+            getFieldDecorator('inspector', {
               rules: [
                 {
                   required: true,
                   message: '请选择审核员',
                 },
               ],
-              initialValue: assessor,
+              initialValue: inspector,
             })(
               <Select
                 dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}

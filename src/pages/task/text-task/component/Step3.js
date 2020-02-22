@@ -43,7 +43,7 @@ class Step3 extends Component {
     const { fileList } = this.state;
     const { stepOne, stepTwo } = this.props;
     const { taskName, taskType, markTool, deadline } = stepOne;
-    const { labeler, assessor, acceptor } = stepTwo;
+    const { labeler, inspector: inspector, acceptor } = stepTwo;
     const formData = new FormData();
     formData.append('file', fileList[0]);
     formData.append('taskName', taskName);
@@ -53,7 +53,7 @@ class Step3 extends Component {
     });
     formData.append('deadline', deadline.format('YYYY-MM-DD HH:mm:ss'));
     formData.append('labeler', labeler);
-    formData.append('assessor', assessor);
+    formData.append('inspector', inspector);
     formData.append('acceptor', acceptor);
     this.setState({
       uploading: true,

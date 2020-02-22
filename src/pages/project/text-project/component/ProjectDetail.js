@@ -150,7 +150,7 @@ class TextProjectDetail extends Component {
         <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
         <Descriptions.Item label="项目周期">{basicInfo.startTime}</Descriptions.Item>
         <Descriptions.Item label="标注员">{basicInfo.labelers ? basicInfo.labelers[0].name : ''}...</Descriptions.Item>
-        <Descriptions.Item label="质检员">{basicInfo.assessors ? basicInfo.assessors[0].name : ''}...</Descriptions.Item>
+        <Descriptions.Item label="质检员">{basicInfo.inspectors ? basicInfo.inspectors[0].name : ''}...</Descriptions.Item>
         <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.toolName).join('，') : ''}</Descriptions.Item>
       </Descriptions>
     );

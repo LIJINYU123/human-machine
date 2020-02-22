@@ -11,13 +11,13 @@ const TextFormData = {
     },
     stepTwo: {
       labeler: '',
-      assessor: '',
+      inspector: '',
       acceptor: '',
     },
     allMarkTools: {},
     members: {
       labelers: [],
-      assessors: [],
+      inspectors: [],
       acceptors: [],
     },
     current: 0,

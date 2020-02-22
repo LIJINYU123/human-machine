@@ -31,7 +31,7 @@ export default {
     markTool: '标注工具',
     deadline: '截止时间',
     labeler: '标注员',
-    assessor: '审核员',
+    inspector: '审核员',
     acceptor: '验收员',
   },
 

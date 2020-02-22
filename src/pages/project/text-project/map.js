@@ -43,7 +43,9 @@ export default {
     projectName: '项目名称',
     projectPeriod: '项目周期',
     labeler: '标注员',
-    assessor: '质检员',
+    inspector: '质检员',
     labelType: '标注类型',
+    passRate: '合格率',
+    checkRate: '质检率',
   },
 }

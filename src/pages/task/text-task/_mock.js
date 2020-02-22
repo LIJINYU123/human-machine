@@ -331,7 +331,7 @@ function deleteTasks(req, res, u, b) {
 function getRoleMembers(req, res) {
   const response = {
     labelers: [{ userId: 'SY0111', userName: '张三' }, { userId: 'SY0112', userName: '王五' }, { userId: 'SY0113', userName: '杨六' }],
-    assessors: [{ userId: 'SY0114', userName: '审核员1' }, { userId: 'SY0115', userName: '审核员2' }, { userId: 'SY0116', userName: '审核员3' }],
+    inspectors: [{ userId: 'SY0114', userName: '审核员1' }, { userId: 'SY0115', userName: '审核员2' }, { userId: 'SY0116', userName: '审核员3' }],
     acceptors: [{ userId: 'SY0117', userName: '验收员1' }, { userId: 'SY0118', userName: '验收员2' }, { userId: 'SY0119', userName: '验收员3' }],
   };
   return res.json(response);
