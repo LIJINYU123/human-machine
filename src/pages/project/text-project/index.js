@@ -19,6 +19,7 @@ import {
 } from 'antd';
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
+import ProjectCreateView from './component/ProjectCreateView';
 import ItemData from './map';
 
 const { RangePicker } = DatePicker;
@@ -106,7 +107,7 @@ class TextProjectList extends Component {
 
   handleCancelAddModal = () => {
     this.setState({
-      addModalVisible: true,
+      addModalVisible: false,
     });
   };
 
@@ -333,11 +334,10 @@ class TextProjectList extends Component {
             onChange={this.handleStandardTableChange}
           />
         </Card>
+        <ProjectCreateView visible={addModalVisible} onCancel={this.handleCancelAddModal} />
       </PageHeaderWrapper>
     );
   }
 }
 
 export default Form.create()(TextProjectList);
-
-

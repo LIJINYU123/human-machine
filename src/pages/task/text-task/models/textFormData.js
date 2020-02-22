@@ -59,10 +59,6 @@ const TextFormData = {
       });
     },
 
-    * createTask({ payload }, { call, put }) {
-
-    },
-
     * fetchMembers({ payload }, { call, put }) {
       const response = yield call(queryMembers, payload);
       yield put({
