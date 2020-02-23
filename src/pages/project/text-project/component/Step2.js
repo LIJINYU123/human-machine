@@ -40,6 +40,19 @@ class Step2 extends Component {
     });
   }
 
+  onValidateForm = () => {
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
+    validateFieldsAndScroll(error => {
+      if (!error) {
+        const values = getFieldsValue();
+        dispatch({
+          type: 'textProjectFormData/saveStepTwoData',
+          payload: values,
+        });
+      }
+    });
+  };
+
   onPrev = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -195,7 +208,7 @@ class Step2 extends Component {
   };
 
   render() {
-    const { textProjectFormData: { markTools, stepOne }, form: { getFieldDecorator } } = this.props;
+    const { textProjectFormData: { markTools, stepOne }, form: { getFieldDecorator }, submitting } = this.props;
     const { toolKeys } = this.state;
     const { labelType } = stepOne;
     // eslint-disable-next-line max-len
@@ -212,7 +225,6 @@ class Step2 extends Component {
                     dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
                     showSearch
                     filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-                    mode="multiple"
                   >
                     {markToolOptions}
                   </Select>)
@@ -243,7 +255,7 @@ class Step2 extends Component {
                 },
               }}
             >
-              <Button type="primary">下一步</Button>
+              <Button type="primary" onClick={this.onValidateForm} loading={submitting}>下一步</Button>
               <Button style={{ marginLeft: '8px' }} onClick={this.onPrev}>上一步</Button>
             </Form.Item>
           </Col>

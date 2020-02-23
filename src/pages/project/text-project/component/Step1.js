@@ -24,7 +24,7 @@ class Step1 extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
-      type: 'textProjectFormData/fetchMarkTool',
+      type: 'textProjectFormData/fetchMembers',
     });
   }
 
@@ -33,6 +33,8 @@ class Step1 extends Component {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
+        values.projectPeriod = [values.projectPeriod && values.projectPeriod[0].format('YYYY-MM-DD HH:mm:ss'),
+                                values.projectPeriod && values.projectPeriod[1].format('YYYY-MM-DD HH:mm:ss')];
 
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
@@ -44,7 +46,14 @@ class Step1 extends Component {
 
   render() {
     // eslint-disable-next-line max-len
-    const { form: { getFieldDecorator } } = this.props;
+    const { form: { getFieldDecorator }, textProjectFormData } = this.props;
+
+    const { members: { labelers, inspectors } } = textProjectFormData;
+
+    const labelerOptions = labelers.map(item => <Option key={item.userId}>{item.userName}</Option>);
+
+    // eslint-disable-next-line max-len
+    const inspectorOptions = inspectors.map(item => <Option key={item.userId}>{item.userName}</Option>);
 
     const formItemLayout = {
       labelCol: {
@@ -139,13 +148,15 @@ class Step1 extends Component {
                       message: '请选择标注员',
                     },
                   ],
-                  initialValue: 'SY0123',
+                  initialValue: [],
                 })(<Select
                   dropdownMenuStyle={{
                     maxHeight: 400,
                     overflow: 'auto',
                   }} style={{ width: '80%' }}
+                  mode="multiple"
                 >
+                  {labelerOptions}
                 </Select>)
               }
             </Form.Item>
@@ -160,13 +171,15 @@ class Step1 extends Component {
                       message: '请选择质检员',
                     },
                   ],
-                  initialValue: 'SY0111',
+                  initialValue: [],
                 })(<Select
                   dropdownMenuStyle={{
                     maxHeight: 400,
                     overflow: 'auto',
                   }} style={{ width: '80%' }}
+                  mode="multiple"
                 >
+                  {inspectorOptions}
                 </Select>)
               }
             </Form.Item>

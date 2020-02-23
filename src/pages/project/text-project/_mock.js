@@ -447,6 +447,18 @@ function getMarkTools(req, res, u) {
   return res.json(dataSource);
 }
 
+function getRoleMembers(req, res) {
+  const response = {
+    labelers: [{ userId: 'SY0111', userName: '张三' }, { userId: 'SY0112', userName: '王五' }, { userId: 'SY0113', userName: '杨六' }, { userId: 'SY0114', userName: '杨九' }],
+    inspectors: [{ userId: 'SY0114', userName: '审核员1' }, { userId: 'SY0115', userName: '审核员2' }, { userId: 'SY0116', userName: '审核员3' }],
+  };
+  return res.json(response);
+}
+
+function downloadTemplate(req, res) {
+  res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/project/text-project/template.xlsx');
+}
+
 export default {
   'GET /api/text-projects': getProjects,
   'GET /api/text-project/detail/:projectId': getProjectDetail,
@@ -455,4 +467,6 @@ export default {
   'GET /api/text-project/label-data': getLabelData,
   'DELETE /api/text-project/label-data': deleteLabelData,
   'GET /api/text-project/marktools': getMarkTools,
+  'GET /api/text-project/members': getRoleMembers,
+  'POST /api/text-project/download-template': downloadTemplate,
 };

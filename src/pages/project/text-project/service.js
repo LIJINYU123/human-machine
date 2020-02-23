@@ -55,3 +55,7 @@ export async function queryMarkTools(params) {
     params,
   });
 }
+
+export async function queryMembers() {
+  return request('/api/text-project/members');
+}

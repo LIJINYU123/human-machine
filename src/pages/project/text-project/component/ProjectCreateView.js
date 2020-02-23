@@ -3,6 +3,7 @@ import { Button, Modal, Form, Steps } from 'antd';
 import { connect } from 'dva';
 import Step1 from './Step1';
 import Step2 from './Step2';
+import Step3 from './Step3';
 import styles from './style.less';
 
 
@@ -19,6 +20,8 @@ class ProjectCreateView extends Component {
       stepComponent = <Step1/>
     } else if (current === 1) {
       stepComponent = <Step2/>
+    } else if (current === 2) {
+      stepComponent = <Step3/>
     }
 
     return (
@@ -32,7 +35,7 @@ class ProjectCreateView extends Component {
         style={{ minWidth: '850px' }}
         destroyOnClose
       >
-        <Steps current={0} className={styles.steps}>
+        <Steps current={current} className={styles.steps}>
           <Step title="基本信息"/>
           <Step title="工具配置"/>
           <Step title="上传数据"/>
