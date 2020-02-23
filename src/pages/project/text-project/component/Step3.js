@@ -104,8 +104,11 @@ class Step3 extends Component {
   };
 
   handleDownload = () => {
+    const { stepOne } = this.props;
+    const { labelType } = stepOne;
     fetch('/api/text-project/download-template', {
       method: 'POST',
+      body: JSON.stringify({ labelType }),
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
         Authorization: localStorage.getItem('Authorization'),

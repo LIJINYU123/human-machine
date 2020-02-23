@@ -175,7 +175,7 @@ class TextProjectDetail extends Component {
       },
       {
         title: '质检员',
-        dataIndex: 'assessorName',
+        dataIndex: 'inspectorName',
       },
       {
         title: '标注进度',

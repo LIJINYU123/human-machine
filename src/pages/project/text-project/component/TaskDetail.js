@@ -44,7 +44,7 @@ class TextTaskDetail extends Component {
 
     dispatch({
       type: 'textTaskDetail/fetchLabelData',
-      payload: location.state.taskId,
+      payload: { taskId: location.state.taskId },
     });
 
     this.setState({
@@ -205,7 +205,7 @@ class TextTaskDetail extends Component {
         <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
         <Descriptions.Item label="任务周期">{basicInfo.startTime}</Descriptions.Item>
         <Descriptions.Item label="标注员">{basicInfo.labelerName}</Descriptions.Item>
-        <Descriptions.Item label="质检员">{basicInfo.assessorName}</Descriptions.Item>
+        <Descriptions.Item label="质检员">{basicInfo.inspectorName}</Descriptions.Item>
         <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.toolName).join('，') : ''}</Descriptions.Item>
       </Descriptions>
     );
