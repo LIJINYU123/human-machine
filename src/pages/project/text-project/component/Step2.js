@@ -52,8 +52,8 @@ class Step2 extends Component {
           name: values[`optionName-${key}`], id: values[`optionId-${key}`] }));
 
         fieldValues.defaultTool = values.defaultTool;
-        fieldValues.toolName = values.toolName;
-        fieldValues.toolId = values.toolId;
+        fieldValues.toolName = values.toolName ? values.toolName : '';
+        fieldValues.toolId = values.toolId ? values.toolId : '';
         fieldValues.options = options;
 
         dispatch({

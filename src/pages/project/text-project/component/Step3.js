@@ -41,8 +41,59 @@ class Step3 extends Component {
   handleUpload = () => {
     const { fileList } = this.state;
     const { stepOne, stepTwo } = this.props;
-    console.log(stepOne);
-    console.log(stepTwo);
+    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
+    const { defaultTool, toolName, toolId, options } = stepTwo;
+    const formData = new FormData();
+    formData.append('file', fileList[0]);
+    formData.append('projectName', projectName);
+    formData.append('labelType', labelType);
+    formData.append('passRate', passRate);
+    formData.append('checkRate', checkRate);
+    labeler.forEach(item => {
+      formData.append('labeler[]', item);
+    });
+
+    inspector.forEach(item => {
+      formData.append('inspector[]', item);
+    });
+
+    formData.append('questionNum', questionNum);
+    projectPeriod.forEach(item => {
+      formData.append('projectPeriod[]', item);
+    });
+    formData.append('description', description);
+    formData.append('defaultTool', defaultTool);
+    if (toolName !== '' && toolId !== '') {
+      formData.append('toolName', toolName);
+      formData.append('toolId', toolId);
+    }
+    if (options.length) {
+      options.forEach(item => {
+        formData.append('options[]', item);
+      });
+    }
+    this.setState({
+      uploading: true,
+    });
+    reqwest({
+      url: '/api/text-project/create',
+      method: 'post',
+      processData: false,
+      data: formData,
+      success: () => {
+        this.setState({
+          fileList: [],
+          uploading: false,
+        });
+        message.success('项目创建成功');
+      },
+      error: () => {
+        this.setState({
+          uploading: false,
+        });
+        message.error('项目创建失败');
+      },
+    });
   };
 
   onPrev = () => {

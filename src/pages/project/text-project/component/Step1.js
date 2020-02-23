@@ -72,11 +72,11 @@ class Step1 extends Component {
           <Col md={12} sm={24}>
             <Form.Item label={FieldLabels.projectName} {...formItemLayout} >
               {
-                getFieldDecorator('taskName', {
+                getFieldDecorator('projectName', {
                   rules: [
                     {
                       required: true,
-                      message: '请输入任务名称',
+                      message: '请输入项目名称',
                     },
                   ],
                   initialValue: '',

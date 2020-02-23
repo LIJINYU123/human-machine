@@ -285,7 +285,7 @@ function getProjects(req, res, u) {
   }
 
   if (params.labelType) {
-    const types = params.taskType.split(',');
+    const types = params.labelType.split(',');
     let filterDataSource = [];
     types.forEach(type => {
       // eslint-disable-next-line max-len
@@ -315,6 +315,12 @@ function getProjects(req, res, u) {
   };
 
   return res.json(result);
+}
+
+function deleteProjects(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  mockData = mockData.filter(item => !body.projectIds.includes(item.projectId));
+  return res.json({ message: '删除成功', status: 'ok' });
 }
 
 function getProjectDetail(req, res) {
@@ -459,8 +465,14 @@ function downloadTemplate(req, res) {
   res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/project/text-project/template.xlsx');
 }
 
+function createProject(req, res) {
+  return res.json({ status: 'ok', message: '创建成功' });
+}
+
 export default {
   'GET /api/text-projects': getProjects,
+  'DELETE /api/text-projects': deleteProjects,
+  'POST /api/text-project/create': createProject,
   'GET /api/text-project/detail/:projectId': getProjectDetail,
   'GET /api/text-project/task-data': getTaskData,
   'GET /api/text-project/task-detail/:taskId': getTaskDetail,
