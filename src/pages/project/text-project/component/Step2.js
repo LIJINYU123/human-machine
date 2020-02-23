@@ -42,12 +42,23 @@ class Step2 extends Component {
 
   onValidateForm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
+    const { optionKeys } = this.state;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
+        const fieldValues = {};
+
+        const options = optionKeys.map(key => ({
+          name: values[`optionName-${key}`], id: values[`optionId-${key}`] }));
+
+        fieldValues.defaultTool = values.defaultTool;
+        fieldValues.toolName = values.toolName;
+        fieldValues.toolId = values.toolId;
+        fieldValues.options = options;
+
         dispatch({
           type: 'textProjectFormData/saveStepTwoData',
-          payload: values,
+          payload: fieldValues,
         });
       }
     });
