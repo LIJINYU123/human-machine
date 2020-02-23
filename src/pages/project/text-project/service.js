@@ -50,6 +50,8 @@ export async function deleteLabelData(params) {
 }
 
 // 创建项目api
-export async function queryMarkTools() {
-  return request('/api/text-task/marktools');
+export async function queryMarkTools(params) {
+  return request('/api/text-project/marktools', {
+    params,
+  });
 }

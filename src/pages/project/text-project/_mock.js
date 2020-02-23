@@ -220,6 +220,39 @@ let labelMockData = [
   },
 ];
 
+const markToolsMockData = [
+  {
+    labelType: 'textClassify',
+    toolId: 'emotion',
+    toolName: '情感',
+  },
+  {
+    labelType: 'textClassify',
+    toolId: 'sentenceType',
+    toolName: '句式',
+  },
+  {
+    labelType: 'textMatch',
+    toolId: 'similarity',
+    toolName: '相似度',
+  },
+  {
+    labelType: 'ner',
+    toolId: 'singer',
+    toolName: '歌手',
+  },
+  {
+    labelType: 'ner',
+    toolId: 'country',
+    toolName: '国家',
+  },
+  {
+    labelType: 'ner',
+    toolId: 'location',
+    toolName: '地名',
+  },
+];
+
 function getProjects(req, res, u) {
   const departmentId = req.get('DepartmentId');
   let url = u;
@@ -396,6 +429,24 @@ function deleteLabelData(req, res, u, b) {
   return res.json({ message: '删除成功', status: 'ok' });
 }
 
+function getMarkTools(req, res, u) {
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+
+  let dataSource = markToolsMockData;
+  const params = parse(url, true).query;
+  if (params.labelType) {
+    dataSource = markToolsMockData.filter(item => item.labelType === params.labelType)
+  } else {
+    dataSource = [];
+  }
+
+  return res.json(dataSource);
+}
+
 export default {
   'GET /api/text-projects': getProjects,
   'GET /api/text-project/detail/:projectId': getProjectDetail,
@@ -403,4 +454,5 @@ export default {
   'GET /api/text-project/task-detail/:taskId': getTaskDetail,
   'GET /api/text-project/label-data': getLabelData,
   'DELETE /api/text-project/label-data': deleteLabelData,
+  'GET /api/text-project/marktools': getMarkTools,
 };

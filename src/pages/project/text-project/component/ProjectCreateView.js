@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import { Button, Modal, Form, Steps } from 'antd';
 import { connect } from 'dva';
 import Step1 from './Step1';
+import Step2 from './Step2';
 import styles from './style.less';
+
 
 const { Step } = Steps;
 
@@ -15,6 +17,8 @@ class ProjectCreateView extends Component {
     let stepComponent;
     if (current === 0) {
       stepComponent = <Step1/>
+    } else if (current === 1) {
+      stepComponent = <Step2/>
     }
 
     return (
@@ -25,7 +29,7 @@ class ProjectCreateView extends Component {
         onCancel={onCancel}
         footer={[
           <Button key="back" onClick={onCancel}>返回</Button>]}
-        style={{ minWidth: '900px' }}
+        style={{ minWidth: '850px' }}
         destroyOnClose
       >
         <Steps current={0} className={styles.steps}>

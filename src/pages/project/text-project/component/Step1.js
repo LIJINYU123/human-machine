@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Col, Form, Input, Row, Select, InputNumber } from 'antd';
+import { Button, Col, Form, Input, Row, Select, InputNumber, DatePicker } from 'antd';
 import { connect } from 'dva';
 import ItemData from '../map';
 import styles from './style.less';
 
 const { Option } = Select;
+const { RangePicker } = DatePicker;
+const { TextArea } = Input;
 const { FieldLabels, labelTypeName } = ItemData;
 
 // eslint-disable-next-line max-len
@@ -25,6 +27,20 @@ class Step1 extends Component {
       type: 'textProjectFormData/fetchMarkTool',
     });
   }
+
+  onValidateForm = () => {
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
+    validateFieldsAndScroll(error => {
+      if (!error) {
+        const values = getFieldsValue();
+
+        dispatch({
+          type: 'textProjectFormData/saveStepOneData',
+          payload: values,
+        });
+      }
+    });
+  };
 
   render() {
     // eslint-disable-next-line max-len
@@ -123,8 +139,12 @@ class Step1 extends Component {
                       message: '请选择标注员',
                     },
                   ],
+                  initialValue: 'SY0123',
                 })(<Select
-                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} className={styles.formItem}
+                  dropdownMenuStyle={{
+                    maxHeight: 400,
+                    overflow: 'auto',
+                  }} style={{ width: '80%' }}
                 >
                 </Select>)
               }
@@ -132,7 +152,81 @@ class Step1 extends Component {
           </Col>
           <Col md={12} sm={24}>
             <Form.Item label={FieldLabels.inspector} {...formItemLayout}>
-
+              {
+                getFieldDecorator('inspector', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择质检员',
+                    },
+                  ],
+                  initialValue: 'SY0111',
+                })(<Select
+                  dropdownMenuStyle={{
+                    maxHeight: 400,
+                    overflow: 'auto',
+                  }} style={{ width: '80%' }}
+                >
+                </Select>)
+              }
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
+          <Col md={12} sm={24}>
+            <Form.Item label={FieldLabels.questionNum} {...formItemLayout}>
+              {
+                getFieldDecorator('questionNum', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请输入单任务题目数',
+                    },
+                  ],
+                })(<InputNumber className={styles.formItem}/>)
+              }
+            </Form.Item>
+          </Col>
+          <Col md={12} sm={24}>
+            <Form.Item label={FieldLabels.projectPeriod} {...formItemLayout}>
+              {
+                getFieldDecorator('projectPeriod', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择项目周期',
+                    },
+                  ],
+                })(
+                  <RangePicker className={styles.formItem} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
+              }
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
+          <Col md={12} sm={24}>
+            <Form.Item label={FieldLabels.description} {...formItemLayout}>
+              {
+                getFieldDecorator('description', {})(<TextArea autoSize className={styles.formItem}/>)
+              }
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
+          <Col md={12} sm={24}>
+            <Form.Item
+              wrapperCol={{
+                xs: {
+                  span: 24,
+                  offset: 0,
+                },
+                sm: {
+                  span: formItemLayout.wrapperCol.sm.span,
+                  offset: formItemLayout.labelCol.sm.span,
+                },
+              }}
+            >
+              <Button type="primary" onClick={this.onValidateForm}>下一步</Button>
             </Form.Item>
           </Col>
         </Row>

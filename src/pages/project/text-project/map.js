@@ -47,5 +47,12 @@ export default {
     labelType: '标注类型',
     passRate: '合格率',
     checkRate: '质检率',
+    questionNum: '单任务题目数',
+    description: '项目描述',
+    defaultTool: '默认工具',
+    toolName: '工具名称',
+    toolId: '工具标识',
+    optionName: '选项名称',
+    optionId: '选项标识',
   },
 }
