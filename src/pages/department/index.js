@@ -5,6 +5,9 @@ import { Button, Card, Divider, Popconfirm, Table } from 'antd';
 import DepCreateView from './component/DepCreateView';
 import DepDetailView from './component/DepDetailView';
 import styles from './style.less';
+import ItemData from './component/map';
+
+const { PrivilegeMap } = ItemData;
 
 @connect(({ departmentList, loading }) => ({
   departmentList,
@@ -25,6 +28,12 @@ class DepartmentList extends Component {
     {
       title: '机构名称',
       dataIndex: 'departmentName',
+    },
+    {
+      title: '机构权限',
+      dataIndex: 'privilege',
+      render: val => val.map(item => PrivilegeMap[item]).join('|'),
+      ellipsis: true,
     },
     {
       title: '管理员',

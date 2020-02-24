@@ -3,7 +3,7 @@ import { connect } from 'dva';
 import { Form, Input, Modal, Select } from 'antd';
 import ItemData from './map';
 
-const { FieldLabels } = ItemData;
+const { FieldLabels, Privileges } = ItemData;
 const { Option } = Select;
 
 @connect(({ departmentList, loading }) => ({
@@ -62,6 +62,9 @@ class DepCreateView extends Component {
     // eslint-disable-next-line max-len
     const accountOptions = noDepAccounts.map(account => <Option key={account.userId}>{`${account.userId}(${account.name})`}</Option>);
 
+    // eslint-disable-next-line max-len
+    const privilegeOptions = Privileges.map(privilege => <Option key={privilege.id}>{privilege.name}</Option>);
+
     const formItenLayout = {
       labelCol: {
         xs: { span: 24 },
@@ -104,6 +107,23 @@ class DepCreateView extends Component {
                   },
                 ],
               })(<Input/>)
+            }
+          </Form.Item>
+          <Form.Item label={FieldLabels.privilege}>
+            {
+              getFieldDecorator('privilege', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择机构权限',
+                  },
+                ],
+              })(<Select
+                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  mode="multiple"
+                >
+                  {privilegeOptions}
+                </Select>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.administrator}>

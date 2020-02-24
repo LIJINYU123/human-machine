@@ -179,7 +179,7 @@ class TextTaskDetail extends Component {
   handleGoBack = () => {
     const { projectId } = this.state;
     router.push({
-      pathname: '/project/text-detail',
+      pathname: '/project/detail',
       state: {
         projectId,
       },

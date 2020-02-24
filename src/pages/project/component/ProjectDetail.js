@@ -160,7 +160,7 @@ class TextProjectDetail extends Component {
     const action = (
       <Fragment>
         <Button>编辑</Button>
-        <Link to="/project/text-project">
+        <Link to="/project">
           <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
         </Link>
       </Fragment>

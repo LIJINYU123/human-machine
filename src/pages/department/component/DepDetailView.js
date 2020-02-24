@@ -4,7 +4,7 @@ import { Form, Input, Modal, Select } from 'antd';
 import ItemData from './map';
 
 const { Option } = Select;
-const { FieldLabels } = ItemData;
+const { FieldLabels, Privileges } = ItemData;
 
 @connect(({ departmentList, loading }) => ({
   departmentList,
@@ -33,6 +33,8 @@ class DepDetailView extends Component {
     const accountOptions = noDepAccounts.map(account => <Option key={account.userId}>{`${account.userId}(${account.name})`}</Option>);
     // eslint-disable-next-line max-len
     accountOptions.push(<Option key={departmentInfo.administrator}>{`${departmentInfo.administrator}(${departmentInfo.adminName})`}</Option>);
+
+    const privilegeOptions = Privileges.map(privilege => <Option key={privilege.id}>{privilege.name}</Option>);
 
     const formItemLayout = {
       labelCol: {
@@ -70,6 +72,18 @@ class DepDetailView extends Component {
               })(<Input/>)
             }
           </Form.Item>
+          <Form.Item label={FieldLabels.privilege}>
+            {
+              getFieldDecorator('privilege', {
+                initialValue: departmentInfo.privilege,
+              })(<Select
+                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
+                  mode="multiple"
+                >
+                {privilegeOptions}
+                </Select>)
+            }
+          </Form.Item>
           <Form.Item label={FieldLabels.administrator}>
             {
               getFieldDecorator('administrator', {
@@ -84,7 +98,7 @@ class DepDetailView extends Component {
                 </Select>)
             }
           </Form.Item>
-          <Form.Item label={departmentInfo.createdTime}>
+          <Form.Item label={FieldLabels.createdTime}>
             {
               getFieldDecorator('createdTime', {
                 initialValue: departmentInfo.createdTime,

@@ -519,7 +519,7 @@ function getRoleMembers(req, res) {
 }
 
 function downloadTemplate(req, res) {
-  res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/project/text-project/template.xlsx');
+  res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/project/template.xlsx');
 }
 
 function createProject(req, res) {

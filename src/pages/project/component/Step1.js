@@ -17,10 +17,6 @@ const labelTypeOptions = Object.keys(labelTypeName).map(key => <Option key={key}
   submitting: loading.effects['textProjectFormData/saveStepOneData'],
 }))
 class Step1 extends Component {
-  state = {
-    selectTaskType: '',
-  };
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({

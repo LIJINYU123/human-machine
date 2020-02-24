@@ -11,6 +11,7 @@ const options = {
   modify: '修改',
   query: '查询',
   delete: '删除',
+  export: '导出',
 };
 
 function StandardTable(props) {

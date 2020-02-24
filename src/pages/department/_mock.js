@@ -4,6 +4,7 @@ let mockData = [
   {
     departmentId: 'deveopment',
     departmentName: '研发部门',
+    privilege: ['textClassify', 'pictureMark'],
     administrator: 'SYDEV',
     adminName: '研发部管理员',
     userAmount: 10,
@@ -12,6 +13,7 @@ let mockData = [
   {
     departmentId: 'operation',
     departmentName: '运营部门',
+    privilege: ['textClassify'],
     administrator: 'SYOPE',
     adminName: '运营部管理员',
     userAmount: 20,

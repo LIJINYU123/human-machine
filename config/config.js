@@ -130,28 +130,21 @@ export default {
               path: '/project',
               name: '项目管理',
               icon: 'schedule',
-              routes: [
-                {
-                  name: '文本标注',
-                  icon: 'container',
-                  path: '/project/text-project',
-                  component: './project/text-project',
-                },
-                {
-                  name: '项目详情页',
-                  icon: 'container',
-                  path: '/project/text-detail',
-                  component: './project/text-project/component/ProjectDetail',
-                  hideInMenu: true,
-                },
-                {
-                  name: '任务详情页',
-                  icon: 'container',
-                  path: '/project/text/task-detail',
-                  component: './project/text-project/component/TaskDetail',
-                  hideInMenu: true,
-                },
-              ],
+              component: './project',
+            },
+            {
+              name: '项目详情页',
+              icon: 'container',
+              path: '/project/detail',
+              component: './project/component/ProjectDetail',
+              hideInMenu: true,
+            },
+            {
+              name: '任务详情页',
+              icon: 'container',
+              path: '/project/text/task-detail',
+              component: './project/component/TextTaskDetail',
+              hideInMenu: true,
             },
             {
               path: '/task',
