@@ -148,10 +148,12 @@ class TextProjectDetail extends Component {
       <Descriptions className={styles.headerList} size="small" column={3}>
         <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
-        <Descriptions.Item label="项目周期">{basicInfo.startTime}</Descriptions.Item>
+        <Descriptions.Item label="项目周期">{basicInfo.endTime}</Descriptions.Item>
         <Descriptions.Item label="标注员">{basicInfo.labelers ? basicInfo.labelers[0].name : ''}...</Descriptions.Item>
         <Descriptions.Item label="质检员">{basicInfo.inspectors ? basicInfo.inspectors[0].name : ''}...</Descriptions.Item>
         <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.toolName).join('，') : ''}</Descriptions.Item>
+        <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
+        <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>
       </Descriptions>
     );
 
