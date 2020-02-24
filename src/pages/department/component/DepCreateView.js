@@ -29,9 +29,9 @@ class DepCreateView extends Component {
   checkDepId = (rule, value, callback) => {
     const { departmentList: { data } } = this.props;
     if (!value) {
-      callback('请输入部门唯一标识');
+      callback('请输入机构唯一标识');
     } else if (data.filter(department => department.departmentId === value).length) {
-      callback('该部门唯一标识已经存在');
+      callback('该机构唯一标识已经存在');
     } else {
       callback();
     }
@@ -40,9 +40,9 @@ class DepCreateView extends Component {
   checkDepName = (rule, value, callback) => {
     const { departmentList: { data } } = this.props;
     if (!value) {
-      callback('请输入部门名称');
+      callback('请输入机构名称');
     } else if (data.filter(department => department.departmentName === value).length) {
-      callback('该部门名称已经存在');
+      callback('该机构名称已经存在');
     } else {
       callback();
     }
@@ -75,7 +75,7 @@ class DepCreateView extends Component {
 
     return (
       <Modal
-        title="创建部门"
+        title="创建机构"
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}

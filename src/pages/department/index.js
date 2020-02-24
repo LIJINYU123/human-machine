@@ -19,11 +19,11 @@ class DepartmentList extends Component {
 
   columns = [
     {
-      title: '部门标识',
+      title: '机构标识',
       dataIndex: 'departmentId',
     },
     {
-      title: '部门名称',
+      title: '机构名称',
       dataIndex: 'departmentName',
     },
     {

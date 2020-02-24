@@ -1,7 +1,7 @@
 export default {
   FieldLabels: {
-    departmentId: '部门标识',
-    departmentName: '部门名称',
+    departmentId: '机构标识',
+    departmentName: '机构名称',
     administrator: '管理员',
   },
 }

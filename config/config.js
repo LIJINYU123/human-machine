@@ -127,18 +127,6 @@ export default {
               component: './statistic',
             },
             {
-              path: '/corpus',
-              name: 'corpus-form',
-              icon: 'form',
-              component: './corpus',
-            },
-            {
-              path: '/history',
-              name: 'history',
-              icon: 'history',
-              component: './history',
-            },
-            {
               path: '/project',
               name: '项目管理',
               icon: 'schedule',

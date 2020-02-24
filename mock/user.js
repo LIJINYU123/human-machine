@@ -47,18 +47,18 @@ export default {
           icon: 'dashboard',
           component: './statistic',
         },
-        {
-          path: '/corpus',
-          name: '对话录入',
-          icon: 'form',
-          component: './corpus',
-        },
-        {
-          path: '/history',
-          name: '历史记录',
-          icon: 'history',
-          component: './history',
-        },
+        // {
+        //   path: '/corpus',
+        //   name: '对话录入',
+        //   icon: 'form',
+        //   component: './corpus',
+        // },
+        // {
+        //   path: '/history',
+        //   name: '历史记录',
+        //   icon: 'history',
+        //   component: './history',
+        // },
         {
           path: '/project',
           name: '项目管理',
@@ -86,28 +86,28 @@ export default {
             },
           ],
         },
+        // {
+        //   path: '/task',
+        //   name: '任务管理',
+        //   icon: 'schedule',
+        //   children: [
+        //     {
+        //       name: '文本标注',
+        //       icon: 'container',
+        //       path: '/task/text-task',
+        //       component: './task/text-task',
+        //     },
+        //     {
+        //       name: '任务详情页',
+        //       icon: 'container',
+        //       path: '/task/text-detail',
+        //       component: './task/text-task/component/Detail',
+        //       hideInMenu: true,
+        //     },
+        //   ],
+        // },
         {
-          path: '/task',
-          name: '任务管理',
-          icon: 'schedule',
-          children: [
-            {
-              name: '文本标注',
-              icon: 'container',
-              path: '/task/text-task',
-              component: './task/text-task',
-            },
-            {
-              name: '任务详情页',
-              icon: 'container',
-              path: '/task/text-detail',
-              component: './task/text-task/component/Detail',
-              hideInMenu: true,
-            },
-          ],
-        },
-        {
-          name: '部门管理',
+          name: '机构管理',
           icon: 'audit',
           path: '/agency/department',
           component: './department',
