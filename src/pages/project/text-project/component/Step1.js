@@ -115,7 +115,7 @@ class Step1 extends Component {
                   initialValue: 0,
                 })(<InputNumber min={0} max={100} formatter={value => `${value}%`}
                                 parser={value => value.replace('%', '')}
-                                className={styles.formItem}/>)
+                                style={{ width: '80%' }}/>)
               }
             </Form.Item>
           </Col>
@@ -132,7 +132,7 @@ class Step1 extends Component {
                   initialValue: 0,
                 })(<InputNumber min={0} max={100} formatter={value => `${value}%`}
                                 parser={value => value.replace('%', '')}
-                                className={styles.formItem}/>)
+                                style={{ width: '80%' }}/>)
               }
             </Form.Item>
           </Col>
@@ -196,7 +196,7 @@ class Step1 extends Component {
                       message: '请输入单任务题目数',
                     },
                   ],
-                })(<InputNumber className={styles.formItem}/>)
+                })(<InputNumber style={{ width: '80%' }}/>)
               }
             </Form.Item>
           </Col>
