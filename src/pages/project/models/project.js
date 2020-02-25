@@ -1,8 +1,8 @@
 import { queryProjectList, deleteProjectList } from '../service';
 import { message } from 'antd/lib/index';
 
-const TextProject = {
-  namespace: 'textProject',
+const Project = {
+  namespace: 'project',
   state: {
     data: {
       list: [],
@@ -45,4 +45,4 @@ const TextProject = {
   },
 };
 
-export default TextProject;
+export default Project;

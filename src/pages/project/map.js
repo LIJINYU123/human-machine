@@ -35,6 +35,9 @@ export default {
     textClassify: '文本分类',
     textMatch: '文本匹配',
     ner: '实体识别',
+    pictureMark: '图片标注',
+    voiceMark: '音频标注',
+    videoDialogMark: '其他标注-视频对话标注',
   },
 
   reviewLabel: {

@@ -38,9 +38,9 @@ const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
   value: key,
 }));
 
-@connect(({ textProject, loading }) => ({
-  data: textProject.data,
-  loading: loading.effects['textProject/fetchProject'],
+@connect(({ project, loading }) => ({
+  data: project.data,
+  loading: loading.effects['project/fetchProject'],
 }))
 class TextProjectList extends Component {
   state = {
@@ -59,7 +59,7 @@ class TextProjectList extends Component {
       sorter: 'createdTime_descend',
     };
     dispatch({
-      type: 'textProject/fetchProject',
+      type: 'project/fetchProject',
       payload: params,
     });
   }
@@ -94,7 +94,7 @@ class TextProjectList extends Component {
     }
 
     dispatch({
-      type: 'textProject/fetchProject',
+      type: 'project/fetchProject',
       payload: params,
     });
   };
@@ -188,14 +188,14 @@ class TextProjectList extends Component {
     });
 
     dispatch({
-      type: 'textProject/fetchProject',
+      type: 'project/fetchProject',
     });
   };
 
   handleDelete = project => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'textProject/deleteProject',
+      type: 'project/deleteProject',
       payload: {
         projectIds: [project.projectId],
       },
@@ -211,7 +211,7 @@ class TextProjectList extends Component {
     const { dispatch } = this.props;
     const { selectedRows } = this.state;
     dispatch({
-      type: 'textProject/deleteProject',
+      type: 'project/deleteProject',
       payload: {
         projectIds: selectedRows.map(row => row.projectId),
       },
@@ -237,7 +237,7 @@ class TextProjectList extends Component {
       });
 
       dispatch({
-        type: 'textProject/deleteProject',
+        type: 'project/deleteProject',
         payload: values,
       });
     });

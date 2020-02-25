@@ -1,13 +1,13 @@
 import request from '@/utils/request';
 
 export async function queryProjectList(params) {
-  return request('/api/text-projects', {
+  return request('/api/projects', {
     params,
   });
 }
 
 export async function deleteProjectList(params) {
-  return request('/api/text-projects', {
+  return request('/api/projects', {
     method: 'DELETE',
     data: params,
   })
@@ -15,11 +15,11 @@ export async function deleteProjectList(params) {
 
 // 项目详情页api
 export async function queryProjectDetail(projectId) {
-  return request(`/api/text-project/detail/${projectId}`);
+  return request(`/api/project/detail/${projectId}`);
 }
 
 export async function queryTaskData(params) {
-  return request('/api/text-project/task-data', {
+  return request('/api/project/task-data', {
     params,
   });
 }
@@ -57,5 +57,5 @@ export async function queryMarkTools(params) {
 }
 
 export async function queryMembers() {
-  return request('/api/text-project/members');
+  return request('/api/project/members');
 }

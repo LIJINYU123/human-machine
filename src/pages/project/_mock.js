@@ -527,15 +527,15 @@ function createProject(req, res) {
 }
 
 export default {
-  'GET /api/text-projects': getProjects,
-  'DELETE /api/text-projects': deleteProjects,
+  'GET /api/projects': getProjects,
+  'DELETE /api/projects': deleteProjects,
+  'GET /api/project/detail/:projectId': getProjectDetail,
+  'GET /api/project/task-data': getTaskData,
+  'GET /api/project/members': getRoleMembers,
   'POST /api/text-project/create': createProject,
-  'GET /api/text-project/detail/:projectId': getProjectDetail,
-  'GET /api/text-project/task-data': getTaskData,
   'GET /api/text-project/task-detail/:taskId': getTaskDetail,
   'GET /api/text-project/label-data': getLabelData,
   'DELETE /api/text-project/label-data': deleteLabelData,
   'GET /api/text-project/marktools': getMarkTools,
-  'GET /api/text-project/members': getRoleMembers,
   'POST /api/text-project/download-template': downloadTemplate,
 };
