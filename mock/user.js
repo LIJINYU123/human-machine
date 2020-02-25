@@ -62,7 +62,7 @@ export default {
         {
           path: '/project',
           name: '项目管理',
-          icon: 'schedule',
+          icon: 'project',
           component: './project',
           children: [
             {
@@ -118,6 +118,19 @@ export default {
           icon: 'team',
           path: '/agency/role',
           component: './role',
+        },
+        {
+          name: '个人中心',
+          icon: 'profile',
+          path: '/person',
+          children: [
+            {
+              name: '任务中心',
+              icon: 'schedule',
+              path: '/person/task-center',
+              component: './personCenter/task-center',
+            },
+          ],
         },
       ],
       SYDEV: [

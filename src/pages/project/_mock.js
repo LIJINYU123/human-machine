@@ -156,7 +156,7 @@ const projectDetailMockData = [
   },
 ];
 
-const taskMockData = [
+let taskMockData = [
   {
     projectId: '1',
     taskId: '1',
@@ -426,6 +426,12 @@ function getTaskData(req, res, u) {
   res.json(result);
 }
 
+function deleteTaskData(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  taskMockData = taskMockData.filter(item => !body.taskIds.includes(item.taskId));
+  return res.json({ message: '删除成功', status: 'ok' });
+}
+
 function getTaskDetail(req, res) {
   const { taskId } = req.params;
   const dataSource = taskDetailMockData.filter(item => item.taskId === taskId);
@@ -531,6 +537,7 @@ export default {
   'DELETE /api/projects': deleteProjects,
   'GET /api/project/detail/:projectId': getProjectDetail,
   'GET /api/project/task-data': getTaskData,
+  'DELETE /api/project/task-data': deleteTaskData,
   'GET /api/project/members': getRoleMembers,
   'POST /api/text-project/create': createProject,
   'GET /api/text-project/task-detail/:taskId': getTaskDetail,

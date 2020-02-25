@@ -129,7 +129,7 @@ export default {
             {
               path: '/project',
               name: '项目管理',
-              icon: 'schedule',
+              icon: 'project',
               component: './project',
             },
             {
@@ -183,6 +183,19 @@ export default {
               icon: 'team',
               path: '/agency/role',
               component: './role',
+            },
+            {
+              name: '个人中心',
+              icon: 'profile',
+              path: '/person',
+              routes: [
+                {
+                  name: '任务中心',
+                  icon: 'schedule',
+                  path: '/person/task-center',
+                  component: './personCenter/task-center',
+                },
+              ],
             },
             {
               component: '404',

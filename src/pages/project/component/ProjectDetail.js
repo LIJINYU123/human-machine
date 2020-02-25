@@ -25,10 +25,10 @@ const statusFilters = Object.keys(taskStatusName).map(key => ({
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
-@connect(({ textProjectDetail, loading }) => ({
-  data: textProjectDetail.data,
-  basicInfo: textProjectDetail.basicInfo,
-  loading: loading.effects['textProjectDetail/fetchDetail'],
+@connect(({ projectDetail, loading }) => ({
+  data: projectDetail.data,
+  basicInfo: projectDetail.basicInfo,
+  loading: loading.effects['projectDetail/fetchDetail'],
 }))
 class TextProjectDetail extends Component {
   state = {
@@ -40,12 +40,12 @@ class TextProjectDetail extends Component {
   componentDidMount() {
     const { dispatch, location } = this.props;
     dispatch({
-      type: 'textProjectDetail/fetchDetail',
+      type: 'projectDetail/fetchDetail',
       payload: location.state.projectId,
     });
 
     dispatch({
-      type: 'textProjectDetail/fetchTaskData',
+      type: 'projectDetail/fetchTaskData',
       payload: { projectId: location.state.projectId },
     });
 
@@ -80,7 +80,7 @@ class TextProjectDetail extends Component {
     };
 
     dispatch({
-      type: 'textProjectDetail/fetchTaskData',
+      type: 'projectDetail/fetchTaskData',
       payload: params,
     });
   };
@@ -89,7 +89,7 @@ class TextProjectDetail extends Component {
     const { dispatch } = this.props;
     const { projectId } = this.state;
     dispatch({
-      type: 'textProjectDetail/deleteTaskData',
+      type: 'projectDetail/deleteTaskData',
       payload: {
         projectId,
         taskIds: [taskInfo.taskId],
@@ -106,7 +106,7 @@ class TextProjectDetail extends Component {
     const { dispatch } = this.props;
     const { projectId, selectedRows } = this.state;
     dispatch({
-      type: 'textProjectDetail/deleteTaskData',
+      type: 'projectDetail/deleteTaskData',
       payload: {
         projectId,
         taskIds: selectedRows.map(row => row.taskId),

@@ -1,8 +1,8 @@
 import { queryProjectDetail, queryTaskData, deleteTaskData } from '../service';
 import { message } from 'antd';
 
-const TextProjectDetail = {
-  namespace: 'textProjectDetail',
+const ProjectDetail = {
+  namespace: 'projectDetail',
   state: {
     data: {
       list: [],
@@ -58,4 +58,4 @@ const TextProjectDetail = {
 
 };
 
-export default TextProjectDetail;
+export default ProjectDetail;

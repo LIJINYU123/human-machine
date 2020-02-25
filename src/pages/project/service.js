@@ -24,8 +24,12 @@ export async function queryTaskData(params) {
   });
 }
 
+export async function queryMembers() {
+  return request('/api/project/members');
+}
+
 export async function deleteTaskData(params) {
-  return request('/api/text-project/task-data', {
+  return request('/api/project/task-data', {
     method: 'DELETE',
     data: params,
   });
@@ -54,8 +58,4 @@ export async function queryMarkTools(params) {
   return request('/api/text-project/marktools', {
     params,
   });
-}
-
-export async function queryMembers() {
-  return request('/api/project/members');
 }
