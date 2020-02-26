@@ -13,6 +13,8 @@ const { labelTypeName } = ItemData;
 @connect(({ detail, loading }) => ({
   data: detail.data,
   basicInfo: detail.basicInfo,
+  inProgressNum: detail.inProgressNum,
+  completeNum: detail.completeNum,
   loading: loading.effects['detail/fetchDetail'],
 }))
 class ProjectDetail extends Component {
@@ -61,7 +63,7 @@ class ProjectDetail extends Component {
   };
 
   render() {
-    const { data, basicInfo, loading } = this.props;
+    const { data, basicInfo, inProgressNum, completeNum, loading } = this.props;
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
         <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
@@ -101,13 +103,6 @@ class ProjectDetail extends Component {
         {bordered && <em />}
       </div>
     );
-    const TimeInfo = ({ title, value, bordered }) => (
-      <div className={styles.headerInfo}>
-        <span>{title}</span>
-        <p>{value}</p>
-        {bordered && <em />}
-      </div>
-    );
 
     return (
       <PageHeaderWrapper
@@ -119,14 +114,11 @@ class ProjectDetail extends Component {
         <div className={styles.standardList}>
           <Card className={styles.card} bordered={false}>
             <Row>
-              <Col sm={8} xs={24}>
-                <Info title="我的待办" value="8个任务" bordered />
+              <Col sm={12} xs={24}>
+                <Info title="我的待办" value={`${inProgressNum}个任务`} bordered />
               </Col>
-              <Col sm={8} xs={24}>
-                <TimeInfo title="本周任务平均处理时间" value="32分钟" bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="本周完成任务数" value="24个任务" />
+              <Col sm={12} xs={24}>
+                <Info title="本周完成任务数" value={`${completeNum}个任务`} />
               </Col>
             </Row>
           </Card>

@@ -22,8 +22,10 @@ const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
   value: key,
 }));
 
-@connect(({ taskCenter, loading }) => ({
+@connect(({ taskCenter, detail, loading }) => ({
   data: taskCenter.data,
+  inProgressNum: detail.inProgressNum,
+  completeNum: detail.completeNum,
   loading: loading.effects['taskCenter/fetchProject'],
 }))
 class TaskCenter extends Component {
@@ -39,6 +41,9 @@ class TaskCenter extends Component {
     dispatch({
       type: 'taskCenter/fetchProject',
       payload: params,
+    });
+    dispatch({
+      type: 'detail/fetchMyTask',
     });
   }
 
@@ -123,7 +128,7 @@ class TaskCenter extends Component {
   };
 
   render() {
-    const { data, loading } = this.props;
+    const { data, inProgressNum, completeNum, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -171,13 +176,6 @@ class TaskCenter extends Component {
         {bordered && <em />}
       </div>
     );
-    const TimeInfo = ({ title, value, bordered }) => (
-      <div className={styles.headerInfo}>
-        <span>{title}</span>
-        <p>{value}</p>
-        {bordered && <em />}
-      </div>
-    );
 
     const extraContent = (
       <div>
@@ -196,14 +194,11 @@ class TaskCenter extends Component {
         <div className={styles.standardList}>
           <Card bordered={false}>
             <Row>
-              <Col sm={8} xs={24}>
-                <Info title="我的待办" value="8个任务" bordered />
+              <Col sm={12} xs={24}>
+                <Info title="我的待办" value={`${inProgressNum}个任务`} bordered />
               </Col>
-              <Col sm={8} xs={24}>
-                <TimeInfo title="本周任务平均处理时间" value="32分钟" bordered />
-              </Col>
-              <Col sm={8} xs={24}>
-                <Info title="本周完成任务数" value="24个任务" />
+              <Col sm={12} xs={24}>
+                <Info title="本周完成任务数" value={`${completeNum}个任务`} />
               </Col>
             </Row>
           </Card>

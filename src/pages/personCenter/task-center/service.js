@@ -12,7 +12,7 @@ export async function queryProjectDetail(projectId) {
 }
 
 export async function queryTaskData(params) {
-  return request('/api/project/task-data', {
+  return request('/api/task-center/task-data', {
     params,
   });
 }
@@ -20,4 +20,8 @@ export async function queryTaskData(params) {
 // 任务中心api
 export async function receiveTask(taskId) {
   return request(`/api/task-center/receive-task/${taskId}`);
+}
+
+export async function queryMyTask() {
+  return request('/api/task-center/my-task');
 }
