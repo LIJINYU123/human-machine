@@ -5,3 +5,14 @@ export async function queryProjectList(params) {
     params,
   });
 }
+
+// 项目详情页api
+export async function queryProjectDetail(projectId) {
+  return request(`/api/project/detail/${projectId}`);
+}
+
+export async function queryTaskData(params) {
+  return request('/api/project/task-data', {
+    params,
+  });
+}

@@ -1,9 +1,109 @@
 import React, { Component, Fragment } from 'react';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button } from 'antd';
+import { Card, Button, Descriptions } from 'antd';
+import StandardTable from './StandardTable';
+import styles from './style.less';
+import ItemData from '../map';
+import Link from 'umi/link';
+import { connect } from 'dva';
 
-class Class {
-  
+const { labelTypeName } = ItemData;
+
+@connect(({ detail, loading }) => ({
+  data: detail.data,
+  basicInfo: detail.basicInfo,
+  loading: loading.effects['detail/fetchDetail'],
+}))
+class ProjectDetail extends Component {
+  state = {
+    projectId: undefined,
+  };
+
+  componentDidMount() {
+    const { dispatch, location } = this.props;
+    dispatch({
+      type: 'detail/fetchDetail',
+      payload: location.state.projectId,
+    });
+
+    dispatch({
+      type: 'detail/fetchTaskData',
+      payload: { projectId: location.state.projectId },
+    });
+
+    this.setState({
+      projectId: location.state.projectId,
+    });
+  }
+
+  handleStandardTableChange = (pagination, filterArg, _) => {
+    const { dispatch } = this.props;
+
+    const params = {
+      projectId: this.state.projectId,
+      currentPage: pagination.current,
+      pageSize: pagination.pageSize,
+    };
+
+    dispatch({
+      type: 'detail/fetchTaskData',
+      payload: params,
+    });
+  };
+
+  render() {
+    const { data, basicInfo, loading } = this.props;
+    const description = (
+      <Descriptions className={styles.headerList} size="small" column={3}>
+        <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
+        <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
+        <Descriptions.Item label="项目周期">{basicInfo.endTime}</Descriptions.Item>
+        <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.toolName).join('，') : ''}</Descriptions.Item>
+        <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
+        <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>
+        <Descriptions.Item label="项目描述">{basicInfo.description}</Descriptions.Item>
+      </Descriptions>
+    );
+
+    const action = (
+      <Fragment>
+        <Link to="/person/task-center">
+          <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
+        </Link>
+      </Fragment>
+    );
+
+    const columns = [
+      {
+        title: '任务名称',
+        dataIndex: 'taskName',
+      },
+      {
+        title: '领取状态',
+        dataIndex: 'status',
+        render: val => (val === true ? <a>领取</a> : '已领取'),
+      },
+    ];
+
+    return (
+      <PageHeaderWrapper
+        title={basicInfo.projectName}
+        extra={action}
+        className={styles.pageHeader}
+        content={description}
+      >
+        <Card title="任务列表" className={styles.card} bordered={false}>
+          <StandardTable
+            loading={loading}
+            data={data}
+            columns={columns}
+            onChange={this.handleStandardTableChange}
+          />
+        </Card>
+      </PageHeaderWrapper>
+    );
+  }
 }
 
+export default ProjectDetail;

@@ -112,7 +112,6 @@ class TextProjectList extends Component {
   };
 
   handleReviewDetails = project => {
-    console.log(project);
     router.push({
       pathname: '/project/detail',
       state: {

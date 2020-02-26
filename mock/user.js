@@ -130,6 +130,13 @@ export default {
               path: '/person/task-center',
               component: './personCenter/task-center',
             },
+            {
+              name: '项目详情页',
+              icon: 'container',
+              path: '/person/project-detail',
+              component: './personCenter/task-center/component/ProjectDetail',
+              hideInMenu: true,
+            },
           ],
         },
       ],

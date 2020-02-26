@@ -1,4 +1,4 @@
-import { queryProjectList } from './service';
+import { queryProjectList } from '../service';
 
 const TaskCenter = {
   namespace: 'taskCenter',

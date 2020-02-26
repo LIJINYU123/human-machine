@@ -6,6 +6,7 @@ import StandardTable from './component/StandardTable';
 import styles from './style.less';
 import ItemData from './map';
 import Highlighter from 'react-highlight-words';
+import router from 'umi/router';
 
 const { statusMap, statusName, labelTypeName } = ItemData;
 
@@ -112,6 +113,15 @@ class TaskCenter extends Component {
     ) : text),
   });
 
+  handleReviewDetails = project => {
+    router.push({
+      pathname: '/person/project-detail',
+      state: {
+        projectId: project.projectId,
+      },
+    });
+  };
+
   render() {
     const { data, loading } = this.props;
     let { filteredInfo } = this.state;
@@ -148,8 +158,8 @@ class TaskCenter extends Component {
       },
       {
         title: '操作',
-        render: () => (
-          <a>进入</a>
+        render: (_, project) => (
+          <a onClick={() => this.handleReviewDetails(project)}>进入</a>
         ),
       },
     ];

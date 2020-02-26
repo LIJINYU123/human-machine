@@ -30,7 +30,7 @@ const getValue = obj => (obj ? obj.join(',') : []);
   basicInfo: projectDetail.basicInfo,
   loading: loading.effects['projectDetail/fetchDetail'],
 }))
-class TextProjectDetail extends Component {
+class ProjectDetail extends Component {
   state = {
     projectId: undefined,
     selectedRows: [],
@@ -153,7 +153,8 @@ class TextProjectDetail extends Component {
         <Descriptions.Item label="质检员">{basicInfo.inspectors ? basicInfo.inspectors[0].name : ''}...</Descriptions.Item>
         <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.toolName).join('，') : ''}</Descriptions.Item>
         <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
-        <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>
+        <Descriptions.Item label="质检率" span={2}>{basicInfo.checkRate}%</Descriptions.Item>
+        <Descriptions.Item label="项目描述">{basicInfo.description}</Descriptions.Item>
       </Descriptions>
     );
 
@@ -231,4 +232,4 @@ class TextProjectDetail extends Component {
   }
 }
 
-export default TextProjectDetail;
+export default ProjectDetail;
