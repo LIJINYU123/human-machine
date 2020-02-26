@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Descriptions } from 'antd';
+import { Card, Button, Descriptions, Row, Col } from 'antd';
 import StandardTable from './StandardTable';
 import styles from './style.less';
 import ItemData from '../map';
@@ -52,6 +52,14 @@ class ProjectDetail extends Component {
     });
   };
 
+  handleReceiveTask = task => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'detail/receiveTask',
+      payload: task.taskId,
+    });
+  };
+
   render() {
     const { data, basicInfo, loading } = this.props;
     const description = (
@@ -82,9 +90,24 @@ class ProjectDetail extends Component {
       {
         title: '领取状态',
         dataIndex: 'status',
-        render: val => (val === true ? <a>领取</a> : '已领取'),
+        render: (_, task) => (task.status === true ? <a onClick={() => this.handleReceiveTask(task)}>领取</a> : '已领取'),
       },
     ];
+
+    const Info = ({ title, value, bordered }) => (
+      <div className={styles.headerInfo}>
+        <span>{title}</span>
+        <p><a>{value}</a></p>
+        {bordered && <em />}
+      </div>
+    );
+    const TimeInfo = ({ title, value, bordered }) => (
+      <div className={styles.headerInfo}>
+        <span>{title}</span>
+        <p>{value}</p>
+        {bordered && <em />}
+      </div>
+    );
 
     return (
       <PageHeaderWrapper
@@ -93,14 +116,30 @@ class ProjectDetail extends Component {
         className={styles.pageHeader}
         content={description}
       >
-        <Card title="任务列表" className={styles.card} bordered={false}>
-          <StandardTable
-            loading={loading}
-            data={data}
-            columns={columns}
-            onChange={this.handleStandardTableChange}
-          />
-        </Card>
+        <div className={styles.standardList}>
+          <Card className={styles.card} bordered={false}>
+            <Row>
+              <Col sm={8} xs={24}>
+                <Info title="我的待办" value="8个任务" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <TimeInfo title="本周任务平均处理时间" value="32分钟" bordered />
+              </Col>
+              <Col sm={8} xs={24}>
+                <Info title="本周完成任务数" value="24个任务" />
+              </Col>
+            </Row>
+          </Card>
+          <Card title="任务列表" bordered={false}>
+            <StandardTable
+              rowKey="taskId"
+              loading={loading}
+              data={data}
+              columns={columns}
+              onChange={this.handleStandardTableChange}
+            />
+          </Card>
+        </div>
       </PageHeaderWrapper>
     );
   }

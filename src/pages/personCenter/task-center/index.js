@@ -209,6 +209,7 @@ class TaskCenter extends Component {
           </Card>
           <Card title="项目列表" className={styles.card} extra={extraContent} bordered={false}>
             <StandardTable
+              rowKey="projectId"
               loading={loading}
               data={data}
               columns={columns}

@@ -20,7 +20,6 @@ class StandardTable extends Component {
     return (
       <div className={styles.standardTable}>
         <Table
-          rowKey="projectId"
           dataSource={list}
           pagination={paginationProps}
           onChange={this.handleTableChange}

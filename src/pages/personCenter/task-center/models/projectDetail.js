@@ -1,4 +1,4 @@
-import { queryProjectDetail, queryTaskData } from '../service';
+import { queryProjectDetail, queryTaskData, receiveTask } from '../service';
 
 
 const ProjectDetail = {
@@ -26,6 +26,14 @@ const ProjectDetail = {
         payload: response,
       });
     },
+
+    * receiveTask({ payload }, { call, put }) {
+      const response = yield call(receiveTask, payload);
+      yield put({
+        type: 'taskData',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -34,9 +42,8 @@ const ProjectDetail = {
     },
     taskData(state, action) {
       const response = action.payload;
-      // const list = response.list.map(item => ({ projectId: item.projectId, taskId: item.taskId, taskName: item.taskName, status: item.status === 'initial' }));
-      // response.list = list;
-      // console.log(response);
+      const list = response.list.map(item => ({ projectId: item.projectId, taskId: item.taskId, taskName: item.taskName, status: item.status === 'initial' }));
+      response.list = list;
       return { ...state, data: response };
     },
   },

@@ -16,3 +16,8 @@ export async function queryTaskData(params) {
     params,
   });
 }
+
+// 任务中心api
+export async function receiveTask(taskId) {
+  return request(`/api/task-center/receive-task/${taskId}`);
+}

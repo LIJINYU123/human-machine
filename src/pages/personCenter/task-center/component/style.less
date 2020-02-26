@@ -1,3 +1,5 @@
+@import '~antd/es/style/themes/default.less';
+
 .standardTable {
   :global {
     .ant-table-pagination {
@@ -23,6 +25,56 @@
   :global {
     .ant-descriptions-row > td {
       padding-bottom: 8px;
+    }
+  }
+}
+
+.standardList {
+  :global {
+    .ant-card-head {
+      border-bottom: none;
+    }
+    .ant-card-head-title {
+      padding: 24px 0;
+      line-height: 32px;
+    }
+    .ant-card-extra {
+      padding: 24px 0;
+    }
+    .ant-list-pagination {
+      margin-top: 24px;
+      text-align: right;
+    }
+    .ant-avatar-lg {
+      width: 48px;
+      height: 48px;
+      line-height: 48px;
+    }
+  }
+
+  .headerInfo {
+    position: relative;
+    text-align: center;
+    & > span {
+      display: inline-block;
+      margin-bottom: 4px;
+      color: @text-color-secondary;
+      font-size: @font-size-base;
+      line-height: 22px;
+    }
+    & > p {
+      margin: 0;
+      color: @heading-color;
+      font-size: 24px;
+      line-height: 32px;
+    }
+    & > em {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 1px;
+      height: 56px;
+      background-color: @border-color-split;
     }
   }
 }
