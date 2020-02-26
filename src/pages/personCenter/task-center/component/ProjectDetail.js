@@ -118,7 +118,7 @@ class ProjectDetail extends Component {
                 <Info title="我的待办" value={`${inProgressNum}个任务`} bordered />
               </Col>
               <Col sm={12} xs={24}>
-                <Info title="本周完成任务数" value={`${completeNum}个任务`} />
+                <Info title="全部完成任务数" value={`${completeNum}个任务`} />
               </Col>
             </Row>
           </Card>

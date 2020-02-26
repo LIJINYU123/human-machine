@@ -31,6 +31,8 @@ const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
 class TaskCenter extends Component {
   state = {
     filteredInfo: null,
+    searchText: '',
+    searchedColumn: '',
   };
 
   componentDidMount() {
@@ -118,11 +120,45 @@ class TaskCenter extends Component {
     ) : text),
   });
 
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
+    });
+  };
+
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({
+      searchText: '',
+    });
+  };
+
   handleReviewDetails = project => {
     router.push({
       pathname: '/person/project-detail',
       state: {
         projectId: project.projectId,
+      },
+    });
+  };
+
+  handleJumptoInProgress = () => {
+    router.push({
+      pathname: '/person/my-task',
+      state: {
+        status: 'labeling',
+      },
+    });
+  };
+
+  handleJumptoComplete = () => {
+    router.push({
+      pathname: '/person/my-task',
+      state: {
+        status: 'complete',
       },
     });
   };
@@ -169,10 +205,10 @@ class TaskCenter extends Component {
       },
     ];
 
-    const Info = ({ title, value, bordered }) => (
+    const Info = ({ title, value, onClick, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
-        <p><a>{value}</a></p>
+        <p><a onClick={onClick}>{value}</a></p>
         {bordered && <em />}
       </div>
     );
@@ -195,10 +231,10 @@ class TaskCenter extends Component {
           <Card bordered={false}>
             <Row>
               <Col sm={12} xs={24}>
-                <Info title="我的待办" value={`${inProgressNum}个任务`} bordered />
+                <Info title="我的待办" value={`${inProgressNum}个任务`} onClick={this.handleJumptoInProgress} bordered />
               </Col>
               <Col sm={12} xs={24}>
-                <Info title="本周完成任务数" value={`${completeNum}个任务`} />
+                <Info title="全部完成任务数" value={`${completeNum}个任务`} onClick={this.handleJumptoComplete} />
               </Col>
             </Row>
           </Card>

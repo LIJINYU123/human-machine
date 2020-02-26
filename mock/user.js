@@ -137,6 +137,13 @@ export default {
               component: './personCenter/task-center/component/ProjectDetail',
               hideInMenu: true,
             },
+            {
+              name: '我的任务',
+              icon: 'container',
+              path: '/person/my-task',
+              component: './personCenter/task-center/component/MyTaskView',
+              hideInMenu: true,
+            },
           ],
         },
       ],

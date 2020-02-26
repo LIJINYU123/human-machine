@@ -15,6 +15,22 @@ export default {
     complete: '完成',
   },
 
+  taskStatusMap: {
+    initial: 'default',
+    labeling: 'processing',
+    review: 'processing',
+    reject: 'warning',
+    complete: 'success',
+  },
+
+  taskStatusName: {
+    initial: '未开始',
+    labeling: '标注中',
+    review: '质检中',
+    reject: '质检未通过',
+    complete: '完成',
+  },
+
   labelTypeName: {
     textClassify: '文本分类',
     textMatch: '文本匹配',

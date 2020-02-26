@@ -22,6 +22,8 @@ export async function receiveTask(taskId) {
   return request(`/api/task-center/receive-task/${taskId}`);
 }
 
-export async function queryMyTask() {
-  return request('/api/task-center/my-task');
+export async function queryMyTask(params) {
+  return request('/api/task-center/my-task', {
+    params,
+  });
 }

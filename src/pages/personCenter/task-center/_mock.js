@@ -102,13 +102,24 @@ const taskMockData = [
   },
   {
     projectId: '1',
-    projectName: '文本分类456',
+    projectName: '文本分类123',
     taskId: '6',
     taskName: '任务6',
     questionNum: 100,
+    schedule: 30,
+    status: 'labeling',
+    receiveTime: '2020-02-26 10:00:00',
+    owner: 'SYECO',
+  },
+  {
+    projectId: '1',
+    projectName: '文本分类456',
+    taskId: '7',
+    taskName: '任务7',
+    questionNum: 100,
     schedule: 100,
     status: 'complete',
-    receiveTime: '2020-02-26 10:00:00',
+    receiveTime: '2020-02-27 10:00:00',
     owner: 'SYDEV',
   },
 ];
@@ -226,13 +237,54 @@ function getMyTask(req, res, u) {
   }
   const params = parse(url, true).query;
 
+  let dataSource = taskMockData.filter(item => item.owner === userId);
+  if (params.sorter) {
+    const s = params.sorter.split('_');
+    dataSource = dataSource.sort((prev, next) => {
+      if (s[1] === 'descend') {
+        return next[s[0]] - prev[s[0]];
+      }
+
+      return prev[s[0]] - next[s[0]];
+    })
+  }
+
+  if (params.status) {
+    const statuses = params.status.split(',');
+    let filterDataSource = [];
+    statuses.forEach(status => {
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.status === status));
+    });
+
+    dataSource = filterDataSource;
+  }
+
+  if (params.labelType) {
+    const types = params.labelType.split(',');
+    let filterDataSource = [];
+    types.forEach(type => {
+      // eslint-disable-next-line max-len
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.labelType === type));
+    });
+
+    dataSource = filterDataSource;
+  }
+
+  if (params.projectName) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.projectName.toLowerCase().includes(params.projectName.toLowerCase()));
+  }
+
+  if (params.taskName) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.taskName.toLowerCase().includes(params.taskName.toLowerCase()));
+  }
+
   let pageSize = 10;
   if (params.pageSize) {
     pageSize = parseInt(`${params.pageSize}`, 0);
   }
 
-  let dataSource = taskMockData;
-  dataSource = dataSource.filter(item => item.owner === userId);
   const result = {
     list: dataSource,
     pagination: {

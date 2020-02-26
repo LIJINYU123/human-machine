@@ -34,8 +34,8 @@ const ProjectDetail = {
       });
     },
 
-    * fetchMyTask(_, { call, put }) {
-      const response = yield call(queryMyTask);
+    * fetchMyTask({ payload }, { call, put }) {
+      const response = yield call(queryMyTask, payload);
       yield put({
         type: 'saveMyData',
         payload: response,
