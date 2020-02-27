@@ -39,4 +39,15 @@ export default {
     voiceMark: '音频标注',
     videoDialogMark: '其他标注-视频对话标注',
   },
+
+  reviewLabel: {
+    approve: '通过',
+    reject: '拒绝',
+    unreview: '未质检',
+  },
+
+  labelResult: {
+    processed: '已标注',
+    unprocessed: '未标注',
+  },
 }

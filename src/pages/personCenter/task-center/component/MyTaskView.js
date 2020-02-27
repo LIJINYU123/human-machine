@@ -6,7 +6,7 @@ import StandardTable from './StandardTable';
 import { connect } from 'dva';
 import ItemData from '../map';
 import Link from 'umi/link';
-
+import router from 'umi/router';
 
 const { taskStatusMap, taskStatusName, labelTypeName } = ItemData;
 
@@ -128,6 +128,18 @@ class MyTaskView extends Component {
     ) : text),
   });
 
+  handleJumpToMarkView = task => {
+    console.log(task);
+    if (['textClassify', 'textMatch', 'ner'].includes(task.labelType)) {
+      router.push({
+        pathname: '/person/my-task/text-mark',
+        state: {
+          taskInfo: task,
+        },
+      });
+    }
+  };
+
   render() {
     const { data, loading } = this.props;
     let { filteredInfo } = this.state;
@@ -181,7 +193,7 @@ class MyTaskView extends Component {
       {
         title: '操作',
         render: (_, task) => (
-          <a>标注</a>
+          <a onClick={() => this.handleJumpToMarkView(task)}>标注</a>
         ),
       },
     ];

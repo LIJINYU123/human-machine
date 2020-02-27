@@ -281,7 +281,7 @@ class TextTaskDetail extends Component {
           dataIndex: 'reviewResult',
           render: val => reviewLabel[val],
           filters: reviewFilters,
-          filteredValue: filteredInfo.review || null,
+          filteredValue: filteredInfo.reviewResult || null,
         },
         {
           title: '备注',
@@ -315,7 +315,7 @@ class TextTaskDetail extends Component {
           title: '质检结果',
           dataIndex: 'reviewResult',
           filters: reviewFilters,
-          filteredValue: filteredInfo.review || null,
+          filteredValue: filteredInfo.reviewResult || null,
         },
         {
           title: '操作',

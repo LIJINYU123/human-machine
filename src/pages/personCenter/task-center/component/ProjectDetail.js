@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from 'react';
-import router from 'umi/router';
+import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Button, Descriptions, Row, Col } from 'antd';
 import StandardTable from './StandardTable';
@@ -7,6 +6,7 @@ import styles from './style.less';
 import ItemData from '../map';
 import Link from 'umi/link';
 import { connect } from 'dva';
+import router from 'umi/router';
 
 const { labelTypeName } = ItemData;
 
@@ -62,6 +62,24 @@ class ProjectDetail extends Component {
     });
   };
 
+  handleJumptoInProgress = () => {
+    router.push({
+      pathname: '/person/my-task',
+      state: {
+        status: 'labeling',
+      },
+    });
+  };
+
+  handleJumptoComplete = () => {
+    router.push({
+      pathname: '/person/my-task',
+      state: {
+        status: 'complete',
+      },
+    });
+  };
+
   render() {
     const { data, basicInfo, inProgressNum, completeNum, loading } = this.props;
     const description = (
@@ -77,11 +95,9 @@ class ProjectDetail extends Component {
     );
 
     const action = (
-      <Fragment>
-        <Link to="/person/task-center">
-          <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
-        </Link>
-      </Fragment>
+      <Link to="/person/task-center">
+        <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
+      </Link>
     );
 
     const columns = [
@@ -96,10 +112,10 @@ class ProjectDetail extends Component {
       },
     ];
 
-    const Info = ({ title, value, bordered }) => (
+    const Info = ({ title, value, onClick, bordered }) => (
       <div className={styles.headerInfo}>
         <span>{title}</span>
-        <p><a>{value}</a></p>
+        <p><a onClick={onClick}>{value}</a></p>
         {bordered && <em />}
       </div>
     );
@@ -115,10 +131,10 @@ class ProjectDetail extends Component {
           <Card className={styles.card} bordered={false}>
             <Row>
               <Col sm={12} xs={24}>
-                <Info title="我的待办" value={`${inProgressNum}个任务`} bordered />
+                <Info title="我的待办" value={`${inProgressNum}个任务`} onClick={this.handleJumptoInProgress} bordered />
               </Col>
               <Col sm={12} xs={24}>
-                <Info title="全部完成任务数" value={`${completeNum}个任务`} />
+                <Info title="全部完成任务数" value={`${completeNum}个任务`} onClick={this.handleJumptoComplete} />
               </Col>
             </Row>
           </Card>

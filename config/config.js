@@ -209,6 +209,13 @@ export default {
                   component: './personCenter/task-center/component/MyTaskView',
                   hideInMenu: true,
                 },
+                {
+                  name: '文本标注',
+                  icon: 'container',
+                  path: '/person/my-task/text-mark',
+                  component: './personCenter/task-center/component/TextMarkView',
+                  hideInMenu: true,
+                },
               ],
             },
             {

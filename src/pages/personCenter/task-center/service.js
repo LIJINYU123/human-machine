@@ -27,3 +27,10 @@ export async function queryMyTask(params) {
     params,
   });
 }
+
+// 文本标注页面api
+export async function queryLabelData(params) {
+  return request('/api/text-project/label-data', {
+    params,
+  });
+}

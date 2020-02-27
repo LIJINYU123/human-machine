@@ -50,6 +50,7 @@ const taskMockData = [
     projectName: '文本分类123',
     taskId: '1',
     taskName: '任务1',
+    labelType: 'textClassify',
     questionNum: 100,
     schedule: 0,
     status: 'initial',
@@ -61,6 +62,7 @@ const taskMockData = [
     projectName: '文本分类123',
     taskId: '2',
     taskName: '任务2',
+    labelType: 'textClassify',
     questionNum: 200,
     schedule: 40,
     status: 'labeling',
@@ -69,9 +71,10 @@ const taskMockData = [
   },
   {
     projectId: '1',
-    projectName: '文本分类123',
+    projectName: '文本匹配123',
     taskId: '3',
     taskName: '任务3',
+    labelType: 'textMatch',
     questionNum: 300,
     schedule: 100,
     status: 'review',
@@ -80,9 +83,10 @@ const taskMockData = [
   },
   {
     projectId: '1',
-    projectName: '文本分类123',
+    projectName: '文本匹配123',
     taskId: '4',
     taskName: '任务4',
+    labelType: 'textMatch',
     questionNum: 400,
     schedule: 100,
     status: 'reject',
@@ -91,9 +95,10 @@ const taskMockData = [
   },
   {
     projectId: '1',
-    projectName: '文本分类123',
+    projectName: '实体识别678',
     taskId: '5',
     taskName: '任务5',
+    labelType: 'ner',
     questionNum: 100,
     schedule: 100,
     status: 'complete',
@@ -105,6 +110,7 @@ const taskMockData = [
     projectName: '文本分类123',
     taskId: '6',
     taskName: '任务6',
+    labelType: 'textClassify',
     questionNum: 100,
     schedule: 30,
     status: 'labeling',
@@ -116,11 +122,43 @@ const taskMockData = [
     projectName: '文本分类456',
     taskId: '7',
     taskName: '任务7',
+    labelType: 'textClassify',
     questionNum: 100,
     schedule: 100,
     status: 'complete',
     receiveTime: '2020-02-27 10:00:00',
     owner: 'SYDEV',
+  },
+];
+
+let labelMockData = [
+  {
+    sentenceId: '1',
+    sentence: '出差怎么预定酒店呢',
+    labelResult: [['高兴', '愤怒'], ['疑问句']],
+    reviewResult: 'approve',
+    remark: '这是条评论1',
+  },
+  {
+    sentenceId: '2',
+    sentence: '出差住的酒店是自己订好吗',
+    labelResult: [['高兴', '愤怒'], ['疑问句']],
+    reviewResult: 'approve',
+    remark: '这是条评论2',
+  },
+  {
+    sentenceId: '3',
+    sentence: '自己能够去订酒店吗',
+    labelResult: [['高兴', '愤怒'], ['疑问句']],
+    reviewResult: 'reject',
+    remark: '这是条评论3',
+  },
+  {
+    sentenceId: '4',
+    sentence: '员工自己可以挑选喜欢的酒店订吗',
+    labelResult: [['高兴', '愤怒'], ['疑问句']],
+    reviewResult: 'unreview',
+    remark: '这是条评论4',
   },
 ];
 
@@ -278,6 +316,58 @@ function getMyTask(req, res, u) {
   if (params.taskName) {
     // eslint-disable-next-line max-len
     dataSource = dataSource.filter(item => item.taskName.toLowerCase().includes(params.taskName.toLowerCase()));
+  }
+
+  let pageSize = 10;
+  if (params.pageSize) {
+    pageSize = parseInt(`${params.pageSize}`, 0);
+  }
+
+  const result = {
+    list: dataSource,
+    pagination: {
+      total: dataSource.length,
+      pageSize,
+      current: parseInt(`${params.currentPage}`, 10) || 1,
+    },
+  };
+
+  res.json(result);
+}
+
+function getLabelData(req, res, u) {
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+  const params = parse(url, true).query;
+  let dataSource = labelMockData;
+
+  if (params.reviewResult) {
+    const results = params.reviewResult.split(',');
+    let filterDataSource = [];
+    results.forEach(result => {
+      // eslint-disable-next-line max-len
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.reviewResult === result));
+    });
+
+    dataSource = filterDataSource;
+  }
+
+  if (params.sentence) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.sentence.toLowerCase().includes(params.sentence.toLowerCase()));
+  }
+
+  if (params.sentence1) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.sentence1.toLowerCase().includes(params.sentence1.toLowerCase()));
+  }
+
+  if (params.sentence2) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.sentence2.toLowerCase().includes(params.sentence2.toLowerCase()));
   }
 
   let pageSize = 10;
