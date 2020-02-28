@@ -41,7 +41,8 @@ class Step3 extends Component {
   handleUpload = () => {
     const { fileList } = this.state;
     const { stepOne, stepTwo } = this.props;
-    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
+    // eslint-disable-next-line max-len
+    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, startTime, endTime, description } = stepOne;
     const { defaultTool, toolName, toolId, options } = stepTwo;
     const formData = new FormData();
     formData.append('file', fileList[0]);
@@ -58,9 +59,8 @@ class Step3 extends Component {
     });
 
     formData.append('questionNum', questionNum);
-    projectPeriod.forEach(item => {
-      formData.append('projectPeriod[]', item);
-    });
+    formData.append('startTime', startTime);
+    formData.append('endTime', endTime);
     formData.append('description', description);
     formData.append('defaultTool', defaultTool);
     if (toolName !== '' && toolId !== '') {

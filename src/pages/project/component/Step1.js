@@ -29,8 +29,9 @@ class Step1 extends Component {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        values.projectPeriod = [values.projectPeriod && values.projectPeriod[0].format('YYYY-MM-DD HH:mm:ss'),
-                                values.projectPeriod && values.projectPeriod[1].format('YYYY-MM-DD HH:mm:ss')];
+        values.startTime = values.projectPeriod && values.projectPeriod[0].format('YYYY-MM-DD HH:mm:ss');
+        values.endTime = values.projectPeriod && values.projectPeriod[1].format('YYYY-MM-DD HH:mm:ss');
+        delete values.projectPeriod;
 
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
