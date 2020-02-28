@@ -131,34 +131,44 @@ const taskMockData = [
   },
 ];
 
-let labelMockData = [
+const markToolsMockData = [
   {
-    sentenceId: '1',
-    sentence: '出差怎么预定酒店呢',
-    labelResult: [['高兴', '愤怒'], ['疑问句']],
-    reviewResult: 'approve',
-    remark: '这是条评论1',
-  },
-  {
-    sentenceId: '2',
-    sentence: '出差住的酒店是自己订好吗',
-    labelResult: [['高兴', '愤怒'], ['疑问句']],
-    reviewResult: 'approve',
-    remark: '这是条评论2',
-  },
-  {
-    sentenceId: '3',
-    sentence: '自己能够去订酒店吗',
-    labelResult: [['高兴', '愤怒'], ['疑问句']],
-    reviewResult: 'reject',
-    remark: '这是条评论3',
-  },
-  {
-    sentenceId: '4',
-    sentence: '员工自己可以挑选喜欢的酒店订吗',
-    labelResult: [['高兴', '愤怒'], ['疑问句']],
-    reviewResult: 'unreview',
-    remark: '这是条评论4',
+    toolId: 'emotion',
+    toolName: '情感',
+    options: [
+      {
+        optionId: 'anger',
+        optionName: '愤怒',
+      },
+      {
+        optionId: 'hate',
+        optionName: '厌恶',
+      },
+      {
+        optionId: 'fear',
+        optionName: '害怕',
+      },
+      {
+        optionId: 'sad',
+        optionName: '悲伤',
+      },
+      {
+        optionId: 'happy',
+        optionName: '高兴',
+      },
+      {
+        optionId: 'like',
+        optionName: '喜欢',
+      },
+      {
+        optionId: 'surprise',
+        optionName: '惊喜',
+      },
+      {
+        optionId: 'neutral',
+        optionName: '中性',
+      },
+    ],
   },
 ];
 
@@ -335,56 +345,15 @@ function getMyTask(req, res, u) {
   res.json(result);
 }
 
-function getLabelData(req, res, u) {
+function getMarkTools(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     // eslint-disable-next-line prefer-destructuring
     url = req.url;
   }
-  const params = parse(url, true).query;
-  let dataSource = labelMockData;
 
-  if (params.reviewResult) {
-    const results = params.reviewResult.split(',');
-    let filterDataSource = [];
-    results.forEach(result => {
-      // eslint-disable-next-line max-len
-      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.reviewResult === result));
-    });
-
-    dataSource = filterDataSource;
-  }
-
-  if (params.sentence) {
-    // eslint-disable-next-line max-len
-    dataSource = dataSource.filter(item => item.sentence.toLowerCase().includes(params.sentence.toLowerCase()));
-  }
-
-  if (params.sentence1) {
-    // eslint-disable-next-line max-len
-    dataSource = dataSource.filter(item => item.sentence1.toLowerCase().includes(params.sentence1.toLowerCase()));
-  }
-
-  if (params.sentence2) {
-    // eslint-disable-next-line max-len
-    dataSource = dataSource.filter(item => item.sentence2.toLowerCase().includes(params.sentence2.toLowerCase()));
-  }
-
-  let pageSize = 10;
-  if (params.pageSize) {
-    pageSize = parseInt(`${params.pageSize}`, 0);
-  }
-
-  const result = {
-    list: dataSource,
-    pagination: {
-      total: dataSource.length,
-      pageSize,
-      current: parseInt(`${params.currentPage}`, 10) || 1,
-    },
-  };
-
-  res.json(result);
+  // const params = parse(url, true).query;
+  res.json(markToolsMockData);
 }
 
 export default {
@@ -392,4 +361,5 @@ export default {
   'GET /api/task-center/task-data': getTaskData,
   'GET /api/task-center/my-task': getMyTask,
   'GET /api/task-center/receive-task/:taskId': receiveTask,
+  'GET /api/task-center/mark-tools': getMarkTools,
 };

@@ -34,3 +34,9 @@ export async function queryLabelData(params) {
     params,
   });
 }
+
+export async function queryMarkTools(params) {
+  return request('/api/task-center/mark-tools', {
+    params,
+  });
+}

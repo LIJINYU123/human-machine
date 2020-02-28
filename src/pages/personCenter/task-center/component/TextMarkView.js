@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, Descriptions, Icon, Input, Statistic } from 'antd';
+import { Button, Card, Descriptions, Icon, Input, Statistic, Popover } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
 import ItemData from '../map';
@@ -24,6 +24,7 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
 
 @connect(({ textMark, loading }) => ({
   data: textMark.data,
+  markTools: textMark.markTools,
   loading: loading.effects['textMark/fetchLabelData'],
 }))
 class TextMarkView extends Component {
@@ -46,6 +47,10 @@ class TextMarkView extends Component {
     const { basicInfo } = this.state;
     dispatch({
       type: 'textMark/fetchLabelData',
+      payload: { taskId: basicInfo.taskId },
+    });
+    dispatch({
+      type: 'textMark/fetchMarkTool',
       payload: { taskId: basicInfo.taskId },
     });
   }
@@ -168,6 +173,13 @@ class TextMarkView extends Component {
       <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGobackMyTask}>返回</Button>
     );
 
+    const content = (
+      <div>
+        <p>Content</p>
+        <p>Content</p>
+      </div>
+    );
+
     let columns = [];
     if (basicInfo.labelType === 'textClassify') {
       columns = [
@@ -183,7 +195,7 @@ class TextMarkView extends Component {
             if (val.length) {
               return val.map(item => item.join('，')).join(' | ');
             }
-            return <a>标注</a>
+            return <Popover title="标注工具" content={content} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
           filteredValue: filteredInfo.labelResult || null,
@@ -219,7 +231,7 @@ class TextMarkView extends Component {
             if (val.length) {
               return val.map(item => item.join('，')).join(' | ');
             }
-            return <a>标注</a>
+            return <Popover title="标注工具" content={content} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
         },

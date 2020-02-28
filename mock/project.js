@@ -265,85 +265,85 @@ const taskDetailMockData = [
 
 let labelMockData = [
   {
-    sentenceId: '1',
-    sentence: '出差怎么预定酒店呢',
+    dataId: '1',
+    data: { sentence: '出差怎么预定酒店呢' },
     labelResult: [['高兴', '愤怒'], ['疑问句']],
     reviewResult: 'approve',
     remark: '这是条评论1',
   },
   {
-    sentenceId: '2',
-    sentence: '出差住的酒店是自己订好吗',
+    dataId: '2',
+    data: { sentence: '出差住的酒店是自己订好吗' },
     labelResult: [['高兴', '愤怒'], ['疑问句']],
     reviewResult: 'approve',
     remark: '这是条评论2',
   },
   {
-    sentenceId: '3',
-    sentence: '自己能够去订酒店吗',
+    dataId: '3',
+    data: { sentence: '自己能够去订酒店吗' },
     labelResult: [],
     reviewResult: 'reject',
     remark: '这是条评论3',
   },
   {
-    sentenceId: '4',
-    sentence: '员工自己可以挑选喜欢的酒店订吗',
+    dataId: '4',
+    data: { sentence: '员工自己可以挑选喜欢的酒店订吗' },
     labelResult: [['高兴', '愤怒'], ['疑问句']],
     reviewResult: 'unreview',
     remark: '',
   },
   {
-    sentenceId: '5',
-    sentence: '自己是不是可以随便订酒店',
+    dataId: '5',
+    data: { sentence: '自己是不是可以随便订酒店' },
     labelResult: [['中性'], ['肯定陈述句']],
     reviewResult: 'unreview',
     remark: '',
   },
   {
-    sentenceId: '6',
-    sentence: '为公司出差住宿可以给多少预算',
+    dataId: '6',
+    data: { sentence: '为公司出差住宿可以给多少预算' },
     labelResult: [['高兴'], ['肯定陈述句']],
     reviewResult: 'unreview',
     remark: '',
   },
   {
-    sentenceId: '7',
-    sentence: '出差的话可以住几星级的酒店',
+    dataId: '7',
+    data: { sentence: '出差的话可以住几星级的酒店' },
     labelResult: [['高兴', '喜欢'], ['疑问句']],
     reviewResult: 'unreview',
     remark: '',
   },
   {
-    sentenceId: '8',
-    sentence: '协议酒店可以不住吗',
+    dataId: '8',
+    data: { sentence: '协议酒店可以不住吗' },
     labelResult: [['中性'], ['疑问句']],
     reviewResult: 'unreview',
     remark: '',
   },
   {
-    sentenceId: '9',
-    sentence: '协议酒店不住会出事吗',
+    dataId: '9',
+    data: { sentence: '协议酒店不住会出事吗' },
     labelResult: [['喜欢'], ['疑问句']],
     reviewResult: 'unreview',
     remark: '',
   },
   {
-    sentenceId: '10',
-    sentence: '在国内出差住400一晚的酒店可以吗',
+    dataId: '10',
+    data: { sentence: '在国内出差住400一晚的酒店可以吗' },
     labelResult: [['喜欢'], ['疑问句']],
     reviewResult: 'unreview',
     remark: '',
   },
   {
-    sentenceId: '11',
-    sentence: '在国内出差能够住几星级的酒店',
+    dataId: '11',
+    data: { sentence: '在国内出差能够住几星级的酒店' },
     labelResult: [['喜欢'], ['疑问句']],
     reviewResult: 'unreview',
     remark: '',
   },
   {
-    sentenceId: '12',
-    sentence: '在国内出差的话住宿有没有一个标准',
+    dataId: '12',
+    data: { sentence: '在国内出差的话住宿有没有一个标准' },
     labelResult: [['喜欢'], ['疑问句']],
     reviewResult: 'unreview',
     remark: '',
@@ -533,6 +533,15 @@ function getLabelData(req, res, u) {
     dataSource = filterDataSource;
   }
 
+  if (params.labelResult) {
+    const labelResult = params.labelResult.split(',');
+    if (labelResult.length === 1 && labelResult[0] === 'processed') {
+      dataSource = dataSource.filter(item => item.labelResult.length > 0);
+    } else if (labelResult.length === 1 && labelResult[0] === 'unprocessed') {
+      dataSource = dataSource.filter(item => item.labelResult.length === 0);
+    }
+  }
+
   if (params.sentence) {
     // eslint-disable-next-line max-len
     dataSource = dataSource.filter(item => item.sentence.toLowerCase().includes(params.sentence.toLowerCase()));
@@ -567,7 +576,7 @@ function getLabelData(req, res, u) {
 
 function deleteLabelData(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  labelMockData = labelMockData.filter(item => !body.sentenceIds.includes(item.sentenceId));
+  labelMockData = labelMockData.filter(item => !body.dataIds.includes(item.dataId));
   return res.json({ message: '删除成功', status: 'ok' });
 }
 

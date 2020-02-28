@@ -28,7 +28,7 @@ const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
 }))
 class MyTaskView extends Component {
   state = {
-    filteredInfo: null,
+    filteredInfo: {},
     searchText: '',
     searchedColumn: '',
   };
@@ -38,6 +38,9 @@ class MyTaskView extends Component {
     dispatch({
       type: 'detail/fetchMyTask',
       payload: { status: location.state.status },
+    });
+    this.setState({
+      filteredInfo: { status: [location.state.status] },
     });
   }
 
@@ -177,6 +180,7 @@ class MyTaskView extends Component {
         title: '任务状态',
         dataIndex: 'status',
         filters: statusFilters,
+        filteredValue: filteredInfo.status || null,
         render: val => <Badge status={taskStatusMap[val]} text={taskStatusName[val]}/>,
       },
       {
