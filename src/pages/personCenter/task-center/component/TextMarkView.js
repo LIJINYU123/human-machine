@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, Descriptions, Icon, Input, Statistic, Popover, Form } from 'antd';
+import { Button, Card, Descriptions, Icon, Input, Statistic, Popover, Form, Tag } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
 import ItemData from '../map';
@@ -159,6 +159,12 @@ class TextMarkView extends Component {
     this.setState({ popoverVisible: visible });
   };
 
+  handleClickTag = () => {
+    this.setState({
+      popoverVisible: true,
+    });
+  };
+
 
   render() {
     const { basicInfo, popoverVisible } = this.state;
@@ -198,8 +204,24 @@ class TextMarkView extends Component {
           title: '标注结果',
           dataIndex: 'labelResult',
           render: (val, info) => {
-            if (val.length) {
-              return val.map(item => item.join('，')).join(' | ');
+            if (Object.keys(val).length) {
+              // Object.keys(val).map(key => {
+              //   const markTool = markTools.filters(tool => tool.toolId === key);
+              //   const values = val[key];
+              //   values.map(item => markTool.options)
+              // });
+              const labelValues = [];
+              markTools.forEach(tool => {
+                if (val.hasOwnProperty(tool.toolId)) {
+                  tool.options.forEach(option => {
+                    // eslint-disable-next-line max-len
+                    if (val[tool.toolId].includes(option.optionId)) {
+                      labelValues.push(option.optionName)
+                    }
+                  });
+                }
+              });
+              return labelValues.map(value => (<Tag color="blue" onClick={this.handleClickTag}>{value}</Tag>));
             }
             return <Popover visible={popoverVisible} onVisibleChange={this.handleVisibleChange} title="标注工具" trigger="click" content={<PopoverView dataId={info.dataId} markTools={markTools} onClose={this.handleClose} />} placement="top"><a>标注</a></Popover>
           },
