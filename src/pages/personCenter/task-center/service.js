@@ -40,3 +40,10 @@ export async function queryMarkTools(params) {
     params,
   });
 }
+
+export async function saveTextMarkResult(params) {
+  return request('/api/text-project/label-data', {
+    method: 'POST',
+    data: params,
+  });
+}

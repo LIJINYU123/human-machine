@@ -1,4 +1,5 @@
-import { queryLabelData, queryMarkTools } from '../service';
+import { queryLabelData, queryMarkTools, saveTextMarkResult } from '../service';
+import { message } from 'antd';
 
 const TextMark = {
   namespace: 'textMark',
@@ -33,6 +34,19 @@ const TextMark = {
         type: 'saveTool',
         payload: response,
       });
+    },
+
+    * saveTextMarkResult({ payload, callback }, { call, put }) {
+      const response = yield call(saveTextMarkResult, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
     },
   },
 

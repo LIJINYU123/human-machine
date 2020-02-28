@@ -614,6 +614,19 @@ function createProject(req, res) {
   return res.json({ status: 'ok', message: '创建成功' });
 }
 
+function saveTextMarkResult(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  const { dataId, labelResult } = body;
+
+  labelMockData.forEach(item => {
+    if (item.dataId === dataId) {
+      item.labelResult = labelResult;
+    }
+  });
+
+  return res.json({ status: 'ok', message: '标注成功' });
+}
+
 export default {
   'GET /api/projects': getProjects,
   'DELETE /api/projects': deleteProjects,
@@ -627,4 +640,6 @@ export default {
   'DELETE /api/text-project/label-data': deleteLabelData,
   'GET /api/text-project/marktools': getMarkTools,
   'POST /api/text-project/download-template': downloadTemplate,
+
+  'POST /api/text-project/label-data': saveTextMarkResult,
 };

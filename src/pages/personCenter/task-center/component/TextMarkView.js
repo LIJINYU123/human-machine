@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import { Button, Card, Descriptions, Icon, Input, Statistic, Popover } from 'antd';
+import { Button, Card, Descriptions, Icon, Input, Statistic, Popover, Form } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
 import ItemData from '../map';
 import router from 'umi/router';
 import { connect } from 'dva';
 import StandardTable from './StandardTable';
+import PopoverView from './PopoverView';
 import Highlighter from 'react-highlight-words';
 
 const { labelTypeName, taskStatusName, reviewLabel, labelResult } = ItemData;
@@ -33,6 +34,7 @@ class TextMarkView extends Component {
     filteredInfo: {},
     searchText: '',
     searchedColumn: '',
+    popoverVisible: false,
   };
 
   componentWillMount() {
@@ -147,9 +149,20 @@ class TextMarkView extends Component {
     });
   };
 
+  handleClose = () => {
+    this.setState({
+      popoverVisible: false,
+    });
+  };
+
+  handleVisibleChange = visible => {
+    this.setState({ popoverVisible: visible });
+  };
+
+
   render() {
-    const { basicInfo } = this.state;
-    const { data, loading } = this.props;
+    const { basicInfo, popoverVisible } = this.state;
+    const { data, markTools, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -173,13 +186,6 @@ class TextMarkView extends Component {
       <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGobackMyTask}>返回</Button>
     );
 
-    const content = (
-      <div>
-        <p>Content</p>
-        <p>Content</p>
-      </div>
-    );
-
     let columns = [];
     if (basicInfo.labelType === 'textClassify') {
       columns = [
@@ -191,11 +197,11 @@ class TextMarkView extends Component {
         {
           title: '标注结果',
           dataIndex: 'labelResult',
-          render: val => {
+          render: (val, info) => {
             if (val.length) {
               return val.map(item => item.join('，')).join(' | ');
             }
-            return <Popover title="标注工具" content={content} placement="top"><a>标注</a></Popover>
+            return <Popover visible={popoverVisible} onVisibleChange={this.handleVisibleChange} title="标注工具" trigger="click" content={<PopoverView dataId={info.dataId} markTools={markTools} onClose={this.handleClose} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
           filteredValue: filteredInfo.labelResult || null,
@@ -227,11 +233,11 @@ class TextMarkView extends Component {
         {
           title: '标注结果',
           dataIndex: 'labelResult',
-          render: val => {
+          render: (val, info) => {
             if (val.length) {
               return val.map(item => item.join('，')).join(' | ');
             }
-            return <Popover title="标注工具" content={content} placement="top"><a>标注</a></Popover>
+            return <Popover title="标注工具" content={<PopoverView dataId={info.dataId} markTools={markTools} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
         },
