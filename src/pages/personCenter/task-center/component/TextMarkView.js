@@ -71,7 +71,7 @@ class TextMarkView extends Component {
     const { dispatch } = this.props;
     this.setState({
       filteredInfo: filterArg,
-      pagination: pagination,
+      pagination,
     });
 
     const filters = Object.keys(filterArg).reduce((obj, key) => {

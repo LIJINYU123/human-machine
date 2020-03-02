@@ -1,5 +1,5 @@
-import { queryLabelData, queryMarkTools, saveTextMarkResult } from '../service';
 import { message } from 'antd';
+import { queryLabelData, queryMarkTools, saveTextMarkResult } from '../service';
 
 const TextMark = {
   namespace: 'textMark',
