@@ -9,16 +9,23 @@ import { connect } from 'dva';
 class PopoverView extends Component {
   onValidateForm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dataId, onClose, dispatch } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dataId, onClose, onRefresh, dispatch } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
+
+        Object.keys(values).forEach(key => {
+          if (values[key].length === 0) {
+            delete values[key];
+          }
+        });
 
         dispatch({
           type: 'textMark/saveTextMarkResult',
           payload: { dataId, result: values },
           callback: () => {
             onClose();
+            onRefresh();
           },
         });
       }

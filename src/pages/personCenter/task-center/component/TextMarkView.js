@@ -32,6 +32,7 @@ class TextMarkView extends Component {
   state = {
     basicInfo: undefined,
     filteredInfo: {},
+    pagination: {},
     searchText: '',
     searchedColumn: '',
     popoverVisible: {},
@@ -70,6 +71,7 @@ class TextMarkView extends Component {
     const { dispatch } = this.props;
     this.setState({
       filteredInfo: filterArg,
+      pagination: pagination,
     });
 
     const filters = Object.keys(filterArg).reduce((obj, key) => {
@@ -149,9 +151,24 @@ class TextMarkView extends Component {
     });
   };
 
-  handleClose = () => {
-    this.setState({
-      popoverVisible: false,
+  handleClose = dataId => {
+    const popoverValue = {};
+    popoverValue[`${dataId}`] = false;
+    this.setState({ popoverVisible: popoverValue });
+  };
+
+  handleRefreshView = () => {
+    const { dispatch } = this.props;
+    const { pagination, taskId } = this.state;
+    const params = {
+      taskId,
+      currentPage: pagination.current,
+      pageSize: pagination.pageSize,
+    };
+
+    dispatch({
+      type: 'textMark/fetchLabelData',
+      payload: params,
     });
   };
 
@@ -201,11 +218,6 @@ class TextMarkView extends Component {
           dataIndex: 'result',
           render: (val, info) => {
             if (Object.keys(val).length) {
-              // Object.keys(val).map(key => {
-              //   const markTool = markTools.filters(tool => tool.toolId === key);
-              //   const values = val[key];
-              //   values.map(item => markTool.options)
-              // });
               const labelValues = [];
               markTools.forEach(tool => {
                 if (val.hasOwnProperty(tool.toolId)) {
@@ -218,9 +230,9 @@ class TextMarkView extends Component {
                 }
               });
 
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView dataId={info.dataId} markTools={markTools} onClose={this.handleClose} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
+              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
             }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView dataId={info.dataId} markTools={markTools} onClose={this.handleClose} result={{}} />} placement="top"><a>标注</a></Popover>
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={{}} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
           filteredValue: filteredInfo.result || null,
@@ -253,12 +265,25 @@ class TextMarkView extends Component {
           title: '标注结果',
           dataIndex: 'result',
           render: (val, info) => {
-            if (val.length) {
-              return val.map(item => item.join('，')).join(' | ');
+            if (Object.keys(val).length) {
+              const labelValues = [];
+              markTools.forEach(tool => {
+                if (val.hasOwnProperty(tool.toolId)) {
+                  tool.options.forEach(option => {
+                    // eslint-disable-next-line max-len
+                    if (val[tool.toolId].includes(option.optionId)) {
+                      labelValues.push(option.optionName)
+                    }
+                  });
+                }
+              });
+
+              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
             }
-            return <Popover title="标注工具" content={<PopoverView dataId={info.dataId} markTools={markTools} />} placement="top"><a>标注</a></Popover>
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={{}} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
+          filteredValue: filteredInfo.result || null,
         },
         {
           title: '质检结果',

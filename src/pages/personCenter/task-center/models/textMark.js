@@ -36,7 +36,7 @@ const TextMark = {
       });
     },
 
-    * saveTextMarkResult({ payload, callback }, { call, put }) {
+    * saveTextMarkResult({ payload, callback }, { call }) {
       const response = yield call(saveTextMarkResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
