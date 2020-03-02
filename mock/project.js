@@ -267,84 +267,84 @@ let labelMockData = [
   {
     dataId: '1',
     data: { sentence: '出差怎么预定酒店呢' },
-    labelResult: { emotion: ['happy', 'anger'] },
+    result: { emotion: ['happy', 'anger'] },
     reviewResult: 'approve',
     remark: '这是条评论1',
   },
   {
     dataId: '2',
     data: { sentence: '出差住的酒店是自己订好吗' },
-    labelResult: { emotion: ['happy', 'anger'] },
+    result: { emotion: ['happy', 'anger'] },
     reviewResult: 'approve',
     remark: '这是条评论2',
   },
   {
     dataId: '3',
     data: { sentence: '自己能够去订酒店吗' },
-    labelResult: [],
+    result: [],
     reviewResult: 'reject',
     remark: '这是条评论3',
   },
   {
     dataId: '4',
     data: { sentence: '员工自己可以挑选喜欢的酒店订吗' },
-    labelResult: { emotion: ['happy', 'anger'] },
+    result: { emotion: ['happy', 'anger'] },
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '5',
     data: { sentence: '自己是不是可以随便订酒店' },
-    labelResult: { emotion: ['neutral'] },
+    result: { emotion: ['neutral'] },
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '6',
     data: { sentence: '为公司出差住宿可以给多少预算' },
-    labelResult: { emotion: ['neutral'] },
+    result: { emotion: ['neutral'] },
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '7',
     data: { sentence: '出差的话可以住几星级的酒店' },
-    labelResult: { emotion: ['happy', 'like'] },
+    result: { emotion: ['happy', 'like'] },
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '8',
     data: { sentence: '协议酒店可以不住吗' },
-    labelResult: { emotion: ['neutral'] },
+    result: { emotion: ['neutral'] },
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '9',
     data: { sentence: '协议酒店不住会出事吗' },
-    labelResult: { emotion: ['like'] },
+    result: { emotion: ['like'] },
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '10',
     data: { sentence: '在国内出差住400一晚的酒店可以吗' },
-    labelResult: { emotion: ['like'] },
+    result: { emotion: ['like'] },
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '11',
     data: { sentence: '在国内出差能够住几星级的酒店' },
-    labelResult: { emotion: ['like'] },
+    result: { emotion: ['like'] },
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '12',
     data: { sentence: '在国内出差的话住宿有没有一个标准' },
-    labelResult: { emotion: ['like'] },
+    result: { emotion: ['like'] },
     reviewResult: 'unreview',
     remark: '',
   },
@@ -536,9 +536,9 @@ function getLabelData(req, res, u) {
   if (params.labelResult) {
     const labelResult = params.labelResult.split(',');
     if (labelResult.length === 1 && labelResult[0] === 'processed') {
-      dataSource = dataSource.filter(item => item.labelResult.length > 0);
+      dataSource = dataSource.filter(item => item.result.length > 0);
     } else if (labelResult.length === 1 && labelResult[0] === 'unprocessed') {
-      dataSource = dataSource.filter(item => item.labelResult.length === 0);
+      dataSource = dataSource.filter(item => item.result.length === 0);
     }
   }
 
@@ -616,11 +616,11 @@ function createProject(req, res) {
 
 function saveTextMarkResult(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  const { dataId, labelResult } = body;
+  const { dataId, result } = body;
 
   labelMockData.forEach(item => {
     if (item.dataId === dataId) {
-      item.labelResult = labelResult;
+      item.result = result;
     }
   });
 

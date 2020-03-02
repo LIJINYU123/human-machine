@@ -16,7 +16,7 @@ class PopoverView extends Component {
 
         dispatch({
           type: 'textMark/saveTextMarkResult',
-          payload: { dataId, labelResult: values },
+          payload: { dataId, result: values },
           callback: () => {
             onClose();
           },
@@ -26,7 +26,7 @@ class PopoverView extends Component {
   };
 
   render() {
-    const { markTools, onClose, form: { getFieldDecorator } } = this.props;
+    const { markTools, onClose, result, form: { getFieldDecorator } } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -45,7 +45,11 @@ class PopoverView extends Component {
           markTools.map(markTool => (
             <Form.Item label={markTool.toolName}>
               {
-                getFieldDecorator(markTool.toolId)(
+                getFieldDecorator(markTool.toolId, {
+                  // eslint-disable-next-line max-len
+                  initialValue: result.hasOwnProperty(markTool.toolId) ? result[markTool.toolId] : [],
+                })(
+                  // eslint-disable-next-line max-len
                   <TagSelect expandable>
                     {/* eslint-disable-next-line max-len */}
                     {markTool.options.map(option => <TagSelect.Option value={option.optionId}>{option.optionName}</TagSelect.Option>)}
