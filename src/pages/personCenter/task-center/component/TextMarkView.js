@@ -93,6 +93,16 @@ class TextMarkView extends Component {
     });
   };
 
+  handleClickCell = cell => {
+    return {
+      onClick: event => {
+        // eslint-disable-next-line max-len
+        const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
+        console.log(cell.sentence.substring(word.anchorOffset, word.focusOffset));
+      },
+    };
+  };
+
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
@@ -211,6 +221,7 @@ class TextMarkView extends Component {
         {
           title: '文本',
           dataIndex: 'sentence',
+          onCell: this.handleClickCell,
           ...this.getColumnSearchProps('sentence'),
         },
         {

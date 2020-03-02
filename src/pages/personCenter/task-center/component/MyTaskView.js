@@ -174,7 +174,7 @@ class MyTaskView extends Component {
       },
       {
         title: '提数',
-        dataIndex: 'qustionNum',
+        dataIndex: 'questionNum',
       },
       {
         title: '任务状态',
