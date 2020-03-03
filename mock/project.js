@@ -544,17 +544,17 @@ function getLabelData(req, res, u) {
 
   if (params.sentence) {
     // eslint-disable-next-line max-len
-    dataSource = dataSource.filter(item => item.sentence.toLowerCase().includes(params.sentence.toLowerCase()));
+    dataSource = dataSource.filter(item => item.data.sentence.toLowerCase().includes(params.sentence.toLowerCase()));
   }
 
   if (params.sentence1) {
     // eslint-disable-next-line max-len
-    dataSource = dataSource.filter(item => item.sentence1.toLowerCase().includes(params.sentence1.toLowerCase()));
+    dataSource = dataSource.filter(item => item.data.sentence1.toLowerCase().includes(params.sentence1.toLowerCase()));
   }
 
   if (params.sentence2) {
     // eslint-disable-next-line max-len
-    dataSource = dataSource.filter(item => item.sentence2.toLowerCase().includes(params.sentence2.toLowerCase()));
+    dataSource = dataSource.filter(item => item.data.sentence2.toLowerCase().includes(params.sentence2.toLowerCase()));
   }
 
   let pageSize = 10;

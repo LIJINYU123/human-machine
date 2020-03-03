@@ -40,7 +40,7 @@ class MyTaskView extends Component {
       payload: { status: location.state.status },
     });
     this.setState({
-      filteredInfo: { status: [location.state.status] },
+      filteredInfo: { status: location.state.status.split(',') },
     });
   }
 
@@ -132,10 +132,16 @@ class MyTaskView extends Component {
   });
 
   handleJumpToMarkView = task => {
-    console.log(task);
-    if (['textClassify', 'textMatch', 'ner'].includes(task.labelType)) {
+    if (['textClassify', 'textMatch'].includes(task.labelType)) {
       router.push({
         pathname: '/person/my-task/text-mark',
+        state: {
+          taskInfo: task,
+        },
+      });
+    } else if (task.labelType === 'ner') {
+      router.push({
+        pathname: '/person/my-task/ner-mark',
         state: {
           taskInfo: task,
         },

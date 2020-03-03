@@ -71,7 +71,7 @@ const ProjectDetail = {
     saveMyData(state, action) {
       const response = action.payload;
       const dataSource = response.list;
-      return { ...state, myTask: { list: response.list, pagination: response.pagination }, inProgressNum: dataSource.filter(item => item.status === 'labeling').length, completeNum: dataSource.filter(item => item.status === 'complete').length };
+      return { ...state, myTask: { list: response.list, pagination: response.pagination }, inProgressNum: dataSource.filter(item => ['labeling', 'reject'].includes(item.status)).length, completeNum: dataSource.filter(item => item.status === 'complete').length };
     },
   },
 };

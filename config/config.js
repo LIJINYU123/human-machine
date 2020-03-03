@@ -216,6 +216,13 @@ export default {
                   component: './personCenter/task-center/component/TextMarkView',
                   hideInMenu: true,
                 },
+                {
+                  name: '文本标注',
+                  icon: 'container',
+                  path: '/person/my-task/ner-mark',
+                  component: './personCenter/task-center/component/NerMarkView',
+                  hideInMenu: true,
+                },
               ],
             },
             {

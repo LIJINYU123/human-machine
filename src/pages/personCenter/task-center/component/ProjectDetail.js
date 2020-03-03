@@ -66,7 +66,7 @@ class ProjectDetail extends Component {
     router.push({
       pathname: '/person/my-task',
       state: {
-        status: 'labeling',
+        status: 'labeling,reject',
       },
     });
   };

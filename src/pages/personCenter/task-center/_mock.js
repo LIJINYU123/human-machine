@@ -107,10 +107,10 @@ const taskMockData = [
   },
   {
     projectId: '1',
-    projectName: '文本分类123',
+    projectName: '实体识别456',
     taskId: '6',
     taskName: '任务6',
-    labelType: 'textClassify',
+    labelType: 'ner',
     questionNum: 100,
     schedule: 30,
     status: 'labeling',
@@ -269,7 +269,7 @@ function getTaskData(req, res, u) {
       pageSize,
       current: parseInt(`${params.currentPage}`, 10) || 1,
     },
-    inProgressNum: dataSource.filter(item => item.status === 'labeling').length,
+    inProgressNum: dataSource.filter(item => ['labeling', 'reject'].includes(item.status)).length,
     completeNum: dataSource.filter(item => item.status === 'complete').length,
   };
 
