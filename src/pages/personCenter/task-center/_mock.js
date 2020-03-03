@@ -108,7 +108,7 @@ const taskMockData = [
   {
     projectId: '1',
     projectName: '实体识别456',
-    taskId: '6',
+    taskId: 'ner6',
     taskName: '任务6',
     labelType: 'ner',
     questionNum: 100,
@@ -167,6 +167,18 @@ const markToolsMockData = [
       {
         optionId: 'neutral',
         optionName: '中性',
+      },
+    ],
+  },
+];
+
+const nerMarkToolsMockData = [
+  {
+    toolId: 'singer',
+    toolName: '歌手',
+    options: [
+      {
+        optionId: '周杰伦',
       },
     ],
   },

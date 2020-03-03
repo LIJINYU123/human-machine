@@ -50,4 +50,11 @@ export default {
     processed: '已标注',
     unprocessed: '未标注',
   },
+
+  FieldLabels: {
+    toolName: '词典名称',
+    saveType: '存储方式',
+    wordEntryName: '所属词条',
+    newWordEntry: '新建词条',
+  },
 }

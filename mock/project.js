@@ -350,6 +350,93 @@ let labelMockData = [
   },
 ];
 
+let nerLabelData = [
+  {
+    dataId: '1',
+    data: { sentence: '我想要听王菲的传奇' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '2',
+    data: { sentence: '我想要去巴黎看埃菲热铁塔' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '3',
+    data: { sentence: '你去过北京的故宫吗' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '4',
+    data: { sentence: '你去过美国吗' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '5',
+    data: { sentence: '我想听林俊杰的江南' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '6',
+    data: { sentence: '我想要听周杰伦的告白气球' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '7',
+    data: { sentence: '你认识哪些篮球明星' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '8',
+    data: { sentence: '我想听吴青峰的歌' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '9',
+    data: { sentence: '我想听苏打绿的小情歌' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '10',
+    data: { sentence: '我想去沙滩晒太阳' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '11',
+    data: { sentence: '我喜欢吃肯德基的香辣鸡腿堡' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '12',
+    data: { sentence: '我喜欢逛万达广场' },
+    result: [],
+    reviewResult: 'unreview',
+    remark: '',
+  },
+];
+
 const markToolsMockData = [
   {
     labelType: 'textClassify',
@@ -520,7 +607,7 @@ function getLabelData(req, res, u) {
     url = req.url;
   }
   const params = parse(url, true).query;
-  let dataSource = labelMockData;
+  let dataSource = params.taskId.indexOf('ner') === 0 ? nerLabelData : labelMockData;
 
   if (params.reviewResult) {
     const results = params.reviewResult.split(',');
@@ -616,13 +703,26 @@ function createProject(req, res) {
 
 function saveTextMarkResult(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  const { dataId, result } = body;
+  const { taskId, dataId, result } = body;
 
-  labelMockData.forEach(item => {
-    if (item.dataId === dataId) {
-      item.result = result;
-    }
-  });
+  if (taskId.indexOf('ner') === 0) {
+    nerLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        let preResult = item.result;
+        if (preResult.filter(r => r.word === result.word).length !== 0) {
+          preResult = preResult.filter(r => r.word !== result.word);
+        }
+        preResult.push(result);
+        item.result = preResult;
+      }
+    });
+  } else {
+    labelMockData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.result = result;
+      }
+    });
+  }
 
   return res.json({ status: 'ok', message: '标注成功' });
 }

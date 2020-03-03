@@ -1,13 +1,13 @@
-import React, { Component, Fragment } from 'react';
-import { Button, Card, Descriptions, Icon, Input, Statistic, Popover, Form, Tag } from 'antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import styles from './style.less';
-import ItemData from '../map';
-import router from 'umi/router';
+import React, { Component } from 'react';
+import { Button, Card, Descriptions, Icon, Input, Statistic } from 'antd';
 import { connect } from 'dva';
-import StandardTable from './StandardTable';
-import PopoverView from './PopoverView';
 import Highlighter from 'react-highlight-words';
+import router from 'umi/router';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import StandardTable from './StandardTable';
+import NerModalView from './NerModalView';
+import ItemData from '../map';
+import styles from './style.less';
 
 const { labelTypeName, taskStatusName, reviewLabel, labelResult } = ItemData;
 
@@ -28,14 +28,17 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   markTools: textMark.markTools,
   loading: loading.effects['textMark/fetchLabelData'],
 }))
-class TextMarkView extends Component {
+class NerMarkView extends Component {
   state = {
     basicInfo: undefined,
     filteredInfo: {},
     pagination: {},
     searchText: '',
     searchedColumn: '',
-    popoverVisible: {},
+    modalVisible: false,
+    word: '',
+    startIndex: 0,
+    endIndex: 0,
   };
 
   componentWillMount() {
@@ -92,6 +95,22 @@ class TextMarkView extends Component {
       payload: params,
     });
   };
+
+  handleClickCell = cell => ({
+      onClick: event => {
+        // eslint-disable-next-line max-len
+        const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
+        if (cell.sentence.substring(word.anchorOffset, word.focusOffset).length > 1) {
+          this.setState({
+            modalVisible: true,
+            word: cell.sentence.substring(word.anchorOffset, word.focusOffset),
+            startIndex: word.anchorOffset,
+            endIndex: word.focusOffset,
+          });
+        }
+        // console.log(cell.sentence.substring(word.anchorOffset, word.focusOffset));
+      },
+    });
 
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -151,12 +170,6 @@ class TextMarkView extends Component {
     });
   };
 
-  handleClose = dataId => {
-    const popoverValue = {};
-    popoverValue[`${dataId}`] = false;
-    this.setState({ popoverVisible: popoverValue });
-  };
-
   handleRefreshView = () => {
     const { dispatch } = this.props;
     const { pagination, basicInfo } = this.state;
@@ -172,16 +185,15 @@ class TextMarkView extends Component {
     });
   };
 
-  handleVisibleChange = dataId => {
-    const popoverValue = {};
-    popoverValue[`${dataId}`] = true;
-    this.setState({ popoverVisible: popoverValue });
+  handleCancelModal = () => {
+    this.setState({
+      modalVisible: false,
+    });
   };
 
-
   render() {
-    const { basicInfo, popoverVisible } = this.state;
-    const { data, markTools, loading } = this.props;
+    const { basicInfo, modalVisible, word, startIndex, endIndex } = this.state;
+    const { data, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -205,99 +217,31 @@ class TextMarkView extends Component {
       <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGobackMyTask}>返回</Button>
     );
 
-    let columns = [];
-    if (basicInfo.labelType === 'textClassify') {
-      columns = [
-        {
-          title: '文本',
-          dataIndex: 'sentence',
-          ...this.getColumnSearchProps('sentence'),
-        },
-        {
-          title: '标注结果',
-          dataIndex: 'result',
-          render: (val, info) => {
-            if (Object.keys(val).length) {
-              const labelValues = [];
-              markTools.forEach(tool => {
-                if (val.hasOwnProperty(tool.toolId)) {
-                  tool.options.forEach(option => {
-                    // eslint-disable-next-line max-len
-                    if (val[tool.toolId].includes(option.optionId)) {
-                      labelValues.push(option.optionName)
-                    }
-                  });
-                }
-              });
-
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
-            }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={{}} />} placement="top"><a>标注</a></Popover>
-          },
-          filters: labelResultFilters,
-          filteredValue: filteredInfo.result || null,
-        },
-        {
-          title: '质检结果',
-          dataIndex: 'reviewResult',
-          render: val => reviewLabel[val],
-          filters: reviewFilters,
-          filteredValue: filteredInfo.reviewResult || null,
-        },
-        {
-          title: '备注',
-          dataIndex: 'remark',
-        },
-      ];
-    } else {
-      columns = [
-        {
-          title: '文本1',
-          dataIndex: 'sentence1',
-          ...this.getColumnSearchProps('sentence1'),
-        },
-        {
-          title: '文本2',
-          dataIndex: 'sentence2',
-          ...this.getColumnSearchProps('sentence2'),
-        },
-        {
-          title: '标注结果',
-          dataIndex: 'result',
-          render: (val, info) => {
-            if (Object.keys(val).length) {
-              const labelValues = [];
-              markTools.forEach(tool => {
-                if (val.hasOwnProperty(tool.toolId)) {
-                  tool.options.forEach(option => {
-                    // eslint-disable-next-line max-len
-                    if (val[tool.toolId].includes(option.optionId)) {
-                      labelValues.push(option.optionName)
-                    }
-                  });
-                }
-              });
-
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
-            }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={{}} />} placement="top"><a>标注</a></Popover>
-          },
-          filters: labelResultFilters,
-          filteredValue: filteredInfo.result || null,
-        },
-        {
-          title: '质检结果',
-          dataIndex: 'reviewResult',
-          render: val => reviewLabel[val],
-          filters: reviewFilters,
-          filteredValue: filteredInfo.reviewResult || null,
-        },
-        {
-          title: '备注',
-          dataIndex: 'remark',
-        },
-      ];
-    }
+    const columns = [
+      {
+        title: '文本',
+        dataIndex: 'sentence',
+        onCell: this.handleClickCell,
+        ...this.getColumnSearchProps('sentenec'),
+      },
+      {
+        title: '标注结果',
+        dataIndex: 'result',
+        filters: labelResultFilters,
+        filteredValue: filteredInfo.result || null,
+      },
+      {
+        title: '质检结果',
+        dataIndex: 'reviewResult',
+        render: val => reviewLabel[val],
+        filters: reviewFilters,
+        filteredValue: filteredInfo.reviewResult || null,
+      },
+      {
+        title: '备注',
+        dataIndex: 'remark',
+      },
+    ];
 
     return (
       <PageHeaderWrapper
@@ -316,9 +260,11 @@ class TextMarkView extends Component {
             onChange={this.handleStandardTableChange}
           />
         </Card>
+        {/* eslint-disable-next-line max-len */}
+        <NerModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} taskId={basicInfo.taskId} />
       </PageHeaderWrapper>
     );
   }
 }
 
-export default TextMarkView;
+export default NerMarkView;

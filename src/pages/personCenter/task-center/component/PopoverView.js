@@ -9,7 +9,7 @@ import { connect } from 'dva';
 class PopoverView extends Component {
   onValidateForm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dataId, onClose, onRefresh, dispatch } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, taskId, dataId, onClose, onRefresh, dispatch } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
@@ -22,7 +22,7 @@ class PopoverView extends Component {
 
         dispatch({
           type: 'textMark/saveTextMarkResult',
-          payload: { dataId, result: values },
+          payload: { taskId, dataId, result: values },
           callback: () => {
             onClose();
             onRefresh();
