@@ -727,6 +727,16 @@ function saveTextMarkResult(req, res, u, b) {
   return res.json({ status: 'ok', message: '标注成功' });
 }
 
+function deleteTextMarkResult(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  nerLabelData.forEach(item => {
+    if (item.dataId === body.dataId) {
+      item.result.splice(body.index, 1);
+    }
+  });
+  return res.json({ status: 'ok', message: '删除成功' });
+}
+
 export default {
   'GET /api/projects': getProjects,
   'DELETE /api/projects': deleteProjects,
@@ -741,5 +751,6 @@ export default {
   'GET /api/text-project/marktools': getMarkTools,
   'POST /api/text-project/download-template': downloadTemplate,
 
-  'POST /api/text-project/label-data': saveTextMarkResult,
+  'POST /api/text-project/label-result': saveTextMarkResult,
+  'DELETE /api/text-project/label-result': deleteTextMarkResult,
 };

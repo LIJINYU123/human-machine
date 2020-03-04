@@ -42,8 +42,15 @@ export async function queryMarkTools(params) {
 }
 
 export async function saveTextMarkResult(params) {
-  return request('/api/text-project/label-data', {
+  return request('/api/text-project/label-result', {
     method: 'POST',
+    data: params,
+  });
+}
+
+export async function deleteTextMarkResult(params) {
+  return request('/api/text-project/label-result', {
+    method: 'DELETE',
     data: params,
   });
 }

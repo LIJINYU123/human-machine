@@ -201,6 +201,20 @@ const nerMarkToolsMockData = [
       },
     ],
   },
+  {
+    toolId: 'song',
+    toolName: '歌名',
+    options: [
+      {
+        optionId: '1',
+        optionName: '十年',
+      },
+      {
+        optionId: '2',
+        optionName: '红玫瑰',
+      },
+    ],
+  },
 ];
 
 function getProjects(req, res, u) {

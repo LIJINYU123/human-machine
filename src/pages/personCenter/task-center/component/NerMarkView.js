@@ -193,6 +193,18 @@ class NerMarkView extends Component {
     });
   };
 
+  handleCloseTag = (index, dataId) => {
+    const { dispatch } = this.props;
+    const { basicInfo } = this.state;
+    dispatch({
+      type: 'textMark/deleteTextMarkResult',
+      payload: { taskId: basicInfo.taskId, dataId, index },
+      callback: () => {
+        this.handleRefreshView();
+      },
+    });
+  };
+
   render() {
     const { basicInfo, modalVisible, word, startIndex, endIndex, dataId } = this.state;
     const { data, markTools, loading } = this.props;
@@ -229,7 +241,7 @@ class NerMarkView extends Component {
       {
         title: '标注结果',
         dataIndex: 'result',
-        render: val => {
+        render: (val, record) => {
           if (val.length) {
             const toolMap = {};
             markTools.forEach(tool => {
@@ -239,7 +251,7 @@ class NerMarkView extends Component {
               };
             });
             const labelValues = val.map(v => `${v.word}: ${toolMap[v.toolId].toolName}`);
-            return labelValues.map(value => (<Tag color="blue">{value}</Tag>));
+            return labelValues.map((value, index) => (<Tag color="blue" closable onClose={() => this.handleCloseTag(index, record.dataId)}>{value}</Tag>));
           }
           return '';
         },

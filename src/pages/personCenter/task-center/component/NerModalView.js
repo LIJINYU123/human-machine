@@ -56,7 +56,6 @@ class NerModalView extends Component {
         values.startIndex = startIndex;
         values.endIndex = endIndex;
 
-        console.log(values);
         dispatch({
           type: 'textMark/saveTextMarkResult',
           payload: { taskId, dataId, result: values },
