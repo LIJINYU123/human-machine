@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Card, Descriptions, Icon, Input, Statistic } from 'antd';
+import { Button, Card, Descriptions, Icon, Input, Statistic, Tag } from 'antd';
 import { connect } from 'dva';
 import Highlighter from 'react-highlight-words';
 import router from 'umi/router';
@@ -229,7 +229,7 @@ class NerMarkView extends Component {
       {
         title: '标注结果',
         dataIndex: 'result',
-        render: (val, info) => {
+        render: val => {
           if (val.length) {
             const toolMap = {};
             markTools.forEach(tool => {
@@ -238,8 +238,8 @@ class NerMarkView extends Component {
                 options: tool.options,
               };
             });
-            const labelValues = val.map(v => `${v.word}: ${toolMap[v.toolId].toolName}`)
-            return labelValues.join(',');
+            const labelValues = val.map(v => `${v.word}: ${toolMap[v.toolId].toolName}`);
+            return labelValues.map(value => (<Tag color="blue">{value}</Tag>));
           }
           return '';
         },
