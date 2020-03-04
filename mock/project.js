@@ -281,7 +281,7 @@ let labelMockData = [
   {
     dataId: '3',
     data: { sentence: '自己能够去订酒店吗' },
-    result: [],
+    result: {},
     reviewResult: 'reject',
     remark: '这是条评论3',
   },
@@ -620,12 +620,12 @@ function getLabelData(req, res, u) {
     dataSource = filterDataSource;
   }
 
-  if (params.labelResult) {
-    const labelResult = params.labelResult.split(',');
-    if (labelResult.length === 1 && labelResult[0] === 'processed') {
-      dataSource = dataSource.filter(item => item.result.length > 0);
-    } else if (labelResult.length === 1 && labelResult[0] === 'unprocessed') {
-      dataSource = dataSource.filter(item => item.result.length === 0);
+  if (params.result) {
+    const result = params.result.split(',');
+    if (result.length === 1 && result[0] === 'processed') {
+      dataSource = dataSource.filter(item => Object.keys(item.result).length > 0);
+    } else if (result.length === 1 && result[0] === 'unprocessed') {
+      dataSource = dataSource.filter(item => Object.keys(item.result).length === 0);
     }
   }
 
