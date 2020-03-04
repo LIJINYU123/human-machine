@@ -195,8 +195,6 @@ export default {
       res.header('UserID', 'SYECO');
       res.header('DepartmentId', 'operation');
       res.header('Privileges', JSON.stringify({
-        dialogInput: ['add'],
-        historyRecord: ['modify', 'query', 'delete', 'export'],
         roleManage: ['add', 'modify', 'query', 'delete'],
         userManage: ['add', 'modify', 'query', 'delete'],
       }));
@@ -216,8 +214,6 @@ export default {
       res.header('UserID', 'SYDEV');
       res.header('DepartmentId', 'development');
       res.header('Privileges', JSON.stringify({
-        dialogInput: ['add'],
-        historyRecord: ['modify', 'query', 'delete'],
         roleManage: ['add', 'modify', 'query', 'delete'],
         userManage: ['add', 'modify', 'query', 'delete'],
       }));

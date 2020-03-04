@@ -5,7 +5,7 @@ import ItemData from './map';
 
 const { TextArea } = Input;
 // eslint-disable-next-line max-len
-const { FieldLabels, dialogInputOptions, historyRecordOptions, roleManageOptions, userManageOptions } = ItemData;
+const { FieldLabels, roleManageOptions, userManageOptions, projectManageOptions, dataMarkOptions } = ItemData;
 
 @connect(({ roleList, loading }) => ({
   roleList,
@@ -87,18 +87,18 @@ class RoleDetailView extends Component {
             }
           </Form.Item>
           <Divider/>
-          <Form.Item label={FieldLabels.dialogInput}>
+          <Form.Item label={FieldLabels.projectManage}>
             {
-              getFieldDecorator('dialogInput', {
-                initialValue: privileges ? privileges.dialogInput : [],
-              })(<Checkbox.Group options={dialogInputOptions} style={{ width: '100%' }} />)
+              getFieldDecorator('projectManage', {
+                initialValue: privileges ? privileges.projectManage : [],
+              })(<Checkbox.Group options={projectManageOptions} style={{ width: '100%' }} />)
             }
           </Form.Item>
-          <Form.Item label={FieldLabels.historyRecord}>
+          <Form.Item label={FieldLabels.dataMark}>
             {
-              getFieldDecorator('historyRecord', {
-                initialValue: privileges ? privileges.historyRecord : [],
-              })(<Checkbox.Group options={historyRecordOptions} style={{ width: '100%' }} />)
+              getFieldDecorator('dataMark', {
+                initialValue: privileges ? privileges.dataMark : [],
+              })(<Checkbox.Group options={dataMarkOptions} style={{ width: '100%' }} />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.roleManage}>

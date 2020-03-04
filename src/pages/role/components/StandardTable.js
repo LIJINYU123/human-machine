@@ -1,18 +1,9 @@
 import React from 'react';
-import styles from './style.less';
 import { Table, Col, Row, Tag } from 'antd';
+import styles from './style.less';
+import ItemData from './map';
 
-const options = {
-  historyRecord: '历史记录',
-  dialogInput: '语料录入',
-  roleManage: '角色管理',
-  userManage: '用户管理',
-  add: '新增',
-  modify: '修改',
-  query: '查询',
-  delete: '删除',
-  export: '导出',
-};
+const { FieldLabels, operateName } = ItemData;
 
 function StandardTable(props) {
   const { data, ...rest } = props;
@@ -21,7 +12,7 @@ function StandardTable(props) {
       <Row type="flex" gutter={[16, 16]}>
         {Object.keys(privileges).map(item => (
             <Col lg={12} md={24} sm={24}>
-              {options[item]}:&nbsp;&nbsp;&nbsp;&nbsp;{privileges[item].map(privilege => <Tag color="cyan" key={privilege}>{options[privilege]}</Tag>)}
+              {FieldLabels[item]}:&nbsp;&nbsp;&nbsp;&nbsp;{privileges[item].map(privilege => <Tag color="cyan" key={privilege}>{operateName[privilege]}</Tag>)}
             </Col>
           ))}
       </Row>);
