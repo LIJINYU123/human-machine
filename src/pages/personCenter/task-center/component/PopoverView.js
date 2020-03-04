@@ -54,7 +54,7 @@ class PopoverView extends Component {
               {
                 getFieldDecorator(markTool.toolId, {
                   // eslint-disable-next-line max-len
-                  initialValue: result.hasOwnProperty(markTool.toolId) ? result[markTool.toolId] : [],
+                  initialValue: result.hasOwnProperty(markTool.toolId) ? result[markTool.toolId].map(option => option.optionId) : [],
                 })(
                   // eslint-disable-next-line max-len
                   <TagSelect expandable>

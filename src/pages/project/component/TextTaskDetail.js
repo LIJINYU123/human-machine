@@ -2,7 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Link from 'umi/link';
 import { connect } from 'dva';
-import { Input, Button, Icon, Statistic, Descriptions, Card, Steps } from 'antd';
+import { Input, Button, Icon, Statistic, Descriptions, Card, Steps, Tag } from 'antd';
 import StandardTable from './StandardTable';
 import styles from './style.less';
 import Highlighter from 'react-highlight-words';
@@ -274,7 +274,18 @@ class TextTaskDetail extends Component {
         {
           title: '标注结果',
           dataIndex: 'result',
-          render: val => val.map(item => item.join('，')).join(' | '),
+          render: val => {
+            if (Object.keys(val).length) {
+              let labelValues = [];
+              Object.keys(val).forEach(toolId => {
+                const temp = val[toolId].map(option => option.optionName);
+                labelValues = labelValues.concat(temp);
+              });
+
+              return labelValues.map(value => (<Tag color="blue">{value}</Tag>));
+            }
+            return '';
+          },
         },
         {
           title: '质检结果',

@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Button, Card, Descriptions, Icon, Input, Statistic, Popover, Form, Tag } from 'antd';
+import React, { Component } from 'react';
+import { Button, Card, Descriptions, Icon, Input, Statistic, Popover, Tag } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
 import ItemData from '../map';
@@ -81,7 +81,7 @@ class TextMarkView extends Component {
     }, {});
 
     const params = {
-      taskId: this.state.taskId,
+      taskId: this.state.basicInfo.taskId,
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...filters,
@@ -218,16 +218,10 @@ class TextMarkView extends Component {
           dataIndex: 'result',
           render: (val, info) => {
             if (Object.keys(val).length) {
-              const labelValues = [];
-              markTools.forEach(tool => {
-                if (val.hasOwnProperty(tool.toolId)) {
-                  tool.options.forEach(option => {
-                    // eslint-disable-next-line max-len
-                    if (val[tool.toolId].includes(option.optionId)) {
-                      labelValues.push(option.optionName)
-                    }
-                  });
-                }
+              let labelValues = [];
+              Object.keys(val).forEach(toolId => {
+                 const temp = val[toolId].map(option => option.optionName);
+                 labelValues = labelValues.concat(temp);
               });
 
               return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>

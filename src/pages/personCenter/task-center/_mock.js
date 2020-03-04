@@ -178,7 +178,26 @@ const nerMarkToolsMockData = [
     toolName: '歌手',
     options: [
       {
-        optionId: '周杰伦',
+        optionId: '1',
+        optionName: '周杰伦',
+      },
+      {
+        optionId: '2',
+        optionName: '林俊杰',
+      },
+    ],
+  },
+  {
+    toolId: 'country',
+    toolName: '景点',
+    options: [
+      {
+        optionId: '1',
+        optionName: '长城',
+      },
+      {
+        optionId: '2',
+        optionName: '外滩',
       },
     ],
   },
@@ -364,8 +383,13 @@ function getMarkTools(req, res, u) {
     url = req.url;
   }
 
-  // const params = parse(url, true).query;
-  res.json(markToolsMockData);
+  const params = parse(url, true).query;
+
+  if (params.taskId.indexOf('ner') === 0) {
+    res.json(nerMarkToolsMockData);
+  } else {
+    res.json(markToolsMockData);
+  }
 }
 
 export default {

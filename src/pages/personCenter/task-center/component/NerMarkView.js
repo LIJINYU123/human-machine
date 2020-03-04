@@ -35,6 +35,7 @@ class NerMarkView extends Component {
     pagination: {},
     searchText: '',
     searchedColumn: '',
+    dataId: '',
     modalVisible: false,
     word: '',
     startIndex: 0,
@@ -102,6 +103,7 @@ class NerMarkView extends Component {
         const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
         if (cell.sentence.substring(word.anchorOffset, word.focusOffset).length > 1) {
           this.setState({
+            dataId: cell.dataId,
             modalVisible: true,
             word: cell.sentence.substring(word.anchorOffset, word.focusOffset),
             startIndex: word.anchorOffset,
@@ -192,8 +194,8 @@ class NerMarkView extends Component {
   };
 
   render() {
-    const { basicInfo, modalVisible, word, startIndex, endIndex } = this.state;
-    const { data, loading } = this.props;
+    const { basicInfo, modalVisible, word, startIndex, endIndex, dataId } = this.state;
+    const { data, markTools, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -227,6 +229,20 @@ class NerMarkView extends Component {
       {
         title: '标注结果',
         dataIndex: 'result',
+        render: (val, info) => {
+          if (val.length) {
+            const toolMap = {};
+            markTools.forEach(tool => {
+              toolMap[tool.toolId] = {
+                toolName: tool.toolName,
+                options: tool.options,
+              };
+            });
+            const labelValues = val.map(v => `${v.word}: ${toolMap[v.toolId].toolName}`)
+            return labelValues.join(',');
+          }
+          return '';
+        },
         filters: labelResultFilters,
         filteredValue: filteredInfo.result || null,
       },
@@ -261,7 +277,7 @@ class NerMarkView extends Component {
           />
         </Card>
         {/* eslint-disable-next-line max-len */}
-        <NerModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} taskId={basicInfo.taskId} />
+        <NerModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} taskId={basicInfo.taskId} dataId={dataId} />
       </PageHeaderWrapper>
     );
   }
