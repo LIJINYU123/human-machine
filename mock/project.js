@@ -374,7 +374,7 @@ const nerLabelData = [
   },
   {
     dataId: '4',
-    data: { sentence: '你去过美国吗' },
+    data: { sentence: '我想要听周董的演唱会' },
     result: [],
     reviewResult: 'unreview',
     remark: '',
@@ -395,7 +395,7 @@ const nerLabelData = [
   },
   {
     dataId: '7',
-    data: { sentence: '你认识哪些篮球明星' },
+    data: { sentence: '我想听阿妹的歌' },
     result: [],
     reviewResult: 'unreview',
     remark: '',
@@ -743,12 +743,12 @@ export default {
   'GET /api/project/detail/:projectId': getProjectDetail,
   'GET /api/project/task-data': getTaskData,
   'DELETE /api/project/task-data': deleteTaskData,
+  'GET /api/project/default-tools': getMarkTools,
   'GET /api/project/members': getRoleMembers,
   'POST /api/text-project/create': createProject,
   'GET /api/text-project/task-detail/:taskId': getTaskDetail,
   'GET /api/text-project/label-data': getLabelData,
   'DELETE /api/text-project/label-data': deleteLabelData,
-  'GET /api/text-project/marktools': getMarkTools,
   'POST /api/text-project/download-template': downloadTemplate,
 
   'POST /api/text-project/label-result': saveTextMarkResult,

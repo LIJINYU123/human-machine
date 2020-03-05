@@ -149,8 +149,8 @@ class ProjectDetail extends Component {
         <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
         <Descriptions.Item label="项目周期">{basicInfo.endTime}</Descriptions.Item>
-        <Descriptions.Item label="标注员">{basicInfo.labelers ? basicInfo.labelers[0].name : ''}<Tooltip title={basicInfo.labelers.map(labeler => labeler.name).join('，')} placement="top" arrowPointAtCenter>...</Tooltip></Descriptions.Item>
-        <Descriptions.Item label="质检员">{basicInfo.inspectors ? basicInfo.inspectors[0].name : ''}<Tooltip title={basicInfo.inspectors.map(inspector => inspector.name).join('，')}>...</Tooltip></Descriptions.Item>
+        <Descriptions.Item label="标注员">{basicInfo.labelers ? basicInfo.labelers[0].name : ''}{basicInfo.labelers ? <Tooltip title={basicInfo.labelers.map(labeler => labeler.name).join('，')}>...</Tooltip> : ''}</Descriptions.Item>
+        <Descriptions.Item label="质检员">{basicInfo.inspectors ? basicInfo.inspectors[0].name : ''}{basicInfo.inspectors ? <Tooltip title={basicInfo.inspectors.map(inspector => inspector.name).join('，')}>...</Tooltip> : ''}</Descriptions.Item>
         <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.toolName).join('，') : ''}</Descriptions.Item>
         <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
         <Descriptions.Item label="质检率" span={2}>{basicInfo.checkRate}%</Descriptions.Item>

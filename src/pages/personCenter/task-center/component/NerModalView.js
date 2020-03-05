@@ -26,7 +26,7 @@ class NerModalView extends Component {
 
   handleSelectChange = (value, _) => {
     this.setState({
-      selectToolId: value,
+      selectToolId: value.key,
     });
   };
 
@@ -56,6 +56,14 @@ class NerModalView extends Component {
         values.word = word;
         values.startIndex = startIndex;
         values.endIndex = endIndex;
+        values.tool = { toolId: values.tool.key, toolName: values.tool.label };
+        if (values.hasOwnProperty('wordEntry')) {
+          values.wordEntry = { wordId: values.wordEntry.key, wordName: values.wordEntry.label };
+        }
+
+        if (values.hasOwnProperty('newWordEntry') && values.hasOwnProperty('wordEntry')) {
+          delete values.wordEntry;
+        }
 
         dispatch({
           type: 'textMark/saveTextMarkResult',
@@ -114,15 +122,18 @@ class NerModalView extends Component {
         <Form {...formItemLayout} hideRequiredMark>
           <Form.Item label={FieldLabels.toolName}>
             {
-              getFieldDecorator('toolId', {
+              getFieldDecorator('tool', {
                 rules: [
                   {
-                    require: true,
+                    required: true,
                     message: '请选择实体类别',
                   },
                 ],
               })(
-                <Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} onChange={this.handleSelectChange}
+                <Select labelInValue
+                        showSearch
+                        dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} onChange={this.handleSelectChange}
+                        filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                 >
                   {toolOptions}
                 </Select>)
@@ -143,8 +154,12 @@ class NerModalView extends Component {
             saveType === 'synonym' &&
             <Form.Item label={FieldLabels.wordEntryName}>
               {
-                getFieldDecorator('wordEntryId')(
-                  <Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} >
+                getFieldDecorator('wordEntry')(
+                  <Select labelInValue
+                          showSearch
+                          dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
+                          filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
+                  >
                     {wordEntryOptioins}
                   </Select>)
               }
@@ -157,7 +172,7 @@ class NerModalView extends Component {
             addWordEntry &&
             <Form.Item label={FieldLabels.newWordEntry}>
               {
-                getFieldDecorator('newWordEntryName')(
+                getFieldDecorator('newWordEntry')(
                   <Input />)
               }
             </Form.Item>

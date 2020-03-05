@@ -9,7 +9,7 @@ import { connect } from 'dva';
 class PopoverView extends Component {
   onValidateForm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, taskId, dataId, onClose, onRefresh, dispatch } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, taskId, dataId, onClose, markTools, onRefresh, dispatch } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
@@ -17,6 +17,9 @@ class PopoverView extends Component {
         Object.keys(values).forEach(key => {
           if (values[key].length === 0) {
             delete values[key];
+          } else {
+            const tool = markTools.filter(markTool => markTool.toolId === key)[0];
+            values[key] = tool.options.filter(option => values[key].includes(option.optionId));
           }
         });
 

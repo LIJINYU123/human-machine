@@ -46,7 +46,7 @@ const ProjectDetail = {
       const response = yield call(receiveTask, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryTaskData, payload);
+        const result = yield call(queryTaskData);
         yield put({
           type: 'taskData',
           payload: result,

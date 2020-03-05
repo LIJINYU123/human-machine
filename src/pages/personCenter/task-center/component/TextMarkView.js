@@ -48,7 +48,6 @@ class TextMarkView extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
-    console.log(basicInfo);
     dispatch({
       type: 'textMark/fetchLabelData',
       payload: { taskId: basicInfo.taskId },

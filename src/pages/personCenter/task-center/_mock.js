@@ -308,9 +308,9 @@ function getTaskData(req, res, u) {
   dataSource = dataSource.filter(item => item.owner === userId);
 
   const result = {
-    list: taskMockData,
+    list: dataSource,
     pagination: {
-      total: taskMockData.length,
+      total: dataSource.length,
       pageSize,
       current: parseInt(`${params.currentPage}`, 10) || 1,
     },

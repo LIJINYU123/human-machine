@@ -85,7 +85,7 @@ class NerMarkView extends Component {
     }, {});
 
     const params = {
-      taskId: this.state.taskId,
+      taskId: this.state.basicInfo.taskId,
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...filters,
@@ -250,7 +250,7 @@ class NerMarkView extends Component {
                 options: tool.options,
               };
             });
-            const labelValues = val.map(v => `${v.word}: ${toolMap[v.toolId].toolName}`);
+            const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.tool.toolName}.${v.wordEntry.wordName}` : `${v.word}: ${v.tool.toolName}`));
             return labelValues.map((value, index) => (<Tag color="blue" closable onClose={() => this.handleCloseTag(index, record.dataId)}>{value}</Tag>));
           }
           return '';

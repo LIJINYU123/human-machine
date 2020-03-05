@@ -28,6 +28,12 @@ export async function queryMembers() {
   return request('/api/project/members');
 }
 
+export async function queryMarkTools(params) {
+  return request('/api/project/default-tools', {
+    params,
+  });
+}
+
 export async function deleteTaskData(params) {
   return request('/api/project/task-data', {
     method: 'DELETE',
@@ -50,12 +56,5 @@ export async function deleteLabelData(params) {
   return request('/api/text-project/label-data', {
     method: 'DELETE',
     data: params,
-  });
-}
-
-// 创建项目api
-export async function queryMarkTools(params) {
-  return request('/api/text-project/marktools', {
-    params,
   });
 }
