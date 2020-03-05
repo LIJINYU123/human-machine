@@ -106,7 +106,7 @@ const taskMockData = [
     owner: 'SYECO',
   },
   {
-    projectId: '1',
+    projectId: 'ner_project1',
     projectName: '实体识别456',
     taskId: 'ner6',
     taskName: '任务6',
@@ -399,7 +399,7 @@ function getMarkTools(req, res, u) {
 
   const params = parse(url, true).query;
 
-  if (params.taskId.indexOf('ner') === 0) {
+  if (params.projectId.indexOf('ner') === 0) {
     res.json(nerMarkToolsMockData);
   } else {
     res.json(markToolsMockData);

@@ -58,7 +58,7 @@ class NerMarkView extends Component {
     });
     dispatch({
       type: 'textMark/fetchMarkTool',
-      payload: { taskId: basicInfo.taskId },
+      payload: { projectId: basicInfo.projectId },
     });
   }
 
@@ -289,7 +289,7 @@ class NerMarkView extends Component {
           />
         </Card>
         {/* eslint-disable-next-line max-len */}
-        <NerModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} taskId={basicInfo.taskId} dataId={dataId} />
+        <NerModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} projectId={basicInfo.projectId} taskId={basicInfo.taskId} dataId={dataId} />
       </PageHeaderWrapper>
     );
   }

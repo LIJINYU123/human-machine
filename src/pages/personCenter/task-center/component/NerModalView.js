@@ -17,10 +17,10 @@ class NerModalView extends Component {
   };
 
   componentDidMount() {
-    const { taskId, dispatch } = this.props;
+    const { projectId, dispatch } = this.props;
     dispatch({
       type: 'textMark/fetchMarkTool',
-      payload: { taskId },
+      payload: { projectId },
     });
   }
 
@@ -43,6 +43,7 @@ class NerModalView extends Component {
   };
 
   onValidateForm = () => {
+    // eslint-disable-next-line max-len
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, taskId, dataId, onCancel, onRefresh, word, startIndex, endIndex } = this.props;
     this.setState({
       saveType: 'wordEntry',
@@ -85,6 +86,7 @@ class NerModalView extends Component {
     let wordEntryOptioins = [];
     if (selectToolId !== '') {
       const filterTools = markTools.filter(tool => tool.toolId === selectToolId);
+      // eslint-disable-next-line max-len
       wordEntryOptioins = filterTools[0].options.map(option => <Option key={option.optionId}>{option.optionName}</Option>);
     }
 
