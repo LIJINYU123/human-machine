@@ -236,7 +236,7 @@ class TextProjectList extends Component {
       });
 
       dispatch({
-        type: 'project/deleteProject',
+        type: 'project/fetchProject',
         payload: values,
       });
     });
@@ -256,7 +256,7 @@ class TextProjectList extends Component {
             </Form.Item>
           </Col>
           <Col md={8} sm={24}>
-            <Button type="primary" htmlType="submit">
+            <Button type="primary" onClick={this.handleFormSearch}>
               查询
             </Button>
             <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
