@@ -183,16 +183,16 @@ class MyTaskView extends Component {
         dataIndex: 'questionNum',
       },
       {
+        title: '标注进度',
+        dataIndex: 'schedule',
+        render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
+      },
+      {
         title: '任务状态',
         dataIndex: 'status',
         filters: statusFilters,
         filteredValue: filteredInfo.status || null,
         render: val => <Badge status={taskStatusMap[val]} text={taskStatusName[val]}/>,
-      },
-      {
-        title: '任务进度',
-        dataIndex: 'schedule',
-        render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
       },
       {
         title: '领取时间',
