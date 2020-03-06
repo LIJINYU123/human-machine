@@ -47,6 +47,7 @@ class TextMarkView extends Component {
     searchText: '',
     searchedColumn: '',
     popoverVisible: {},
+    remarkPopoverVisible: {},
   };
 
   componentWillMount() {
@@ -189,22 +190,28 @@ class TextMarkView extends Component {
     this.setState({ popoverVisible: popoverValue });
   };
 
-  handleApproveOperate = (dataId, taskId) => {
+  handleApproveOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'textMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult: 'approve' } },
+      payload: { dataId, taskId, result: { reviewResult: 'approve', remark } },
       callback: this.handleRefreshView(),
     });
   };
 
-  handleRejectOperate = (dataId, taskId) => {
+  handleRejectOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'textMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult: 'reject' } },
+      payload: { dataId, taskId, result: { reviewResult: 'reject', remark } },
       callback: this.handleRefreshView(),
     });
+  };
+
+  handleRemarkPopiverVisible = dataId => {
+    const popoverValue = {};
+    popoverValue[`${dataId}_remark`] = true;
+    this.setState({ remarkPopoverVisible: popoverValue });
   };
 
 
@@ -234,6 +241,14 @@ class TextMarkView extends Component {
       <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGobackMyTask}>返回</Button>
     );
 
+    const extraContent = (
+      <Fragment>
+        <span style={{ marginRight: '16px' }}>质检率：{'10'}%</span>
+        <span style={{ marginRight: '16px' }}>合格率：{'90%'}</span>
+        <Button type="primary" icon="check">提交</Button>
+      </Fragment>
+    );
+
     let columns = [];
     if (basicInfo.labelType === 'textClassify') {
       columns = [
@@ -246,16 +261,16 @@ class TextMarkView extends Component {
           title: '标注结果',
           dataIndex: 'result',
           render: (val, info) => {
-            if (Object.keys(val).length) {
-              let labelValues = [];
-              Object.keys(val).forEach(toolId => {
-                 const temp = val[toolId].map(option => option.optionName);
-                 labelValues = labelValues.concat(temp);
+            if (val.length) {
+              const labelValues = [];
+              const labelIds = [];
+              val.forEach(option => {
+                labelValues.push(option.optionName);
+                labelIds.push(option.optionId);
               });
-
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
+              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={labelIds} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
             }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={{}} />} placement="top"><a>标注</a></Popover>
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={[]} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
           filteredValue: filteredInfo.result || null,
@@ -274,8 +289,8 @@ class TextMarkView extends Component {
             }
             return <Popover title="质检" trigger="click" content={<Row>
               <Col sm={10} xs={24}>
-                <div style={{ position: 'relative', textAlign: 'center'}}>
-                  <a onClick={() => this.handleApproveOperate(info.dataId, basicInfo.taskId)}>通过</a>
+                <div style={{ position: 'relative', textAlign: 'center' }}>
+                  <a onClick={() => this.handleApproveOperate(info.dataId, basicInfo.taskId, info.remark)}>通过</a>
                 </div>
               </Col>
               <Col sm={2} xs={24}>
@@ -283,7 +298,7 @@ class TextMarkView extends Component {
               </Col>
               <Col sm={10} xs={24}>
                 <div style={{ position: 'relative', textAlign: 'center' }}>
-                  <a onClick={() => this.handleRejectOperate(info.dataId, basicInfo.taskId)}>拒绝</a>
+                  <a onClick={() => this.handleRejectOperate(info.dataId, basicInfo.taskId, info.remark)}>拒绝</a>
                 </div>
               </Col>
             </Row>}>{renderItem}</Popover>;
@@ -312,16 +327,16 @@ class TextMarkView extends Component {
           title: '标注结果',
           dataIndex: 'result',
           render: (val, info) => {
-            if (Object.keys(val).length) {
-              let labelValues = [];
-              Object.keys(val).forEach(toolId => {
-                const temp = val[toolId].map(option => option.optionName);
-                labelValues = labelValues.concat(temp);
+            if (val.length) {
+              const labelValues = [];
+              const labelIds = [];
+              val.forEach(option => {
+                labelValues.push(option.optionName);
+                labelIds.push(option.optionId);
               });
-
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
+              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={labelIds} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
             }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={{}} />} placement="top"><a>标注</a></Popover>
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={[]} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
           filteredValue: filteredInfo.result || null,
@@ -360,6 +375,24 @@ class TextMarkView extends Component {
         {
           title: '备注',
           dataIndex: 'remark',
+          render: (val, info) => {
+            let renderItem;
+            if (val === '') {
+              renderItem = <a>备注</a>;
+            } else {
+              renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
+            }
+            return <Popover title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '400px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId)} content={
+              <Row gutter={16}>
+                <Col sm={18}>
+                  <Input value={val}/>
+                </Col>
+                <Col sm={6}>
+                  <Button type="primary">确定</Button>
+                </Col>
+              </Row>
+            }>{renderItem}</Popover>
+          },
         },
       ];
     }
@@ -372,7 +405,7 @@ class TextMarkView extends Component {
         content={description}
         extraContent={extra}
       >
-        <Card title="标注数据" bordered={false} extra={<Button type="primary" icon="check">提交</Button>}>
+        <Card title="标注数据" bordered={false} extra={extraContent}>
           <StandardTable
             rowKey="sentence"
             loading={loading}

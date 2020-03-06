@@ -14,18 +14,19 @@ class PopoverView extends Component {
       if (!error) {
         const values = getFieldsValue();
 
+        let result = [];
         Object.keys(values).forEach(key => {
           if (values[key].length === 0) {
             delete values[key];
           } else {
             const tool = markTools.filter(markTool => markTool.toolId === key)[0];
-            values[key] = tool.options.filter(option => values[key].includes(option.optionId));
+            result = tool.options.filter(option => values[key].includes(option.optionId));
           }
         });
 
         dispatch({
           type: 'textMark/saveTextMarkResult',
-          payload: { taskId, dataId, result: values },
+          payload: { taskId, dataId, result },
           callback: () => {
             onClose();
             onRefresh();
@@ -36,7 +37,7 @@ class PopoverView extends Component {
   };
 
   render() {
-    const { markTools, onClose, result, form: { getFieldDecorator } } = this.props;
+    const { markTools, onClose, labelIds, form: { getFieldDecorator } } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -57,7 +58,7 @@ class PopoverView extends Component {
               {
                 getFieldDecorator(markTool.toolId, {
                   // eslint-disable-next-line max-len
-                  initialValue: result.hasOwnProperty(markTool.toolId) ? result[markTool.toolId].map(option => option.optionId) : [],
+                  initialValue: labelIds,
                 })(
                   // eslint-disable-next-line max-len
                   <TagSelect expandable style={{ minWidth: '400px' }}>

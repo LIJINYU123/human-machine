@@ -275,13 +275,9 @@ class TextTaskDetail extends Component {
           title: '标注结果',
           dataIndex: 'result',
           render: val => {
-            if (Object.keys(val).length) {
-              let labelValues = [];
-              Object.keys(val).forEach(toolId => {
-                const temp = val[toolId].map(option => option.optionName);
-                labelValues = labelValues.concat(temp);
-              });
-
+            if (val.length) {
+              const labelValues = [];
+              val.forEach(option => labelValues.push(option.optionName));
               return labelValues.map(value => (<Tag color="blue">{value}</Tag>));
             }
             return '';
