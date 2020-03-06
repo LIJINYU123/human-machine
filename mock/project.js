@@ -350,6 +350,93 @@ let labelMockData = [
   },
 ];
 
+const matchLabelData = [
+  {
+    dataId: '1',
+    data: { sentence1: '出差的话怎么去预订酒店', sentence2: '去其他地方出差这酒店怎么预订' },
+    result: {},
+    reviewResult: 'unreview',
+    remark: '',
+  },
+  {
+    dataId: '2',
+    data: { sentence1: '出差时订酒店规定档次吗', sentence2: '在外面出差的时候酒店在什么地方订' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论2',
+  },
+  {
+    dataId: '3',
+    data: { sentence1: '酒店是公司帮忙订吗', sentence2: '出差住的酒店是自己订好吗' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论3',
+  },
+  {
+    dataId: '4',
+    data: { sentence1: '为了工作出差住酒店能报销多少', sentence2: '出差住的酒店星级有限制吗' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论4',
+  },
+  {
+    dataId: '5',
+    data: { sentence1: '不去住协议酒店会怎么样', sentence2: '协议酒店不住会出事吗' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论5',
+  },
+  {
+    dataId: '6',
+    data: { sentence1: '协议酒店如果不去住会有什么事发生', sentence2: '出差的地方没有协议酒店怎么办' },
+    result: { similarity: [{ optionId: 'notSimilar', optionName: '不相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论6',
+  },
+  {
+    dataId: '7',
+    data: { sentence1: '在国内出差可以选择1000元的酒店吗', sentence2: '被派在国内出差可以住什么档次的酒店' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论7',
+  },
+  {
+    dataId: '8',
+    data: { sentence1: '去国内出差住酒店公司有多少预算', sentence2: '被公司派去国内出差酒店住宿的价格有上限吗' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论8',
+  },
+  {
+    dataId: '9',
+    data: { sentence1: '出差住宿这产生的服务费可以报销吗', sentence2: '出差住宿的早餐前能不能给报了' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论8',
+  },
+  {
+    dataId: '10',
+    data: { sentence1: '住酒店吃早餐花的钱给报吗', sentence2: '住酒店找停车位花的钱也能报销吗' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论10',
+  },
+  {
+    dataId: '11',
+    data: { sentence1: '在国内出差除了协议酒店还有其他可以选的吗', sentence2: '澳门出差也算去海外出差吗' },
+    result: { similarity: [{ optionId: 'notSimilar', optionName: '不相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论11',
+  },
+  {
+    dataId: '12',
+    data: { sentence1: '海外酒店适用于香港吗', sentence2: '澳门的酒店应该不算海外酒店吧' },
+    result: { similarity: [{ optionId: 'similar', optionName: '相似' }] },
+    reviewResult: 'approve',
+    remark: '这是条评论12',
+  },
+];
+
 const nerLabelData = [
   {
     dataId: '1',
@@ -607,7 +694,14 @@ function getLabelData(req, res, u) {
     url = req.url;
   }
   const params = parse(url, true).query;
-  let dataSource = params.taskId.indexOf('ner') === 0 ? nerLabelData : labelMockData;
+  let dataSource;
+  if (params.taskId.indexOf('ner') === 0) {
+    dataSource = nerLabelData;
+  } else if (params.taskId.indexOf('match') === 0) {
+    dataSource = matchLabelData;
+  } else {
+    dataSource = labelMockData;
+  }
 
   if (params.reviewResult) {
     const results = params.reviewResult.split(',');
@@ -716,6 +810,12 @@ function saveTextMarkResult(req, res, u, b) {
         item.result = preResult;
       }
     });
+  } else if (taskId.indexOf('match') === 0) {
+    matchLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.result = result;
+      }
+    });
   } else {
     labelMockData.forEach(item => {
       if (item.dataId === dataId) {
@@ -737,6 +837,24 @@ function deleteTextMarkResult(req, res, u, b) {
   return res.json({ status: 'ok', message: '删除成功' });
 }
 
+function saveReviewResult(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  const { dataId, taskId, result } = body;
+  let labelData;
+  if (taskId.indexOf('ner') === 0) {
+    labelData = nerLabelData;
+  } else if (taskId.indexOf('match') === 0) {
+    labelData = matchLabelData;
+  } else {
+    labelData = labelMockData;
+  }
+  labelData.forEach(item => {
+    if (item.dataId === dataId) {
+      item.reviewResult = result.reviewResult;
+    }
+  });
+}
+
 export default {
   'GET /api/projects': getProjects,
   'DELETE /api/projects': deleteProjects,
@@ -745,6 +863,8 @@ export default {
   'DELETE /api/project/task-data': deleteTaskData,
   'GET /api/project/default-tools': getMarkTools,
   'GET /api/project/members': getRoleMembers,
+  'POST /api/project/review-result': saveReviewResult,
+
   'POST /api/text-project/create': createProject,
   'GET /api/text-project/task-detail/:taskId': getTaskDetail,
   'GET /api/text-project/label-data': getLabelData,

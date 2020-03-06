@@ -1,5 +1,16 @@
-import React, { Component } from 'react';
-import { Button, Card, Descriptions, Icon, Input, Statistic, Popover, Tag } from 'antd';
+import React, { Component, Fragment } from 'react';
+import {
+  Button,
+  Card,
+  Descriptions,
+  Icon,
+  Input,
+  Statistic,
+  Popover,
+  Tag,
+  Divider,
+  Row, Col
+} from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
 import ItemData from '../map';
@@ -178,6 +189,24 @@ class TextMarkView extends Component {
     this.setState({ popoverVisible: popoverValue });
   };
 
+  handleApproveOperate = (dataId, taskId) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult: 'approve' } },
+      callback: this.handleRefreshView(),
+    });
+  };
+
+  handleRejectOperate = (dataId, taskId) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult: 'reject' } },
+      callback: this.handleRefreshView(),
+    });
+  };
+
 
   render() {
     const { basicInfo, popoverVisible } = this.state;
@@ -234,7 +263,31 @@ class TextMarkView extends Component {
         {
           title: '质检结果',
           dataIndex: 'reviewResult',
-          render: val => reviewLabel[val],
+          render: (val, info) => {
+            let renderItem;
+            if (val === 'approve') {
+              renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
+            } else if (val === 'reject') {
+              renderItem = <span style={{ color: '#f5222d', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
+            } else {
+              renderItem = <a>{reviewLabel[val]}</a>;
+            }
+            return <Popover title="质检" trigger="click" content={<Row>
+              <Col sm={10} xs={24}>
+                <div style={{ position: 'relative', textAlign: 'center'}}>
+                  <a onClick={() => this.handleApproveOperate(info.dataId, basicInfo.taskId)}>通过</a>
+                </div>
+              </Col>
+              <Col sm={2} xs={24}>
+                <Divider type="vertical"/>
+              </Col>
+              <Col sm={10} xs={24}>
+                <div style={{ position: 'relative', textAlign: 'center' }}>
+                  <a onClick={() => this.handleRejectOperate(info.dataId, basicInfo.taskId)}>拒绝</a>
+                </div>
+              </Col>
+            </Row>}>{renderItem}</Popover>;
+          },
           filters: reviewFilters,
           filteredValue: filteredInfo.reviewResult || null,
         },
@@ -260,16 +313,10 @@ class TextMarkView extends Component {
           dataIndex: 'result',
           render: (val, info) => {
             if (Object.keys(val).length) {
-              const labelValues = [];
-              markTools.forEach(tool => {
-                if (val.hasOwnProperty(tool.toolId)) {
-                  tool.options.forEach(option => {
-                    // eslint-disable-next-line max-len
-                    if (val[tool.toolId].includes(option.optionId)) {
-                      labelValues.push(option.optionName)
-                    }
-                  });
-                }
+              let labelValues = [];
+              Object.keys(val).forEach(toolId => {
+                const temp = val[toolId].map(option => option.optionName);
+                labelValues = labelValues.concat(temp);
               });
 
               return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTools={markTools} onClose={this.handleClose} onRefresh={this.handleRefreshView} result={val} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
@@ -282,7 +329,31 @@ class TextMarkView extends Component {
         {
           title: '质检结果',
           dataIndex: 'reviewResult',
-          render: val => reviewLabel[val],
+          render: (val, info) => {
+            let renderItem;
+            if (val === 'approve') {
+              renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
+            } else if (val === 'reject') {
+              renderItem = <span style={{ color: '#f5222d', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
+            } else {
+              renderItem = <a>{reviewLabel[val]}</a>;
+            }
+            return <Popover title="质检" trigger="click" content={<Row>
+              <Col sm={10} xs={24}>
+                <div style={{ position: 'relative', textAlign: 'center' }}>
+                  <a onClick={() => this.handleApproveOperate(info.dataId, basicInfo.taskId)}>通过</a>
+                </div>
+              </Col>
+              <Col sm={2} xs={24}>
+                <Divider type="vertical" />
+              </Col>
+              <Col sm={10} xs={24}>
+                <div style={{ position: 'relative', textAlign: 'center' }}>
+                  <a onClick={() => this.handleRejectOperate(info.dataId, basicInfo.taskId)}>拒绝</a>
+                </div>
+              </Col>
+            </Row>}>{renderItem}</Popover>;
+          },
           filters: reviewFilters,
           filteredValue: filteredInfo.reviewResult || null,
         },
@@ -301,7 +372,7 @@ class TextMarkView extends Component {
         content={description}
         extraContent={extra}
       >
-        <Card title="标注数据" bordered={false}>
+        <Card title="标注数据" bordered={false} extra={<Button type="primary" icon="check">提交</Button>}>
           <StandardTable
             rowKey="sentence"
             loading={loading}

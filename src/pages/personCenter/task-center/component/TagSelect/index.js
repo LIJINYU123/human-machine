@@ -131,11 +131,6 @@ class TagSelect extends Component {
 
           return child;
         })}
-        {expandable && (
-          <a className={styles.trigger} onClick={this.handleExpand}>
-            {expand ? collapseText : expandText} <Icon type={expand ? 'up' : 'down'} />
-          </a>
-        )}
       </div>
     );
   }

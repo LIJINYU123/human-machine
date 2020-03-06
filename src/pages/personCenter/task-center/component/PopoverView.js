@@ -41,11 +41,11 @@ class PopoverView extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 2 },
+        sm: { span: 4 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 22 },
+        sm: { span: 20 },
       },
     };
 
@@ -60,7 +60,7 @@ class PopoverView extends Component {
                   initialValue: result.hasOwnProperty(markTool.toolId) ? result[markTool.toolId].map(option => option.optionId) : [],
                 })(
                   // eslint-disable-next-line max-len
-                  <TagSelect expandable>
+                  <TagSelect expandable style={{ minWidth: '600px' }}>
                     {/* eslint-disable-next-line max-len */}
                     {markTool.options.map(option => <TagSelect.Option value={option.optionId}>{option.optionName}</TagSelect.Option>)}
                   </TagSelect>)

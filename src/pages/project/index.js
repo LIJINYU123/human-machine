@@ -188,6 +188,7 @@ class TextProjectList extends Component {
 
     dispatch({
       type: 'project/fetchProject',
+      payload: { sorter: 'createdTime_descend' },
     });
   };
 

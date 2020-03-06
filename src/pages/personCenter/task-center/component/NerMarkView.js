@@ -279,7 +279,7 @@ class NerMarkView extends Component {
         content={description}
         extraContent={extra}
       >
-        <Card title="标注数据" bordered={false}>
+        <Card title="标注数据" bordered={false} extra={<Button type="primary" icon="check">提交</Button>}>
           <StandardTable
             rowKey="sentence"
             loading={loading}

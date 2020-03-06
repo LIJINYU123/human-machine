@@ -82,9 +82,9 @@ const taskMockData = [
     owner: 'SYECO',
   },
   {
-    projectId: '1',
+    projectId: 'match_project1',
     projectName: '文本匹配123',
-    taskId: '4',
+    taskId: 'match4',
     taskName: '任务4',
     labelType: 'textMatch',
     questionNum: 400,
@@ -167,6 +167,23 @@ const markToolsMockData = [
       {
         optionId: 'neutral',
         optionName: '中性',
+      },
+    ],
+  },
+];
+
+const matchMarkToolsMockData = [
+  {
+    toolId: 'similarity',
+    toolName: '相似度',
+    options: [
+      {
+        optionId: 'similar',
+        optionName: '相似',
+      },
+      {
+        optionId: 'notSimilar',
+        optionName: '不相似',
       },
     ],
   },
@@ -401,6 +418,8 @@ function getMarkTools(req, res, u) {
 
   if (params.projectId.indexOf('ner') === 0) {
     res.json(nerMarkToolsMockData);
+  } else if (params.projectId.indexOf('match') === 0) {
+    res.json(matchMarkToolsMockData);
   } else {
     res.json(markToolsMockData);
   }

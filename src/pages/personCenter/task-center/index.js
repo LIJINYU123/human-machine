@@ -163,6 +163,23 @@ class TaskCenter extends Component {
     });
   };
 
+  handleRadioChange = event => {
+    const { dispatch } = this.props;
+    const params = {
+      sorter: 'createdTime_descend',
+    };
+    if (event.target.value === 'text') {
+      params.labelType = 'textClassify,textMatch,ner';
+    } else if (event.target.value !== 'all') {
+      params.labelType = event.target.value;
+    }
+
+    dispatch({
+      type: 'taskCenter/fetchProject',
+      payload: params,
+    });
+  };
+
   render() {
     const { data, inProgressNum, completeNum, loading } = this.props;
     let { filteredInfo } = this.state;
@@ -215,12 +232,12 @@ class TaskCenter extends Component {
 
     const extraContent = (
       <div>
-        <Radio.Group defaultValue="all">
+        <Radio.Group defaultValue="all" onChange={this.handleRadioChange}>
           <Radio.Button value="all">全部</Radio.Button>
           <Radio.Button value="text">文本</Radio.Button>
-          <Radio.Button value="picture">图片</Radio.Button>
-          <Radio.Button value="voice">音频</Radio.Button>
-          <Radio.Button value="other">其他</Radio.Button>
+          <Radio.Button value="pictureMark">图片</Radio.Button>
+          <Radio.Button value="voiceMark">音频</Radio.Button>
+          <Radio.Button value="videoDialogMark">其他</Radio.Button>
         </Radio.Group>
       </div>
     );

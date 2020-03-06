@@ -48,6 +48,13 @@ export async function saveTextMarkResult(params) {
   });
 }
 
+export async function saveReviewResult(params) {
+  return request('/api/project/review-result', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export async function deleteTextMarkResult(params) {
   return request('/api/text-project/label-result', {
     method: 'DELETE',

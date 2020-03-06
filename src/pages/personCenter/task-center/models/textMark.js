@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryLabelData, queryMarkTools, saveTextMarkResult, deleteTextMarkResult } from '../service';
+import { queryLabelData, queryMarkTools, saveTextMarkResult, deleteTextMarkResult, saveReviewResult } from '../service';
 
 const TextMark = {
   namespace: 'textMark',
@@ -38,6 +38,19 @@ const TextMark = {
 
     * saveTextMarkResult({ payload, callback }, { call }) {
       const response = yield call(saveTextMarkResult, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
+    },
+
+    * saveReviewResult({ payload, callback }, { call }) {
+      const response = yield call(saveReviewResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
       } else {
