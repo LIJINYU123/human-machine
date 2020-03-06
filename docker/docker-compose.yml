@@ -4,7 +4,7 @@ services:
     image: docker-reg.ecovacs.com/library/human-machine:20200306-44d45ea
     container_name: human-machine
     ports:
-      - "8000:8000"
+      - "8127:8000"
     restart: always
     logging:
       options:
