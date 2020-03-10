@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   Button,
   Card,
@@ -9,7 +9,7 @@ import {
   Tag,
   Popover,
   Row,
-  Col,
+  Col, Divider,
 } from 'antd';
 import { connect } from 'dva';
 import Highlighter from 'react-highlight-words';
@@ -35,9 +35,11 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
 }));
 
 @connect(({ textMark, loading }) => ({
-  data: textMark.data,
+  data: textMark.nerData,
+  checkRate: textMark.checkRate,
+  passRate: textMark.passRate,
   markTools: textMark.markTools,
-  loading: loading.effects['textMark/fetchLabelData'],
+  loading: loading.effects['textMark/fetchNerData'],
 }))
 class NerMarkView extends Component {
   state = {
@@ -66,7 +68,7 @@ class NerMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'textMark/fetchLabelData',
+      type: 'textMark/fetchNerData',
       payload: { taskId: basicInfo.taskId },
     });
     dispatch({
@@ -105,8 +107,27 @@ class NerMarkView extends Component {
     };
 
     dispatch({
-      type: 'textMark/fetchLabelData',
+      type: 'textMark/fetchNerData',
       payload: params,
+    });
+  };
+
+  // 处理质检通过或者拒绝的处理函数
+  handleApproveOperate = (dataId, taskId, remark) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult: 'approve', remark } },
+      callback: this.handleRefreshView(),
+    });
+  };
+
+  handleRejectOperate = (dataId, taskId, remark) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult: 'reject', remark } },
+      callback: this.handleRefreshView(),
     });
   };
 
@@ -222,7 +243,7 @@ class NerMarkView extends Component {
     };
 
     dispatch({
-      type: 'textMark/fetchLabelData',
+      type: 'textMark/fetchNerData',
       payload: params,
     });
   };
@@ -247,7 +268,7 @@ class NerMarkView extends Component {
 
   render() {
     const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue } = this.state;
-    const { data, markTools, loading } = this.props;
+    const { data, checkRate, passRate, markTools, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -269,6 +290,14 @@ class NerMarkView extends Component {
 
     const action = (
       <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGobackMyTask}>返回</Button>
+    );
+
+    const extraContent = (
+      <Fragment>
+        <span style={{ marginRight: '16px' }}>质检率：{`${checkRate}%`}</span>
+        <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
+        <Button type="primary" icon="check">提交</Button>
+      </Fragment>
     );
 
     const columns = [
@@ -301,7 +330,31 @@ class NerMarkView extends Component {
       {
         title: '质检结果',
         dataIndex: 'reviewResult',
-        render: val => reviewLabel[val],
+        render: (val, info) => {
+          let renderItem;
+          if (val === 'approve') {
+            renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
+          } else if (val === 'reject') {
+            renderItem = <span style={{ color: '#f5222d', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
+          } else {
+            renderItem = <a>{reviewLabel[val]}</a>;
+          }
+          return <Popover title="质检" trigger="click" content={<Row>
+            <Col sm={10} xs={24}>
+              <div style={{ position: 'relative', textAlign: 'center' }}>
+                <a onClick={() => this.handleApproveOperate(info.dataId, basicInfo.taskId, info.remark)}>通过</a>
+              </div>
+            </Col>
+            <Col sm={2} xs={24}>
+              <Divider type="vertical"/>
+            </Col>
+            <Col sm={10} xs={24}>
+              <div style={{ position: 'relative', textAlign: 'center' }}>
+                <a onClick={() => this.handleRejectOperate(info.dataId, basicInfo.taskId, info.remark)}>拒绝</a>
+              </div>
+            </Col>
+          </Row>}>{renderItem}</Popover>;
+        },
         filters: reviewFilters,
         filteredValue: filteredInfo.reviewResult || null,
       },
@@ -318,7 +371,7 @@ class NerMarkView extends Component {
           return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '450px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
             <Row gutter={16}>
               <Col sm={16}>
-                <Input value={inputValue} onChange={this.handleInputChange} />
+                <Input value={inputValue} onChange={this.handleInputChange} onPressEnter={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)} />
               </Col>
               <Col sm={4}>
                 <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
@@ -340,7 +393,7 @@ class NerMarkView extends Component {
         content={description}
         extraContent={extra}
       >
-        <Card title="标注数据" bordered={false} extra={<Button type="primary" icon="check">提交</Button>}>
+        <Card title="标注数据" bordered={false} extra={extraContent}>
           <StandardTable
             rowKey="sentence"
             loading={loading}

@@ -36,6 +36,8 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
 
 @connect(({ textMark, loading }) => ({
   data: textMark.data,
+  checkRate: textMark.checkRate,
+  passRate: textMark.passRate,
   markTools: textMark.markTools,
   loading: loading.effects['textMark/fetchLabelData'],
 }))
@@ -191,6 +193,7 @@ class TextMarkView extends Component {
     this.setState({ popoverVisible: popoverValue });
   };
 
+  // 处理质检通过或者拒绝的处理函数
   handleApproveOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
     dispatch({
@@ -238,7 +241,7 @@ class TextMarkView extends Component {
 
   render() {
     const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue } = this.state;
-    const { data, markTools, loading } = this.props;
+    const { data, checkRate, passRate, markTools, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -264,8 +267,8 @@ class TextMarkView extends Component {
 
     const extraContent = (
       <Fragment>
-        <span style={{ marginRight: '16px' }}>质检率：{'10'}%</span>
-        <span style={{ marginRight: '16px' }}>合格率：{'90%'}</span>
+        <span style={{ marginRight: '16px' }}>质检率：{`${checkRate}%`}</span>
+        <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
         <Button type="primary" icon="check">提交</Button>
       </Fragment>
     );
@@ -340,7 +343,7 @@ class TextMarkView extends Component {
             return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '450px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
               <Row gutter={16}>
                 <Col sm={16}>
-                  <Input value={inputValue} onChange={this.handleInputChange} />
+                  <Input value={inputValue} onChange={this.handleInputChange} onPressEnter={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)} />
                 </Col>
                 <Col sm={4}>
                   <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>

@@ -8,6 +8,12 @@ const TextMark = {
       list: [],
       pagination: {},
     },
+    nerData: {
+      list: [],
+      pagination: {},
+    },
+    checkRate: 0,
+    passRate: 0,
     markTools: [],
   },
 
@@ -21,13 +27,24 @@ const TextMark = {
           item.sentence1 = item.data.sentence1;
           item.sentence2 = item.data.sentence2;
         }
-        return item;
       });
       yield put({
         type: 'labelData',
         payload: response,
       });
     },
+
+    * fetchNerData({ payload }, { call, put }) {
+      const response = yield call(queryLabelData, payload);
+      response.list.forEach(item => {
+        item.sentence = item.data.sentence;
+      });
+      yield put({
+        type: 'nerData',
+        payload: response,
+      });
+    },
+
     * fetchMarkTool({ payload }, { call, put }) {
       const response = yield call(queryMarkTools, payload);
       yield put({
@@ -78,7 +95,16 @@ const TextMark = {
 
   reducers: {
     labelData(state, action) {
-      return { ...state, data: action.payload };
+      const data = action.payload;
+      const checkNum = data.list.filter(item => item.reviewResult !== 'unreview').length;
+      const passNum = data.list.filter(item => item.reviewResult === 'approve').length;
+      return { ...state, data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: parseInt(passNum / checkNum * 100, 0) };
+    },
+    nerData(state, action) {
+      const data = action.payload;
+      const checkNum = data.list.filter(item => item.reviewResult !== 'unreview').length;
+      const passNum = data.list.filter(item => item.reviewResult === 'approve').length;
+      return { ...state, nerData: data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: parseInt(passNum / checkNum * 100, 0) };
     },
     saveTool(state, action) {
       return { ...state, markTools: action.payload };
