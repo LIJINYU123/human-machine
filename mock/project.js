@@ -854,6 +854,7 @@ function saveReviewResult(req, res, u, b) {
       item.remark = result.remark;
     }
   });
+  return res.json({ status: 'ok', message: '保存成功' });
 }
 
 export default {

@@ -9,7 +9,7 @@ import {
   Popover,
   Tag,
   Divider,
-  Row, Col
+  Row, Col,
 } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
@@ -48,6 +48,7 @@ class TextMarkView extends Component {
     searchedColumn: '',
     popoverVisible: {},
     remarkPopoverVisible: {},
+    inputValue: '',
   };
 
   componentWillMount() {
@@ -208,15 +209,31 @@ class TextMarkView extends Component {
     });
   };
 
-  handleRemarkPopiverVisible = dataId => {
+  handleRemarkPopiverVisible = (dataId, value) => {
     const popoverValue = {};
-    popoverValue[`${dataId}_remark`] = true;
-    this.setState({ remarkPopoverVisible: popoverValue });
+    popoverValue[`remark${dataId}`] = true;
+    this.setState({ remarkPopoverVisible: popoverValue, inputValue: value });
   };
 
+  handleRemarkConfirm = (dataId, taskId, reviewResult) => {
+    const { dispatch } = this.props;
+    const { inputValue } = this.state;
+    dispatch({
+      type: 'textMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult, remark: inputValue } },
+      callback: () => {
+        this.handleRefreshView();
+        this.setState({ remarkPopoverVisible: {} });
+      },
+    });
+  };
+
+  handleInputChange = event => {
+    this.setState({ inputValue: event.target.value });
+  };
 
   render() {
-    const { basicInfo, popoverVisible } = this.state;
+    const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue } = this.state;
     const { data, markTools, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -309,6 +326,24 @@ class TextMarkView extends Component {
         {
           title: '备注',
           dataIndex: 'remark',
+          render: (val, info) => {
+            let renderItem;
+            if (val === '') {
+              renderItem = <a>备注</a>;
+            } else {
+              renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
+            }
+            return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '400px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
+              <Row gutter={16}>
+                <Col sm={18}>
+                  <Input value={inputValue} onChange={this.handleInputChange} />
+                </Col>
+                <Col sm={6}>
+                  <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
+                </Col>
+              </Row>
+            }>{renderItem}</Popover>
+          },
         },
       ];
     } else {
@@ -382,13 +417,13 @@ class TextMarkView extends Component {
             } else {
               renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
             }
-            return <Popover title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '400px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId)} content={
+            return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '400px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
               <Row gutter={16}>
                 <Col sm={18}>
-                  <Input value={val}/>
+                  <Input value={inputValue} onChange={this.handleInputChange} />
                 </Col>
                 <Col sm={6}>
-                  <Button type="primary">确定</Button>
+                  <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
                 </Col>
               </Row>
             }>{renderItem}</Popover>

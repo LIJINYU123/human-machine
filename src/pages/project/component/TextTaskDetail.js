@@ -210,38 +210,17 @@ class TextTaskDetail extends Component {
       </Descriptions>
     );
 
-    const stepDesc1 = () => {
-      if (basicInfo.status === 'labeling' || basicInfo.status === 'reject') {
-        return (
-          <div>
-            {basicInfo.labelerName}
-            <div><a>催一下</a></div>
-          </div>
-        );
-      }
-
-      return (
+    const stepDesc1 = () => (
         <div>
           {basicInfo.labelerName}
         </div>
       );
-    };
 
-    const stepDesc2 = () => {
-      if (basicInfo.status === 'review') {
-        return (
-          <div>
-            {basicInfo.assessorName}
-            <div><a>催一下</a></div>
-          </div>
-        )
-      }
-      return (
+    const stepDesc2 = () => (
         <div>
-          {basicInfo.assessorName}
+          {basicInfo.inspectorName}
         </div>
       );
-    };
 
     const stepCurrent = () => {
       if (basicInfo.status === 'initial') {

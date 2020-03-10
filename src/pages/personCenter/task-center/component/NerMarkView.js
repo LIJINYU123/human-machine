@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { Button, Card, Descriptions, Icon, Input, Statistic, Tag } from 'antd';
+import {
+  Button,
+  Card,
+  Descriptions,
+  Icon,
+  Input,
+  Statistic,
+  Tag,
+  Popover,
+  Row,
+  Col,
+} from 'antd';
 import { connect } from 'dva';
 import Highlighter from 'react-highlight-words';
 import router from 'umi/router';
@@ -40,6 +51,8 @@ class NerMarkView extends Component {
     word: '',
     startIndex: 0,
     endIndex: 0,
+    remarkPopoverVisible: {},
+    inputValue: '',
   };
 
   componentWillMount() {
@@ -95,6 +108,29 @@ class NerMarkView extends Component {
       type: 'textMark/fetchLabelData',
       payload: params,
     });
+  };
+
+  handleRemarkPopiverVisible = (dataId, value) => {
+    const popoverValue = {};
+    popoverValue[`remark${dataId}`] = true;
+    this.setState({ remarkPopoverVisible: popoverValue, inputValue: value });
+  };
+
+  handleRemarkConfirm = (dataId, taskId, reviewResult) => {
+    const { dispatch } = this.props;
+    const { inputValue } = this.state;
+    dispatch({
+      type: 'textMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult, remark: inputValue } },
+      callback: () => {
+        this.handleRefreshView();
+        this.setState({ remarkPopoverVisible: {} });
+      },
+    });
+  };
+
+  handleInputChange = event => {
+    this.setState({ inputValue: event.target.value });
   };
 
   handleClickCell = cell => ({
@@ -206,7 +242,7 @@ class NerMarkView extends Component {
   };
 
   render() {
-    const { basicInfo, modalVisible, word, startIndex, endIndex, dataId } = this.state;
+    const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue } = this.state;
     const { data, markTools, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -268,6 +304,24 @@ class NerMarkView extends Component {
       {
         title: '备注',
         dataIndex: 'remark',
+        render: (val, info) => {
+          let renderItem;
+          if (val === '') {
+            renderItem = <a>备注</a>;
+          } else {
+            renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
+          }
+          return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '400px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
+            <Row gutter={16}>
+              <Col sm={18}>
+                <Input value={inputValue} onChange={this.handleInputChange} />
+              </Col>
+              <Col sm={6}>
+                <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
+              </Col>
+            </Row>
+          }>{renderItem}</Popover>
+        },
       },
     ];
 
