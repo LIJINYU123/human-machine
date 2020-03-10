@@ -228,6 +228,10 @@ class TextMarkView extends Component {
     });
   };
 
+  handleRemarkCancel = () => {
+    this.setState({ remarkPopoverVisible: {} });
+  };
+
   handleInputChange = event => {
     this.setState({ inputValue: event.target.value });
   };
@@ -333,13 +337,16 @@ class TextMarkView extends Component {
             } else {
               renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
             }
-            return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '400px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
+            return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '450px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
               <Row gutter={16}>
-                <Col sm={18}>
+                <Col sm={16}>
                   <Input value={inputValue} onChange={this.handleInputChange} />
                 </Col>
-                <Col sm={6}>
+                <Col sm={4}>
                   <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
+                </Col>
+                <Col sm={4}>
+                  <Button onClick={this.handleRemarkCancel}>取消</Button>
                 </Col>
               </Row>
             }>{renderItem}</Popover>
@@ -417,13 +424,16 @@ class TextMarkView extends Component {
             } else {
               renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
             }
-            return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '400px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
+            return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '450px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
               <Row gutter={16}>
-                <Col sm={18}>
+                <Col sm={16}>
                   <Input value={inputValue} onChange={this.handleInputChange} />
                 </Col>
-                <Col sm={6}>
+                <Col sm={4}>
                   <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
+                </Col>
+                <Col sm={4}>
+                  <Button onClick={this.handleRemarkCancel}>取消</Button>
                 </Col>
               </Row>
             }>{renderItem}</Popover>
