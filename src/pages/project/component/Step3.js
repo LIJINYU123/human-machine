@@ -64,10 +64,10 @@ class Step3 extends Component {
     formData.append('endTime', endTime);
     formData.append('description', description);
     if (toolName !== '' && toolId !== '') {
-      formData.append('tool', { toolId, toolName, options });
+      formData.append('tool', JSON.stringify({ toolId, toolName, options }));
     } else {
       const defaultTools = markTools.filter(tool => tool.toolId === defaultTool);
-      formData.append('tool', defaultTools[0]);
+      formData.append('tool', JSON.stringify(defaultTools[0]));
     }
     this.setState({
       uploading: true,
