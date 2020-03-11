@@ -529,31 +529,92 @@ const markToolsMockData = [
     labelType: 'textClassify',
     toolId: 'emotion',
     toolName: '情感',
+    options: [
+      {
+        optionId: 'anger',
+        optionName: '愤怒',
+      },
+      {
+        optionId: 'hate',
+        optionName: '厌恶',
+      },
+      {
+        optionId: 'fear',
+        optionName: '害怕',
+      },
+      {
+        optionId: 'sad',
+        optionName: '悲伤',
+      },
+      {
+        optionId: 'happy',
+        optionName: '高兴',
+      },
+      {
+        optionId: 'like',
+        optionName: '喜欢',
+      },
+      {
+        optionId: 'surprise',
+        optionName: '惊喜',
+      },
+      {
+        optionId: 'neutral',
+        optionName: '中性',
+      },
+    ],
   },
   {
     labelType: 'textClassify',
     toolId: 'sentenceType',
     toolName: '句式',
+    options: [
+      {
+        optionId: 'chenshuju',
+        optionName: '肯定陈述句',
+      },
+      {
+        optionId: 'fanwenju',
+        optionName: '反问句',
+      },
+      {
+        optionId: 'yiwenju',
+        optionName: '疑问句',
+      },
+    ],
   },
   {
     labelType: 'textMatch',
     toolId: 'similarity',
     toolName: '相似度',
+    options: [
+      {
+        optionId: 'similar',
+        optionName: '相似',
+      },
+      {
+        optionId: 'notSimilar',
+        optionName: '不相似',
+      },
+    ],
   },
   {
     labelType: 'ner',
     toolId: 'singer',
     toolName: '歌手',
+    options: [],
   },
   {
     labelType: 'ner',
     toolId: 'country',
     toolName: '国家',
+    options: [],
   },
   {
     labelType: 'ner',
     toolId: 'location',
     toolName: '地名',
+    options: [],
   },
 ];
 

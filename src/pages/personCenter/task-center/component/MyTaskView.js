@@ -179,7 +179,7 @@ class MyTaskView extends Component {
         filteredValue: filteredInfo.labelType || null,
       },
       {
-        title: '提数',
+        title: '题数',
         dataIndex: 'questionNum',
       },
       {

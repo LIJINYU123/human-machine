@@ -8,6 +8,7 @@ const { Dragger } = Upload;
 @connect(({ textProjectFormData }) => ({
   stepOne: textProjectFormData.stepOne,
   stepTwo: textProjectFormData.stepTwo,
+  markTools: textProjectFormData.markTools,
 }))
 class Step3 extends Component {
   state = {
@@ -40,7 +41,7 @@ class Step3 extends Component {
 
   handleUpload = () => {
     const { fileList } = this.state;
-    const { stepOne, stepTwo } = this.props;
+    const { stepOne, stepTwo, markTools } = this.props;
     // eslint-disable-next-line max-len
     const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, startTime, endTime, description } = stepOne;
     const { defaultTool, toolName, toolId, options } = stepTwo;
@@ -62,15 +63,11 @@ class Step3 extends Component {
     formData.append('startTime', startTime);
     formData.append('endTime', endTime);
     formData.append('description', description);
-    formData.append('defaultTool', defaultTool);
     if (toolName !== '' && toolId !== '') {
-      formData.append('toolName', toolName);
-      formData.append('toolId', toolId);
-    }
-    if (options.length) {
-      options.forEach(item => {
-        formData.append('options[]', item);
-      });
+      formData.append('tool', { toolId, toolName, options });
+    } else {
+      const defaultTools = markTools.filter(tool => tool.toolId === defaultTool);
+      formData.append('tool', defaultTools[0]);
     }
     this.setState({
       uploading: true,
@@ -80,6 +77,9 @@ class Step3 extends Component {
       method: 'post',
       processData: false,
       data: formData,
+      headers: {
+        Authorization: localStorage.getItem('Authorization'),
+      },
       success: () => {
         this.setState({
           fileList: [],

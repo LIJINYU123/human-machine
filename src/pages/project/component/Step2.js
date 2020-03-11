@@ -1,8 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Form, Select, Row, Col, Divider, Icon, Input } from 'antd';
+import { Button, Form, Select, Row, Col, Divider, Input } from 'antd';
 import { connect } from 'dva';
 import ItemData from '../map';
-import styles from './style.less';
 
 const { FieldLabels } = ItemData;
 const { Option } = Select;
@@ -49,7 +48,7 @@ class Step2 extends Component {
         const fieldValues = {};
 
         const options = optionKeys.map(key => ({
-          name: values[`optionName-${key}`], id: values[`optionId-${key}`] }));
+          optionName: values[`optionName-${key}`], optionId: values[`optionId-${key}`] }));
 
         fieldValues.defaultTool = values.defaultTool;
         fieldValues.toolName = values.toolName ? values.toolName : '';
@@ -218,6 +217,16 @@ class Step2 extends Component {
     return null;
   };
 
+  checkDefaultTool = (rule, value, callback) => {
+    const { form: { getFieldsValue } } = this.props;
+    const values = getFieldsValue();
+    if (!value && !values.hasOwnProperty('toolName')) {
+      callback('请选择默认工具');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     const { textProjectFormData: { markTools, stepOne }, form: { getFieldDecorator }, submitting } = this.props;
     const { toolKeys } = this.state;
@@ -231,10 +240,17 @@ class Step2 extends Component {
           <Col md={10} sm={24}>
             <Form.Item label={FieldLabels.defaultTool} {...formItemLayout}>
               {
-                getFieldDecorator('defaultTool', {})(
+                getFieldDecorator('defaultTool', {
+                  rules: [
+                    {
+                      validator: this.checkDefaultTool,
+                    },
+                  ],
+                })(
                   <Select
                     dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
                     showSearch
+                    allowClear
                     filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                   >
                     {markToolOptions}
