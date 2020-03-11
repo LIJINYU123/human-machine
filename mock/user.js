@@ -38,10 +38,6 @@ export default {
     const directory = {
       SYECO: [
         {
-          path: '/',
-          redirect: '/corpus',
-        },
-        {
           path: '/analysis',
           name: '数据分析',
           icon: 'dashboard',
@@ -162,10 +158,6 @@ export default {
         },
       ],
       SYDEV: [
-        {
-          path: '/',
-          redirect: '/corpus',
-        },
         {
           path: '/corpus',
           name: '对话录入',
