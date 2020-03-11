@@ -288,7 +288,7 @@ class TextProjectList extends Component {
         filteredValue: filteredInfo.labelType || null,
       },
       {
-        title: '标注进度',
+        title: '项目进度',
         dataIndex: 'schedule',
         render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
       },

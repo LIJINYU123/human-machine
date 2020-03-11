@@ -52,11 +52,11 @@ class Step3 extends Component {
     formData.append('passRate', passRate);
     formData.append('checkRate', checkRate);
     labeler.forEach(item => {
-      formData.append('labeler[]', item);
+      formData.append('labeler', item);
     });
 
     inspector.forEach(item => {
-      formData.append('inspector[]', item);
+      formData.append('inspector', item);
     });
 
     formData.append('questionNum', questionNum);
