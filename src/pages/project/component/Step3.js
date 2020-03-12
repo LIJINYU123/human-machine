@@ -41,7 +41,7 @@ class Step3 extends Component {
 
   handleUpload = () => {
     const { fileList } = this.state;
-    const { stepOne, stepTwo, markTools } = this.props;
+    const { stepOne, stepTwo, markTools, onCancel, dispatch } = this.props;
     // eslint-disable-next-line max-len
     const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, startTime, endTime, description } = stepOne;
     const { defaultTool, toolName, toolId, options } = stepTwo;
@@ -84,6 +84,11 @@ class Step3 extends Component {
         this.setState({
           fileList: [],
           uploading: false,
+        });
+        onCancel();
+        dispatch({
+          type: 'project/fetchProject',
+          payload: { sorter: 'createdTime_descend' },
         });
         message.success('项目创建成功');
       },

@@ -106,6 +106,11 @@ class TextProjectList extends Component {
   };
 
   handleCancelAddModal = () => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'textProjectFormData/resetStep',
+    });
     this.setState({
       addModalVisible: false,
     });

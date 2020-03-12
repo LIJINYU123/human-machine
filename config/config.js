@@ -118,7 +118,7 @@ export default {
           routes: [
             {
               path: '/',
-              redirect: '/person/my-task',
+              redirect: '/person/task-center',
             },
             {
               path: '/analysis',

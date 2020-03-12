@@ -59,6 +59,13 @@ const TextProjectFormData = {
         payload: 1,
       });
     },
+
+    * resetStep(_, { put }) {
+      yield put({
+        type: 'resetCurrentStep',
+        payload: 0,
+      });
+    },
   },
 
   reducers: {
@@ -78,6 +85,9 @@ const TextProjectFormData = {
       return { ...state, current: action.payload };
     },
     stepThreePrev(state, action) {
+      return { ...state, current: action.payload };
+    },
+    resetCurrentStep(state, action) {
       return { ...state, current: action.payload };
     },
   },
