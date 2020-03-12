@@ -26,7 +26,7 @@ class PopoverView extends Component {
 
         dispatch({
           type: 'textMark/saveTextMarkResult',
-          payload: { taskId, dataId, result },
+          payload: { taskId, dataId, labelResult: result },
           callback: () => {
             onClose();
             onRefresh();

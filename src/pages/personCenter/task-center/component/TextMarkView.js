@@ -283,7 +283,7 @@ class TextMarkView extends Component {
         },
         {
           title: '标注结果',
-          dataIndex: 'result',
+          dataIndex: 'labelResult',
           render: (val, info) => {
             if (val.length) {
               const labelValues = [];
@@ -370,7 +370,7 @@ class TextMarkView extends Component {
         },
         {
           title: '标注结果',
-          dataIndex: 'result',
+          dataIndex: 'labelResult',
           render: (val, info) => {
             if (val.length) {
               const labelValues = [];

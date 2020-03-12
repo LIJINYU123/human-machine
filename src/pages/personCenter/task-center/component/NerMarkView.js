@@ -309,7 +309,7 @@ class NerMarkView extends Component {
       },
       {
         title: '标注结果',
-        dataIndex: 'result',
+        dataIndex: 'labelResult',
         render: (val, record) => {
           if (val.length) {
             const toolMap = {};

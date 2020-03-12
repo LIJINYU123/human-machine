@@ -67,7 +67,7 @@ class NerModalView extends Component {
 
         dispatch({
           type: 'textMark/saveTextMarkResult',
-          payload: { taskId, dataId, result: values },
+          payload: { taskId, dataId, labelResult: values },
           callback: () => {
             onCancel();
             onRefresh();

@@ -252,7 +252,7 @@ class TextTaskDetail extends Component {
         },
         {
           title: '标注结果',
-          dataIndex: 'result',
+          dataIndex: 'labelResult',
           render: val => {
             if (val.length) {
               const labelValues = [];
@@ -294,7 +294,7 @@ class TextTaskDetail extends Component {
         },
         {
           title: '标注结果',
-          dataIndex: 'result',
+          dataIndex: 'labelResult',
           render: val => val.map(item => item.join('，')).join(' | '),
         },
         {

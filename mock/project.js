@@ -267,84 +267,84 @@ let labelMockData = [
   {
     dataId: '1',
     data: { sentence: '出差怎么预定酒店呢' },
-    result: [{ optionId: 'happy', optionName: '高兴' }, { optionId: 'anger', optionName: '愤怒' }],
+    labelResult: [{ optionId: 'happy', optionName: '高兴' }, { optionId: 'anger', optionName: '愤怒' }],
     reviewResult: 'approve',
     remark: '这是条评论1',
   },
   {
     dataId: '2',
     data: { sentence: '出差住的酒店是自己订好吗' },
-    result: [{ optionId: 'happy', optionName: '高兴' }, { optionId: 'anger', optionName: '愤怒' }],
+    labelResult: [{ optionId: 'happy', optionName: '高兴' }, { optionId: 'anger', optionName: '愤怒' }],
     reviewResult: 'approve',
     remark: '这是条评论2',
   },
   {
     dataId: '3',
     data: { sentence: '自己能够去订酒店吗' },
-    result: [],
+    labelResult: [],
     reviewResult: 'reject',
     remark: '这是条评论3',
   },
   {
     dataId: '4',
     data: { sentence: '员工自己可以挑选喜欢的酒店订吗' },
-    result: [{ optionId: 'happy', optionName: '高兴' }, { optionId: 'anger', optionName: '愤怒' }],
+    labelResult: [{ optionId: 'happy', optionName: '高兴' }, { optionId: 'anger', optionName: '愤怒' }],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '5',
     data: { sentence: '自己是不是可以随便订酒店' },
-    result: [{ optionId: 'neutral', optionName: '中性' }],
+    labelResult: [{ optionId: 'neutral', optionName: '中性' }],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '6',
     data: { sentence: '为公司出差住宿可以给多少预算' },
-    result: [{ optionId: 'neutral', optionName: '中性' }],
+    labelResult: [{ optionId: 'neutral', optionName: '中性' }],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '7',
     data: { sentence: '出差的话可以住几星级的酒店' },
-    result: [{ optionId: 'happy', optionName: '高兴' }, { optionId: 'like', optionName: '喜欢' }],
+    labelResult: [{ optionId: 'happy', optionName: '高兴' }, { optionId: 'like', optionName: '喜欢' }],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '8',
     data: { sentence: '协议酒店可以不住吗' },
-    result: [{ optionId: 'neutral', optionName: '中性' }],
+    labelResult: [{ optionId: 'neutral', optionName: '中性' }],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '9',
     data: { sentence: '协议酒店不住会出事吗' },
-    result: [{ optionId: 'like', optionName: '喜欢' }],
+    labelResult: [{ optionId: 'like', optionName: '喜欢' }],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '10',
     data: { sentence: '在国内出差住400一晚的酒店可以吗' },
-    result: [{ optionId: 'like', optionName: '喜欢' }],
+    labelResult: [{ optionId: 'like', optionName: '喜欢' }],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '11',
     data: { sentence: '在国内出差能够住几星级的酒店' },
-    result: [{ optionId: 'like', optionName: '喜欢' }],
+    labelResult: [{ optionId: 'like', optionName: '喜欢' }],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '12',
     data: { sentence: '在国内出差的话住宿有没有一个标准' },
-    result: [{ optionId: 'like', optionName: '喜欢' }],
+    labelResult: [{ optionId: 'like', optionName: '喜欢' }],
     reviewResult: 'unreview',
     remark: '',
   },
@@ -354,84 +354,84 @@ const matchLabelData = [
   {
     dataId: '1',
     data: { sentence1: '出差的话怎么去预订酒店', sentence2: '去其他地方出差这酒店怎么预订' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '2',
     data: { sentence1: '出差时订酒店规定档次吗', sentence2: '在外面出差的时候酒店在什么地方订' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论2',
   },
   {
     dataId: '3',
     data: { sentence1: '酒店是公司帮忙订吗', sentence2: '出差住的酒店是自己订好吗' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论3',
   },
   {
     dataId: '4',
     data: { sentence1: '为了工作出差住酒店能报销多少', sentence2: '出差住的酒店星级有限制吗' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论4',
   },
   {
     dataId: '5',
     data: { sentence1: '不去住协议酒店会怎么样', sentence2: '协议酒店不住会出事吗' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论5',
   },
   {
     dataId: '6',
     data: { sentence1: '协议酒店如果不去住会有什么事发生', sentence2: '出差的地方没有协议酒店怎么办' },
-    result: [{ optionId: 'notSimilar', optionName: '不相似' }],
+    labelResult: [{ optionId: 'notSimilar', optionName: '不相似' }],
     reviewResult: 'approve',
     remark: '这是条评论6',
   },
   {
     dataId: '7',
     data: { sentence1: '在国内出差可以选择1000元的酒店吗', sentence2: '被派在国内出差可以住什么档次的酒店' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论7',
   },
   {
     dataId: '8',
     data: { sentence1: '去国内出差住酒店公司有多少预算', sentence2: '被公司派去国内出差酒店住宿的价格有上限吗' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论8',
   },
   {
     dataId: '9',
     data: { sentence1: '出差住宿这产生的服务费可以报销吗', sentence2: '出差住宿的早餐前能不能给报了' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论8',
   },
   {
     dataId: '10',
     data: { sentence1: '住酒店吃早餐花的钱给报吗', sentence2: '住酒店找停车位花的钱也能报销吗' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论10',
   },
   {
     dataId: '11',
     data: { sentence1: '在国内出差除了协议酒店还有其他可以选的吗', sentence2: '澳门出差也算去海外出差吗' },
-    result: [{ optionId: 'notSimilar', optionName: '不相似' }],
+    labelResult: [{ optionId: 'notSimilar', optionName: '不相似' }],
     reviewResult: 'approve',
     remark: '这是条评论11',
   },
   {
     dataId: '12',
     data: { sentence1: '海外酒店适用于香港吗', sentence2: '澳门的酒店应该不算海外酒店吧' },
-    result: [{ optionId: 'similar', optionName: '相似' }],
+    labelResult: [{ optionId: 'similar', optionName: '相似' }],
     reviewResult: 'approve',
     remark: '这是条评论12',
   },
@@ -441,84 +441,84 @@ const nerLabelData = [
   {
     dataId: '1',
     data: { sentence: '我想要听王菲的传奇' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '2',
     data: { sentence: '我想要去巴黎看埃菲热铁塔' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '3',
     data: { sentence: '你去过北京的故宫吗' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '4',
     data: { sentence: '我想要听周董的演唱会' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '5',
     data: { sentence: '我想听林俊杰的江南' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '6',
     data: { sentence: '我想要听周杰伦的告白气球' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '7',
     data: { sentence: '我想听阿妹的歌' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '8',
     data: { sentence: '我想听吴青峰的歌' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '9',
     data: { sentence: '我想听苏打绿的小情歌' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '10',
     data: { sentence: '我想去沙滩晒太阳' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '11',
     data: { sentence: '我喜欢吃肯德基的香辣鸡腿堡' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
   {
     dataId: '12',
     data: { sentence: '我喜欢逛万达广场' },
-    result: [],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
   },
@@ -858,29 +858,29 @@ function createProject(req, res) {
 
 function saveTextMarkResult(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  const { taskId, dataId, result } = body;
+  const { taskId, dataId, labelResult } = body;
 
   if (taskId.indexOf('ner') === 0) {
     nerLabelData.forEach(item => {
       if (item.dataId === dataId) {
-        let preResult = item.result;
-        if (preResult.filter(r => r.word === result.word).length !== 0) {
-          preResult = preResult.filter(r => r.word !== result.word);
+        let preResult = item.labelResult;
+        if (preResult.filter(r => r.word === labelResult.word).length !== 0) {
+          preResult = preResult.filter(r => r.word !== labelResult.word);
         }
-        preResult.push(result);
-        item.result = preResult;
+        preResult.push(labelResult);
+        item.labelResult = preResult;
       }
     });
   } else if (taskId.indexOf('match') === 0) {
     matchLabelData.forEach(item => {
       if (item.dataId === dataId) {
-        item.result = result;
+        item.labelResult = labelResult;
       }
     });
   } else {
     labelMockData.forEach(item => {
       if (item.dataId === dataId) {
-        item.result = result;
+        item.labelResult = labelResult;
       }
     });
   }
@@ -892,7 +892,7 @@ function deleteTextMarkResult(req, res, u, b) {
   const body = (b && b.body) || req.body;
   nerLabelData.forEach(item => {
     if (item.dataId === body.dataId) {
-      item.result.splice(body.index, 1);
+      item.labelResult.splice(body.index, 1);
     }
   });
   return res.json({ status: 'ok', message: '删除成功' });
