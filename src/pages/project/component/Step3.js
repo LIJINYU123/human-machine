@@ -79,6 +79,7 @@ class Step3 extends Component {
       data: formData,
       headers: {
         Authorization: localStorage.getItem('Authorization'),
+        DepartmentId: localStorage.getItem('DepartmentId'),
       },
       success: () => {
         this.setState({
