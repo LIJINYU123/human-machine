@@ -34,6 +34,10 @@ class ProjectDetail extends Component {
       payload: { projectId: location.state.projectId },
     });
 
+    dispatch({
+      type: 'detail/fetchTaskNumber',
+    });
+
     this.setState({
       projectId: location.state.projectId,
     });
@@ -59,6 +63,11 @@ class ProjectDetail extends Component {
     dispatch({
       type: 'detail/receiveTask',
       payload: task.taskId,
+      callback: () => {
+        dispatch({
+          type: 'detail/fetchTaskNumber',
+        });
+      },
     });
   };
 

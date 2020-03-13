@@ -331,8 +331,6 @@ function getTaskData(req, res, u) {
       pageSize,
       current: parseInt(`${params.currentPage}`, 10) || 1,
     },
-    inProgressNum: dataSource.filter(item => ['labeling', 'reject'].includes(item.status)).length,
-    completeNum: dataSource.filter(item => item.status === 'complete').length,
   };
 
   res.json(result);
@@ -407,6 +405,17 @@ function getMyTask(req, res, u) {
   res.json(result);
 }
 
+function getMyTaskNumber(req, res) {
+  const userId = req.header('UserID');
+  let filterDataSource;
+  const dataSource = taskMockData.filter(item => item.owner === userId);
+  filterDataSource = dataSource.filter(item => ['labeling', 'reject'].includes(item.status));
+  const inProgressNum = filterDataSource.length;
+  filterDataSource = dataSource.filter(item => item.status === 'complete');
+  const completeNum = filterDataSource.length;
+  res.json({ inProgressNum, completeNum });
+}
+
 function getMarkTools(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
@@ -429,6 +438,7 @@ export default {
   'GET /api/task-center/projects': getProjects,
   'GET /api/task-center/task-data': getTaskData,
   'GET /api/task-center/my-task': getMyTask,
+  'GET /api/task-center/task-number': getMyTaskNumber,
   'GET /api/task-center/receive-task/:taskId': receiveTask,
   'GET /api/task-center/mark-tools': getMarkTools,
 };

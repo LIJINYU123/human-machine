@@ -1,4 +1,4 @@
-import { queryProjectDetail, queryTaskData, receiveTask, queryMyTask } from '../service';
+import { queryMyTask, queryTaskNumber, queryProjectDetail, queryTaskData, receiveTask } from '../service';
 import { message } from 'antd';
 
 
@@ -42,7 +42,15 @@ const ProjectDetail = {
       });
     },
 
-    * receiveTask({ payload }, { call, put }) {
+    * fetchTaskNumber(_, { call, put }) {
+      const response = yield call(queryTaskNumber);
+      yield put({
+        type: 'saveTaskNumber',
+        payload: response,
+      });
+    },
+
+    * receiveTask({ payload, callback }, { call, put }) {
       const response = yield call(receiveTask, payload);
       if (response.status === 'ok') {
         message.success(response.message);
@@ -54,6 +62,10 @@ const ProjectDetail = {
       } else {
         message.error(response.message);
       }
+
+      if (callback) {
+        callback();
+      }
     },
   },
 
@@ -63,15 +75,22 @@ const ProjectDetail = {
     },
     taskData(state, action) {
       const response = action.payload;
-      const list = response.list.map(item => ({ projectId: item.projectId, taskId: item.taskId, taskName: item.taskName, status: item.status === 'initial' }));
-      response.list = list;
+      response.list = response.list.map(item => ({
+        projectId: item.projectId,
+        taskId: item.taskId,
+        taskName: item.taskName,
+        status: item.status === 'initial',
+      }));
       // eslint-disable-next-line max-len
-      return { ...state, data: { list: response.list, pagination: response.pagination }, inProgressNum: response.inProgressNum, completeNum: response.completeNum };
+      return { ...state, data: response };
     },
     saveMyData(state, action) {
       const response = action.payload;
-      const dataSource = response.list;
-      return { ...state, myTask: { list: response.list, pagination: response.pagination }, inProgressNum: dataSource.filter(item => ['labeling', 'reject'].includes(item.status)).length, completeNum: dataSource.filter(item => item.status === 'complete').length };
+      return { ...state, myTask: { list: response.list, pagination: response.pagination } };
+    },
+    saveTaskNumber(state, action) {
+      const response = action.payload;
+      return { ...state, inProgressNum: response.inProgressNum, completeNum: response.completeNum }
     },
   },
 };

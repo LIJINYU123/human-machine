@@ -28,6 +28,10 @@ export async function queryMyTask(params) {
   });
 }
 
+export async function queryTaskNumber() {
+  return request('/api/task-center/task-number');
+}
+
 // 文本标注页面api
 export async function queryLabelData(params) {
   return request('/api/text-project/label-data', {

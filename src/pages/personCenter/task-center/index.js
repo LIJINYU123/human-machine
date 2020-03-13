@@ -45,7 +45,7 @@ class TaskCenter extends Component {
       payload: params,
     });
     dispatch({
-      type: 'detail/fetchMyTask',
+      type: 'detail/fetchTaskNumber',
     });
   }
 
