@@ -96,7 +96,7 @@ class ProjectDetail extends Component {
         <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
         <Descriptions.Item label="项目周期">{basicInfo.endTime}</Descriptions.Item>
-        <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.map(item => item.toolName).join('，') : ''}</Descriptions.Item>
+        <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.toolName : ''}</Descriptions.Item>
         <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
         <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>
         <Descriptions.Item label="项目描述">{basicInfo.description}</Descriptions.Item>

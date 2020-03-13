@@ -14,7 +14,7 @@ const TextMark = {
     },
     checkRate: 0,
     passRate: 0,
-    markTools: [],
+    markTool: {},
   },
 
   effects: {
@@ -107,7 +107,7 @@ const TextMark = {
       return { ...state, nerData: data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: parseInt(passNum / checkNum * 100, 0) };
     },
     saveTool(state, action) {
-      return { ...state, markTools: action.payload };
+      return { ...state, markTool: action.payload };
     },
   },
 };

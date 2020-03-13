@@ -38,7 +38,6 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   data: textMark.nerData,
   checkRate: textMark.checkRate,
   passRate: textMark.passRate,
-  markTools: textMark.markTools,
   loading: loading.effects['textMark/fetchNerData'],
 }))
 class NerMarkView extends Component {
@@ -70,10 +69,6 @@ class NerMarkView extends Component {
     dispatch({
       type: 'textMark/fetchNerData',
       payload: { taskId: basicInfo.taskId },
-    });
-    dispatch({
-      type: 'textMark/fetchMarkTool',
-      payload: { projectId: basicInfo.projectId },
     });
   }
 
@@ -268,7 +263,7 @@ class NerMarkView extends Component {
 
   render() {
     const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue } = this.state;
-    const { data, checkRate, passRate, markTools, loading } = this.props;
+    const { data, checkRate, passRate, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -305,21 +300,14 @@ class NerMarkView extends Component {
         title: '文本',
         dataIndex: 'sentence',
         onCell: this.handleClickCell,
-        ...this.getColumnSearchProps('sentenec'),
+        ...this.getColumnSearchProps('sentence'),
       },
       {
         title: '标注结果',
         dataIndex: 'labelResult',
         render: (val, record) => {
           if (val.length) {
-            const toolMap = {};
-            markTools.forEach(tool => {
-              toolMap[tool.toolId] = {
-                toolName: tool.toolName,
-                options: tool.options,
-              };
-            });
-            const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.tool.toolName}.${v.wordEntry.wordName}` : `${v.word}: ${v.tool.toolName}`));
+            const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.option.optionName}.${v.wordEntry.name}` : `${v.word}: ${v.option.optionName}`));
             return labelValues.map((value, index) => (<Tag color="blue" closable onClose={() => this.handleCloseTag(index, record.dataId)}>{value}</Tag>));
           }
           return '';

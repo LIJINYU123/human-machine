@@ -139,34 +139,42 @@ const markToolsMockData = [
       {
         optionId: 'anger',
         optionName: '愤怒',
+        extraInfo: [],
       },
       {
         optionId: 'hate',
         optionName: '厌恶',
+        extraInfo: [],
       },
       {
         optionId: 'fear',
         optionName: '害怕',
+        extraInfo: [],
       },
       {
         optionId: 'sad',
         optionName: '悲伤',
+        extraInfo: [],
       },
       {
         optionId: 'happy',
         optionName: '高兴',
+        extraInfo: [],
       },
       {
         optionId: 'like',
         optionName: '喜欢',
+        extraInfo: [],
       },
       {
         optionId: 'surprise',
         optionName: '惊喜',
+        extraInfo: [],
       },
       {
         optionId: 'neutral',
         optionName: '中性',
+        extraInfo: [],
       },
     ],
   },
@@ -180,10 +188,12 @@ const matchMarkToolsMockData = [
       {
         optionId: 'similar',
         optionName: '相似',
+        extraInfo: [],
       },
       {
         optionId: 'notSimilar',
         optionName: '不相似',
+        extraInfo: [],
       },
     ],
   },
@@ -191,44 +201,58 @@ const matchMarkToolsMockData = [
 
 const nerMarkToolsMockData = [
   {
-    toolId: 'singer',
-    toolName: '歌手',
+    toolId: 'entity',
+    toolName: '实体',
     options: [
       {
-        optionId: '1',
-        optionName: '周杰伦',
+        optionId: 'singer',
+        optionName: '歌手',
+        extraInfo: [
+          {
+            wordEntryId: 'abcd123',
+            wordEntryName: '周杰伦',
+          },
+          {
+            wordEntryId: '1234',
+            wordEntryName: '林俊杰',
+          },
+        ],
       },
       {
-        optionId: '2',
-        optionName: '林俊杰',
-      },
-    ],
-  },
-  {
-    toolId: 'country',
-    toolName: '景点',
-    options: [
-      {
-        optionId: '1',
-        optionName: '长城',
-      },
-      {
-        optionId: '2',
-        optionName: '外滩',
-      },
-    ],
-  },
-  {
-    toolId: 'song',
-    toolName: '歌名',
-    options: [
-      {
-        optionId: '1',
-        optionName: '十年',
+        optionId: 'country',
+        optionName: '景点',
+        extraInfo: [
+          {
+            wordEntryId: 're4345',
+            wordEntryName: '长城',
+          },
+          {
+            wordEntryId: 'hfg45645',
+            wordEntryName: '外滩',
+          },
+          {
+            wordEntryId: 'hfg456fdre45',
+            wordEntryName: '故宫',
+          },
+        ],
       },
       {
-        optionId: '2',
-        optionName: '红玫瑰',
+        optionId: 'song',
+        optionName: '歌名',
+        extraInfo: [
+          {
+            wordEntryId: 'refds4345',
+            wordEntryName: '十年',
+          },
+          {
+            wordEntryId: 'gfdhter',
+            wordEntryName: '红玫瑰',
+          },
+          {
+            wordEntryId: '67897',
+            wordEntryName: '告白气球',
+          },
+        ],
       },
     ],
   },
@@ -426,11 +450,11 @@ function getMarkTools(req, res, u) {
   const params = parse(url, true).query;
 
   if (params.projectId.indexOf('ner') === 0) {
-    res.json(nerMarkToolsMockData);
+    res.json(nerMarkToolsMockData[0]);
   } else if (params.projectId.indexOf('match') === 0) {
-    res.json(matchMarkToolsMockData);
+    res.json(matchMarkToolsMockData[0]);
   } else {
-    res.json(markToolsMockData);
+    res.json(markToolsMockData[0]);
   }
 }
 

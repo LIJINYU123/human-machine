@@ -186,10 +186,8 @@ class Step2 extends Component {
   };
 
   getOptionButton = () => {
-    const { textProjectFormData: { stepOne } } = this.props;
     const { toolKeys } = this.state;
-    const { labelType } = stepOne;
-    if (labelType !== 'ner' && toolKeys.length > 0) {
+    if (toolKeys.length > 0) {
       return (
         <Fragment>
           <Divider style={{ marginTop: '0px', marginBottom: '8px' }}/>
@@ -228,9 +226,8 @@ class Step2 extends Component {
   };
 
   render() {
-    const { textProjectFormData: { markTools, stepOne }, form: { getFieldDecorator }, submitting } = this.props;
+    const { textProjectFormData: { markTools }, form: { getFieldDecorator }, submitting } = this.props;
     const { toolKeys } = this.state;
-    const { labelType } = stepOne;
     // eslint-disable-next-line max-len
     const markToolOptions = markTools ? markTools.map(option => <Option key={option.toolId}>{option.toolName}</Option>) : [];
 
@@ -260,7 +257,7 @@ class Step2 extends Component {
           </Col>
           <Col md={10} sm={24}>
             <Form.Item>
-              <Button icon="plus" type="primary" onClick={this.handleAddTool} disabled={labelType !== 'ner' && toolKeys.length === 1}>工具</Button>
+              <Button icon="plus" type="primary" onClick={this.handleAddTool} disabled={toolKeys.length === 1}>工具</Button>
             </Form.Item>
           </Col>
         </Row>
