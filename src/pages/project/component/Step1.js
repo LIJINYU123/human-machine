@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Col, Form, Input, Row, Select, InputNumber, DatePicker } from 'antd';
+import { Button, Col, Form, Input, Row, Select, Cascader, InputNumber, DatePicker } from 'antd';
 import { connect } from 'dva';
 import ItemData from '../map';
 import styles from './style.less';
@@ -7,10 +7,7 @@ import styles from './style.less';
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-const { FieldLabels, labelTypeName } = ItemData;
-
-// eslint-disable-next-line max-len
-const labelTypeOptions = Object.keys(labelTypeName).map(key => <Option key={key}>{labelTypeName[key]}</Option>);
+const { FieldLabels, labelType } = ItemData;
 
 @connect(({ textProjectFormData, loading }) => ({
   textProjectFormData,
@@ -86,14 +83,7 @@ class Step1 extends Component {
               {
                 getFieldDecorator('labelType', {
                   initialValue: '',
-                })(
-                  <Select
-                    dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
-                    style={{ width: '80%' }}
-                    onChange={this.handleSelectChange}
-                  >
-                    {labelTypeOptions}
-                  </Select>)
+                })(<Cascader options={labelType} style={{ width: '80%' }}/>)
               }
             </Form.Item>
           </Col>

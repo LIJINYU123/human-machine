@@ -35,10 +35,60 @@ export default {
     textClassify: '文本分类',
     textMatch: '文本匹配',
     ner: '实体识别',
+    textMark: '文本标注',
     pictureMark: '图片标注',
     voiceMark: '音频标注',
     videoDialogMark: '其他标注-视频对话标注',
   },
+
+  labelType: [
+    {
+      value: 'textMark',
+      label: '文本标注',
+      children: [
+        {
+          value: 'textClassify',
+          label: '文本分类',
+        },
+        {
+          value: 'sequenceLabeling',
+          label: '序列标注',
+          children: [
+            {
+              value: 'sentenceSplit',
+              label: '句子切分',
+            },
+            {
+              value: 'readingComprehension',
+              label: '阅读理解',
+            },
+            {
+              value: 'ner',
+              label: '实体识别',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      value: 'pictureMark',
+      label: '图片标注',
+    },
+    {
+      value: 'voiceMark',
+      label: '音频标注',
+    },
+    {
+      value: 'otherMark',
+      label: '其他标注',
+      children: [
+        {
+          value: 'videoDialogMark',
+          label: '视频对话标注',
+        },
+      ],
+    },
+  ],
 
   reviewLabel: {
     approve: '通过',
@@ -56,10 +106,11 @@ export default {
     checkRate: '质检率',
     questionNum: '单任务题目数',
     description: '项目描述',
-    defaultTool: '默认工具',
-    toolName: '工具名称',
+    defaultTool: '复制默认模板',
+    toolName: '模板名称',
     toolId: '工具标识',
-    optionName: '选项名称',
-    optionId: '选项标识',
+    classifyName: '类别名称',
+    classifyId: '选项标识',
+    color: '颜色',
   },
 }

@@ -1,4 +1,4 @@
-import { queryMarkTools, queryMembers } from '../service';
+import { queryDefaultTemplate, queryMembers } from '../service';
 
 
 const TextProjectFormData = {
@@ -6,20 +6,24 @@ const TextProjectFormData = {
   state: {
     stepOne: {
       projectName: '',
-      labelType: '',
+      labelType: 'textClassify',
     },
-    markTools: [],
+    stepTwo: {
+      templateName: '',
+    },
+    templates: [],
+    classifyData: [],
     members: {
       labelers: [],
       inspectors: [],
     },
-    current: 0,
+    current: 1,
   },
   effects: {
-    * fetchMarkTool({ payload }, { call, put }) {
-      const response = yield call(queryMarkTools, payload);
+    * fetchTemplate({ payload }, { call, put }) {
+      const response = yield call(queryDefaultTemplate, payload);
       yield put({
-        type: 'saveMarkToolOptions',
+        type: 'saveDefaultTemplate',
         payload: response,
       });
     },
@@ -37,6 +41,37 @@ const TextProjectFormData = {
         type: 'saveStepOne',
         payload,
       });
+    },
+
+    * saveClassifies({ payload }, { put }) {
+      yield put({
+        type: 'saveClassifyData',
+        payload,
+      });
+    },
+
+    * saveColor({ payload }, { put }) {
+      yield put({
+        type: 'saveClassifyColor',
+        payload,
+      });
+    },
+
+    * deleteClassify({ payload }, { put }) {
+      yield put({
+        type: 'deleteClassifyData',
+        payload,
+      });
+    },
+
+    * addClassify({ payload, callback }, { put }) {
+      yield put({
+        type: 'addClassifyData',
+        payload,
+      });
+      if (callback) {
+        callback();
+      }
     },
 
     * saveStepTwoData({ payload }, { put }) {
@@ -69,17 +104,45 @@ const TextProjectFormData = {
   },
 
   reducers: {
-    saveMarkToolOptions(state, action) {
-      return { ...state, markTools: action.payload };
+    saveDefaultTemplate(state, action) {
+      return { ...state, templates: action.payload };
     },
     saveMembers(state, action) {
       return { ...state, members: action.payload };
     },
     saveStepOne(state, action) {
-      return { ...state, stepOne: action.payload, current: 1 };
+      const { labelType, ...rest } = action.payload;
+
+      return { ...state, stepOne: { labelType: labelType.pop(), ...rest }, current: 1 };
     },
     saveStepTwo(state, action) {
       return { ...state, stepTwo: action.payload, current: 2 };
+    },
+    saveClassifyData(state, action) {
+      return { ...state, classifyData: action.payload };
+    },
+    deleteClassifyData(state, action) {
+      const { classifyData } = state;
+      const response = action.payload;
+      const filterData = classifyData.filter(data => data.classifyName !== response.classifyName);
+      return { ...state, classifyData: filterData };
+    },
+    addClassifyData(state, action) {
+      const { classifyData } = state;
+      const response = action.payload;
+      // eslint-disable-next-line max-len
+      classifyData.push({ classifyName: response.classifyName, color: response.color });
+      return { ...state, classifyData };
+    },
+    saveClassifyColor(state, action) {
+      const { classifyData } = state;
+      const response = action.payload;
+      classifyData.forEach(data => {
+        if (data.classifyId === response.classifyId) {
+          data.color = response.color;
+        }
+      });
+      return { ...state, classifyData };
     },
     stepTwoPrev(state, action) {
       return { ...state, current: action.payload };

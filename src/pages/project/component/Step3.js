@@ -48,7 +48,7 @@ class Step3 extends Component {
     const formData = new FormData();
     formData.append('file', fileList[0]);
     formData.append('projectName', projectName);
-    formData.append('labelType', labelType);
+    formData.append('labelType', labelType.pop());
     formData.append('passRate', passRate);
     formData.append('checkRate', checkRate);
     labeler.forEach(item => {

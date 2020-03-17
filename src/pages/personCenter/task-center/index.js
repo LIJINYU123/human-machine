@@ -247,11 +247,8 @@ class TaskCenter extends Component {
         <div className={styles.standardList}>
           <Card bordered={false}>
             <Row>
-              <Col sm={12} xs={24}>
+              <Col sm={24} xs={24}>
                 <Info title="我的待办" value={`${inProgressNum}个任务`} onClick={this.handleJumptoInProgress} bordered />
-              </Col>
-              <Col sm={12} xs={24}>
-                <Info title="全部完成任务数" value={`${completeNum}个任务`} onClick={this.handleJumptoComplete} />
               </Col>
             </Row>
           </Card>

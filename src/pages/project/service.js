@@ -28,8 +28,8 @@ export async function queryMembers() {
   return request('/api/project/members');
 }
 
-export async function queryMarkTools(params) {
-  return request('/api/project/default-tools', {
+export async function queryDefaultTemplate(params) {
+  return request('/api/project/default-templates', {
     params,
   });
 }

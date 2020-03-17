@@ -447,7 +447,7 @@ const nerLabelData = [
   },
   {
     dataId: '2',
-    data: { sentence: '我想要去巴黎看埃菲热铁塔' },
+    data: { sentence: '我想要去巴黎看埃菲尔铁塔' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -524,92 +524,100 @@ const nerLabelData = [
   },
 ];
 
-const markToolsMockData = [
+const templatesMockData = [
   {
     labelType: 'textClassify',
-    toolId: 'emotion',
-    toolName: '情感',
-    options: [
+    templateId: 'emotion',
+    templateName: '情感',
+    classifies: [
       {
-        optionId: 'anger',
-        optionName: '愤怒',
+        classifyId: 'anger',
+        classifyName: '愤怒',
+        color: '#1890ff',
       },
       {
-        optionId: 'hate',
-        optionName: '厌恶',
+        classifyId: 'hate',
+        classifyName: '厌恶',
+        color: '#1890ff',
       },
       {
-        optionId: 'fear',
-        optionName: '害怕',
+        classifyId: 'fear',
+        classifyName: '害怕',
+        color: '#1890ff',
       },
       {
-        optionId: 'sad',
-        optionName: '悲伤',
+        classifyId: 'sad',
+        classifyName: '悲伤',
+        color: '#1890ff',
       },
       {
-        optionId: 'happy',
-        optionName: '高兴',
+        classifyId: 'happy',
+        classifyName: '高兴',
+        color: '#1890ff',
       },
       {
-        optionId: 'like',
-        optionName: '喜欢',
+        classifyId: 'like',
+        classifyName: '喜欢',
+        color: '#1890ff',
       },
       {
-        optionId: 'surprise',
-        optionName: '惊喜',
+        classifyId: 'surprise',
+        classifyName: '惊喜',
+        color: '#1890ff',
       },
       {
-        optionId: 'neutral',
-        optionName: '中性',
+        classifyId: 'neutral',
+        classifyName: '中性',
+        color: '#1890ff',
       },
     ],
   },
   {
     labelType: 'textClassify',
-    toolId: 'sentenceType',
-    toolName: '句式',
-    options: [
+    templateId: 'sentenceType',
+    templateName: '句式',
+    classifies: [
       {
-        optionId: 'chenshuju',
-        optionName: '肯定陈述句',
+        classifyId: 'chenshuju',
+        classifyName: '肯定陈述句',
       },
       {
-        optionId: 'fanwenju',
-        optionName: '反问句',
+        classifyId: 'fanwenju',
+        classifyName: '反问句',
       },
       {
-        optionId: 'yiwenju',
-        optionName: '疑问句',
+        classifyId: 'yiwenju',
+        classifyName: '疑问句',
       },
     ],
   },
   {
     labelType: 'textMatch',
-    toolId: 'similarity',
-    toolName: '相似度',
-    options: [
+    templateId: 'similarity',
+    templateName: '相似度',
+    classifies: [
       {
-        optionId: 'similar',
-        optionName: '相似',
+        classifyId: 'similar',
+        classifyName: '相似',
       },
       {
-        optionId: 'notSimilar',
-        optionName: '不相似',
+        classifyId: 'notSimilar',
+        classifyName: '不相似',
       },
     ],
   },
   {
     labelType: 'ner',
-    toolId: 'entity',
-    toolName: '实体',
-    options: [
+    templateId: 'entity',
+    templateName: '实体',
+    classifies: [
       {
-        optionId: 'country',
-        toolName: '国家',
+        classifyId: 'country',
+        classifyName: '国家',
       },
       {
-        optionId: 'location',
-        toolName: '地名',
+        classifyId: 'location',
+        classifyName: '地名',
       },
     ],
   },
@@ -819,17 +827,17 @@ function deleteLabelData(req, res, u, b) {
   return res.json({ message: '删除成功', status: 'ok' });
 }
 
-function getMarkTools(req, res, u) {
+function getTemplates(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     // eslint-disable-next-line prefer-destructuring
     url = req.url;
   }
 
-  let dataSource = markToolsMockData;
+  let dataSource = templatesMockData;
   const params = parse(url, true).query;
   if (params.labelType) {
-    dataSource = markToolsMockData.filter(item => item.labelType === params.labelType)
+    dataSource = templatesMockData.filter(item => item.labelType === params.labelType)
   } else {
     dataSource = [];
   }
@@ -921,7 +929,7 @@ export default {
   'GET /api/project/detail/:projectId': getProjectDetail,
   'GET /api/project/task-data': getTaskData,
   'DELETE /api/project/task-data': deleteTaskData,
-  'GET /api/project/default-tools': getMarkTools,
+  'GET /api/project/default-templates': getTemplates,
   'GET /api/project/members': getRoleMembers,
   'POST /api/project/review-result': saveReviewResult,
 

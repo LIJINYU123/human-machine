@@ -292,9 +292,9 @@ class TextMarkView extends Component {
                 labelValues.push(option.optionName);
                 labelIds.push(option.optionId);
               });
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={labelIds} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
+              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={labelIds} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
             }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={[]} />} placement="top"><a>标注</a></Popover>
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={[]} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
           filteredValue: filteredInfo.result || null,
