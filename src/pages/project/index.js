@@ -109,7 +109,7 @@ class TextProjectList extends Component {
     const { dispatch } = this.props;
 
     dispatch({
-      type: 'textProjectFormData/resetStep',
+      type: 'textProjectFormData/resetStepData',
     });
     this.setState({
       addModalVisible: false,

@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react';
-import { Button, Form, Select, Row, Col, Divider, Input, Popover } from 'antd';
+import React, { Component } from 'react';
+import { Button, Form, Select, Input, Popover, Radio } from 'antd';
 import { connect } from 'dva';
 import update from 'immutability-helper';
 import { SketchPicker } from 'react-color';
@@ -10,9 +10,6 @@ import ItemData from '../map';
 
 const { FieldLabels } = ItemData;
 const { Option } = Select;
-
-let toolId = 0;
-let optionId = 0;
 
 const formItemLayout = {
   labelCol: {
@@ -25,14 +22,19 @@ const formItemLayout = {
   },
 };
 
+const prestColors = ['#F5222D', '#FA541C', '#FA8C16', '#FAAD14', '#FADB14', '#A0D911', '#52C41A', '#13C2C2',
+  '#1890FF', '#2F54EB', '#722ED1', '#EB2F96', '#FF4D4F', '#FF7A45', '#FFA940', '#FFC53D',
+  '#FFEC3D', '#BAE637', '#73D13D', '#36CFC9', '#40A9FF', '#597EF7', '#9254DE', '#F759AB',
+  '#CF1322', '#D4380D', '#D46B08', '#D48806', '#D4B106', '#7CB305', '#389E0D', '#08979C',
+  '#096DD9', '#1D39C4', '#531DAB', '#C41D7F',
+];
+
 @connect(({ textProjectFormData, loading }) => ({
   textProjectFormData,
   submitting: loading.effects['textProjectFormData/saveStepTwoData'],
 }))
 class Step2 extends Component {
   state = {
-    toolKeys: [],
-    optionKeys: [],
     classifyId: '',
     modalVisible: false,
   };
@@ -42,29 +44,18 @@ class Step2 extends Component {
     const { labelType } = stepOne;
     dispatch({
       type: 'textProjectFormData/fetchTemplate',
-      payload: { labelType },
+      payload: { labelType: labelType[labelType.length - 1] },
     });
   }
 
   onValidateForm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
-    const { optionKeys } = this.state;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        const fieldValues = {};
-
-        const options = optionKeys.map(key => ({
-          optionName: values[`optionName-${key}`], optionId: values[`optionId-${key}`] }));
-
-        fieldValues.defaultTool = values.defaultTool;
-        fieldValues.toolName = values.toolName ? values.toolName : '';
-        fieldValues.toolId = values.toolId ? values.toolId : '';
-        fieldValues.options = options;
-
         dispatch({
           type: 'textProjectFormData/saveStepTwoData',
-          payload: fieldValues,
+          payload: values,
         });
       }
     });
@@ -88,133 +79,6 @@ class Step2 extends Component {
     dispatch({
       type: 'textProjectFormData/stepTwoPrevious',
     });
-  };
-
-  handleAddTool = () => {
-    const { toolKeys } = this.state;
-    const newTool = toolKeys.concat(`tool-${++toolId}`);
-    this.setState({
-      toolKeys: newTool,
-    });
-  };
-
-  handleDeleteTool = toolKey => {
-    const { toolKeys } = this.state;
-    this.setState({
-      toolKeys: toolKeys.filter(key => key !== toolKey),
-      optionKeys: [],
-    });
-  };
-
-  getToolField = () => {
-    const { toolKeys } = this.state;
-    const { form: { getFieldDecorator } } = this.props;
-    return toolKeys.map(toolKey => (
-      <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
-        <Col md={10} sm={24}>
-          <Form.Item label={FieldLabels.toolName} {...formItemLayout}>
-            {
-              getFieldDecorator('toolName', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入模板名称',
-                  },
-                ],
-              })(<Input />)
-            }
-          </Form.Item>
-        </Col>
-        <Col md={2} sm={24}>
-          <Form.Item>
-            <Button icon="delete" type="danger" onClick={() => this.handleDeleteTool(toolKey)}>删除</Button>
-          </Form.Item>
-        </Col>
-      </Row>
-    ));
-  };
-
-  getOptionField = () => {
-    const { optionKeys } = this.state;
-    const { form: { getFieldDecorator } } = this.props;
-    return optionKeys.map(optionKey => (
-      <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
-        <Col md={10} sm={24}>
-          <Form.Item label={FieldLabels.optionName} {...formItemLayout}>
-            {
-              getFieldDecorator(`optionName-${optionKey}`, {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入类别名称',
-                  },
-                ],
-              })(<Input />)
-            }
-          </Form.Item>
-        </Col>
-        <Col md={2} sm={24}>
-          <Form.Item>
-            <Button icon="delete" type="danger" onClick={() => this.handleDeleteOption(optionKey)}>删除</Button>
-          </Form.Item>
-        </Col>
-      </Row>
-    ));
-  };
-
-  handleAddOption = () => {
-    const { optionKeys } = this.state;
-    const newOption = optionKeys.concat(`${++optionId}`);
-    this.setState({
-      optionKeys: newOption,
-    });
-  };
-
-  handleDeleteOption = optionKey => {
-    const { optionKeys } = this.state;
-    this.setState({
-      optionKeys: optionKeys.filter(key => key !== optionKey),
-    });
-  };
-
-  getOptionButton = () => {
-    const { toolKeys } = this.state;
-    if (toolKeys.length > 0) {
-      return (
-        <Fragment>
-          <Divider style={{ marginTop: '0px', marginBottom: '8px' }}/>
-          <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
-            <Col md={10} sm={24}>
-              <Form.Item
-                wrapperCol={{
-                  xs: {
-                    span: 24,
-                    offset: 0,
-                  },
-                  sm: {
-                    span: formItemLayout.wrapperCol.sm.span,
-                    offset: formItemLayout.labelCol.sm.span,
-                  },
-                }}
-              >
-                <Button icon="plus" type="primary" onClick={this.handleAddOption}>类别</Button>
-              </Form.Item>
-            </Col>
-          </Row>
-        </Fragment>
-      );
-    }
-    return null;
-  };
-
-  checkDefaultTool = (rule, value, callback) => {
-    const { form: { getFieldsValue } } = this.props;
-    const values = getFieldsValue();
-    if (!value && !values.hasOwnProperty('toolName')) {
-      callback('请选择默认模板');
-    } else {
-      callback();
-    }
   };
 
   handleMoveRow = (dragIndex, hoverIndex) => {
@@ -267,7 +131,8 @@ class Step2 extends Component {
   };
 
   render() {
-    const { textProjectFormData: { templates, classifyData }, form: { getFieldDecorator }, submitting } = this.props;
+    const { textProjectFormData: { templates, classifyData, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
+    const { templateName, defaultTool, multiple } = stepTwo;
     const { modalVisible } = this.state;
     // eslint-disable-next-line max-len
     const templateOptions = templates ? templates.map(template => <Option key={template.templateId}>{template.templateName}</Option>) : [];
@@ -280,7 +145,7 @@ class Step2 extends Component {
       {
         title: '颜色',
         dataIndex: 'color',
-        render: (val, record) => <Popover trigger="click" content={<SketchPicker color={val} onChange={this.handleChange}/>}><div className={styles.colorPicker} onClick={() => this.handleClickDiv(record)}><div className={styles.color} style={{ background: `${val}` }}></div></div></Popover>,
+        render: (val, record) => <Popover trigger="click" content={<SketchPicker presetColors={prestColors} color={val} onChange={this.handleChange}/>}><div className={styles.colorPicker} onClick={() => this.handleClickDiv(record)}><div className={styles.color} style={{ background: `${val}` }}></div></div></Popover>,
       },
       {
         title: '操作',
@@ -292,7 +157,9 @@ class Step2 extends Component {
       <Form hideRequiredMark>
         <Form.Item label={FieldLabels.defaultTool} {...formItemLayout}>
           {
-            getFieldDecorator('defaultTool', {})(
+            getFieldDecorator('defaultTool', {
+              initialValue: defaultTool,
+            })(
               <Select
                 dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
                 showSearch
@@ -305,7 +172,7 @@ class Step2 extends Component {
               </Select>)
           }
         </Form.Item>
-        <Form.Item label={FieldLabels.toolName} {...formItemLayout}>
+        <Form.Item label={FieldLabels.templateName} {...formItemLayout}>
           {
             getFieldDecorator('templateName', {
               rules: [
@@ -314,7 +181,19 @@ class Step2 extends Component {
                   message: '请输入模板名称',
                 },
               ],
+              initialValue: templateName,
             })(<Input style={{ width: '50%' }} />)
+          }
+        </Form.Item>
+        <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
+          {
+            getFieldDecorator('multiple', {
+              initialValue: multiple,
+            })(
+              <Radio.Group name="multiple">
+                <Radio value>是</Radio>
+                <Radio value={false}>否</Radio>
+              </Radio.Group>)
           }
         </Form.Item>
         <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAddClassify}>类别</Button>

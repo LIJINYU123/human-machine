@@ -6,10 +6,19 @@ const TextProjectFormData = {
   state: {
     stepOne: {
       projectName: '',
-      labelType: 'textClassify',
+      labelType: [],
+      passRate: 0,
+      checkRate: 0,
+      labeler: [],
+      inspector: [],
+      questionNum: null,
+      projectPeriod: [],
+      description: '',
     },
     stepTwo: {
       templateName: '',
+      defaultTool: '',
+      multiple: true,
     },
     templates: [],
     classifyData: [],
@@ -17,7 +26,7 @@ const TextProjectFormData = {
       labelers: [],
       inspectors: [],
     },
-    current: 1,
+    current: 0,
   },
   effects: {
     * fetchTemplate({ payload }, { call, put }) {
@@ -95,9 +104,9 @@ const TextProjectFormData = {
       });
     },
 
-    * resetStep(_, { put }) {
+    * resetStepData(_, { put }) {
       yield put({
-        type: 'resetCurrentStep',
+        type: 'resetData',
         payload: 0,
       });
     },
@@ -111,9 +120,7 @@ const TextProjectFormData = {
       return { ...state, members: action.payload };
     },
     saveStepOne(state, action) {
-      const { labelType, ...rest } = action.payload;
-
-      return { ...state, stepOne: { labelType: labelType.pop(), ...rest }, current: 1 };
+      return { ...state, stepOne: action.payload, current: 1 };
     },
     saveStepTwo(state, action) {
       return { ...state, stepTwo: action.payload, current: 2 };
@@ -150,8 +157,29 @@ const TextProjectFormData = {
     stepThreePrev(state, action) {
       return { ...state, current: action.payload };
     },
-    resetCurrentStep(state, action) {
-      return { ...state, current: action.payload };
+    resetData(state, _) {
+      return {
+        ...state,
+        stepOne: {
+          projectName: '',
+          labelType: [],
+          passRate: 0,
+          checkRate: 0,
+          labeler: [],
+          inspector: [],
+          questionNum: null,
+          projectPeriod: [],
+          description: '',
+        },
+        stepTwo: {
+          templateName: '',
+          defaultTool: '',
+          multiple: true,
+        },
+        templates: [],
+        classifyData: [],
+        current: 0,
+      };
     },
   },
 };

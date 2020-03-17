@@ -7,7 +7,7 @@ import styles from './style.less';
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-const { FieldLabels, labelType } = ItemData;
+const { FieldLabels, labelTypes } = ItemData;
 
 @connect(({ textProjectFormData, loading }) => ({
   textProjectFormData,
@@ -26,9 +26,9 @@ class Step1 extends Component {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        values.startTime = values.projectPeriod && values.projectPeriod[0].format('YYYY-MM-DD HH:mm:ss');
-        values.endTime = values.projectPeriod && values.projectPeriod[1].format('YYYY-MM-DD HH:mm:ss');
-        delete values.projectPeriod;
+        // values.startTime = values.projectPeriod && values.projectPeriod[0].format('YYYY-MM-DD HH:mm:ss');
+        // values.endTime = values.projectPeriod && values.projectPeriod[1].format('YYYY-MM-DD HH:mm:ss');
+        // delete values.projectPeriod;
 
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
@@ -40,9 +40,10 @@ class Step1 extends Component {
 
   render() {
     // eslint-disable-next-line max-len
-    const { form: { getFieldDecorator }, textProjectFormData } = this.props;
+    const { form: { getFieldDecorator }, textProjectFormData: { stepOne, members } } = this.props;
+    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
 
-    const { members: { labelers, inspectors } } = textProjectFormData;
+    const { labelers, inspectors } = members;
 
     const labelerOptions = labelers.map(item => <Option key={item.userId}>{item.userName}</Option>);
 
@@ -73,7 +74,7 @@ class Step1 extends Component {
                       message: '请输入项目名称',
                     },
                   ],
-                  initialValue: '',
+                  initialValue: projectName,
                 })(<Input className={styles.formItem}/>)
               }
             </Form.Item>
@@ -82,8 +83,8 @@ class Step1 extends Component {
             <Form.Item label={FieldLabels.labelType} {...formItemLayout} >
               {
                 getFieldDecorator('labelType', {
-                  initialValue: '',
-                })(<Cascader options={labelType} style={{ width: '80%' }}/>)
+                  initialValue: labelType,
+                })(<Cascader options={labelTypes} style={{ width: '80%' }}/>)
               }
             </Form.Item>
           </Col>
@@ -99,7 +100,7 @@ class Step1 extends Component {
                       message: '请输入合格率',
                     },
                   ],
-                  initialValue: 0,
+                  initialValue: passRate,
                 })(<InputNumber min={0} max={100} formatter={value => `${value}%`}
                                 parser={value => value.replace('%', '')}
                                 style={{ width: '80%' }}/>)
@@ -116,7 +117,7 @@ class Step1 extends Component {
                       message: '请输入质检率',
                     },
                   ],
-                  initialValue: 0,
+                  initialValue: checkRate,
                 })(<InputNumber min={0} max={100} formatter={value => `${value}%`}
                                 parser={value => value.replace('%', '')}
                                 style={{ width: '80%' }}/>)
@@ -135,7 +136,7 @@ class Step1 extends Component {
                       message: '请选择标注员',
                     },
                   ],
-                  initialValue: [],
+                  initialValue: labeler,
                 })(<Select
                   dropdownMenuStyle={{
                     maxHeight: 400,
@@ -158,7 +159,7 @@ class Step1 extends Component {
                       message: '请选择质检员',
                     },
                   ],
-                  initialValue: [],
+                  initialValue: inspector,
                 })(<Select
                   dropdownMenuStyle={{
                     maxHeight: 400,
@@ -183,6 +184,7 @@ class Step1 extends Component {
                       message: '请输入单任务题目数',
                     },
                   ],
+                  initialValue: questionNum,
                 })(<InputNumber style={{ width: '80%' }}/>)
               }
             </Form.Item>
@@ -197,6 +199,7 @@ class Step1 extends Component {
                       message: '请选择项目周期',
                     },
                   ],
+                  initialValue: projectPeriod,
                 })(
                   <RangePicker className={styles.formItem} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
               }
@@ -207,7 +210,9 @@ class Step1 extends Component {
           <Col md={12} sm={24}>
             <Form.Item label={FieldLabels.description} {...formItemLayout}>
               {
-                getFieldDecorator('description', {})(<TextArea autoSize className={styles.formItem}/>)
+                getFieldDecorator('description', {
+                  initialValue: description,
+                })(<TextArea autoSize className={styles.formItem}/>)
               }
             </Form.Item>
           </Col>

@@ -580,14 +580,17 @@ const templatesMockData = [
       {
         classifyId: 'chenshuju',
         classifyName: '肯定陈述句',
+        color: '#1890ff',
       },
       {
         classifyId: 'fanwenju',
         classifyName: '反问句',
+        color: '#1890ff',
       },
       {
         classifyId: 'yiwenju',
         classifyName: '疑问句',
+        color: '#1890ff',
       },
     ],
   },
@@ -599,10 +602,12 @@ const templatesMockData = [
       {
         classifyId: 'similar',
         classifyName: '相似',
+        color: '#1890ff',
       },
       {
         classifyId: 'notSimilar',
         classifyName: '不相似',
+        color: '#1890ff',
       },
     ],
   },
@@ -614,10 +619,12 @@ const templatesMockData = [
       {
         classifyId: 'country',
         classifyName: '国家',
+        color: '#1890ff',
       },
       {
         classifyId: 'location',
         classifyName: '地名',
+        color: '#1890ff',
       },
     ],
   },

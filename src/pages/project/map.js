@@ -41,7 +41,7 @@ export default {
     videoDialogMark: '其他标注-视频对话标注',
   },
 
-  labelType: [
+  labelTypes: [
     {
       value: 'textMark',
       label: '文本标注',
@@ -107,10 +107,10 @@ export default {
     questionNum: '单任务题目数',
     description: '项目描述',
     defaultTool: '复制默认模板',
-    toolName: '模板名称',
-    toolId: '工具标识',
+    templateName: '模板名称',
     classifyName: '类别名称',
     classifyId: '选项标识',
     color: '颜色',
+    multiple: '支持多选',
   },
 }

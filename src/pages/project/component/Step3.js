@@ -8,6 +8,7 @@ const { Dragger } = Upload;
 @connect(({ textProjectFormData }) => ({
   stepOne: textProjectFormData.stepOne,
   stepTwo: textProjectFormData.stepTwo,
+  classifyData: textProjectFormData.classifyData,
   markTools: textProjectFormData.markTools,
 }))
 class Step3 extends Component {
@@ -41,10 +42,10 @@ class Step3 extends Component {
 
   handleUpload = () => {
     const { fileList } = this.state;
-    const { stepOne, stepTwo, markTools, onCancel, dispatch } = this.props;
+    const { stepOne, stepTwo, classifyData, onCancel, dispatch } = this.props;
     // eslint-disable-next-line max-len
-    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, startTime, endTime, description } = stepOne;
-    const { defaultTool, toolName, toolId, options } = stepTwo;
+    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
+    const { templateName, multiple } = stepTwo;
     const formData = new FormData();
     formData.append('file', fileList[0]);
     formData.append('projectName', projectName);
@@ -60,15 +61,10 @@ class Step3 extends Component {
     });
 
     formData.append('questionNum', questionNum);
-    formData.append('startTime', startTime);
-    formData.append('endTime', endTime);
+    formData.append('startTime', projectPeriod[0].format('YYYY-MM-DD HH:mm:ss'));
+    formData.append('endTime', projectPeriod[1].format('YYYY-MM-DD HH:mm:ss'));
     formData.append('description', description);
-    if (toolName !== '' && toolId !== '') {
-      formData.append('tool', JSON.stringify({ toolId, toolName, options }));
-    } else {
-      const defaultTools = markTools.filter(tool => tool.toolId === defaultTool);
-      formData.append('tool', JSON.stringify(defaultTools[0]));
-    }
+    formData.append('template', JSON.stringify({ templateName, multiple, classifies: classifyData }));
     this.setState({
       uploading: true,
     });

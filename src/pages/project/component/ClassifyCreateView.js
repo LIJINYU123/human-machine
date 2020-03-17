@@ -1,11 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
 import ItemData from '../map';
-import { Button, Modal, Form, Row, Col, Input, Popover, Icon } from 'antd';
+import { Button, Modal, Form, Input, Popover, Icon } from 'antd';
 import { SketchPicker } from 'react-color';
 import styles from './style.less';
 
 const { FieldLabels } = ItemData;
+
+const prestColors = ['#F5222D', '#FA541C', '#FA8C16', '#FAAD14', '#FADB14', '#A0D911', '#52C41A', '#13C2C2',
+  '#1890FF', '#2F54EB', '#722ED1', '#EB2F96', '#FF4D4F', '#FF7A45', '#FFA940', '#FFC53D',
+  '#FFEC3D', '#BAE637', '#73D13D', '#36CFC9', '#40A9FF', '#597EF7', '#9254DE', '#F759AB',
+  '#CF1322', '#D4380D', '#D46B08', '#D48806', '#D4B106', '#7CB305', '#389E0D', '#08979C',
+  '#096DD9', '#1D39C4', '#531DAB', '#C41D7F',
+];
 
 @connect(({ textProjectFormData, loading }) => ({
   stepTwo: textProjectFormData.stepTwo,
@@ -74,7 +81,7 @@ class ClassifyCreateView extends Component {
               })(<Input className={styles.formItem}/>)
             }
             {
-              <Popover trigger="click" content={<SketchPicker color={color} onChange={this.handleChange}/>}>
+              <Popover trigger="click" content={<SketchPicker presetColors={prestColors} color={color} onChange={this.handleChange}/>}>
                 <Icon style={{ marginLeft: '20px', fontSize: '16px', color }} type="font-colors" />
               </Popover>
             }
