@@ -7,6 +7,7 @@ const { FieldLabels } = ItemData;
 const { Option } = Select;
 
 @connect(({ textMark }) => ({
+  data: textMark.nerData,
   markTool: textMark.markTool,
 }))
 class NerModalView extends Component {
@@ -44,7 +45,7 @@ class NerModalView extends Component {
 
   onValidateForm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, taskId, dataId, onCancel, onRefresh, word, startIndex, endIndex } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, taskId, dataId, data, onCancel, onRefresh, word, startIndex, endIndex } = this.props;
     this.setState({
       saveType: 'wordEntry',
       addWordEntry: false,
@@ -57,9 +58,14 @@ class NerModalView extends Component {
         values.startIndex = startIndex;
         values.endIndex = endIndex;
 
+        const filterData = data.list.filter(item => item.dataId === dataId);
+        let prevResult = filterData[0].labelResult;
+        prevResult = prevResult.filter(r => r.word !== values.word);
+        prevResult.push(values);
+
         dispatch({
           type: 'textMark/saveTextMarkResult',
-          payload: { taskId, dataId, labelResult: values },
+          payload: { taskId, dataId, labelResult: prevResult },
           callback: () => {
             onCancel();
             onRefresh();

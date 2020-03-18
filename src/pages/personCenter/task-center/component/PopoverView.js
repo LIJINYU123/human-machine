@@ -49,7 +49,7 @@ class PopoverView extends Component {
               initialValue: labelValues,
             })(
               // eslint-disable-next-line max-len
-              <TagSelect expandable style={{ minWidth: '400px' }}>
+              <TagSelect expandable style={{ minWidth: '400px' }} multiple={markTool.multiple}>
                 {/* eslint-disable-next-line max-len */}
                 {markTool.options.map(option => <TagSelect.Option value={option.optionName}>{option.optionName}</TagSelect.Option>)}
               </TagSelect>)

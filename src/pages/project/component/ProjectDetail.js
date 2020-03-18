@@ -140,7 +140,8 @@ class ProjectDetail extends Component {
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={statusName[basicInfo.status]} />
-        <Statistic title="项目进度" value={basicInfo.schedule} suffix="%"/>
+        <Statistic title="标注进度" value={basicInfo.schedule} suffix="%" />
+        <Statistic title="项目进度" value={basicInfo.schedule} suffix="%" />
       </div>
     );
 

@@ -42,10 +42,10 @@ class Step3 extends Component {
 
   handleUpload = () => {
     const { fileList } = this.state;
-    const { stepOne, stepTwo, optionData, onCancel, dispatch } = this.props;
+    const { stepOne, stepTwo, forever, optionData, saveTemplate, onCancel, dispatch } = this.props;
     // eslint-disable-next-line max-len
-    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, forever, description } = stepOne;
-    const { saveTemplate, multiple } = stepTwo;
+    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
+    const { multiple } = stepTwo;
     const formData = new FormData();
     formData.append('file', fileList[0]);
     formData.append('projectName', projectName);

@@ -82,11 +82,16 @@ class TagSelect extends Component {
 
   handleTagChange = (value, checked) => {
     const { value: StateValue } = this.state;
-    const checkedTags = [...StateValue];
+    const { multiple } = this.props;
+    let checkedTags = [...StateValue];
     const index = checkedTags.indexOf(value);
 
     if (checked && index === -1) {
-      checkedTags.push(value);
+      if (multiple) {
+        checkedTags.push(value);
+      } else {
+        checkedTags = [value];
+      }
     } else if (!checked && index > -1) {
       checkedTags.splice(index, 1);
     }

@@ -20,8 +20,10 @@ const TextProjectFormData = {
       defaultTool: '',
       multiple: true,
     },
+    forever: false,
     templates: [],
     optionData: [],
+    saveTemplate: false,
     members: {
       labelers: [],
       inspectors: [],
@@ -48,6 +50,13 @@ const TextProjectFormData = {
     * saveStepOneData({ payload }, { put }) {
       yield put({
         type: 'saveStepOne',
+        payload,
+      });
+    },
+
+    * saveRadio({ payload }, { put }) {
+      yield put({
+        type: 'saveRadioData',
         payload,
       });
     },
@@ -81,6 +90,13 @@ const TextProjectFormData = {
       if (callback) {
         callback();
       }
+    },
+
+    * saveCheckBox({ payload }, { put }) {
+      yield put({
+        type: 'saveCheckBoxData',
+        payload,
+      });
     },
 
     * saveStepTwoData({ payload }, { put }) {
@@ -122,6 +138,9 @@ const TextProjectFormData = {
     saveStepOne(state, action) {
       return { ...state, stepOne: action.payload, current: 1 };
     },
+    saveRadioData(state, action) {
+      return { ...state, forever: action.payload.forever };
+    },
     saveStepTwo(state, action) {
       return { ...state, stepTwo: action.payload, current: 2 };
     },
@@ -151,6 +170,9 @@ const TextProjectFormData = {
       });
       return { ...state, optionData };
     },
+    saveCheckBoxData(state, action) {
+      return { ...state, saveTemplate: action.payload.saveTemplate };
+    },
     stepTwoPrev(state, action) {
       return { ...state, current: action.payload };
     },
@@ -176,8 +198,10 @@ const TextProjectFormData = {
           defaultTool: '',
           multiple: true,
         },
+        forever: false,
         templates: [],
         optionData: [],
+        saveTemplate: false,
         current: 0,
       };
     },

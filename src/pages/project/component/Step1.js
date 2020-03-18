@@ -9,7 +9,7 @@ import {
   Cascader,
   InputNumber,
   DatePicker,
-  Radio
+  Radio,
 } from 'antd';
 import { connect } from 'dva';
 import ItemData from '../map';
@@ -38,7 +38,6 @@ class Step1 extends Component {
 
   onValidateForm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
-    const { checked } = this.state;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
@@ -48,23 +47,23 @@ class Step1 extends Component {
 
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
-          payload: { ...values, forever: checked },
+          payload: values,
         });
       }
     });
   };
 
   handleRadioClick = () => {
-    const { checked } = this.state;
-    this.setState({
-      checked: !checked,
+    const { textProjectFormData: { forever }, dispatch } = this.props;
+    dispatch({
+      type: 'textProjectFormData/saveRadio',
+      payload: { forever: !forever },
     });
   };
 
   render() {
     // eslint-disable-next-line max-len
-    const { form: { getFieldDecorator }, textProjectFormData: { stepOne, members } } = this.props;
-    const { checked } = this.state;
+    const { form: { getFieldDecorator }, textProjectFormData: { stepOne, members, forever } } = this.props;
     const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
 
     const { labelers, inspectors } = members;
@@ -219,7 +218,7 @@ class Step1 extends Component {
                 getFieldDecorator('projectPeriod', {
                   rules: [
                     {
-                      required: !checked,
+                      required: !forever,
                       message: '请选择项目周期',
                     },
                   ],
@@ -228,7 +227,7 @@ class Step1 extends Component {
                   <RangePicker style={{ width: '70%' }} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
               }
               {
-                <Radio style={{ marginLeft: '8px' }} checked={checked} onClick={this.handleRadioClick}>永久</Radio>
+                <Radio style={{ marginLeft: '8px' }} checked={forever} onClick={this.handleRadioClick}>永久</Radio>
               }
             </Form.Item>
           </Col>

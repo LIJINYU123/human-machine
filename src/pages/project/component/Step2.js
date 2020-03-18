@@ -37,7 +37,6 @@ class Step2 extends Component {
   state = {
     optionName: '',
     modalVisible: false,
-    checked: false,
   };
 
   componentDidMount() {
@@ -51,13 +50,12 @@ class Step2 extends Component {
 
   onValidateForm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
-    const { checked } = this.state;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
           type: 'textProjectFormData/saveStepTwoData',
-          payload: { ...values, saveTemplate: checked },
+          payload: values,
         });
       }
     });
@@ -133,15 +131,17 @@ class Step2 extends Component {
   };
 
   handleCheckboxChange = event => {
-    this.setState({
-      checked: event.target.checked,
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textProjectFormData/saveCheckBox',
+      payload: { saveTemplate: event.target.checked },
     });
   };
 
   render() {
-    const { textProjectFormData: { templates, optionData, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
+    const { textProjectFormData: { templates, optionData, saveTemplate, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
     const { templateName, defaultTool, multiple } = stepTwo;
-    const { modalVisible, checked } = this.state;
+    const { modalVisible } = this.state;
     // eslint-disable-next-line max-len
     const templateOptions = templates ? templates.map(template => <Option key={template.templateId}>{template.templateName}</Option>) : [];
 
@@ -180,11 +180,11 @@ class Step2 extends Component {
               </Select>)
           }
           {
-            <Checkbox style={{ marginLeft: '16px' }} onChange={this.handleCheckboxChange} checked={checked}>保存模板</Checkbox>
+            <Checkbox style={{ marginLeft: '16px' }} onChange={this.handleCheckboxChange} checked={saveTemplate}>保存模板</Checkbox>
           }
         </Form.Item>
         {
-          checked ? <Form.Item label={FieldLabels.templateName} {...formItemLayout}>
+          saveTemplate ? <Form.Item label={FieldLabels.templateName} {...formItemLayout}>
             {
               getFieldDecorator('templateName', {
                 rules: [

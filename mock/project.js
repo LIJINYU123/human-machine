@@ -875,12 +875,7 @@ function saveTextMarkResult(req, res, u, b) {
   if (taskId.indexOf('ner') === 0) {
     nerLabelData.forEach(item => {
       if (item.dataId === dataId) {
-        let preResult = item.labelResult;
-        if (preResult.filter(r => r.word === labelResult.word).length !== 0) {
-          preResult = preResult.filter(r => r.word !== labelResult.word);
-        }
-        preResult.push(labelResult);
-        item.labelResult = preResult;
+        item.labelResult = labelResult;
       }
     });
   } else if (taskId.indexOf('match') === 0) {
