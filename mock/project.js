@@ -528,7 +528,9 @@ const templatesMockData = [
   {
     labelType: 'textClassify',
     templateId: 'emotion',
-    templateName: '情感',
+    templateName: '情感配置模板',
+    classifyName: '情感',
+    multiple: true,
     options: [
       {
         optionId: 'anger',
@@ -575,7 +577,9 @@ const templatesMockData = [
   {
     labelType: 'textClassify',
     templateId: 'sentenceType',
-    templateName: '句式',
+    templateName: '句式配置模板',
+    classifyName: '句式',
+    multiple: true,
     options: [
       {
         optionId: 'chenshuju',
@@ -595,9 +599,11 @@ const templatesMockData = [
     ],
   },
   {
-    labelType: 'textMatch',
+    labelType: 'textClassify',
     templateId: 'similarity',
-    templateName: '相似度',
+    templateName: '相似度配置模板',
+    classifyName: '相似度',
+    multiple: false,
     options: [
       {
         optionId: 'similar',
@@ -612,9 +618,11 @@ const templatesMockData = [
     ],
   },
   {
-    labelType: 'ner',
+    labelType: 'sequenceLabeling',
     templateId: 'entity',
-    templateName: '实体',
+    templateName: '实体识别配置模板',
+    classifyName: '实体',
+    multiple: true,
     options: [
       {
         optionId: 'country',

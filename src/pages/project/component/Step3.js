@@ -8,6 +8,8 @@ const { Dragger } = Upload;
 @connect(({ textProjectFormData }) => ({
   stepOne: textProjectFormData.stepOne,
   stepTwo: textProjectFormData.stepTwo,
+  forever: textProjectFormData.forever,
+  saveTemplate: textProjectFormData.saveTemplate,
   optionData: textProjectFormData.optionData,
   markTools: textProjectFormData.markTools,
 }))
@@ -45,7 +47,7 @@ class Step3 extends Component {
     const { stepOne, stepTwo, forever, optionData, saveTemplate, onCancel, dispatch } = this.props;
     // eslint-disable-next-line max-len
     const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
-    const { multiple } = stepTwo;
+    const { classifyName, multiple } = stepTwo;
     const formData = new FormData();
     formData.append('file', fileList[0]);
     formData.append('projectName', projectName);
@@ -72,9 +74,9 @@ class Step3 extends Component {
     formData.append('saveTemplate', saveTemplate);
     if (saveTemplate) {
       const { templateName } = stepTwo;
-      formData.append('template', JSON.stringify({ templateName, multiple, options: optionData }));
+      formData.append('template', JSON.stringify({ templateName, classifyName, multiple, options: optionData }));
     } else {
-      formData.append('template', JSON.stringify({ templateName: '', multiple, options: optionData }));
+      formData.append('template', JSON.stringify({ templateName: '', classifyName, multiple, options: optionData }));
     }
 
     this.setState({

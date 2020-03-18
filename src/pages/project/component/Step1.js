@@ -85,7 +85,7 @@ class Step1 extends Component {
     };
 
     return (
-      <Form hideRequiredMark>
+      <Form>
         <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
           <Col md={12} sm={24}>
             <Form.Item label={FieldLabels.projectName} {...formItemLayout} >
@@ -106,6 +106,12 @@ class Step1 extends Component {
             <Form.Item label={FieldLabels.labelType} {...formItemLayout} >
               {
                 getFieldDecorator('labelType', {
+                  rules: [
+                    {
+                      required: true,
+                      message: '请选择标注类型',
+                    },
+                  ],
                   initialValue: labelType,
                 })(<Cascader options={labelTypes} style={{ width: '80%' }}/>)
               }

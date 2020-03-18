@@ -9,7 +9,7 @@ import {
   Popover,
   Tag,
   Divider,
-  Row, Col,
+  Row, Col, Radio,
 } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
@@ -269,6 +269,10 @@ class TextMarkView extends Component {
       <Fragment>
         <span style={{ marginRight: '16px' }}>质检率：{`${checkRate}%`}</span>
         <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
+        <Radio.Group defaultValue="overview" style={{ marginRight: '16px' }}>
+          <Radio.Button value="overview">概览模式</Radio.Button>
+          <Radio.Button value="focus">答题模式</Radio.Button>
+        </Radio.Group>
         <Button type="primary" icon="check">提交</Button>
       </Fragment>
     );

@@ -7,8 +7,8 @@ const TextProjectFormData = {
     stepOne: {
       projectName: '',
       labelType: [],
-      passRate: 0,
-      checkRate: 0,
+      passRate: null,
+      checkRate: null,
       labeler: [],
       inspector: [],
       questionNum: null,
@@ -19,6 +19,7 @@ const TextProjectFormData = {
       templateName: '',
       defaultTool: '',
       multiple: true,
+      saveType: 'nomal',
     },
     forever: false,
     templates: [],

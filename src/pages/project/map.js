@@ -53,20 +53,10 @@ export default {
         {
           value: 'sequenceLabeling',
           label: '序列标注',
-          children: [
-            {
-              value: 'sentenceSplit',
-              label: '句子切分',
-            },
-            {
-              value: 'readingComprehension',
-              label: '阅读理解',
-            },
-            {
-              value: 'ner',
-              label: '实体识别',
-            },
-          ],
+        },
+        {
+          value: 'textExtension',
+          label: '文本扩充',
         },
       ],
     },
@@ -109,7 +99,8 @@ export default {
     defaultTool: '复制默认模板',
     templateName: '模板名称',
     optionName: '选项名称',
-    classifyId: '选项标识',
+    classifyName: '类别名称',
+    saveType: '存储方式',
     color: '颜色',
     multiple: '选项多选',
   },

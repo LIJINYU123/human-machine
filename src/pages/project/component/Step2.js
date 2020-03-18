@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Select, Input, Popover, Radio, Checkbox } from 'antd';
+import { Button, Form, Select, Input, Popover, Radio, Checkbox, Icon, Tooltip } from 'antd';
 import { connect } from 'dva';
 import update from 'immutability-helper';
 import { SketchPicker } from 'react-color';
@@ -66,7 +66,8 @@ class Step2 extends Component {
     if (typeof value !== 'undefined') {
       const filterTemplates = templates.filter(t => t.templateId === value);
       const { options } = filterTemplates[0];
-      setFieldsValue({ templateName: filterTemplates[0].templateName });
+      setFieldsValue({ classifyName: filterTemplates[0].classifyName });
+      setFieldsValue({ multiple: filterTemplates[0].multiple });
       dispatch({
         type: 'textProjectFormData/saveOptions',
         payload: options,
@@ -139,8 +140,9 @@ class Step2 extends Component {
   };
 
   render() {
-    const { textProjectFormData: { templates, optionData, saveTemplate, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
-    const { templateName, defaultTool, multiple } = stepTwo;
+    const { textProjectFormData: { templates, optionData, saveTemplate, stepOne, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
+    const { labelType } = stepOne;
+    const { templateName, classifyName, defaultTool, multiple, saveType } = stepTwo;
     const { modalVisible } = this.state;
     // eslint-disable-next-line max-len
     const templateOptions = templates ? templates.map(template => <Option key={template.templateId}>{template.templateName}</Option>) : [];
@@ -162,7 +164,7 @@ class Step2 extends Component {
     ];
 
     return (
-      <Form hideRequiredMark>
+      <Form>
         <Form.Item label={FieldLabels.defaultTool} {...formItemLayout}>
           {
             getFieldDecorator('defaultTool', {
@@ -184,7 +186,7 @@ class Step2 extends Component {
           }
         </Form.Item>
         {
-          saveTemplate ? <Form.Item label={FieldLabels.templateName} {...formItemLayout}>
+          saveTemplate && <Form.Item label={FieldLabels.templateName} {...formItemLayout}>
             {
               getFieldDecorator('templateName', {
                 rules: [
@@ -196,7 +198,37 @@ class Step2 extends Component {
                 initialValue: templateName,
               })(<Input style={{ width: '50%' }} />)
             }
-          </Form.Item> : null
+          </Form.Item>
+        }
+        <Form.Item label={FieldLabels.classifyName} {...formItemLayout}>
+          {
+            getFieldDecorator('classifyName', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入类别名称',
+                },
+              ],
+              initialValue: classifyName,
+            })(<Input style={{ width: '50%' }} />)
+          }
+        </Form.Item>
+        {
+          labelType[labelType.length - 1] === 'sequenceLabeling' &&
+          <Form.Item label={FieldLabels.saveType} {...formItemLayout}>
+            {
+              getFieldDecorator('saveType', {
+                initialValue: saveType,
+              })(
+                <Radio.Group name="saveType">
+                  <Radio value="nomal">普通</Radio>
+                  <Radio value="dict">词典</Radio>
+                </Radio.Group>)
+            }
+            {
+              <Tooltip title="提示。。。。。" trigger="hover" ><Icon type="question-circle" style={{ fontSize: '16px', cursor: 'pointer' }} /></Tooltip>
+            }
+          </Form.Item>
         }
         <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
           {
