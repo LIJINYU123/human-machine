@@ -11,7 +11,7 @@ const { Option } = Select;
 }))
 class NerModalView extends Component {
   state = {
-    selectOptionId: '',
+    selectOptionName: '',
     saveType: 'wordEntry',
     addWordEntry: false,
   };
@@ -26,7 +26,7 @@ class NerModalView extends Component {
 
   handleSelectChange = (value, _) => {
     this.setState({
-      selectOptionId: value.key,
+      selectOptionName: value,
     });
   };
 
@@ -56,14 +56,6 @@ class NerModalView extends Component {
         values.word = word;
         values.startIndex = startIndex;
         values.endIndex = endIndex;
-        values.option = { optionId: values.option.key, optionName: values.option.label };
-        if (values.hasOwnProperty('wordEntry')) {
-          values.wordEntry = { id: values.wordEntry.key, name: values.wordEntry.label };
-        }
-
-        if (values.hasOwnProperty('newWordEntry') && values.hasOwnProperty('wordEntry')) {
-          delete values.wordEntry;
-        }
 
         dispatch({
           type: 'textMark/saveTextMarkResult',
@@ -88,14 +80,14 @@ class NerModalView extends Component {
 
   render() {
     const { visible, markTool, form: { getFieldDecorator }, submitting } = this.props;
-    const { selectOptionId, saveType, addWordEntry } = this.state;
+    const { selectOptionName, saveType, addWordEntry } = this.state;
 
-    const entityOptions = Object.keys(markTool).length ? markTool.options.map(option => <Option key={option.optionId}>{option.optionName}</Option>) : [];
-    let wordEntryOptioins = [];
-    if (selectOptionId !== '') {
-      const filterOptions = markTool.options.filter(option => option.optionId === selectOptionId);
+    const entityOptions = Object.keys(markTool).length ? markTool.options.map(option => <Option value={option.optionName}>{option.optionName}</Option>) : [];
+    let wordEntryOptions = [];
+    if (selectOptionName !== '') {
+      const filterOptions = markTool.options.filter(option => option.optionName === selectOptionName);
       // eslint-disable-next-line max-len
-      wordEntryOptioins = filterOptions[0].extraInfo.map(info => <Option key={info.wordEntryId}>{info.wordEntryName}</Option>);
+      wordEntryOptions = filterOptions[0].extraInfo.map(wordEntry => <Option key={wordEntry}>{wordEntry}</Option>);
     }
 
     const formItemLayout = {
@@ -122,7 +114,7 @@ class NerModalView extends Component {
         <Form {...formItemLayout} hideRequiredMark>
           <Form.Item label={FieldLabels.toolName}>
             {
-              getFieldDecorator('option', {
+              getFieldDecorator('optionName', {
                 rules: [
                   {
                     required: true,
@@ -130,8 +122,7 @@ class NerModalView extends Component {
                   },
                 ],
               })(
-                <Select labelInValue
-                        showSearch
+                <Select showSearch
                         dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} onChange={this.handleSelectChange}
                         filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                 >
@@ -155,12 +146,11 @@ class NerModalView extends Component {
             <Form.Item label={FieldLabels.wordEntryName}>
               {
                 getFieldDecorator('wordEntry')(
-                  <Select labelInValue
-                          showSearch
+                  <Select showSearch
                           dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
                           filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
                   >
-                    {wordEntryOptioins}
+                    {wordEntryOptions}
                   </Select>)
               }
               {

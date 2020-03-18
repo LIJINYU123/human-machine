@@ -32,7 +32,7 @@ class ProjectCreateView extends Component {
         onCancel={onCancel}
         footer={[
           <Button key="back" onClick={onCancel}>返回</Button>]}
-        style={{ minWidth: '850px' }}
+        style={{ minWidth: '950px' }}
         destroyOnClose
       >
         <Steps current={current} className={styles.steps}>

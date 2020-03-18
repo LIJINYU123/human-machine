@@ -307,7 +307,7 @@ class NerMarkView extends Component {
         dataIndex: 'labelResult',
         render: (val, record) => {
           if (val.length) {
-            const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.option.optionName}.${v.wordEntry.name}` : `${v.word}: ${v.option.optionName}`));
+            const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.optionName}.${v.wordEntry}` : `${v.word}: ${v.optionName}`));
             return labelValues.map((value, index) => (<Tag color="blue" closable onClose={() => this.handleCloseTag(index, record.dataId)}>{value}</Tag>));
           }
           return '';

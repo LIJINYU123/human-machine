@@ -8,7 +8,7 @@ const { Dragger } = Upload;
 @connect(({ textProjectFormData }) => ({
   stepOne: textProjectFormData.stepOne,
   stepTwo: textProjectFormData.stepTwo,
-  classifyData: textProjectFormData.classifyData,
+  optionData: textProjectFormData.optionData,
   markTools: textProjectFormData.markTools,
 }))
 class Step3 extends Component {
@@ -42,10 +42,10 @@ class Step3 extends Component {
 
   handleUpload = () => {
     const { fileList } = this.state;
-    const { stepOne, stepTwo, classifyData, onCancel, dispatch } = this.props;
+    const { stepOne, stepTwo, optionData, onCancel, dispatch } = this.props;
     // eslint-disable-next-line max-len
-    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
-    const { templateName, multiple } = stepTwo;
+    const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, forever, description } = stepOne;
+    const { saveTemplate, multiple } = stepTwo;
     const formData = new FormData();
     formData.append('file', fileList[0]);
     formData.append('projectName', projectName);
@@ -61,10 +61,22 @@ class Step3 extends Component {
     });
 
     formData.append('questionNum', questionNum);
-    formData.append('startTime', projectPeriod[0].format('YYYY-MM-DD HH:mm:ss'));
-    formData.append('endTime', projectPeriod[1].format('YYYY-MM-DD HH:mm:ss'));
+    if (forever) {
+      formData.append('startTime', '');
+      formData.append('endTime', '');
+    } else {
+      formData.append('startTime', projectPeriod[0].format('YYYY-MM-DD HH:mm:ss'));
+      formData.append('endTime', projectPeriod[1].format('YYYY-MM-DD HH:mm:ss'));
+    }
     formData.append('description', description);
-    formData.append('template', JSON.stringify({ templateName, multiple, classifies: classifyData }));
+    formData.append('saveTemplate', saveTemplate);
+    if (saveTemplate) {
+      const { templateName } = stepTwo;
+      formData.append('template', JSON.stringify({ templateName, multiple, options: optionData }));
+    } else {
+      formData.append('template', JSON.stringify({ templateName: '', multiple, options: optionData }));
+    }
+
     this.setState({
       uploading: true,
     });

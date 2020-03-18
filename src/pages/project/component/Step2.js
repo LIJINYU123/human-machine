@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Form, Select, Input, Popover, Radio } from 'antd';
+import { Button, Form, Select, Input, Popover, Radio, Checkbox } from 'antd';
 import { connect } from 'dva';
 import update from 'immutability-helper';
 import { SketchPicker } from 'react-color';
 import DragSortingTable from './DragSortingTable';
-import ClassifyCreateView from './ClassifyCreateView';
+import OptionCreateView from './OptionCreateView';
 import styles from './style.less';
 import ItemData from '../map';
 
@@ -35,8 +35,9 @@ const prestColors = ['#F5222D', '#FA541C', '#FA8C16', '#FAAD14', '#FADB14', '#A0
 }))
 class Step2 extends Component {
   state = {
-    classifyId: '',
+    optionName: '',
     modalVisible: false,
+    checked: false,
   };
 
   componentDidMount() {
@@ -50,12 +51,13 @@ class Step2 extends Component {
 
   onValidateForm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
+    const { checked } = this.state;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
           type: 'textProjectFormData/saveStepTwoData',
-          payload: values,
+          payload: { ...values, saveTemplate: checked },
         });
       }
     });
@@ -65,11 +67,11 @@ class Step2 extends Component {
     const { textProjectFormData: { templates }, form: { setFieldsValue }, dispatch } = this.props;
     if (typeof value !== 'undefined') {
       const filterTemplates = templates.filter(t => t.templateId === value);
-      const { classifies } = filterTemplates[0];
+      const { options } = filterTemplates[0];
       setFieldsValue({ templateName: filterTemplates[0].templateName });
       dispatch({
-        type: 'textProjectFormData/saveClassifies',
-        payload: classifies,
+        type: 'textProjectFormData/saveOptions',
+        payload: options,
       });
     }
   };
@@ -82,37 +84,37 @@ class Step2 extends Component {
   };
 
   handleMoveRow = (dragIndex, hoverIndex) => {
-    const { textProjectFormData: { classifyData }, dispatch } = this.props;
-    const dragRow = classifyData[dragIndex];
+    const { textProjectFormData: { optionData }, dispatch } = this.props;
+    const dragRow = optionData[dragIndex];
     dispatch({
-      type: 'textProjectFormData/saveClassifies',
-      payload: update(classifyData, {
+      type: 'textProjectFormData/saveOptions',
+      payload: update(optionData, {
         $splice: [[dragIndex, 1], [hoverIndex, 0, dragRow]],
       }),
     });
   };
 
   handleChange = color => {
-    const { classifyId } = this.state;
+    const { optionName } = this.state;
     const { dispatch } = this.props;
     dispatch({
       type: 'textProjectFormData/saveColor',
       payload: {
-        classifyId,
+        optionName,
         color: color.hex,
       },
     });
   };
 
-  handleDeleteClassify = classifyName => {
+  handleDeleteOption = optionName => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'textProjectFormData/deleteClassify',
-      payload: { classifyName },
+      type: 'textProjectFormData/deleteOption',
+      payload: { optionName },
     });
   };
 
-  handleAddClassify = () => {
+  handleAddOption = () => {
     this.setState({
       modalVisible: true,
     });
@@ -126,21 +128,27 @@ class Step2 extends Component {
 
   handleClickDiv = record => {
     this.setState({
-      classifyId: record.classifyId,
+      optionName: record.optionName,
+    });
+  };
+
+  handleCheckboxChange = event => {
+    this.setState({
+      checked: event.target.checked,
     });
   };
 
   render() {
-    const { textProjectFormData: { templates, classifyData, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
+    const { textProjectFormData: { templates, optionData, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
     const { templateName, defaultTool, multiple } = stepTwo;
-    const { modalVisible } = this.state;
+    const { modalVisible, checked } = this.state;
     // eslint-disable-next-line max-len
     const templateOptions = templates ? templates.map(template => <Option key={template.templateId}>{template.templateName}</Option>) : [];
 
     const columns = [
       {
-        title: '类别',
-        dataIndex: 'classifyName',
+        title: '选项',
+        dataIndex: 'optionName',
       },
       {
         title: '颜色',
@@ -149,7 +157,7 @@ class Step2 extends Component {
       },
       {
         title: '操作',
-        render: (_, record) => (<a onClick={() => this.handleDeleteClassify(record.classifyName)}>删除</a>),
+        render: (_, record) => (<a onClick={() => this.handleDeleteOption(record.optionName)}>删除</a>),
       },
     ];
 
@@ -171,20 +179,25 @@ class Step2 extends Component {
                 {templateOptions}
               </Select>)
           }
-        </Form.Item>
-        <Form.Item label={FieldLabels.templateName} {...formItemLayout}>
           {
-            getFieldDecorator('templateName', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入模板名称',
-                },
-              ],
-              initialValue: templateName,
-            })(<Input style={{ width: '50%' }} />)
+            <Checkbox style={{ marginLeft: '16px' }} onChange={this.handleCheckboxChange} checked={checked}>保存模板</Checkbox>
           }
         </Form.Item>
+        {
+          checked ? <Form.Item label={FieldLabels.templateName} {...formItemLayout}>
+            {
+              getFieldDecorator('templateName', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入模板名称',
+                  },
+                ],
+                initialValue: templateName,
+              })(<Input style={{ width: '50%' }} />)
+            }
+          </Form.Item> : null
+        }
         <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
           {
             getFieldDecorator('multiple', {
@@ -196,15 +209,15 @@ class Step2 extends Component {
               </Radio.Group>)
           }
         </Form.Item>
-        <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAddClassify}>类别</Button>
+        <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAddOption}>选项</Button>
         <DragSortingTable
-          data={classifyData}
+          data={optionData}
           columns={columns}
           onMoveRow={this.handleMoveRow}
         />
         <Button type="primary" onClick={this.onValidateForm} loading={submitting} style={{ marginTop: '16px' }}>下一步</Button>
         <Button style={{ marginLeft: '8px' }} onClick={this.onPrev}>上一步</Button>
-        <ClassifyCreateView visible={modalVisible} onCancel={this.handleCancelModal} />
+        <OptionCreateView visible={modalVisible} onCancel={this.handleCancelModal} />
       </Form>
     );
   }

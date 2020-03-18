@@ -9,23 +9,14 @@ import { connect } from 'dva';
 class PopoverView extends Component {
   onValidateForm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, taskId, dataId, onClose, markTool, onRefresh, dispatch } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, taskId, dataId, onClose, onRefresh, dispatch } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
 
-        let result = [];
-        Object.keys(values).forEach(key => {
-          if (values[key].length === 0) {
-            delete values[key];
-          } else {
-            result = markTool.options.filter(option => values[key].includes(option.optionId));
-          }
-        });
-
         dispatch({
           type: 'textMark/saveTextMarkResult',
-          payload: { taskId, dataId, labelResult: result },
+          payload: { taskId, dataId, labelResult: values.result },
           callback: () => {
             onClose();
             onRefresh();
@@ -36,7 +27,7 @@ class PopoverView extends Component {
   };
 
   render() {
-    const { markTool, onClose, labelIds, form: { getFieldDecorator } } = this.props;
+    const { markTool, onClose, labelValues, form: { getFieldDecorator } } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -51,16 +42,16 @@ class PopoverView extends Component {
 
     return (
       <Form {...formItemLayout}>
-        <Form.Item label={markTool.toolName}>
+        <Form.Item label={markTool.templateName}>
           {
-            getFieldDecorator(markTool.toolId, {
+            getFieldDecorator('result', {
               // eslint-disable-next-line max-len
-              initialValue: labelIds,
+              initialValue: labelValues,
             })(
               // eslint-disable-next-line max-len
               <TagSelect expandable style={{ minWidth: '400px' }}>
                 {/* eslint-disable-next-line max-len */}
-                {markTool.options.map(option => <TagSelect.Option value={option.optionId}>{option.optionName}</TagSelect.Option>)}
+                {markTool.options.map(option => <TagSelect.Option value={option.optionName}>{option.optionName}</TagSelect.Option>)}
               </TagSelect>)
           }
         </Form.Item>

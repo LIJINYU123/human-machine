@@ -1,6 +1,5 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import Link from 'umi/link';
 import { connect } from 'dva';
 import { Input, Button, Icon, Statistic, Descriptions, Card, Steps, Tag } from 'antd';
 import StandardTable from './StandardTable';
@@ -11,7 +10,7 @@ import router from 'umi/router';
 
 const { Step } = Steps;
 
-const { reviewLabel, taskStatusName, labelTypeName } = ItemData;
+const { reviewLabel, taskStatusName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -199,8 +198,6 @@ class TextTaskDetail extends Component {
       </div>
     );
 
-    console.log(basicInfo);
-
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
         <Descriptions.Item label="标注员">{basicInfo.labelerName}</Descriptions.Item>
@@ -253,9 +250,7 @@ class TextTaskDetail extends Component {
           dataIndex: 'labelResult',
           render: val => {
             if (val.length) {
-              const labelValues = [];
-              val.forEach(option => labelValues.push(option.optionName));
-              return labelValues.map(value => (<Tag color="blue">{value}</Tag>));
+              return val.map(value => (<Tag color="blue">{value}</Tag>));
             }
             return '';
           },
@@ -293,7 +288,12 @@ class TextTaskDetail extends Component {
         {
           title: '标注结果',
           dataIndex: 'labelResult',
-          render: val => val.map(item => item.join('，')).join(' | '),
+          render: val => {
+            if (val.length) {
+              return val.map(value => (<Tag color="blue">{value}</Tag>));
+            }
+            return '';
+          },
         },
         {
           title: '质检结果',

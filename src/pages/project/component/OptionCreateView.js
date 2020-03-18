@@ -18,7 +18,7 @@ const prestColors = ['#F5222D', '#FA541C', '#FA8C16', '#FAAD14', '#FADB14', '#A0
   stepTwo: textProjectFormData.stepTwo,
   submitting: loading.effects['textProjectFormData/addClassify'],
 }))
-class ClassifyCreateView extends Component {
+class OptionCreateView extends Component {
   state = {
     color: '#1890ff',
   };
@@ -34,8 +34,8 @@ class ClassifyCreateView extends Component {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
-          type: 'textProjectFormData/addClassify',
-          payload: { classifyName: values.classifyName, color },
+          type: 'textProjectFormData/addOption',
+          payload: { optionName: values.optionName, color },
           callback: onCancel,
         });
       }
@@ -59,7 +59,7 @@ class ClassifyCreateView extends Component {
 
     return (
       <Modal
-        title="创建类别"
+        title="创建选项"
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}
@@ -69,13 +69,13 @@ class ClassifyCreateView extends Component {
         destroyOnClose
       >
         <Form {...formItemLayout} hideRequiredMark>
-          <Form.Item label={FieldLabels.classifyName}>
+          <Form.Item label={FieldLabels.optionName}>
             {
-              getFieldDecorator('classifyName', {
+              getFieldDecorator('optionName', {
                 rules: [
                   {
                     required: true,
-                    message: '请输入项目名称',
+                    message: '请输入选项名称',
                   },
                 ],
               })(<Input className={styles.formItem}/>)
@@ -92,4 +92,4 @@ class ClassifyCreateView extends Component {
   }
 }
 
-export default Form.create()(ClassifyCreateView);
+export default Form.create()(OptionCreateView);

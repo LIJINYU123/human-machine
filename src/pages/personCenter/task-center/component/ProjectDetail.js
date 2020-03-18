@@ -90,7 +90,7 @@ class ProjectDetail extends Component {
   };
 
   render() {
-    const { data, basicInfo, inProgressNum, completeNum, loading } = this.props;
+    const { data, basicInfo, inProgressNum, loading } = this.props;
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
         <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
@@ -115,9 +115,8 @@ class ProjectDetail extends Component {
         dataIndex: 'taskName',
       },
       {
-        title: '领取状态',
-        dataIndex: 'status',
-        render: (_, task) => (task.status === true ? <a onClick={() => this.handleReceiveTask(task)}>领取</a> : '已领取'),
+        title: '操作',
+        render: (val, record) => <a>标注</a>,
       },
     ];
 
@@ -128,6 +127,8 @@ class ProjectDetail extends Component {
         {bordered && <em />}
       </div>
     );
+
+    const extraContent = <Button type="primary">领取新任务</Button>;
 
     return (
       <PageHeaderWrapper
@@ -144,7 +145,7 @@ class ProjectDetail extends Component {
               </Col>
             </Row>
           </Card>
-          <Card title="任务列表" bordered={false}>
+          <Card title="任务列表" bordered={false} extra={extraContent}>
             <StandardTable
               rowKey="taskId"
               loading={loading}

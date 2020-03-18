@@ -274,7 +274,7 @@ class TextMarkView extends Component {
     );
 
     let columns = [];
-    if (basicInfo.labelType === 'textClassify') {
+    if (data.list.length && data.list[0].data.hasOwnProperty('sentence')) {
       columns = [
         {
           title: '文本',
@@ -286,15 +286,9 @@ class TextMarkView extends Component {
           dataIndex: 'labelResult',
           render: (val, info) => {
             if (val.length) {
-              const labelValues = [];
-              const labelIds = [];
-              val.forEach(option => {
-                labelValues.push(option.optionName);
-                labelIds.push(option.optionId);
-              });
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={labelIds} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
+              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={val} />} placement="top">{val.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
             }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={[]} />} placement="top"><a>标注</a></Popover>
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={[]} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
           filteredValue: filteredInfo.result || null,
@@ -373,15 +367,9 @@ class TextMarkView extends Component {
           dataIndex: 'labelResult',
           render: (val, info) => {
             if (val.length) {
-              const labelValues = [];
-              const labelIds = [];
-              val.forEach(option => {
-                labelValues.push(option.optionName);
-                labelIds.push(option.optionId);
-              });
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={labelIds} />} placement="top">{labelValues.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
+              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={val} />} placement="top">{val.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
             }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} title="标注工具" trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={[]} />} placement="top"><a>标注</a></Popover>
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={[]} />} placement="top"><a>标注</a></Popover>
           },
           filters: labelResultFilters,
           filteredValue: filteredInfo.result || null,

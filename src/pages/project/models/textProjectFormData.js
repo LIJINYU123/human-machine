@@ -21,7 +21,7 @@ const TextProjectFormData = {
       multiple: true,
     },
     templates: [],
-    classifyData: [],
+    optionData: [],
     members: {
       labelers: [],
       inspectors: [],
@@ -52,30 +52,30 @@ const TextProjectFormData = {
       });
     },
 
-    * saveClassifies({ payload }, { put }) {
+    * saveOptions({ payload }, { put }) {
       yield put({
-        type: 'saveClassifyData',
+        type: 'saveOptionData',
         payload,
       });
     },
 
     * saveColor({ payload }, { put }) {
       yield put({
-        type: 'saveClassifyColor',
+        type: 'saveOptionColor',
         payload,
       });
     },
 
-    * deleteClassify({ payload }, { put }) {
+    * deleteOption({ payload }, { put }) {
       yield put({
-        type: 'deleteClassifyData',
+        type: 'deleteOptionData',
         payload,
       });
     },
 
-    * addClassify({ payload, callback }, { put }) {
+    * addOption({ payload, callback }, { put }) {
       yield put({
-        type: 'addClassifyData',
+        type: 'addOptionData',
         payload,
       });
       if (callback) {
@@ -125,31 +125,31 @@ const TextProjectFormData = {
     saveStepTwo(state, action) {
       return { ...state, stepTwo: action.payload, current: 2 };
     },
-    saveClassifyData(state, action) {
-      return { ...state, classifyData: action.payload };
+    saveOptionData(state, action) {
+      return { ...state, optionData: action.payload };
     },
-    deleteClassifyData(state, action) {
-      const { classifyData } = state;
+    deleteOptionData(state, action) {
+      const { optionData } = state;
       const response = action.payload;
-      const filterData = classifyData.filter(data => data.classifyName !== response.classifyName);
-      return { ...state, classifyData: filterData };
+      const filterData = optionData.filter(data => data.optionName !== response.optionName);
+      return { ...state, optionData: filterData };
     },
-    addClassifyData(state, action) {
-      const { classifyData } = state;
+    addOptionData(state, action) {
+      const { optionData } = state;
       const response = action.payload;
       // eslint-disable-next-line max-len
-      classifyData.push({ classifyName: response.classifyName, color: response.color });
-      return { ...state, classifyData };
+      optionData.push({ optionName: response.optionName, color: response.color });
+      return { ...state, optionData };
     },
-    saveClassifyColor(state, action) {
-      const { classifyData } = state;
+    saveOptionColor(state, action) {
+      const { optionData } = state;
       const response = action.payload;
-      classifyData.forEach(data => {
-        if (data.classifyId === response.classifyId) {
+      optionData.forEach(data => {
+        if (data.optionName === response.optionName) {
           data.color = response.color;
         }
       });
-      return { ...state, classifyData };
+      return { ...state, optionData };
     },
     stepTwoPrev(state, action) {
       return { ...state, current: action.payload };
@@ -177,7 +177,7 @@ const TextProjectFormData = {
           multiple: true,
         },
         templates: [],
-        classifyData: [],
+        optionData: [],
         current: 0,
       };
     },

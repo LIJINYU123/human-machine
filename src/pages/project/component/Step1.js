@@ -1,5 +1,16 @@
 import React, { Component } from 'react';
-import { Button, Col, Form, Input, Row, Select, Cascader, InputNumber, DatePicker } from 'antd';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Row,
+  Select,
+  Cascader,
+  InputNumber,
+  DatePicker,
+  Radio
+} from 'antd';
 import { connect } from 'dva';
 import ItemData from '../map';
 import styles from './style.less';
@@ -14,6 +25,10 @@ const { FieldLabels, labelTypes } = ItemData;
   submitting: loading.effects['textProjectFormData/saveStepOneData'],
 }))
 class Step1 extends Component {
+  state = {
+    checked: false,
+  };
+
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -23,6 +38,7 @@ class Step1 extends Component {
 
   onValidateForm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
+    const { checked } = this.state;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
@@ -32,15 +48,23 @@ class Step1 extends Component {
 
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
-          payload: values,
+          payload: { ...values, forever: checked },
         });
       }
+    });
+  };
+
+  handleRadioClick = () => {
+    const { checked } = this.state;
+    this.setState({
+      checked: !checked,
     });
   };
 
   render() {
     // eslint-disable-next-line max-len
     const { form: { getFieldDecorator }, textProjectFormData: { stepOne, members } } = this.props;
+    const { checked } = this.state;
     const { projectName, labelType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
 
     const { labelers, inspectors } = members;
@@ -195,13 +219,16 @@ class Step1 extends Component {
                 getFieldDecorator('projectPeriod', {
                   rules: [
                     {
-                      required: true,
+                      required: !checked,
                       message: '请选择项目周期',
                     },
                   ],
                   initialValue: projectPeriod,
                 })(
-                  <RangePicker className={styles.formItem} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
+                  <RangePicker style={{ width: '70%' }} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
+              }
+              {
+                <Radio style={{ marginLeft: '8px' }} checked={checked} onClick={this.handleRadioClick}>永久</Radio>
               }
             </Form.Item>
           </Col>

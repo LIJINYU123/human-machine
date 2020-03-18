@@ -133,47 +133,47 @@ const taskMockData = [
 
 const markToolsMockData = [
   {
-    toolId: 'emotion',
-    toolName: '情感',
+    templateName: '情感',
+    multiple: true,
     options: [
       {
-        optionId: 'anger',
         optionName: '愤怒',
+        color: '#1890ff',
         extraInfo: [],
       },
       {
-        optionId: 'hate',
         optionName: '厌恶',
+        color: '#1890ff',
         extraInfo: [],
       },
       {
-        optionId: 'fear',
         optionName: '害怕',
+        color: '#1890ff',
         extraInfo: [],
       },
       {
-        optionId: 'sad',
         optionName: '悲伤',
+        color: '#1890ff',
         extraInfo: [],
       },
       {
-        optionId: 'happy',
         optionName: '高兴',
+        color: '#1890ff',
         extraInfo: [],
       },
       {
-        optionId: 'like',
         optionName: '喜欢',
+        color: '#1890ff',
         extraInfo: [],
       },
       {
-        optionId: 'surprise',
         optionName: '惊喜',
+        color: '#1890ff',
         extraInfo: [],
       },
       {
-        optionId: 'neutral',
         optionName: '中性',
+        color: '#1890ff',
         extraInfo: [],
       },
     ],
@@ -182,17 +182,17 @@ const markToolsMockData = [
 
 const matchMarkToolsMockData = [
   {
-    toolId: 'similarity',
-    toolName: '相似度',
+    templateName: '相似度',
+    multiple: false,
     options: [
       {
-        optionId: 'similar',
         optionName: '相似',
+        color: '#1890ff',
         extraInfo: [],
       },
       {
-        optionId: 'notSimilar',
         optionName: '不相似',
+        color: '#1890ff',
         extraInfo: [],
       },
     ],
@@ -201,58 +201,28 @@ const matchMarkToolsMockData = [
 
 const nerMarkToolsMockData = [
   {
-    toolId: 'entity',
-    toolName: '实体',
+    templateName: '实体',
+    multiple: true,
     options: [
       {
-        optionId: 'singer',
         optionName: '歌手',
+        color: '#1890ff',
         extraInfo: [
-          {
-            wordEntryId: 'abcd123',
-            wordEntryName: '周杰伦',
-          },
-          {
-            wordEntryId: '1234',
-            wordEntryName: '林俊杰',
-          },
+          '周杰伦',
+          '林俊杰',
         ],
       },
       {
-        optionId: 'country',
         optionName: '景点',
+        color: '#1890ff',
         extraInfo: [
-          {
-            wordEntryId: 're4345',
-            wordEntryName: '长城',
-          },
-          {
-            wordEntryId: 'hfg45645',
-            wordEntryName: '外滩',
-          },
-          {
-            wordEntryId: 'hfg456fdre45',
-            wordEntryName: '故宫',
-          },
+          '外滩', '长城',
         ],
       },
       {
-        optionId: 'song',
         optionName: '歌名',
-        extraInfo: [
-          {
-            wordEntryId: 'refds4345',
-            wordEntryName: '十年',
-          },
-          {
-            wordEntryId: 'gfdhter',
-            wordEntryName: '红玫瑰',
-          },
-          {
-            wordEntryId: '67897',
-            wordEntryName: '告白气球',
-          },
-        ],
+        color: '#1890ff',
+        extraInfo: ['十年', '红玫瑰', '告白气球'],
       },
     ],
   },

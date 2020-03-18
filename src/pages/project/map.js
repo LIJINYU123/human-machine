@@ -108,9 +108,9 @@ export default {
     description: '项目描述',
     defaultTool: '复制默认模板',
     templateName: '模板名称',
-    classifyName: '类别名称',
+    optionName: '选项名称',
     classifyId: '选项标识',
     color: '颜色',
-    multiple: '支持多选',
+    multiple: '选项多选',
   },
 }
