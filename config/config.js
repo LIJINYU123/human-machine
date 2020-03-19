@@ -133,6 +133,12 @@ export default {
               component: './project',
             },
             {
+              path: '/template',
+              name: '标注模板管理',
+              icon: 'tool',
+              component: './template',
+            },
+            {
               name: '项目详情页',
               icon: 'container',
               path: '/project/detail',

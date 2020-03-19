@@ -77,6 +77,12 @@ export default {
             },
           ],
         },
+        {
+          path: '/template',
+          name: '标注模板管理',
+          icon: 'tool',
+          component: './template',
+        },
         // {
         //   path: '/task',
         //   name: '任务管理',

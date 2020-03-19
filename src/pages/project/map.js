@@ -96,7 +96,7 @@ export default {
     checkRate: '质检率',
     questionNum: '单任务题目数',
     description: '项目描述',
-    defaultTool: '复制默认模板',
+    defaultTool: '复制模板工具',
     templateName: '模板名称',
     optionName: '选项名称',
     classifyName: '类别名称',

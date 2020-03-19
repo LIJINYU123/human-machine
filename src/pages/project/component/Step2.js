@@ -64,7 +64,7 @@ class Step2 extends Component {
   handleSelectChange = (value, _) => {
     const { textProjectFormData: { templates }, form: { setFieldsValue }, dispatch } = this.props;
     if (typeof value !== 'undefined') {
-      const filterTemplates = templates.filter(t => t.templateId === value);
+      const filterTemplates = templates.filter(t => t.templateName === value);
       const { options } = filterTemplates[0];
       setFieldsValue({ classifyName: filterTemplates[0].classifyName });
       setFieldsValue({ multiple: filterTemplates[0].multiple });
@@ -145,7 +145,7 @@ class Step2 extends Component {
     const { templateName, classifyName, defaultTool, multiple, saveType } = stepTwo;
     const { modalVisible } = this.state;
     // eslint-disable-next-line max-len
-    const templateOptions = templates ? templates.map(template => <Option key={template.templateId}>{template.templateName}</Option>) : [];
+    const templateOptions = templates ? templates.map(template => <Option key={template.templateName}>{template.templateName}</Option>) : [];
 
     const columns = [
       {

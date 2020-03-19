@@ -6,7 +6,7 @@ import ItemData from './map';
 const { TextArea } = Input;
 
 // eslint-disable-next-line max-len
-const { FieldLabels, dialogInputOptions, historyRecordOptions, roleManageOptions, userManageOptions } = ItemData;
+const { FieldLabels, projectManageOptions, dataMarkOptions, roleManageOptions, userManageOptions } = ItemData;
 
 @connect(({ roleList, loading }) => ({
   roleList,
@@ -112,18 +112,18 @@ class RoleCreateView extends Component {
             }
           </Form.Item>
           <Divider/>
-          <Form.Item label={FieldLabels.dialogInput}>
+          <Form.Item label={FieldLabels.projectManage}>
             {
-              getFieldDecorator('dialogInput', {
+              getFieldDecorator('projectManage', {
                 initialValue: [],
-              })(<Checkbox.Group options={dialogInputOptions} style={{ width: '100%' }} />)
+              })(<Checkbox.Group options={projectManageOptions} style={{ width: '100%' }} />)
             }
           </Form.Item>
-          <Form.Item label={FieldLabels.historyRecord}>
+          <Form.Item label={FieldLabels.dataMark}>
             {
-              getFieldDecorator('historyRecord', {
+              getFieldDecorator('dataMark', {
                 initialValue: [],
-              })(<Checkbox.Group options={historyRecordOptions} style={{ width: '100%' }} />)
+              })(<Checkbox.Group options={dataMarkOptions} style={{ width: '100%' }} />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.roleManage}>

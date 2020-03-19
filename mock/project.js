@@ -527,8 +527,9 @@ const nerLabelData = [
 const templatesMockData = [
   {
     labelType: 'textClassify',
-    templateId: 'emotion',
     templateName: '情感配置模板',
+    description: '这是情感工具配置模板',
+    createdTime: '2020-03-10 10:10:00',
     classifyName: '情感',
     multiple: true,
     options: [
@@ -576,8 +577,9 @@ const templatesMockData = [
   },
   {
     labelType: 'textClassify',
-    templateId: 'sentenceType',
     templateName: '句式配置模板',
+    description: '这是句式工具配置模板',
+    createdTime: '2020-03-11 12:10:00',
     classifyName: '句式',
     multiple: true,
     options: [
@@ -600,8 +602,9 @@ const templatesMockData = [
   },
   {
     labelType: 'textClassify',
-    templateId: 'similarity',
     templateName: '相似度配置模板',
+    description: '这是相似度配置模板',
+    createdTime: '2020-03-11 12:10:00',
     classifyName: '相似度',
     multiple: false,
     options: [
@@ -619,8 +622,9 @@ const templatesMockData = [
   },
   {
     labelType: 'sequenceLabeling',
-    templateId: 'entity',
     templateName: '实体识别配置模板',
+    description: '这是句式工具配置模板',
+    createdTime: '2020-03-12 13:10:00',
     classifyName: '实体',
     multiple: true,
     options: [
@@ -851,10 +855,32 @@ function getTemplates(req, res, u) {
 
   let dataSource = templatesMockData;
   const params = parse(url, true).query;
+
+  if (params.sorter) {
+    const s = params.sorter.split('_');
+    dataSource = dataSource.sort((prev, next) => {
+      if (s[1] === 'descend') {
+        return next[s[0]] - prev[s[0]];
+      }
+
+      return prev[s[0]] - next[s[0]];
+    })
+  }
+
   if (params.labelType) {
-    dataSource = templatesMockData.filter(item => item.labelType === params.labelType)
-  } else {
-    dataSource = [];
+    const types = params.labelType.split(',');
+    let filterDataSource = [];
+    types.forEach(type => {
+      // eslint-disable-next-line max-len
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.labelType === type));
+    });
+
+    dataSource = filterDataSource;
+  }
+
+  if (params.templateName) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.templateName.toLowerCase().includes(params.templateName.toLowerCase()));
   }
 
   return res.json(dataSource);
