@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import ItemData from '../map';
-import { Button, Modal, Form, Input, Popover, Icon } from 'antd';
+import { Modal, Form, Input, Popover, Icon } from 'antd';
 import { SketchPicker } from 'react-color';
 import styles from './style.less';
+import ItemData from '../map';
 
 const { FieldLabels } = ItemData;
 
@@ -14,9 +14,9 @@ const prestColors = ['#F5222D', '#FA541C', '#FA8C16', '#FAAD14', '#FADB14', '#A0
   '#096DD9', '#1D39C4', '#531DAB', '#C41D7F',
 ];
 
-@connect(({ textProjectFormData, loading }) => ({
-  stepTwo: textProjectFormData.stepTwo,
-  submitting: loading.effects['textProjectFormData/addOption'],
+@connect(({ createTemplate, loading }) => ({
+  createTemplate,
+  submitting: loading.effects['createTemplate/addOption'],
 }))
 class OptionCreateView extends Component {
   state = {
@@ -34,7 +34,7 @@ class OptionCreateView extends Component {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
-          type: 'textProjectFormData/addOption',
+          type: 'createTemplate/addOption',
           payload: { optionName: values.optionName, color },
           callback: onCancel,
         });

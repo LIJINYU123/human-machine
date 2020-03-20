@@ -4,6 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Highlighter from 'react-highlight-words';
 import { Button, Card, Divider, Icon, Input } from 'antd';
 import StandardTable from './component/StandardTable';
+import TemplateCreateView from './component/TemplateCreateView';
 import styles from './style.less';
 import ItemData from './map';
 
@@ -26,6 +27,7 @@ class TemplateManage extends Component {
     filteredInfo: null,
     searchText: '',
     searchedColumn: '',
+    modalVisible: false,
   };
 
   componentDidMount() {
@@ -101,6 +103,37 @@ class TemplateManage extends Component {
     });
   };
 
+  handleDelete = template => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'templateManage/deleteTemplate',
+      payload: {
+        templateIds: [template.templateId],
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
+  handleBatchDelete = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    dispatch({
+      type: 'templateManage/deleteTemplate',
+      payload: {
+        projectIds: selectedRows.map(row => row.projectId),
+      },
+      callback: () => {
+        this.setState({
+          selectedRows: [],
+        });
+      },
+    });
+  };
+
   handleStandardTableChange = (pagination, filterArg, sorter) => {
     const { dispatch } = this.props;
     const { formValues } = this.state;
@@ -128,9 +161,21 @@ class TemplateManage extends Component {
     });
   };
 
+  handleCreateTemplate = () => {
+    this.setState({
+      modalVisible: true,
+    });
+  };
+
+  handleCancelModal = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
   render() {
     const { templateManage: { data }, loading } = this.props;
-    const { selectedRows } = this.state;
+    const { selectedRows, modalVisible } = this.state;
 
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -175,7 +220,7 @@ class TemplateManage extends Component {
       <PageHeaderWrapper>
         <Card bordered={false}>
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary">创建</Button>
+            <Button icon="plus" type="primary" onClick={this.handleCreateTemplate}>创建</Button>
             <Button icon="delete" type="danger" disabled={!selectedRows.length}>删除</Button>
           </div>
           <StandardTable
@@ -187,6 +232,7 @@ class TemplateManage extends Component {
             onChange={this.handleStandardTableChange}
           />
         </Card>
+        <TemplateCreateView visible={modalVisible} onCancel={this.handleCancelModal} />
       </PageHeaderWrapper>
     );
   }

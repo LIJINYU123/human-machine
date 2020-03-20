@@ -527,6 +527,7 @@ const nerLabelData = [
 const templatesMockData = [
   {
     labelType: 'textClassify',
+    templateId: '1',
     templateName: '情感配置模板',
     description: '这是情感工具配置模板',
     createdTime: '2020-03-10 10:10:00',
@@ -577,6 +578,7 @@ const templatesMockData = [
   },
   {
     labelType: 'textClassify',
+    templateId: '2',
     templateName: '句式配置模板',
     description: '这是句式工具配置模板',
     createdTime: '2020-03-11 12:10:00',
@@ -602,6 +604,7 @@ const templatesMockData = [
   },
   {
     labelType: 'textClassify',
+    templateId: '3',
     templateName: '相似度配置模板',
     description: '这是相似度配置模板',
     createdTime: '2020-03-11 12:10:00',
@@ -622,6 +625,7 @@ const templatesMockData = [
   },
   {
     labelType: 'sequenceLabeling',
+    templateId: '4',
     templateName: '实体识别配置模板',
     description: '这是句式工具配置模板',
     createdTime: '2020-03-12 13:10:00',

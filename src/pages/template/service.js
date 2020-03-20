@@ -5,3 +5,10 @@ export async function queryTemplateList(params) {
     params,
   });
 }
+
+export async function deleteTemplateList(params) {
+  return request('/api/project/default-templates', {
+    method: 'DELETE',
+    data: params,
+  });
+}
