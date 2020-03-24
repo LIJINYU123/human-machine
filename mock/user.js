@@ -37,12 +37,12 @@ export default {
     const userId = req.header('UserID');
     const directory = {
       SYECO: [
-        {
-          path: '/analysis',
-          name: '数据分析',
-          icon: 'dashboard',
-          component: './statistic',
-        },
+        // {
+        //   path: '/analysis',
+        //   name: '数据分析',
+        //   icon: 'dashboard',
+        //   component: './statistic',
+        // },
         // {
         //   path: '/corpus',
         //   name: '对话录入',
@@ -154,6 +154,21 @@ export default {
           path: '/person/my-task/ner-mark',
           component: './personCenter/task-center/component/NerMarkView',
           hideInMenu: true,
+        },
+        {
+          name: '个人中心',
+          icon: 'profile',
+          path: '/person',
+          children: [
+            {
+              name: '个人资料',
+              icon: 'book',
+            },
+            {
+              name: '数据统计',
+              icon: 'dashboard',
+            },
+          ],
         },
       ],
       SYDEV: [

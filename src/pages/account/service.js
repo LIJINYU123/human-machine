@@ -29,3 +29,10 @@ export async function updateUserDetail(params) {
 export async function queryRoleList() {
   return request('/api/roles');
 }
+
+// 组别管理相关接口
+export async function queryGroupList(params) {
+  return request('/api/groups', {
+    params,
+  });
+}

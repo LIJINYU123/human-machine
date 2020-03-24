@@ -7,6 +7,7 @@ import styles from './style.less';
 import StandardTable from './components/StandardTable';
 import UserDetailView from './components/UserDetailView';
 import UserAddView from './components/UserAddView';
+import GroupManage from './components/GroupManage';
 
 const { confirm } = Modal;
 
@@ -25,6 +26,7 @@ class UserManage extends Component {
     addAuthority: false,
     modifyAuthority: false,
     deleteAuthority: false,
+    activeTabKey: 'account',
   };
 
   componentDidMount() {
@@ -78,6 +80,12 @@ class UserManage extends Component {
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
+    });
+  };
+
+  handleTabChange = key => {
+    this.setState({
+      activeTabKey: key,
     });
   };
 
@@ -217,7 +225,18 @@ class UserManage extends Component {
 
   render() {
     const { userList: { data, roleInfos, accounts }, loading } = this.props;
-    const { selectedRows, userInfo, addAuthority, modifyAuthority, deleteAuthority } = this.state;
+    const { selectedRows, userInfo, addAuthority, modifyAuthority, deleteAuthority, activeTabKey } = this.state;
+
+    const tabList = [
+      {
+        key: 'account',
+        tab: '成员管理',
+      },
+      {
+        key: 'group',
+        tab: '组别管理',
+      },
+    ];
 
     const columns = [
       {
@@ -255,25 +274,35 @@ class UserManage extends Component {
     ];
 
     return (
-      <PageHeaderWrapper>
-        <Card bordered={false}>
-          <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={this.handleAddto} disabled={!addAuthority}>添加</Button>
-            <Button icon="delete" type="danger" disabled={!selectedRows.length || !deleteAuthority} onClick={this.showDeleteConfirm}>移除</Button>
-          </div>
-          <StandardTable
-            selectedRows={selectedRows}
-            loading={loading}
-            data={data}
-            columns={columns}
-            onSelectRow={this.handleSelectRows}
-            onChange={this.handleStandardTableChange}
-          />
-        </Card>
-        {/* eslint-disable-next-line max-len */}
-        <UserDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} userInfo={userInfo} roleInfos={roleInfos} />
-        {/* eslint-disable-next-line max-len */}
-        <UserAddView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} roleInfos={roleInfos} noDepAccounts={accounts} />
+      <PageHeaderWrapper
+        tabList={tabList}
+        tabActiveKey={activeTabKey}
+        onTabChange={this.handleTabChange}
+      >
+        {
+          activeTabKey === 'account' &&
+          <Fragment>
+            <Card bordered={false}>
+              <div className={styles.tableListOperator}>
+                <Button icon="plus" type="primary" onClick={this.handleAddto} disabled={!addAuthority}>添加</Button>
+                <Button icon="delete" type="danger" disabled={!selectedRows.length || !deleteAuthority} onClick={this.showDeleteConfirm}>移除</Button>
+              </div>
+              <StandardTable
+                selectedRows={selectedRows}
+                loading={loading}
+                data={data}
+                columns={columns}
+                onSelectRow={this.handleSelectRows}
+                onChange={this.handleStandardTableChange}
+              />
+            </Card>
+            <UserDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} userInfo={userInfo} roleInfos={roleInfos} />
+            <UserAddView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} roleInfos={roleInfos} noDepAccounts={accounts} />
+          </Fragment>
+        }
+        {
+          activeTabKey === 'group' && <GroupManage />
+        }
       </PageHeaderWrapper>
     );
   }

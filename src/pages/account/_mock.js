@@ -1,5 +1,6 @@
 import { parse } from 'url';
 import moment from 'moment';
+import Mock from 'mockjs';
 
 
 let mockData = [
@@ -51,6 +52,75 @@ let mockData = [
     roleName: '普通用户',
     registerTime: '2019-12-25 16:00:00',
     departmentId: 'operation',
+  },
+];
+
+const groupData = [
+  {
+    groupId: '1',
+    groupName: '标注组A',
+    userAmount: 3,
+    userInfo: [
+      {
+        userId: 'SY0123',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+      {
+        userId: 'SY0124',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+      {
+        userId: 'SY0125',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+    ],
+  },
+  {
+    groupId: '2',
+    groupName: '标注组B',
+    userAmount: 3,
+    userInfo: [
+      {
+        userId: 'SY0126',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+      {
+        userId: 'SY0127',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+      {
+        userId: 'SY0128',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+    ],
+  },
+  {
+    groupId: '3',
+    groupName: '标注组C',
+    userAmount: 3,
+    userInfo: [
+      {
+        userId: 'SY0129',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+      {
+        userId: 'SY0130',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+      {
+        userId: 'SY0131',
+        name: Mock.Random.cname(),
+        roleName: '标注员',
+      },
+    ],
   },
 ];
 
@@ -154,9 +224,44 @@ function updateUser(req, res, u, b) {
   return res.json({ message: '更新成功', status: 'ok' });
 }
 
+
+function getGroups(req, res, u) {
+  let url = u;
+
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+
+  const params = parse(url, true).query;
+  let dataSource = groupData;
+  if (params.groupName) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.groupName.toLowerCase().includes(params.groupName.toLowerCase()));
+  }
+
+  let pageSize = 10;
+  if (params.pageSize) {
+    pageSize = parseInt(`${params.pageSize}`, 0);
+  }
+
+
+  const result = {
+    list: dataSource,
+    pagination: {
+      total: dataSource.length,
+      pageSize,
+      current: parseInt(`${params.currentPage}`, 10) || 1,
+    },
+};
+
+  return res.json(result);
+}
+
 export default {
   'GET /api/users': getUsers,
   'GET /api/user/detail': getUserDetail,
   'DELETE /api/users': deleteUser,
   'POST /api/user/detail': updateUser,
+  'GET /api/groups': getGroups,
 };

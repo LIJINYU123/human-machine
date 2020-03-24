@@ -1,5 +1,17 @@
-import React, { Component } from 'react';
-import { Button, Form, Select, Input, Popover, Radio, Checkbox, Icon, Tooltip } from 'antd';
+import React, { Component, Fragment } from 'react';
+import {
+  Button,
+  Form,
+  Select,
+  Input,
+  Popover,
+  Radio,
+  Checkbox,
+  Icon,
+  Tooltip,
+  Cascader,
+  InputNumber,
+} from 'antd';
 import { connect } from 'dva';
 import update from 'immutability-helper';
 import { SketchPicker } from 'react-color';
@@ -8,7 +20,7 @@ import OptionCreateView from './OptionCreateView';
 import styles from './style.less';
 import ItemData from '../map';
 
-const { FieldLabels } = ItemData;
+const { FieldLabels, labelTypes } = ItemData;
 const { Option } = Select;
 
 const formItemLayout = {
@@ -37,16 +49,9 @@ class Step2 extends Component {
   state = {
     optionName: '',
     modalVisible: false,
+    validateStatus: 'success',
+    help: '',
   };
-
-  componentDidMount() {
-    const { dispatch, textProjectFormData: { stepOne } } = this.props;
-    const { labelType } = stepOne;
-    dispatch({
-      type: 'textProjectFormData/fetchTemplate',
-      payload: { labelType: labelType[labelType.length - 1] },
-    });
-  }
 
   onValidateForm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch } = this.props;
@@ -61,13 +66,21 @@ class Step2 extends Component {
     });
   };
 
+  handleCascaderChange = (value, _) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textProjectFormData/fetchTemplate',
+      payload: value,
+    });
+  };
+
   handleSelectChange = (value, _) => {
     const { textProjectFormData: { templates }, form: { setFieldsValue }, dispatch } = this.props;
     if (typeof value !== 'undefined') {
       const filterTemplates = templates.filter(t => t.templateName === value);
-      const { options } = filterTemplates[0];
-      setFieldsValue({ classifyName: filterTemplates[0].classifyName });
-      setFieldsValue({ multiple: filterTemplates[0].multiple });
+      const { options } = filterTemplates[0].setting;
+      setFieldsValue({ classifyName: filterTemplates[0].setting.classifyName });
+      setFieldsValue({ multiple: filterTemplates[0].setting.multiple });
       dispatch({
         type: 'textProjectFormData/saveOptions',
         payload: options,
@@ -139,11 +152,26 @@ class Step2 extends Component {
     });
   };
 
+  handleMinChange = value => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textProjectFormData/saveMinValue',
+      payload: value,
+    });
+  };
+
+  handleMaxChange = value => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textProjectFormData/saveMaxValue',
+      payload: value,
+    });
+  };
+
   render() {
-    const { textProjectFormData: { templates, optionData, saveTemplate, stepOne, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
-    const { labelType } = stepOne;
+    const { textProjectFormData: { templates, labelType, optionData, saveTemplate, minValue, maxValue, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
     const { templateName, classifyName, defaultTool, multiple, saveType } = stepTwo;
-    const { modalVisible } = this.state;
+    const { modalVisible, validateStatus, help } = this.state;
     // eslint-disable-next-line max-len
     const templateOptions = templates ? templates.map(template => <Option key={template.templateName}>{template.templateName}</Option>) : [];
 
@@ -165,6 +193,19 @@ class Step2 extends Component {
 
     return (
       <Form>
+        <Form.Item label={FieldLabels.labelType} {...formItemLayout}>
+          {
+            getFieldDecorator('labelType', {
+              rules: [
+                {
+                  required: true,
+                  message: '请选择标注工具',
+                },
+              ],
+              initialValue: labelType,
+            })(<Cascader options={labelTypes} onChange={this.handleCascaderChange} style={{ width: '50%' }}/>)
+          }
+        </Form.Item>
         <Form.Item label={FieldLabels.defaultTool} {...formItemLayout}>
           {
             getFieldDecorator('defaultTool', {
@@ -214,7 +255,7 @@ class Step2 extends Component {
           }
         </Form.Item>
         {
-          labelType[labelType.length - 1] === 'sequenceLabeling' &&
+          labelType.length > 0 && labelType[labelType.length - 1] === 'sequenceLabeling' &&
           <Form.Item label={FieldLabels.saveType} {...formItemLayout}>
             {
               getFieldDecorator('saveType', {
@@ -226,27 +267,44 @@ class Step2 extends Component {
                 </Radio.Group>)
             }
             {
-              <Tooltip title="提示。。。。。" trigger="hover" ><Icon type="question-circle" style={{ fontSize: '16px', cursor: 'pointer' }} /></Tooltip>
+              <Tooltip title="词典方式存在词条名和同义词的概念，多用于实体识别中，即从某个句子中划出的词，是作为标准词条名，还是作为某个现有词条的同义词。" trigger="hover" ><Icon type="question-circle" style={{ fontSize: '16px', cursor: 'pointer' }} /></Tooltip>
             }
           </Form.Item>
         }
-        <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
-          {
-            getFieldDecorator('multiple', {
-              initialValue: multiple,
-            })(
-              <Radio.Group name="multiple">
-                <Radio value>是</Radio>
-                <Radio value={false}>否</Radio>
-              </Radio.Group>)
-          }
-        </Form.Item>
-        <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAddOption}>选项</Button>
-        <DragSortingTable
-          data={optionData}
-          columns={columns}
-          onMoveRow={this.handleMoveRow}
-        />
+        {
+          labelType.length > 0 && labelType.slice(-1)[0] === 'textExtension' &&
+          <Fragment>
+            <Form.Item label={FieldLabels.numberRange} {...formItemLayout} help={help} validateStatus={validateStatus}>
+              <Fragment>
+                <InputNumber value={minValue} onChange={this.handleMinChange} placeholder="min" style={{ width: '24%' }}/>
+                <span> ~ </span>
+                <InputNumber value={maxValue} onChange={this.handleMaxChange} placeholder="max" style={{ width: '24%' }}/>
+              </Fragment>
+            </Form.Item>
+          </Fragment>
+        }
+        {
+          labelType.length > 0 && labelType[labelType.length - 1] !== 'textExtension' &&
+          <Fragment>
+            <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
+              {
+                getFieldDecorator('multiple', {
+                  initialValue: multiple,
+                })(
+                  <Radio.Group name="multiple">
+                    <Radio value>是</Radio>
+                    <Radio value={false}>否</Radio>
+                  </Radio.Group>)
+              }
+            </Form.Item>
+            <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAddOption}>选项</Button>
+            <DragSortingTable
+              data={optionData}
+              columns={columns}
+              onMoveRow={this.handleMoveRow}
+            />
+          </Fragment>
+        }
         <Button type="primary" onClick={this.onValidateForm} loading={submitting} style={{ marginTop: '16px' }}>下一步</Button>
         <Button style={{ marginLeft: '8px' }} onClick={this.onPrev}>上一步</Button>
         <OptionCreateView visible={modalVisible} onCancel={this.handleCancelModal} />

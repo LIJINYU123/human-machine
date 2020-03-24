@@ -6,7 +6,6 @@ const TextProjectFormData = {
   state: {
     stepOne: {
       projectName: '',
-      labelType: [],
       passRate: null,
       checkRate: null,
       labeler: [],
@@ -21,8 +20,11 @@ const TextProjectFormData = {
       saveType: 'nomal',
     },
     forever: false,
+    labelType: [],
     templates: [],
     optionData: [],
+    minValue: null,
+    maxValue: null,
     saveTemplate: false,
     members: {
       labelers: [],
@@ -32,10 +34,21 @@ const TextProjectFormData = {
   },
   effects: {
     * fetchTemplate({ payload }, { call, put }) {
-      const response = yield call(queryDefaultTemplate, payload);
+      if (payload.length) {
+        const response = yield call(queryDefaultTemplate, { labelType: payload[payload.length - 1] });
+        yield put({
+          type: 'saveDefaultTemplate',
+          payload: response,
+        });
+      } else {
+        yield put({
+          type: 'saveDefaultTemplate',
+          payload: [],
+        });
+      }
       yield put({
-        type: 'saveDefaultTemplate',
-        payload: response,
+        type: 'saveLabelType',
+        payload,
       });
     },
 
@@ -99,6 +112,20 @@ const TextProjectFormData = {
       });
     },
 
+    * saveMinValue({ payload }, { put }) {
+      yield put({
+        type: 'saveMinValueData',
+        payload,
+      });
+    },
+
+    * saveMaxValue({ payload }, { put }) {
+      yield put({
+        type: 'saveMaxValueData',
+        payload,
+      });
+    },
+
     * saveStepTwoData({ payload }, { put }) {
       yield put({
         type: 'saveStepTwo',
@@ -131,6 +158,9 @@ const TextProjectFormData = {
   reducers: {
     saveDefaultTemplate(state, action) {
       return { ...state, templates: action.payload };
+    },
+    saveLabelType(state, action) {
+      return { ...state, labelType: action.payload };
     },
     saveMembers(state, action) {
       return { ...state, members: action.payload };
@@ -172,6 +202,12 @@ const TextProjectFormData = {
     },
     saveCheckBoxData(state, action) {
       return { ...state, saveTemplate: action.payload.saveTemplate };
+    },
+    saveMinValueData(state, action) {
+      return { ...state, minValue: action.payload };
+    },
+    saveMaxValueData(state, action) {
+      return { ...state, maxValue: action.payload };
     },
     stepTwoPrev(state, action) {
       return { ...state, current: action.payload };

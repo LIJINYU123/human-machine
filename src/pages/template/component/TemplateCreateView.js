@@ -1,5 +1,16 @@
-import React, { Component } from 'react';
-import { Button, Modal, Form, Cascader, Input, Popover, Radio } from 'antd';
+import React, { Component, Fragment } from 'react';
+import {
+  Button,
+  Modal,
+  Form,
+  Cascader,
+  Input,
+  InputNumber,
+  Popover,
+  Radio,
+  Tooltip,
+  Icon
+} from 'antd';
 import { SketchPicker } from 'react-color';
 import update from 'immutability-helper';
 import { connect } from 'dva';
@@ -35,6 +46,11 @@ class TemplateCreateView extends Component {
   state = {
     optionName: '',
     modalVisible: false,
+    minValue: null,
+    maxValue: null,
+    labelType: [],
+    validateStatus: 'success',
+    help: '',
   };
 
   handleMoveRow = (dragIndex, hoverIndex) => {
@@ -57,6 +73,12 @@ class TemplateCreateView extends Component {
         optionName,
         color: color.hex,
       },
+    });
+  };
+
+  handleCascaderChange = (value, _) => {
+    this.setState({
+      labelType: value,
     });
   };
 
@@ -86,9 +108,27 @@ class TemplateCreateView extends Component {
     });
   };
 
+  handleMinChange = value => {
+    this.setState({ minValue: value });
+  };
+
+  handleMaxChange = value => {
+    this.setState({ maxValue: value })
+  };
+
+  onValidateForm = () => {
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    validateFieldsAndScroll(error => {
+      if (!error) {
+        const values = getFieldsValue();
+        const { labelType, templateName, classifyName } = values;
+      }
+    });
+  };
+
   render() {
     const { form: { getFieldDecorator }, visible, onCancel, createTemplate: { optionData } } = this.props;
-    const { modalVisible } = this.state;
+    const { modalVisible, minValue, maxValue, validateStatus, help, labelType } = this.state;
 
     const columns = [
       {
@@ -125,7 +165,7 @@ class TemplateCreateView extends Component {
                     message: '请选择工具类型',
                   },
                 ],
-              })(<Cascader options={labelTypes} style={{ width: '50%' }}/>)
+              })(<Cascader onChange={this.handleCascaderChange} options={labelTypes} style={{ width: '50%' }}/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.templateName} {...formItemLayout}>
@@ -140,23 +180,67 @@ class TemplateCreateView extends Component {
               })(<Input className={styles.formItem}/>)
             }
           </Form.Item>
-          <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
+          <Form.Item label={FieldLabels.classifyName} {...formItemLayout}>
             {
-              getFieldDecorator('multiple', {
-                initialValue: true,
-              })(
-                <Radio.Group name="multiple">
-                  <Radio value>是</Radio>
-                  <Radio value={false}>否</Radio>
-                </Radio.Group>)
+              getFieldDecorator('classifyName', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入类别名称',
+                  },
+                ],
+              })(<Input className={styles.formItem}/>)
             }
           </Form.Item>
-          <Button style={{ marginBottom: '16px' }} icon="plus" type="primary" onClick={this.handleAddOption}>选项</Button>
-          <DragSortingTable
-            data={optionData}
-            columns={columns}
-            onMoveRow={this.handleMoveRow}
-          />
+          {
+            labelType.length > 0 && labelType.slice(-1)[0] === 'sequenceLabeling' &&
+            <Form.Item label={FieldLabels.saveType} {...formItemLayout}>
+              {
+                getFieldDecorator('saveType', {})(
+                  <Radio.Group name="saveType">
+                    <Radio value="nomal">普通</Radio>
+                    <Radio value="dict">词典</Radio>
+                  </Radio.Group>)
+              }
+              {
+                <Tooltip title="词典方式存在词条名和同义词的概念，多用于实体识别中，即从某个句子中划出的词，是作为标准词条名，还是作为某个现有词条的同义词。" trigger="hover" ><Icon type="question-circle" style={{ fontSize: '16px', cursor: 'pointer' }} /></Tooltip>
+              }
+            </Form.Item>
+          }
+          {
+            labelType.length > 0 && labelType.slice(-1)[0] === 'textExtension' &&
+            <Fragment>
+              <Form.Item label={FieldLabels.numberRange} {...formItemLayout} help={help} validateStatus={validateStatus}>
+                <Fragment>
+                  <InputNumber value={minValue} onChange={this.handleMinChange} placeholder="min" style={{ width: '24%' }}/>
+                  <span> ~ </span>
+                  <InputNumber value={maxValue} onChange={this.handleMaxChange} placeholder="max" style={{ width: '24%' }}/>
+                </Fragment>
+              </Form.Item>
+            </Fragment>
+          }
+          {
+            labelType.length > 0 && labelType.slice(-1)[0] !== 'textExtension' &&
+            <Fragment>
+              <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
+                {
+                  getFieldDecorator('multiple', {
+                    initialValue: true,
+                  })(
+                    <Radio.Group name="multiple">
+                      <Radio value>是</Radio>
+                      <Radio value={false}>否</Radio>
+                    </Radio.Group>)
+                }
+              </Form.Item>
+              <Button style={{ marginBottom: '16px' }} icon="plus" type="primary" onClick={this.handleAddOption}>选项</Button>
+              <DragSortingTable
+                data={optionData}
+                columns={columns}
+                onMoveRow={this.handleMoveRow}
+              />
+            </Fragment>
+          }
         </Form>
         <OptionCreateView visible={modalVisible} onCancel={this.handleCancelModal} />
       </Modal>

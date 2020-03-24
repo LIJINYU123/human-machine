@@ -1,8 +1,8 @@
-import { queryUserList, deleteUser, queryRoleList, updateUserDetail } from './service';
-import { queryNoDepAccounts } from '../department/service';
-import { message } from 'antd';
+import { queryUserList, deleteUser, queryRoleList, updateUserDetail } from '../service';
+import { queryNoDepAccounts } from '../../department/service';
+import { message } from 'antd/lib/index';
 
-const Model = {
+const Account = {
   namespace: 'userList',
   state: {
     data: {
@@ -85,4 +85,4 @@ const Model = {
   },
 };
 
-export default Model;
+export default Account;

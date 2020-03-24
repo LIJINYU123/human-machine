@@ -532,49 +532,51 @@ const templatesMockData = [
     description: '这是情感工具配置模板',
     createdTime: '2020-03-10 10:10:00',
     classifyName: '情感',
-    multiple: true,
-    options: [
-      {
-        optionId: 'anger',
-        optionName: '愤怒',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'hate',
-        optionName: '厌恶',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'fear',
-        optionName: '害怕',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'sad',
-        optionName: '悲伤',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'happy',
-        optionName: '高兴',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'like',
-        optionName: '喜欢',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'surprise',
-        optionName: '惊喜',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'neutral',
-        optionName: '中性',
-        color: '#1890ff',
-      },
-    ],
+    setting: {
+      multiple: true,
+      options: [
+        {
+          optionId: 'anger',
+          optionName: '愤怒',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'hate',
+          optionName: '厌恶',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'fear',
+          optionName: '害怕',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'sad',
+          optionName: '悲伤',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'happy',
+          optionName: '高兴',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'like',
+          optionName: '喜欢',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'surprise',
+          optionName: '惊喜',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'neutral',
+          optionName: '中性',
+          color: '#1890ff',
+        },
+      ],
+    },
   },
   {
     labelType: 'textClassify',
@@ -583,24 +585,26 @@ const templatesMockData = [
     description: '这是句式工具配置模板',
     createdTime: '2020-03-11 12:10:00',
     classifyName: '句式',
-    multiple: true,
-    options: [
-      {
-        optionId: 'chenshuju',
-        optionName: '肯定陈述句',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'fanwenju',
-        optionName: '反问句',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'yiwenju',
-        optionName: '疑问句',
-        color: '#1890ff',
-      },
-    ],
+    setting: {
+      multiple: true,
+      options: [
+        {
+          optionId: 'chenshuju',
+          optionName: '肯定陈述句',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'fanwenju',
+          optionName: '反问句',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'yiwenju',
+          optionName: '疑问句',
+          color: '#1890ff',
+        },
+      ],
+    },
   },
   {
     labelType: 'textClassify',
@@ -609,19 +613,21 @@ const templatesMockData = [
     description: '这是相似度配置模板',
     createdTime: '2020-03-11 12:10:00',
     classifyName: '相似度',
-    multiple: false,
-    options: [
-      {
-        optionId: 'similar',
-        optionName: '相似',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'notSimilar',
-        optionName: '不相似',
-        color: '#1890ff',
-      },
-    ],
+    setting: {
+      multiple: false,
+      options: [
+        {
+          optionId: 'similar',
+          optionName: '相似',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'notSimilar',
+          optionName: '不相似',
+          color: '#1890ff',
+        },
+      ],
+    },
   },
   {
     labelType: 'sequenceLabeling',
@@ -630,19 +636,21 @@ const templatesMockData = [
     description: '这是句式工具配置模板',
     createdTime: '2020-03-12 13:10:00',
     classifyName: '实体',
-    multiple: true,
-    options: [
-      {
-        optionId: 'country',
-        optionName: '国家',
-        color: '#1890ff',
-      },
-      {
-        optionId: 'location',
-        optionName: '地名',
-        color: '#1890ff',
-      },
-    ],
+    setting: {
+      multiple: true,
+      options: [
+        {
+          optionId: 'country',
+          optionName: '国家',
+          color: '#1890ff',
+        },
+        {
+          optionId: 'location',
+          optionName: '地名',
+          color: '#1890ff',
+        },
+      ],
+    },
   },
 ];
 

@@ -121,12 +121,6 @@ export default {
               redirect: '/person/task-center',
             },
             {
-              path: '/analysis',
-              name: '数据分析',
-              icon: 'dashboard',
-              component: './statistic',
-            },
-            {
               path: '/project',
               name: '项目管理',
               icon: 'project',
@@ -223,6 +217,21 @@ export default {
               path: '/person/my-task/ner-mark',
               component: './personCenter/task-center/component/NerMarkView',
               hideInMenu: true,
+            },
+            {
+              name: '个人中心',
+              icon: 'profile',
+              path: '/person',
+              routes: [
+                {
+                  name: '个人资料',
+                  icon: 'book',
+                },
+                {
+                  name: '数据统计',
+                  icon: 'dashboard',
+                },
+              ],
             },
             {
               component: '404',
