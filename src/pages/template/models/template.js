@@ -16,15 +16,10 @@ const Template = {
       });
     },
 
-    * deleteTemplate({ payload, callback }, { call, put }) {
+    * deleteTemplate({ payload, callback }, { call }) {
       const response = yield call(deleteTemplateList, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryTemplateList, payload);
-        yield put({
-          type: 'template',
-          payload: result,
-        });
       } else {
         message.error(response.message);
       }

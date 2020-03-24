@@ -1,3 +1,5 @@
+import { createTemplate, deleteTemplateList } from '../service';
+import { message } from 'antd';
 
 const CreateTemplate = {
   namespace: 'createTemplate',
@@ -34,6 +36,19 @@ const CreateTemplate = {
         type: 'saveOptionColor',
         payload,
       });
+    },
+
+    * addTemplate({ payload, callback }, { call }) {
+      const response = yield call(createTemplate, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
     },
   },
 

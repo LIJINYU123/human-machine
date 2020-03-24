@@ -35,7 +35,7 @@ class TemplateManage extends Component {
 
     dispatch({
       type: 'templateManage/fetchTemplate',
-      payload: { labelType: 'textClassify' },
+      payload: { sorter: 'createdTime_descend' },
     });
   }
 
@@ -103,14 +103,18 @@ class TemplateManage extends Component {
     });
   };
 
-  handleDelete = template => {
+  handleDelete = templateId => {
     const { dispatch } = this.props;
     dispatch({
       type: 'templateManage/deleteTemplate',
       payload: {
-        templateIds: [template.templateId],
+        templateIds: [templateId],
       },
       callback: () => {
+        dispatch({
+          type: 'templateManage/fetchTemplate',
+          payload: { sorter: 'createdTime_descend' },
+        });
         this.setState({
           selectedRows: [],
         });
@@ -124,9 +128,13 @@ class TemplateManage extends Component {
     dispatch({
       type: 'templateManage/deleteTemplate',
       payload: {
-        projectIds: selectedRows.map(row => row.projectId),
+        templateIds: selectedRows.map(row => row.templateId),
       },
       callback: () => {
+        dispatch({
+          type: 'templateManage/fetchTemplate',
+          payload: { sorter: 'createdTime_descend' },
+        });
         this.setState({
           selectedRows: [],
         });
@@ -210,7 +218,7 @@ class TemplateManage extends Component {
           <Fragment>
             <a>编辑</a>
             <Divider type="vertical" />
-            <a>删除</a>
+            <a onClick={() => this.handleDelete(template.templateId)}>删除</a>
           </Fragment>
         ),
       },
@@ -221,7 +229,7 @@ class TemplateManage extends Component {
         <Card bordered={false}>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={this.handleCreateTemplate}>创建</Button>
-            <Button icon="delete" type="danger" disabled={!selectedRows.length}>删除</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}

@@ -9,7 +9,7 @@ import {
   Popover,
   Radio,
   Tooltip,
-  Icon
+  Icon,
 } from 'antd';
 import { SketchPicker } from 'react-color';
 import update from 'immutability-helper';
@@ -19,6 +19,7 @@ import styles from './style.less';
 import DragSortingTable from './DragSortingTable';
 import OptionCreateView from './OptionCreateView';
 
+const { TextArea } = Input;
 const { FieldLabels, labelTypes } = ItemData;
 
 const formItemLayout = {
@@ -41,6 +42,7 @@ const prestColors = ['#F5222D', '#FA541C', '#FA8C16', '#FAAD14', '#FADB14', '#A0
 
 @connect(({ createTemplate, loading }) => ({
   createTemplate,
+  submitting: loading.effects['createTemplate/addTemplate'],
 }))
 class TemplateCreateView extends Component {
   state = {
@@ -117,17 +119,52 @@ class TemplateCreateView extends Component {
   };
 
   onValidateForm = () => {
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, createTemplate: { optionData }, dispatch, onCancel } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        const { labelType, templateName, classifyName } = values;
+        const { labelType, templateName, description, classifyName } = values;
+        const setting = {};
+        if (labelType.slice(-1)[0] === 'textExtension') {
+          const { minValue, maxValue } = this.state;
+          setting.minValue = minValue;
+          setting.maxValue = maxValue;
+        } else if (labelType.slice(-1)[0] === 'sequenceLabeling') {
+          const { saveType } = values;
+          setting.saveType = saveType;
+          setting.optionData = optionData;
+        } else {
+          const { multiple } = values;
+          setting.multiple = multiple;
+          setting.optionData = optionData;
+        }
+
+        dispatch({
+          type: 'createTemplate/addTemplate',
+          payload: {
+            labelType: labelType.slice(-1)[0],
+            templateName,
+            description,
+            classifyName,
+            setting,
+          },
+          callback: () => {
+            dispatch({
+              type: 'templateManage/fetchTemplate',
+              payload: { sorter: 'createdTime_descend' },
+            });
+            onCancel();
+            this.setState({
+              labelType: [],
+            });
+          },
+        });
       }
     });
   };
 
   render() {
-    const { form: { getFieldDecorator }, visible, onCancel, createTemplate: { optionData } } = this.props;
+    const { form: { getFieldDecorator }, visible, onCancel, createTemplate: { optionData }, submitting } = this.props;
     const { modalVisible, minValue, maxValue, validateStatus, help, labelType } = this.state;
 
     const columns = [
@@ -152,7 +189,9 @@ class TemplateCreateView extends Component {
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}
+        onOk={this.onValidateForm}
         style={{ minWidth: '950px' }}
+        confirmLoading={submitting}
         destroyOnClose
       >
         <Form>
@@ -180,6 +219,13 @@ class TemplateCreateView extends Component {
               })(<Input className={styles.formItem}/>)
             }
           </Form.Item>
+          <Form.Item label={FieldLabels.description} {...formItemLayout}>
+            {
+              getFieldDecorator('description', {
+                initialValue: '',
+              })(<TextArea autoSize className={styles.formItem} />)
+            }
+          </Form.Item>
           <Form.Item label={FieldLabels.classifyName} {...formItemLayout}>
             {
               getFieldDecorator('classifyName', {
@@ -196,7 +242,9 @@ class TemplateCreateView extends Component {
             labelType.length > 0 && labelType.slice(-1)[0] === 'sequenceLabeling' &&
             <Form.Item label={FieldLabels.saveType} {...formItemLayout}>
               {
-                getFieldDecorator('saveType', {})(
+                getFieldDecorator('saveType', {
+                  initialValue: 'nomal',
+                })(
                   <Radio.Group name="saveType">
                     <Radio value="nomal">普通</Radio>
                     <Radio value="dict">词典</Radio>
@@ -220,19 +268,22 @@ class TemplateCreateView extends Component {
             </Fragment>
           }
           {
+            labelType.length > 0 && labelType.slice(-1)[0] === 'textClassify' &&
+            <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
+              {
+                getFieldDecorator('multiple', {
+                  initialValue: true,
+                })(
+                  <Radio.Group name="multiple">
+                    <Radio value>是</Radio>
+                    <Radio value={false}>否</Radio>
+                  </Radio.Group>)
+              }
+            </Form.Item>
+          }
+          {
             labelType.length > 0 && labelType.slice(-1)[0] !== 'textExtension' &&
             <Fragment>
-              <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
-                {
-                  getFieldDecorator('multiple', {
-                    initialValue: true,
-                  })(
-                    <Radio.Group name="multiple">
-                      <Radio value>是</Radio>
-                      <Radio value={false}>否</Radio>
-                    </Radio.Group>)
-                }
-              </Form.Item>
               <Button style={{ marginBottom: '16px' }} icon="plus" type="primary" onClick={this.handleAddOption}>选项</Button>
               <DragSortingTable
                 data={optionData}

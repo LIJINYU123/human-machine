@@ -12,3 +12,10 @@ export async function deleteTemplateList(params) {
     data: params,
   });
 }
+
+export async function createTemplate(params) {
+  return request('/api/project/default-templates', {
+    method: 'PUT',
+    data: params,
+  });
+}

@@ -1,4 +1,6 @@
 import { parse } from 'url';
+import moment from 'moment';
+import Mock from 'mockjs';
 
 let mockData = [
   {
@@ -524,7 +526,7 @@ const nerLabelData = [
   },
 ];
 
-const templatesMockData = [
+let templatesMockData = [
   {
     labelType: 'textClassify',
     templateId: '1',
@@ -898,6 +900,20 @@ function getTemplates(req, res, u) {
   return res.json(dataSource);
 }
 
+function createTemplate(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  body.createdTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
+  body.templateId = Mock.Random.word();
+  templatesMockData.push(body);
+  return res.json({ message: '创建成功', status: 'ok' });
+}
+
+function deleteTemplates(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  templatesMockData = templatesMockData.filter(item => !body.templateIds.includes(item.templateId));
+  return res.json({ message: '删除成功', status: 'ok' });
+}
+
 function getRoleMembers(req, res) {
   const response = {
     labelers: [{ userId: 'SY0111', userName: '张三' }, { userId: 'SY0112', userName: '王五' }, { userId: 'SY0113', userName: '杨六' }, { userId: 'SY0114', userName: '杨九' }],
@@ -978,6 +994,8 @@ export default {
   'GET /api/project/task-data': getTaskData,
   'DELETE /api/project/task-data': deleteTaskData,
   'GET /api/project/default-templates': getTemplates,
+  'PUT /api/project/default-templates': createTemplate,
+  'DELETE /api/project/default-templates': deleteTemplates,
   'GET /api/project/members': getRoleMembers,
   'POST /api/project/review-result': saveReviewResult,
 

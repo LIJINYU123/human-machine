@@ -11,6 +11,7 @@ export default {
   FieldLabels: {
     labelType: '工具类型',
     templateName: '模板名称',
+    description: '模板描述',
     classifyName: '类别名称',
     numberRange: '数值范围',
     multiple: '选项多选',
