@@ -429,10 +429,10 @@ function getMarkTools(req, res, u) {
 }
 
 export default {
-  'GET /api/task-center/projects': getProjects,
-  'GET /api/task-center/task-data': getTaskData,
-  'GET /api/task-center/my-task': getMyTask,
-  'GET /api/task-center/task-number': getMyTaskNumber,
-  'GET /api/task-center/receive-task/:taskId': receiveTask,
-  'GET /api/task-center/mark-tools': getMarkTools,
+  'GET /api/task-manage/projects': getProjects,
+  'GET /api/task-manage/task-data': getTaskData,
+  'GET /api/task-manage/my-task': getMyTask,
+  'GET /api/task-manage/task-number': getMyTaskNumber,
+  'GET /api/task-manage/receive-task/:taskId': receiveTask,
+  'GET /api/task-manage/mark-tools': getMarkTools,
 };

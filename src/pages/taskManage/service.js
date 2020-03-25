@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
 export async function queryProjectList(params) {
-  return request('/api/task-center/projects', {
+  return request('/api/task-manage/projects', {
     params,
   });
 }
@@ -12,24 +12,24 @@ export async function queryProjectDetail(projectId) {
 }
 
 export async function queryTaskData(params) {
-  return request('/api/task-center/task-data', {
+  return request('/api/task-manage/task-data', {
     params,
   });
 }
 
 // 任务中心api
 export async function receiveTask(taskId) {
-  return request(`/api/task-center/receive-task/${taskId}`);
+  return request(`/api/task-manage/receive-task/${taskId}`);
 }
 
 export async function queryMyTask(params) {
-  return request('/api/task-center/my-task', {
+  return request('/api/task-manage/my-task', {
     params,
   });
 }
 
 export async function queryTaskNumber() {
-  return request('/api/task-center/task-number');
+  return request('/api/task-manage/task-number');
 }
 
 // 文本标注页面api
@@ -40,7 +40,7 @@ export async function queryLabelData(params) {
 }
 
 export async function queryMarkTools(params) {
-  return request('/api/task-center/mark-tools', {
+  return request('/api/task-manage/mark-tools', {
     params,
   });
 }
