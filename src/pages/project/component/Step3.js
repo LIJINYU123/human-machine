@@ -74,9 +74,9 @@ class Step3 extends Component {
     formData.append('saveTemplate', saveTemplate);
     if (saveTemplate) {
       const { templateName } = stepTwo;
-      formData.append('template', JSON.stringify({ templateName, classifyName, multiple, options: optionData }));
+      formData.append('template', JSON.stringify({ templateName, setting: { classifyName, multiple, options: optionData } }));
     } else {
-      formData.append('template', JSON.stringify({ templateName: '', classifyName, multiple, options: optionData }));
+      formData.append('template', JSON.stringify({ templateName: '', setting: { classifyName, multiple, options: optionData } }));
     }
 
     this.setState({

@@ -147,7 +147,7 @@ class ProjectDetail extends Component {
 
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
-        <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
+        <Descriptions.Item label="工具类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
         <Descriptions.Item label="项目周期">{basicInfo.endTime}</Descriptions.Item>
         <Descriptions.Item label="标注员">{basicInfo.labelers ? basicInfo.labelers[0].name : ''}{basicInfo.labelers ? <Tooltip title={basicInfo.labelers.map(labeler => labeler.name).join('，')}>...</Tooltip> : ''}</Descriptions.Item>

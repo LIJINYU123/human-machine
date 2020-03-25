@@ -5,6 +5,7 @@ import Highlighter from 'react-highlight-words';
 import { Button, Card, Divider, Icon, Input } from 'antd';
 import StandardTable from './component/StandardTable';
 import TemplateCreateView from './component/TemplateCreateView';
+import TemplateDetailView from './component/TemplateDetailView';
 import styles from './style.less';
 import ItemData from './map';
 
@@ -27,7 +28,12 @@ class TemplateManage extends Component {
     filteredInfo: null,
     searchText: '',
     searchedColumn: '',
+    templateInfo: {
+      templateName: '',
+      setting: {},
+    },
     modalVisible: false,
+    modifyModal: false,
   };
 
   componentDidMount() {
@@ -181,9 +187,34 @@ class TemplateManage extends Component {
     });
   };
 
+  handleModify = template => {
+    const { templateManage: { data }, dispatch } = this.props;
+    const result = data.filter(item => item.templateId === template.templateId);
+    if (result.length && result[0].setting.hasOwnProperty('options')) {
+      dispatch({
+        type: 'updateTemplate/saveOptions',
+        payload: result[0].setting.options,
+      });
+    }
+
+    if (result.length && result[0].setting.hasOwnProperty('minValue')) {
+
+    }
+    this.setState({
+      templateInfo: result.length ? result[0] : {},
+      modifyModal: true,
+    });
+  };
+
+  handleCancelModifyModal = () => {
+    this.setState({
+      modifyModal: false,
+    });
+  };
+
   render() {
     const { templateManage: { data }, loading } = this.props;
-    const { selectedRows, modalVisible } = this.state;
+    const { selectedRows, modalVisible, modifyModal, templateInfo } = this.state;
 
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -216,7 +247,7 @@ class TemplateManage extends Component {
         title: '操作',
         render: (_, template) => (
           <Fragment>
-            <a>编辑</a>
+            <a onClick={() => this.handleModify(template)}>编辑</a>
             <Divider type="vertical" />
             <a onClick={() => this.handleDelete(template.templateId)}>删除</a>
           </Fragment>
@@ -241,6 +272,7 @@ class TemplateManage extends Component {
           />
         </Card>
         <TemplateCreateView visible={modalVisible} onCancel={this.handleCancelModal} />
+        <TemplateDetailView visible={modifyModal} onCancel={this.handleCancelModifyModal} templateInfo={templateInfo}/>
       </PageHeaderWrapper>
     );
   }

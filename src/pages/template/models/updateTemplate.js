@@ -1,8 +1,8 @@
-import { createTemplate } from '../service';
+import { updateTemplate } from '../service';
 import { message } from 'antd';
 
 const CreateTemplate = {
-  namespace: 'createTemplate',
+  namespace: 'updateTemplate',
   state: {
     optionData: [],
   },
@@ -31,6 +31,14 @@ const CreateTemplate = {
       });
     },
 
+    * saveMinValue({ payload }, { put }) {
+      yield put({
+        type: 'saveMinData',
+        payload,
+      });
+    },
+
+
     * saveColor({ payload }, { put }) {
       yield put({
         type: 'saveOptionColor',
@@ -38,8 +46,8 @@ const CreateTemplate = {
       });
     },
 
-    * addTemplate({ payload, callback }, { call }) {
-      const response = yield call(createTemplate, payload);
+    * modifyTemplate({ payload, callback }, { call }) {
+      const response = yield call(updateTemplate, payload);
       if (response.status === 'ok') {
         message.success(response.message);
       } else {

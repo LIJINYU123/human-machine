@@ -15,9 +15,9 @@ import { SketchPicker } from 'react-color';
 import update from 'immutability-helper';
 import { connect } from 'dva';
 import ItemData from '../map';
-import styles from './style.less';
 import DragSortingTable from './DragSortingTable';
 import OptionCreateView from './OptionCreateView';
+import styles from './style.less';
 
 const { TextArea } = Input;
 const { FieldLabels, labelTypes } = ItemData;
@@ -25,11 +25,11 @@ const { FieldLabels, labelTypes } = ItemData;
 const formItemLayout = {
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 4 },
+    sm: { span: 6 },
   },
   wrapperCol: {
     xs: { span: 24 },
-    sm: { span: 20 },
+    sm: { span: 18 },
   },
 };
 
@@ -139,13 +139,14 @@ class TemplateCreateView extends Component {
           setting.optionData = optionData;
         }
 
+        setting.classifyName = classifyName;
+
         dispatch({
           type: 'createTemplate/addTemplate',
           payload: {
             labelType: labelType.slice(-1)[0],
             templateName,
             description,
-            classifyName,
             setting,
           },
           callback: () => {
@@ -190,7 +191,7 @@ class TemplateCreateView extends Component {
         visible={visible}
         onCancel={onCancel}
         onOk={this.onValidateForm}
-        style={{ minWidth: '950px' }}
+        style={{ minWidth: '800px' }}
         confirmLoading={submitting}
         destroyOnClose
       >

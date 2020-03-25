@@ -533,8 +533,8 @@ let templatesMockData = [
     templateName: '情感配置模板',
     description: '这是情感工具配置模板',
     createdTime: '2020-03-10 10:10:00',
-    classifyName: '情感',
     setting: {
+      classifyName: '情感',
       multiple: true,
       options: [
         {
@@ -586,8 +586,8 @@ let templatesMockData = [
     templateName: '句式配置模板',
     description: '这是句式工具配置模板',
     createdTime: '2020-03-11 12:10:00',
-    classifyName: '句式',
     setting: {
+      classifyName: '句式',
       multiple: true,
       options: [
         {
@@ -614,8 +614,8 @@ let templatesMockData = [
     templateName: '相似度配置模板',
     description: '这是相似度配置模板',
     createdTime: '2020-03-11 12:10:00',
-    classifyName: '相似度',
     setting: {
+      classifyName: '相似度',
       multiple: false,
       options: [
         {
@@ -637,9 +637,9 @@ let templatesMockData = [
     templateName: '实体识别配置模板',
     description: '这是句式工具配置模板',
     createdTime: '2020-03-12 13:10:00',
-    classifyName: '实体',
     setting: {
-      multiple: true,
+      classifyName: '实体',
+      saveType: 'nomal',
       options: [
         {
           optionId: 'country',
@@ -654,6 +654,7 @@ let templatesMockData = [
       ],
     },
   },
+
 ];
 
 function getProjects(req, res, u) {
@@ -908,6 +909,18 @@ function createTemplate(req, res, u, b) {
   return res.json({ message: '创建成功', status: 'ok' });
 }
 
+function updateTemplate(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  templatesMockData.forEach(template => {
+    if (template.templateId === body.templateId) {
+      template.templateName = body.templateName;
+      template.description = body.description;
+      template.setting = body.setting;
+    }
+  });
+  return res.json({ message: '更新成功', status: 'ok' });
+}
+
 function deleteTemplates(req, res, u, b) {
   const body = (b && b.body) || req.body;
   templatesMockData = templatesMockData.filter(item => !body.templateIds.includes(item.templateId));
@@ -995,6 +1008,7 @@ export default {
   'DELETE /api/project/task-data': deleteTaskData,
   'GET /api/project/default-templates': getTemplates,
   'PUT /api/project/default-templates': createTemplate,
+  'POST /api/project/default-templates': updateTemplate,
   'DELETE /api/project/default-templates': deleteTemplates,
   'GET /api/project/members': getRoleMembers,
   'POST /api/project/review-result': saveReviewResult,

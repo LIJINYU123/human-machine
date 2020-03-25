@@ -19,3 +19,10 @@ export async function createTemplate(params) {
     data: params,
   });
 }
+
+export async function updateTemplate(params) {
+  return request('/api/project/default-templates', {
+    method: 'POST',
+    data: params,
+  });
+}
