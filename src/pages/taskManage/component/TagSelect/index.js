@@ -1,4 +1,4 @@
-import { Icon, Tag } from 'antd';
+import { Icon, Tag } from 'antd/lib/index';
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import styles from './index.less';

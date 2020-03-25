@@ -1,5 +1,5 @@
 import { parse } from 'url';
-import moment from 'moment';
+import moment from 'moment/moment';
 
 const projectMockData = [
   {
@@ -133,7 +133,7 @@ const taskMockData = [
 
 const markToolsMockData = [
   {
-    templateName: '情感',
+    classifyName: '情感',
     multiple: true,
     options: [
       {
@@ -182,7 +182,7 @@ const markToolsMockData = [
 
 const matchMarkToolsMockData = [
   {
-    templateName: '相似度',
+    classifyName: '相似度',
     multiple: false,
     options: [
       {
@@ -201,7 +201,7 @@ const matchMarkToolsMockData = [
 
 const nerMarkToolsMockData = [
   {
-    templateName: '实体',
+    classifyName: '实体',
     multiple: true,
     options: [
       {

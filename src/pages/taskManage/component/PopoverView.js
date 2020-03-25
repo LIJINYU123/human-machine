@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'antd';
+import { Button, Form } from 'antd/lib/index';
 import TagSelect from './TagSelect';
-import { connect } from 'dva';
+import { connect } from 'dva/index';
 
 @connect(({ textMark }) => ({
   textMark,
@@ -42,7 +42,7 @@ class PopoverView extends Component {
 
     return (
       <Form {...formItemLayout}>
-        <Form.Item label={markTool.templateName}>
+        <Form.Item label={markTool.classifyName}>
           {
             getFieldDecorator('result', {
               // eslint-disable-next-line max-len

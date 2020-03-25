@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'dva';
-import { Card, Row, Col, Radio, Input, Button, Icon, Badge } from 'antd';
+import { connect } from 'dva/index';
+import { Card, Row, Col, Radio, Input, Button, Icon, Badge } from 'antd/lib/index';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import StandardTable from './component/StandardTable';
 import styles from './style.less';
@@ -138,7 +138,7 @@ class TaskCenter extends Component {
 
   handleReviewDetails = project => {
     router.push({
-      pathname: '/person/project-detail',
+      pathname: '/task-manage/project-detail',
       state: {
         projectId: project.projectId,
       },
@@ -147,7 +147,7 @@ class TaskCenter extends Component {
 
   handleJumptoInProgress = () => {
     router.push({
-      pathname: '/person/my-task',
+      pathname: '/task-manage/my-task',
       state: {
         status: 'labeling,reject',
       },

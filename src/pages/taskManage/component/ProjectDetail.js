@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Descriptions, Row, Col } from 'antd';
+import { Card, Button, Descriptions, Row, Col } from 'antd/lib/index';
 import StandardTable from './StandardTable';
 import styles from './style.less';
 import ItemData from '../map';
 import Link from 'umi/link';
-import { connect } from 'dva';
+import { connect } from 'dva/index';
 import router from 'umi/router';
 
 const { labelTypeName } = ItemData;
@@ -73,7 +73,7 @@ class ProjectDetail extends Component {
 
   handleJumptoInProgress = () => {
     router.push({
-      pathname: '/person/my-task',
+      pathname: '/task-manage/my-task',
       state: {
         status: 'labeling,reject',
       },
@@ -82,7 +82,7 @@ class ProjectDetail extends Component {
 
   handleJumptoComplete = () => {
     router.push({
-      pathname: '/person/my-task',
+      pathname: '/task-manage/my-task',
       state: {
         status: 'complete',
       },
@@ -104,7 +104,7 @@ class ProjectDetail extends Component {
     );
 
     const action = (
-      <Link to="/person/task-center">
+      <Link to="/task-manage">
         <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
       </Link>
     );

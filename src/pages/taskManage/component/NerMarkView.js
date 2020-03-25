@@ -10,8 +10,8 @@ import {
   Popover,
   Row,
   Col, Divider,
-} from 'antd';
-import { connect } from 'dva';
+} from 'antd/lib/index';
+import { connect } from 'dva/index';
 import Highlighter from 'react-highlight-words';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
@@ -74,7 +74,7 @@ class NerMarkView extends Component {
 
   handleGobackMyTask = () => {
     router.push({
-      pathname: '/person/my-task',
+      pathname: '/task-manage/my-task',
       state: {
         status: 'labeling,reject',
       },

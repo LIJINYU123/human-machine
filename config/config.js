@@ -118,7 +118,7 @@ export default {
           routes: [
             {
               path: '/',
-              redirect: '/person/task-center',
+              redirect: '/task-manage',
             },
             {
               path: '/project',
@@ -147,26 +147,6 @@ export default {
               hideInMenu: true,
             },
             {
-              path: '/task',
-              name: '任务管理',
-              icon: 'schedule',
-              routes: [
-                {
-                  name: '文本标注',
-                  icon: 'container',
-                  path: '/task/text-task',
-                  component: './task/text-task',
-                },
-                {
-                  name: '任务详情页',
-                  icon: 'container',
-                  path: '/task/text-detail',
-                  component: './task/text-task/component/Detail',
-                  hideInMenu: true,
-                },
-              ],
-            },
-            {
               name: 'department',
               icon: 'audit',
               path: '/agency/department',
@@ -187,35 +167,35 @@ export default {
             {
               name: '任务管理',
               icon: 'schedule',
-              path: '/person/task-center',
-              component: './personCenter/task-center',
+              path: '/task-manage',
+              component: './taskManage',
             },
             {
               name: '项目详情页',
               icon: 'container',
-              path: '/person/project-detail',
-              component: './personCenter/task-center/component/ProjectDetail',
+              path: '/task-manage/project-detail',
+              component: './taskManage/component/ProjectDetail',
               hideInMenu: true,
             },
             {
               name: '我的任务',
               icon: 'container',
-              path: '/person/my-task',
-              component: './personCenter/task-center/component/MyTaskView',
+              path: '/task-manage/my-task',
+              component: './taskManage/component/MyTaskView',
               hideInMenu: true,
             },
             {
               name: '文本标注',
               icon: 'container',
-              path: '/person/my-task/text-mark',
-              component: './personCenter/task-center/component/TextMarkView',
+              path: '/task-manage/my-task/text-mark',
+              component: './taskManage/component/TextMarkView',
               hideInMenu: true,
             },
             {
               name: '文本标注',
               icon: 'container',
-              path: '/person/my-task/ner-mark',
-              component: './personCenter/task-center/component/NerMarkView',
+              path: '/task-manage/my-task/ner-mark',
+              component: './taskManage/component/NerMarkView',
               hideInMenu: true,
             },
             {

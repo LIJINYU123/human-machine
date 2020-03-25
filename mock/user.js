@@ -37,45 +37,25 @@ export default {
     const userId = req.header('UserID');
     const directory = {
       SYECO: [
-        // {
-        //   path: '/analysis',
-        //   name: '数据分析',
-        //   icon: 'dashboard',
-        //   component: './statistic',
-        // },
-        // {
-        //   path: '/corpus',
-        //   name: '对话录入',
-        //   icon: 'form',
-        //   component: './corpus',
-        // },
-        // {
-        //   path: '/history',
-        //   name: '历史记录',
-        //   icon: 'history',
-        //   component: './history',
-        // },
         {
           path: '/project',
           name: '项目管理',
           icon: 'project',
           component: './project',
-          children: [
-            {
-              name: '项目详情页',
-              icon: 'container',
-              path: '/project/detail',
-              component: './project/component/ProjectDetail',
-              hideInMenu: true,
-            },
-            {
-              name: '任务详情页',
-              icon: 'container',
-              path: '/project/text/task-detail',
-              component: './project/component/TextTaskDetail',
-              hideInMenu: true,
-            },
-          ],
+        },
+        {
+          name: '项目详情页',
+          icon: 'container',
+          path: '/project/detail',
+          component: './project/component/ProjectDetail',
+          hideInMenu: true,
+        },
+        {
+          name: '任务详情页',
+          icon: 'container',
+          path: '/project/text/task-detail',
+          component: './project/component/TextTaskDetail',
+          hideInMenu: true,
         },
         {
           path: '/template',
@@ -83,26 +63,6 @@ export default {
           icon: 'tool',
           component: './template',
         },
-        // {
-        //   path: '/task',
-        //   name: '任务管理',
-        //   icon: 'schedule',
-        //   children: [
-        //     {
-        //       name: '文本标注',
-        //       icon: 'container',
-        //       path: '/task/text-task',
-        //       component: './task/text-task',
-        //     },
-        //     {
-        //       name: '任务详情页',
-        //       icon: 'container',
-        //       path: '/task/text-detail',
-        //       component: './task/text-task/component/Detail',
-        //       hideInMenu: true,
-        //     },
-        //   ],
-        // },
         {
           name: '机构管理',
           icon: 'audit',
@@ -124,35 +84,35 @@ export default {
         {
           name: '任务管理',
           icon: 'schedule',
-          path: '/person/task-center',
-          component: './personCenter/task-center',
+          path: '/task-manage',
+          component: './taskManage',
         },
         {
           name: '项目详情页',
           icon: 'container',
-          path: '/person/project-detail',
-          component: './personCenter/task-center/component/ProjectDetail',
+          path: '/task-manage/project-detail',
+          component: './taskManage/component/ProjectDetail',
           hideInMenu: true,
         },
         {
           name: '我的任务',
           icon: 'container',
-          path: '/person/my-task',
-          component: './personCenter/task-center/component/MyTaskView',
+          path: '/task-manage/my-task',
+          component: './taskManage/component/MyTaskView',
           hideInMenu: true,
         },
         {
           name: '文本标注',
           icon: 'container',
-          path: '/person/my-task/text-mark',
-          component: './personCenter/task-center/component/TextMarkView',
+          path: '/task-manage/my-task/text-mark',
+          component: './taskManage/component/TextMarkView',
           hideInMenu: true,
         },
         {
           name: '文本标注',
           icon: 'container',
-          path: '/person/my-task/ner-mark',
-          component: './personCenter/task-center/component/NerMarkView',
+          path: '/task-manage/my-task/ner-mark',
+          component: './taskManage/component/NerMarkView',
           hideInMenu: true,
         },
         {

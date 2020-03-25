@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'dva';
-import { Modal, Form, Select, Input, Radio } from 'antd';
+import { connect } from 'dva/index';
+import { Modal, Form, Select, Input, Radio } from 'antd/lib/index';
 import ItemData from '../map';
 
 const { FieldLabels } = ItemData;

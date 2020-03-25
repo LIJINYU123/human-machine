@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Table, Alert } from 'antd';
+import { Table, Alert } from 'antd/lib/index';
 import styles from './style.less';
 
 class StandardTable extends Component {

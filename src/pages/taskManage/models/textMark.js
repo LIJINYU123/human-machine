@@ -1,4 +1,4 @@
-import { message } from 'antd';
+import { message } from 'antd/lib/index';
 import { queryLabelData, queryMarkTools, saveTextMarkResult, deleteTextMarkResult, saveReviewResult } from '../service';
 
 const TextMark = {

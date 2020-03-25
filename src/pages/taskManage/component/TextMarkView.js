@@ -10,12 +10,12 @@ import {
   Tag,
   Divider,
   Row, Col, Radio,
-} from 'antd';
+} from 'antd/lib/index';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
 import ItemData from '../map';
 import router from 'umi/router';
-import { connect } from 'dva';
+import { connect } from 'dva/index';
 import StandardTable from './StandardTable';
 import PopoverView from './PopoverView';
 import Highlighter from 'react-highlight-words';
@@ -75,7 +75,7 @@ class TextMarkView extends Component {
 
   handleGobackMyTask = () => {
     router.push({
-      pathname: '/person/my-task',
+      pathname: '/task-manage/my-task',
       state: {
         status: 'labeling,reject',
       },

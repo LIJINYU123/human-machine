@@ -1,5 +1,5 @@
 import { queryMyTask, queryTaskNumber, queryProjectDetail, queryTaskData, receiveTask } from '../service';
-import { message } from 'antd';
+import { message } from 'antd/lib/index';
 
 
 const ProjectDetail = {

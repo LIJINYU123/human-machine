@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { Badge, Button, Card, Icon, Input, Progress } from 'antd';
+import { Badge, Button, Card, Icon, Input, Progress } from 'antd/lib/index';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Highlighter from 'react-highlight-words';
 import StandardTable from './StandardTable';
-import { connect } from 'dva';
+import { connect } from 'dva/index';
 import ItemData from '../map';
 import Link from 'umi/link';
 import router from 'umi/router';
@@ -134,14 +134,14 @@ class MyTaskView extends Component {
   handleJumpToMarkView = task => {
     if (['textClassify', 'textMatch'].includes(task.labelType)) {
       router.push({
-        pathname: '/person/my-task/text-mark',
+        pathname: '/task-manage/my-task/text-mark',
         state: {
           taskInfo: task,
         },
       });
     } else if (task.labelType === 'ner') {
       router.push({
-        pathname: '/person/my-task/ner-mark',
+        pathname: '/task-manage/my-task/ner-mark',
         state: {
           taskInfo: task,
         },
@@ -155,7 +155,7 @@ class MyTaskView extends Component {
     filteredInfo = filteredInfo || {};
 
     const action = (
-      <Link to="/person/task-center">
+      <Link to="/task-manage">
         <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
       </Link>
     );
