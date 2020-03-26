@@ -36,3 +36,17 @@ export async function queryGroupList(params) {
     params,
   });
 }
+
+export async function addGroup(params) {
+  return request('/api/groups', {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+export async function deleteGroup(params) {
+  return request('/api/groups', {
+    method: 'DELETE',
+    data: params,
+  });
+}

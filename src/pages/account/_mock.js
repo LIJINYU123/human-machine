@@ -55,7 +55,7 @@ let mockData = [
   },
 ];
 
-const groupData = [
+let groupData = [
   {
     groupId: '1',
     groupName: '标注组A',
@@ -64,19 +64,20 @@ const groupData = [
       {
         userId: 'SY0123',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
       {
         userId: 'SY0124',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
       {
         userId: 'SY0125',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
     ],
+    createdTime: '2020-03-10 10:00:00',
   },
   {
     groupId: '2',
@@ -86,19 +87,20 @@ const groupData = [
       {
         userId: 'SY0126',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
       {
         userId: 'SY0127',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
       {
         userId: 'SY0128',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
     ],
+    createdTime: '2020-03-11 10:00:00',
   },
   {
     groupId: '3',
@@ -108,19 +110,20 @@ const groupData = [
       {
         userId: 'SY0129',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
       {
         userId: 'SY0130',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
       {
         userId: 'SY0131',
         name: Mock.Random.cname(),
-        roleName: '标注员',
+        roleId: 'inspector',
       },
     ],
+    createdTime: '2020-03-12 10:00:00',
   },
 ];
 
@@ -145,10 +148,9 @@ function getUsers(req, res, u) {
     const s = params.sorter.split('_');
     dataSource = dataSource.sort((prev, next) => {
       if (s[1] === 'descend') {
-        return next[s[0]] - prev[s[0]];
+        return Date.parse(next[s[0]]) - Date.parse(prev[s[0]]);
       }
-
-      return prev[s[0]] - next[s[0]];
+      return Date.parse(prev[s[0]]) - Date.parse(next[s[0]]);
     });
   }
 
@@ -235,6 +237,18 @@ function getGroups(req, res, u) {
 
   const params = parse(url, true).query;
   let dataSource = groupData;
+
+
+  if (params.sorter) {
+    const s = params.sorter.split('_');
+    dataSource = dataSource.sort((prev, next) => {
+      if (s[1] === 'descend') {
+        return Date.parse(next[s[0]]) - Date.parse(prev[s[0]]);
+      }
+      return Date.parse(prev[s[0]]) - Date.parse(next[s[0]]);
+    });
+  }
+
   if (params.groupName) {
     // eslint-disable-next-line max-len
     dataSource = dataSource.filter(item => item.groupName.toLowerCase().includes(params.groupName.toLowerCase()));
@@ -243,10 +257,31 @@ function getGroups(req, res, u) {
   return res.json(dataSource);
 }
 
+function addGroup(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  groupData.push({
+    groupId: Mock.Random.word(),
+    groupName: body.groupName,
+    userAmount: body.userIds.length,
+    userInfo: body.userIds.map(id => ({ userId: id, name: Mock.Random.cname(), roleId: 'inspector' })),
+    createdTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+  });
+
+  return res.json({ message: '创建成功', status: 'ok' });
+}
+
+function deleteGroup(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  groupData = groupData.filter(group => !body.groupIds.includes(group.groupId));
+  return res.json({ message: '删除成功', status: 'ok' });
+}
+
 export default {
   'GET /api/users': getUsers,
   'GET /api/user/detail': getUserDetail,
   'DELETE /api/users': deleteUser,
   'POST /api/user/detail': updateUser,
   'GET /api/groups': getGroups,
+  'PUT /api/groups': addGroup,
+  'DELETE /api/groups': deleteGroup,
 };

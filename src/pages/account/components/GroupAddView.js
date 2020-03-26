@@ -8,6 +8,7 @@ const { FieldLabels } = ItemData;
 
 @connect(({ groupList, loading }) => ({
   groupList,
+  submitting: loading.effects['groupList/addGroup'],
 }))
 class GroupAddView extends Component {
   state = {
@@ -30,6 +31,27 @@ class GroupAddView extends Component {
     this.setState({ treeData, treeMap, groupIds });
   }
 
+  handleConfirm = () => {
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    const { targetKeys } = this.state;
+    validateFieldsAndScroll(error => {
+      if (!error) {
+        const values = getFieldsValue();
+        dispatch({
+          type: 'groupList/addGroup',
+          payload: { ...values, userIds: targetKeys },
+          callback: () => {
+            dispatch({
+              type: 'groupList/fetchGroups',
+              payload: { sorter: 'createdTime_descend' },
+            });
+            onCancel();
+          },
+        });
+      }
+    });
+  };
+
   handleTreeTransferChange = targetKeys => {
     const { treeMap, groupIds } = this.state;
     let collectKeys = [];
@@ -44,7 +66,7 @@ class GroupAddView extends Component {
   };
 
   render() {
-    const { visible, onCancel, form: { getFieldDecorator } } = this.props;
+    const { visible, onCancel, form: { getFieldDecorator }, submitting } = this.props;
     const { targetKeys, treeData } = this.state;
 
     const formItemLayout = {
@@ -64,6 +86,8 @@ class GroupAddView extends Component {
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}
+        onOk={this.handleConfirm}
+        confirmLoading={submitting}
       >
         <Form {...formItemLayout}>
           <Form.Item label={FieldLabels.groupName}>

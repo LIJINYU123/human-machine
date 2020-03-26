@@ -19,10 +19,11 @@ class GroupManage extends Component {
     searchedColumn: '',
   };
 
-  componentDidMount() {
+  componentWillMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'groupList/fetchGroups',
+      payload: { sorter: 'createdTime_descend' },
     });
   }
 
@@ -61,6 +62,39 @@ class GroupManage extends Component {
     dispatch({
       type: 'groupList/fetchGroups',
       payload: params,
+    });
+  };
+
+  handleDelete = group => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'groupList/deleteGroups',
+      payload: { groupIds: [group.groupId] },
+      callback: () => {
+        dispatch({
+          type: 'groupList/fetchGroups',
+          payload: { sorter: 'createdTime_descend' },
+        });
+      },
+    });
+  };
+
+  handleBatchDelete = () => {
+    const { dispatch } = this.props;
+    const { selectedRows } = this.state;
+    dispatch({
+      type: 'groupList/deleteGroups',
+      payload: { groupIds: selectedRows.map(row => row.groupId) },
+      callback: () => {
+        dispatch({
+          type: 'groupList/fetchGroups',
+          payload: { sorter: 'createdTime_descend' },
+        });
+        this.setState({
+          selectedRows: [],
+        });
+      },
     });
   };
 
@@ -140,12 +174,18 @@ class GroupManage extends Component {
         render: val => <a>{val}</a>,
       },
       {
+        title: '创建时间',
+        dataIndex: 'createdTime',
+        sorter: true,
+        defaultSortOrder: 'descend',
+      },
+      {
         title: '操作',
         render: (_, group) => (
          <Fragment>
            <a>编辑</a>
            <Divider type="vertical" />
-           <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消"><a>删除</a></Popconfirm>
+           <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(group)}><a>删除</a></Popconfirm>
          </Fragment>),
       },
     ];
@@ -155,7 +195,7 @@ class GroupManage extends Component {
         <Card bordered={false}>
           <div className={styles.tableListOperator}>
             <Button icon="plus" type="primary" onClick={this.handleAddGroup}>创建</Button>
-            <Button icon="delete" type="danger">删除</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}
