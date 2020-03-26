@@ -328,7 +328,7 @@ class TextProjectList extends Component {
         <Card bordered={false}>
           <div className={styles.tableListForm}>{this.renderForm()}</div>
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={this.handleAdd}>新增</Button>
+            <Button icon="plus" type="primary" onClick={this.handleAdd}>创建</Button>
             <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
           </div>
           <StandardTable

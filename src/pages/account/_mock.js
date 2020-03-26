@@ -240,22 +240,7 @@ function getGroups(req, res, u) {
     dataSource = dataSource.filter(item => item.groupName.toLowerCase().includes(params.groupName.toLowerCase()));
   }
 
-  let pageSize = 10;
-  if (params.pageSize) {
-    pageSize = parseInt(`${params.pageSize}`, 0);
-  }
-
-
-  const result = {
-    list: dataSource,
-    pagination: {
-      total: dataSource.length,
-      pageSize,
-      current: parseInt(`${params.currentPage}`, 10) || 1,
-    },
-};
-
-  return res.json(result);
+  return res.json(dataSource);
 }
 
 export default {

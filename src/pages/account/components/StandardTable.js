@@ -48,10 +48,10 @@ class StandardTable extends Component {
   render() {
     const { selectedRowKeys } = this.state;
     const { data, ...rest } = this.props;
-    const { list = [], pagination = false } = data || {};
+    const { list = data, pagination = false } = data || {};
     const paginationProps = pagination ? {
       showSizeChanger: true, showQuickJumper: true, ...pagination,
-    } : false;
+    } : { showSizeChanger: true, showQuickJumper: true };
 
     const rowSelection = {
       selectedRowKeys,

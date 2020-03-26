@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Button, Card, Divider, Icon, Input, Popconfirm } from 'antd';
 import StandardTable from './StandardTable';
+import GroupAddView from './GroupAddView';
 import styles from './style.less';
 import Highlighter from 'react-highlight-words';
 
@@ -28,6 +29,18 @@ class GroupManage extends Component {
   handleSelectRows = rows => {
     this.setState({
       selectedRows: rows,
+    });
+  };
+
+  handleAddGroup = () => {
+    this.setState({
+      addModalVisible: true,
+    });
+  };
+
+  handleCancelAddModal = () => {
+    this.setState({
+      addModalVisible: false,
     });
   };
 
@@ -112,8 +125,8 @@ class GroupManage extends Component {
   };
 
   render() {
-    const { groupList: { data }, loading } = this.props;
-    const { selectedRows } = this.state;
+    const { groupList: { groups }, loading } = this.props;
+    const { selectedRows, addModalVisible } = this.state;
 
     const columns = [
       {
@@ -141,18 +154,19 @@ class GroupManage extends Component {
       <Fragment>
         <Card bordered={false}>
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary">创建</Button>
+            <Button icon="plus" type="primary" onClick={this.handleAddGroup}>创建</Button>
             <Button icon="delete" type="danger">删除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}
             loading={loading}
-            data={data}
+            data={groups}
             columns={columns}
             onSelectRow={this.handleSelectRows}
             onChange={this.handleStandardTableChange}
           />
         </Card>
+        <GroupAddView visible={addModalVisible} onCancel={this.handleCancelAddModal} groups={groups} />
       </Fragment>
     );
   }

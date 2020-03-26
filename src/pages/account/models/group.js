@@ -4,10 +4,7 @@ import { queryGroupList } from '../service';
 const Group = {
   namespace: 'groupList',
   state: {
-    data: {
-      list: [],
-      pagination: {},
-    },
+    groups: [],
   },
   effects: {
     * fetchGroups({ payload }, { call, put }) {
@@ -20,7 +17,7 @@ const Group = {
   },
   reducers: {
     group(state, action) {
-      return { ...state, data: action.payload };
+      return { ...state, groups: action.payload };
     },
   },
 };
