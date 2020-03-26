@@ -50,3 +50,10 @@ export async function deleteGroup(params) {
     data: params,
   });
 }
+
+export async function modifyGroup(params) {
+  return request('/api/groups', {
+    method: 'POST',
+    data: params,
+  });
+}

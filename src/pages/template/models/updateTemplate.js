@@ -31,14 +31,6 @@ const CreateTemplate = {
       });
     },
 
-    * saveMinValue({ payload }, { put }) {
-      yield put({
-        type: 'saveMinData',
-        payload,
-      });
-    },
-
-
     * saveColor({ payload }, { put }) {
       yield put({
         type: 'saveOptionColor',

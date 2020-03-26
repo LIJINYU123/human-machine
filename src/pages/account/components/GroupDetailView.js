@@ -7,12 +7,11 @@ import ItemData from './map';
 const { FieldLabels } = ItemData;
 
 @connect(({ groupList, loading }) => ({
-  groupList,
-  submitting: loading.effects['groupList/addGroup'],
+  targetKeys: groupList.targetKeys,
+  submitting: loading.effects['groupList/modifyGroup'],
 }))
-class GroupAddView extends Component {
+class GroupDetailView extends Component {
   state = {
-    targetKeys: [],
     treeData: [],
     treeMap: {},
     groupIds: [],
@@ -39,14 +38,13 @@ class GroupAddView extends Component {
   }
 
   handleConfirm = () => {
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
-    const { targetKeys } = this.state;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel, currentGroup, targetKeys } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
-          type: 'groupList/addGroup',
-          payload: { ...values, userIds: targetKeys },
+          type: 'groupList/modifyGroup',
+          payload: { ...values, groupId: currentGroup.groupId, userIds: targetKeys },
           callback: () => {
             dispatch({
               type: 'groupList/fetchGroups',
@@ -60,6 +58,7 @@ class GroupAddView extends Component {
   };
 
   handleTreeTransferChange = targetKeys => {
+    const { dispatch } = this.props;
     const { treeMap, groupIds } = this.state;
     let collectKeys = [];
     targetKeys.forEach(key => {
@@ -69,12 +68,15 @@ class GroupAddView extends Component {
         collectKeys.push(key);
       }
     });
-    this.setState({ targetKeys: collectKeys });
+    dispatch({
+      type: 'groupList/saveTargetKeys',
+      payload: collectKeys,
+    });
   };
 
   render() {
-    const { visible, onCancel, form: { getFieldDecorator }, submitting } = this.props;
-    const { targetKeys, treeData } = this.state;
+    const { visible, onCancel, form: { getFieldDecorator }, currentGroup, targetKeys, submitting } = this.props;
+    const { treeData } = this.state;
 
     const formItemLayout = {
       labelCol: {
@@ -89,7 +91,7 @@ class GroupAddView extends Component {
 
     return (
       <Modal
-        title="创建组别"
+        title="组别信息"
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}
@@ -106,6 +108,7 @@ class GroupAddView extends Component {
                     message: '请输入组别名称',
                   },
                 ],
+                initialValue: currentGroup.groupName,
               })(<Input />)
             }
           </Form.Item>
@@ -116,4 +119,4 @@ class GroupAddView extends Component {
   }
 }
 
-export default Form.create()(GroupAddView);
+export default Form.create()(GroupDetailView);

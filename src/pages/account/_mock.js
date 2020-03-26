@@ -276,6 +276,16 @@ function deleteGroup(req, res, u, b) {
   return res.json({ message: '删除成功', status: 'ok' });
 }
 
+function modifyGroup(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  groupData.forEach(group => {
+    if (group.groupId === body.groupId) {
+      group.groupName = body.groupName;
+    }
+  });
+  return res.json({ message: '更新成功', status: 'ok' });
+}
+
 export default {
   'GET /api/users': getUsers,
   'GET /api/user/detail': getUserDetail,
@@ -284,4 +294,5 @@ export default {
   'GET /api/groups': getGroups,
   'PUT /api/groups': addGroup,
   'DELETE /api/groups': deleteGroup,
+  'POST /api/groups': modifyGroup,
 };

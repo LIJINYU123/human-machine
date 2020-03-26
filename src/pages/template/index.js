@@ -197,9 +197,6 @@ class TemplateManage extends Component {
       });
     }
 
-    if (result.length && result[0].setting.hasOwnProperty('minValue')) {
-
-    }
     this.setState({
       templateInfo: result.length ? result[0] : {},
       modifyModal: true,

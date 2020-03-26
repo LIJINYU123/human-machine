@@ -1,10 +1,11 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Button, Card, Divider, Icon, Input, Popconfirm } from 'antd';
+import Highlighter from 'react-highlight-words';
 import StandardTable from './StandardTable';
 import GroupAddView from './GroupAddView';
+import GroupDetailView from './GroupDetailView';
 import styles from './style.less';
-import Highlighter from 'react-highlight-words';
 
 @connect(({ groupList, loading }) => ({
   groupList,
@@ -14,12 +15,14 @@ class GroupManage extends Component {
   state = {
     modalVisible: false,
     addModalVisible: false,
+    currentGroup: {},
     selectedRows: [],
     searchText: '',
     searchedColumn: '',
   };
 
-  componentWillMount() {
+
+  componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
       type: 'groupList/fetchGroups',
@@ -42,6 +45,25 @@ class GroupManage extends Component {
   handleCancelAddModal = () => {
     this.setState({
       addModalVisible: false,
+    });
+  };
+
+  handleModify = group => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'groupList/saveTargetKeys',
+      payload: group.userInfo.map(user => user.userId),
+    });
+
+    this.setState({
+      currentGroup: group,
+      modalVisible: true,
+    });
+  };
+
+  handleCancelModifyModal = () => {
+    this.setState({
+      modalVisible: false,
     });
   };
 
@@ -160,7 +182,7 @@ class GroupManage extends Component {
 
   render() {
     const { groupList: { groups }, loading } = this.props;
-    const { selectedRows, addModalVisible } = this.state;
+    const { selectedRows, addModalVisible, modalVisible, currentGroup } = this.state;
 
     const columns = [
       {
@@ -171,7 +193,7 @@ class GroupManage extends Component {
       {
         title: '用户数目',
         dataIndex: 'userAmount',
-        render: val => <a>{val}</a>,
+        render: val => <Button type="link">{val}</Button>,
       },
       {
         title: '创建时间',
@@ -183,7 +205,7 @@ class GroupManage extends Component {
         title: '操作',
         render: (_, group) => (
          <Fragment>
-           <a>编辑</a>
+           <a onClick={() => this.handleModify(group)}>编辑</a>
            <Divider type="vertical" />
            <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(group)}><a>删除</a></Popconfirm>
          </Fragment>),
@@ -207,6 +229,7 @@ class GroupManage extends Component {
           />
         </Card>
         <GroupAddView visible={addModalVisible} onCancel={this.handleCancelAddModal} groups={groups} />
+        <GroupDetailView visible={modalVisible} onCancel={this.handleCancelModifyModal} groups={groups} currentGroup={currentGroup} />
       </Fragment>
     );
   }
