@@ -286,6 +286,35 @@ function modifyGroup(req, res, u, b) {
   return res.json({ message: '更新成功', status: 'ok' });
 }
 
+function getUserInfo(req, res, u) {
+  let url = u;
+
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+  const params = parse(url, true).query;
+
+  if (params.groupId) {
+    const filterGroup = groupData.filter(group => group.groupId === params.groupId);
+    if (filterGroup.length) {
+      return res.json(filterGroup[0].userInfo);
+    }
+  }
+
+  return res.json([])
+}
+
+function deleteUserInfo(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  groupData.forEach(group => {
+    if (group.groupId === body.groupId) {
+      group.userInfo = group.userInfo.filter(user => !body.userIds.includes(user.userId));
+    }
+  });
+  return res.json({ message: '删除成功', status: 'ok' });
+}
+
 export default {
   'GET /api/users': getUsers,
   'GET /api/user/detail': getUserDetail,
@@ -295,4 +324,6 @@ export default {
   'PUT /api/groups': addGroup,
   'DELETE /api/groups': deleteGroup,
   'POST /api/groups': modifyGroup,
+  'GET /api/user-info': getUserInfo,
+  'DELETE /api/user-info': deleteUserInfo,
 };

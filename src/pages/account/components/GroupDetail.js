@@ -1,33 +1,37 @@
 import React, { Component, Fragment } from 'react';
-import { connect } from 'dva';
-import { Button, Card, Divider, Icon, Input, Popconfirm } from 'antd';
-import Highlighter from 'react-highlight-words';
-import StandardTable from './StandardTable';
-import GroupAddView from './GroupAddView';
-import GroupDetailView from './GroupDetailView';
-import styles from './style.less';
 import router from 'umi/router';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import { Card, Button, Input, Icon } from 'antd';
+import Highlighter from 'react-highlight-words';
+import Link from 'umi/link';
+import { connect } from 'dva';
+import StandardTable from './StandardTable';
+import styles from './style.less';
+import ItemData from './map';
+
+const { RoleName } = ItemData;
 
 @connect(({ groupList, loading }) => ({
   groupList,
-  loading: loading.effects['groupList/fetchGroups'],
 }))
-class GroupManage extends Component {
+class GroupDetail extends Component {
   state = {
-    modalVisible: false,
-    addModalVisible: false,
-    currentGroup: {},
+    groupId: '',
+    groupName: '',
     selectedRows: [],
     searchText: '',
     searchedColumn: '',
   };
 
-
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, location } = this.props;
     dispatch({
-      type: 'groupList/fetchGroups',
-      payload: { sorter: 'createdTime_descend' },
+      type: 'groupList/fetchUserInfo',
+      payload: { groupId: location.state.groupId },
+    });
+    this.setState({
+      groupId: location.state.groupId,
+      groupName: location.state.groupName,
     });
   }
 
@@ -37,67 +41,32 @@ class GroupManage extends Component {
     });
   };
 
-  handleAddGroup = () => {
-    this.setState({
-      addModalVisible: true,
-    });
-  };
-
-  handleCancelAddModal = () => {
-    this.setState({
-      addModalVisible: false,
-    });
-  };
-
-  handleModify = group => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'groupList/saveTargetKeys',
-      payload: group.userInfo.map(user => user.userId),
-    });
-
-    this.setState({
-      currentGroup: group,
-      modalVisible: true,
-    });
-  };
-
-  handleCancelModifyModal = () => {
-    this.setState({
-      modalVisible: false,
-    });
-  };
-
   handleStandardTableChange = (pagination, filterArg, sorter) => {
     const { dispatch } = this.props;
+    const { groupId } = this.state;
     const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      groupId,
     };
-
-    if (sorter.field) {
-      params.sorter = `${sorter.field}_${sorter.order}`;
-    }
 
     if (this.state.searchText !== '') {
       params[this.state.searchedColumn] = this.state.searchText;
     }
     dispatch({
-      type: 'groupList/fetchGroups',
+      type: 'groupList/fetchUserInfo',
       payload: params,
     });
   };
 
-  handleDelete = group => {
+  handleDelete = (user, groupId) => {
     const { dispatch } = this.props;
 
     dispatch({
-      type: 'groupList/deleteGroups',
-      payload: { groupIds: [group.groupId] },
+      type: 'groupList/deleteUserInfo',
+      payload: { userIds: [user.userId], groupId },
       callback: () => {
         dispatch({
-          type: 'groupList/fetchGroups',
-          payload: { sorter: 'createdTime_descend' },
+          type: 'groupList/fetchUserInfo',
+          payload: { groupId },
         });
       },
     });
@@ -105,14 +74,14 @@ class GroupManage extends Component {
 
   handleBatchDelete = () => {
     const { dispatch } = this.props;
-    const { selectedRows } = this.state;
+    const { selectedRows, groupId } = this.state;
     dispatch({
-      type: 'groupList/deleteGroups',
-      payload: { groupIds: selectedRows.map(row => row.groupId) },
+      type: 'groupList/deleteUserInfo',
+      payload: { userIds: selectedRows.map(row => row.userId), groupId },
       callback: () => {
         dispatch({
-          type: 'groupList/fetchGroups',
-          payload: { sorter: 'createdTime_descend' },
+          type: 'groupList/fetchUserInfo',
+          payload: { groupId },
         });
         this.setState({
           selectedRows: [],
@@ -121,12 +90,11 @@ class GroupManage extends Component {
     });
   };
 
-  handleReviewDetails = group => {
+  handleGoBack = () => {
     router.push({
-      pathname: '/agency/account/group-detail',
+      pathname: '/agency/account',
       state: {
-        groupId: group.groupId,
-        groupName: group.groupName,
+        activeTabKey: 'group',
       },
     });
   };
@@ -192,60 +160,50 @@ class GroupManage extends Component {
   };
 
   render() {
-    const { groupList: { groups }, loading } = this.props;
-    const { selectedRows, addModalVisible, modalVisible, currentGroup } = this.state;
+    const { groupList: { userInfos } } = this.props;
+    const { selectedRows, groupId, groupName } = this.state;
+
+    const action = (
+      <Button type="primary" onClick={this.handleGoBack}>返回</Button>
+    );
 
     const columns = [
       {
-        title: '组别名称',
-        dataIndex: 'groupName',
-        ...this.getColumnSearchProps('groupName'),
+        title: '用户名',
+        dataIndex: 'name',
       },
       {
-        title: '用户数目',
-        dataIndex: 'userAmount',
-        render: val => <Button type="link">{val}</Button>,
-      },
-      {
-        title: '创建时间',
-        dataIndex: 'createdTime',
-        sorter: true,
-        defaultSortOrder: 'descend',
+        title: '角色名称',
+        dataIndex: 'roleId',
+        render: val => RoleName[val],
       },
       {
         title: '操作',
-        render: (_, group) => (
-         <Fragment>
-           <a onClick={() => this.handleModify(group)}>编辑</a>
-           <Divider type="vertical" />
-           <a onClick={() => this.handleReviewDetails(group)}>详情</a>
-           <Divider type="vertical" />
-           <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(group)}><a>删除</a></Popconfirm>
-         </Fragment>),
+        render: (_, user) => <a onClick={() => this.handleDelete(user, groupId)}>删除</a>,
       },
     ];
 
     return (
-      <Fragment>
-        <Card bordered={false}>
+      <PageHeaderWrapper
+        title={groupName}
+        extra={action}
+        className={styles.pageHeader}
+      >
+        <Card title="成员列表" className={styles.card} bordered={false}>
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary" onClick={this.handleAddGroup}>创建</Button>
             <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}
-            loading={loading}
-            data={groups}
+            data={userInfos}
             columns={columns}
             onSelectRow={this.handleSelectRows}
             onChange={this.handleStandardTableChange}
           />
         </Card>
-        <GroupAddView visible={addModalVisible} onCancel={this.handleCancelAddModal} groups={groups} />
-        <GroupDetailView visible={modalVisible} onCancel={this.handleCancelModifyModal} groups={groups} currentGroup={currentGroup} />
-      </Fragment>
+      </PageHeaderWrapper>
     );
   }
 }
 
-export default GroupManage;
+export default GroupDetail;

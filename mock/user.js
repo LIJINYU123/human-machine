@@ -76,6 +76,13 @@ export default {
           component: './account',
         },
         {
+          name: '组别详情',
+          icon: 'container',
+          path: '/agency/account/group-detail',
+          component: './account/components/GroupDetail',
+          hideInMenu: true,
+        },
+        {
           name: '角色管理',
           icon: 'team',
           path: '/agency/role',

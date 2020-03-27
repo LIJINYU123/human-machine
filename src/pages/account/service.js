@@ -57,3 +57,18 @@ export async function modifyGroup(params) {
     data: params,
   });
 }
+
+
+// 组别详情相关接口
+export async function queryUserInfo(params) {
+  return request('/api/user-info', {
+    params,
+  });
+}
+
+export async function deleteUserInfo(params) {
+  return request('/api/user-info', {
+    method: 'DELETE',
+    data: params,
+  });
+}

@@ -30,8 +30,7 @@ class UserManage extends Component {
   };
 
   componentDidMount() {
-    const { dispatch } = this.props;
-
+    const { dispatch, location } = this.props;
     const params = {
       sorter: 'registerTime_descend',
     };
@@ -44,10 +43,12 @@ class UserManage extends Component {
     const privilegeStr = localStorage.getItem('Privileges');
     const privileges = JSON.parse(privilegeStr);
     const { userManage } = privileges;
+
     this.setState({
       addAuthority: userManage.includes('add'),
       modifyAuthority: userManage.includes('modify'),
       deleteAuthority: userManage.includes('delete'),
+      activeTabKey: typeof location.state !== 'undefined' ? 'group' : 'account',
     });
   }
 
