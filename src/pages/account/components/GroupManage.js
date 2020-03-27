@@ -204,7 +204,7 @@ class GroupManage extends Component {
       {
         title: '用户数目',
         dataIndex: 'userAmount',
-        render: val => <Button type="link">{val}</Button>,
+        render: (val, group) => <Button type="link" onClick={() => this.handleReviewDetails(group)}>{val}</Button>,
       },
       {
         title: '创建时间',

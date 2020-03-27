@@ -37,7 +37,7 @@ class MyTaskView extends Component {
     const { dispatch, location } = this.props;
     dispatch({
       type: 'detail/fetchMyTask',
-      payload: { status: location.state.status },
+      payload: { status: location.state.status, sorter: 'receiveTime_descend' },
     });
     this.setState({
       filteredInfo: { status: location.state.status.split(',') },

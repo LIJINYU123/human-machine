@@ -241,10 +241,10 @@ function getProjects(req, res, u) {
     const s = params.sorter.split('_');
     dataSource = dataSource.sort((prev, next) => {
       if (s[1] === 'descend') {
-        return next[s[0]] - prev[s[0]];
+        return Date.parse(next[s[0]]) - Date.parse(prev[s[0]]);
       }
 
-      return prev[s[0]] - next[s[0]];
+      return Date.parse(prev[s[0]]) - Date.parse(next[s[0]]);
     })
   }
   if (params.status) {
@@ -344,10 +344,10 @@ function getMyTask(req, res, u) {
     const s = params.sorter.split('_');
     dataSource = dataSource.sort((prev, next) => {
       if (s[1] === 'descend') {
-        return next[s[0]] - prev[s[0]];
+        return Date.parse(next[s[0]]) - Date.parse(prev[s[0]]);
       }
 
-      return prev[s[0]] - next[s[0]];
+      return Date.parse(prev[s[0]]) - Date.parse(next[s[0]]);
     })
   }
 

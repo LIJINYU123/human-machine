@@ -1,4 +1,4 @@
-import { queryUserList, deleteUser, queryRoleList, updateUserDetail } from '../service';
+import { queryUserList, deleteUser, queryRoleList, updateUserDetail, updateUserStatus } from '../service';
 import { queryNoDepAccounts } from '../../department/service';
 import { message } from 'antd/lib/index';
 
@@ -35,6 +35,19 @@ const Account = {
         }
       } else {
         message.error(response.message);
+      }
+    },
+
+    * activeUser({ payload, callback }, { call }) {
+      const response = yield call(updateUserStatus, payload);
+      if (response.status === 'ok') {
+        message.success(response.message)
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
       }
     },
 

@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Popconfirm, Modal, Input, Icon } from 'antd';
+import { Button, Card, Divider, Popconfirm, Modal, Input, Icon, Badge, Tag, Dropdown, Menu } from 'antd';
 import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
@@ -149,12 +149,27 @@ class UserManage extends Component {
     });
   };
 
-  handleDelete = user => {
+  handleDelete = userId => {
     const { dispatch } = this.props;
 
     dispatch({
       type: 'userList/deleteUsers',
-      payload: { userIds: [user.userId] },
+      payload: { userIds: [userId] },
+    });
+  };
+
+  handleActive = (userId, status) => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'userList/activeUser',
+      payload: { userId, status: status === 'active' ? 'inactive' : 'active' },
+      callback: () => {
+        dispatch({
+          type: 'userList/fetchUsers',
+          payload: { sorter: 'registerTime_descend' },
+        });
+      },
     });
   };
 
@@ -224,9 +239,30 @@ class UserManage extends Component {
     });
   };
 
+  activeAndDelete = (key, userId, status) => {
+    if (key === 'delete') {
+      this.handleDelete(userId);
+    } else {
+      this.handleActive(userId, status);
+    }
+  };
+
   render() {
     const { userList: { data, roleInfos, accounts }, loading } = this.props;
     const { selectedRows, userInfo, addAuthority, modifyAuthority, deleteAuthority, activeTabKey } = this.state;
+
+    const MoreBtn = ({ userId, status }) => (
+      <Dropdown
+        overlay={
+          <Menu onClick={({ key }) => this.activeAndDelete(key, userId, status)}>
+            <Menu.Item key="active">{status === 'active' ? '停用' : '启用'}</Menu.Item>
+            <Menu.Item key="delete">移除</Menu.Item>
+          </Menu>
+        }
+      >
+        <a>更多<Icon type="down"/></a>
+      </Dropdown>
+    );
 
     const tabList = [
       {
@@ -255,6 +291,21 @@ class UserManage extends Component {
         dataIndex: 'roleName',
       },
       {
+        title: '组别',
+        dataIndex: 'groups',
+        render: val => {
+          if (val.length) {
+            return val.map(group => <Tag color="blue">{group.groupName}</Tag>);
+          }
+          return '';
+        },
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        render: val => <Badge status={val === 'active' ? 'success' : 'error'} text={val === 'active' ? '已启用' : '已停用'}/>,
+      },
+      {
         title: '注册时间',
         dataIndex: 'registerTime',
         sorter: true,
@@ -265,10 +316,10 @@ class UserManage extends Component {
         render: (_, user) => (
           <Fragment>
             { modifyAuthority && <a onClick={() => this.handleModify(user)}>编辑</a> }
-            { modifyAuthority && deleteAuthority && <Divider type="vertical"/> }
-            <Popconfirm title="确认移除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(user)}>
-              { deleteAuthority && <a>移除</a> }
-            </Popconfirm>
+            { modifyAuthority && <Divider type="vertical"/> }
+            <a>重置密码</a>
+            <Divider type="vertical"/>
+            <MoreBtn key="more" userId={user.userId} status={user.status}/>
           </Fragment>
         ),
       },

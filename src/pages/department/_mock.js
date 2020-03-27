@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { parse } from "url";
 
 let mockData = [
   {
@@ -32,8 +33,27 @@ const mockAccounts = [
   },
 ];
 
-function getDepartment(req, res) {
-  return res.json(mockData);
+function getDepartment(req, res, u) {
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+
+  let dataSource = mockData;
+  const params = parse(url, true).query;
+
+  if (params.sorter) {
+    const s = params.sorter.split('_');
+    dataSource = dataSource.sort((prev, next) => {
+      if (s[1] === 'descend') {
+        return Date.parse(next[s[0]]) - Date.parse(prev[s[0]]);
+      }
+
+      return Date.parse(prev[s[0]]) - Date.parse(next[s[0]]);
+    })
+  }
+  return res.json(dataSource);
 }
 
 function createDepartment(req, res, u, b) {

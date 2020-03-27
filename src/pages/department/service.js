@@ -1,7 +1,9 @@
 import request from '@/utils/request';
 
-export async function queryDepList() {
-  return request('/api/department');
+export async function queryDepList(params) {
+  return request('/api/department', {
+    params,
+  });
 }
 
 export async function createDepartment(params) {

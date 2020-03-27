@@ -9,8 +9,8 @@ const Model = {
     accounts: [],
   },
   effects: {
-    * fetchDepartment(_, { call, put }) {
-      const response = yield call(queryDepList);
+    * fetchDepartment({ payload }, { call, put }) {
+      const response = yield call(queryDepList, payload);
       yield put({
         type: 'department',
         payload: response,

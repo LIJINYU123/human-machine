@@ -49,6 +49,8 @@ class DepartmentList extends Component {
     {
       title: '创建时间',
       dataIndex: 'createdTime',
+      sorter: true,
+      defaultSortOrder: 'descend',
     },
     {
       title: '操作',
@@ -68,6 +70,7 @@ class DepartmentList extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'departmentList/fetchDepartment',
+      payload: { sorter: 'createdTime_descend' },
     });
   }
 
@@ -119,6 +122,21 @@ class DepartmentList extends Component {
     });
   };
 
+  handleTableChange = (pagination, filterArg, sorter) => {
+    const { dispatch } = this.props;
+
+    const params = {};
+
+    if (sorter.field) {
+      params.sorter = `${sorter.field}_${sorter.order}`;
+    }
+
+    dispatch({
+      type: 'departmentList/fetchDepartment',
+      payload: params,
+    });
+  };
+
   render() {
     const { departmentList: { data, accounts }, loading } = this.props;
 
@@ -132,6 +150,7 @@ class DepartmentList extends Component {
             dataSource={data}
             pagination={false}
             columns={this.columns}
+            onChange={this.handleTableChange}
           />
         </Card>
         {/* eslint-disable-next-line max-len */}

@@ -8,49 +8,63 @@ let mockData = [
     userId: 'SY0111',
     name: '李雷',
     roleName: '管理员',
+    groups: [{ groupId: '1', groupName: '用户组1' }, { groupId: '2', groupName: '用户组2' }],
     registerTime: '2019-12-20 10:00:00',
+    status: 'active',
     departmentId: 'development',
   },
   {
     userId: 'SY0112',
     name: '张三',
     roleName: '管理员',
+    groups: [{ groupId: '3', groupName: '用户组3' }, { groupId: '4', groupName: '用户组4' }],
     registerTime: '2019-12-21 09:00:00',
+    status: 'active',
     departmentId: 'development',
   },
   {
     userId: 'SY0113',
     name: '李四',
     roleName: '普通用户',
+    groups: [{ groupId: '5', groupName: '用户组5' }, { groupId: '6', groupName: '用户组6' }],
     registerTime: '2019-12-22 13:00:00',
+    status: 'active',
     departmentId: 'development',
   },
   {
     userId: 'SY0114',
     name: '王五',
     roleName: '普通用户',
+    groups: [{ groupId: '7', groupName: '用户组7' }, { groupId: '8', groupName: '用户组8' }],
     registerTime: '2019-12-25 16:00:00',
+    status: 'active',
     departmentId: 'development',
   },
   {
     userId: 'SY0115',
     name: '杨六',
     roleName: '管理员',
+    groups: [{ groupId: '9', groupName: '用户组9' }, { groupId: '10', groupName: '用户组10' }],
     registerTime: '2020-01-08 09:00:00',
+    status: 'active',
     departmentId: 'operation',
   },
   {
     userId: 'SY0116',
     name: '顾七',
     roleName: '普通用户',
+    groups: [{ groupId: '11', groupName: '用户组11' }, { groupId: '12', groupName: '用户组12' }],
     registerTime: '2020-01-09 13:00:00',
+    status: 'active',
     departmentId: 'operation',
   },
   {
     userId: 'SY0117',
     name: '何九',
     roleName: '普通用户',
+    groups: [{ groupId: '13', groupName: '用户组13' }, { groupId: '14', groupName: '用户组14' }],
     registerTime: '2019-12-25 16:00:00',
+    status: 'inactive',
     departmentId: 'operation',
   },
 ];
@@ -218,10 +232,23 @@ function updateUser(req, res, u, b) {
       userId: body.userId,
       name: 'XXX',
       roleName: roleMap[body.roleId],
+      groups: [],
       registerTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+      status: 'active',
       departmentId,
     });
   }
+
+  return res.json({ message: '更新成功', status: 'ok' });
+}
+
+function updateStatus(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  mockData.forEach(item => {
+    if (body.userId === item.userId) {
+      item.status = body.status;
+    }
+  });
 
   return res.json({ message: '更新成功', status: 'ok' });
 }
@@ -320,6 +347,7 @@ export default {
   'GET /api/user/detail': getUserDetail,
   'DELETE /api/users': deleteUser,
   'POST /api/user/detail': updateUser,
+  'POST /api/user/status': updateStatus,
   'GET /api/groups': getGroups,
   'PUT /api/groups': addGroup,
   'DELETE /api/groups': deleteGroup,

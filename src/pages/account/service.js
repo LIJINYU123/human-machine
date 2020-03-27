@@ -26,6 +26,13 @@ export async function updateUserDetail(params) {
   });
 }
 
+export async function updateUserStatus(params) {
+  return request('/api/user/status', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export async function queryRoleList() {
   return request('/api/roles');
 }
