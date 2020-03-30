@@ -1,4 +1,5 @@
-import { queryDefaultTemplate, queryMembers } from '../service';
+import { message } from 'antd';
+import { queryDefaultTemplate, queryMembers, saveStepOneData, saveStepTwoData, queryPreLabelData } from '../service';
 
 
 const TextProjectFormData = {
@@ -16,9 +17,13 @@ const TextProjectFormData = {
     },
     stepTwo: {
       templateName: '',
+      classifyName: '',
       multiple: true,
       saveType: 'nomal',
     },
+    stepFour: {
+    },
+    projectId: '',
     forever: false,
     labelType: [],
     templates: [],
@@ -30,6 +35,8 @@ const TextProjectFormData = {
       labelers: [],
       inspectors: [],
     },
+    preLabelData: [],
+    preLabelResult: [],
     current: 0,
   },
   effects: {
@@ -60,11 +67,83 @@ const TextProjectFormData = {
       });
     },
 
-    * saveStepOneData({ payload }, { put }) {
+    * fetchPreLabelData({ payload }, { call, put }) {
+      const reponse = yield call(queryPreLabelData, payload);
       yield put({
-        type: 'saveStepOne',
+        type: 'savePreLabelData',
+        payload: reponse,
+      });
+    },
+
+    * saveStepOneData({ payload }, { call, put, select }) {
+      const forever = yield select(state => state.textProjectFormData.forever);
+      const { projectPeriod, ...rest } = payload;
+      let startTime = '';
+      let endTime = '';
+      if (!forever) {
+        startTime = projectPeriod[0].format('YYYY-MM-DD HH:mm:ss');
+        endTime = projectPeriod[1].format('YYYY-MM-DD HH:mm:ss');
+      }
+      const response = yield call(saveStepOneData, { startTime, endTime, ...rest });
+      if (response.status) {
+        yield put({
+          type: 'saveStepOne',
+          payload: { ...payload, projectId: response.message },
+        });
+      } else {
+        message.error(response.message);
+      }
+    },
+
+    * saveStepTwoData({ payload }, { call, put, select }) {
+      const labelType = yield select(state => state.textProjectFormData.labelType);
+      const saveTemplate = yield select(state => state.textProjectFormData.saveTemplate);
+      const optionData = yield select(state => state.textProjectFormData.optionData);
+      let setting = {};
+      if (labelType.slice(-1)[0] === 'textClassify') {
+        setting = {
+          classifyName: payload.classifyName,
+          multiple: payload.multiple,
+          options: optionData,
+        }
+      } else if (labelType.slice(-1)[0] === 'sequenceLabeling') {
+        setting = {
+          classifyName: payload.classifyName,
+          multiple: payload.multiple,
+          options: optionData,
+          saveType: payload.saveType,
+        };
+      } else if (labelType.slice(-1)[0] === 'textExtension') {
+        const minValue = yield select(state => state.textProjectFormData.minValue);
+        const maxValue = yield select(state => state.textProjectFormData.maxValue);
+        setting = {
+          minValue,
+          maxValue,
+        };
+      }
+
+      const templateName = payload.hasOwnProperty('templateName') ? payload.templateName : '';
+
+      const response = yield call(saveStepTwoData, { labelType: labelType.slice(-1)[0], saveTemplate, templateName, setting });
+      if (response.status) {
+        yield put({
+          type: 'saveStepTwo',
+          payload,
+        });
+      } else {
+        message.error(response.message);
+      }
+    },
+
+    * savePreLabelResult({ payload, callback }, { put }) {
+      yield put({
+        type: 'savePreLabelResultData',
         payload,
       });
+
+      if (callback) {
+        callback();
+      }
     },
 
     * saveRadio({ payload }, { put }) {
@@ -126,17 +205,17 @@ const TextProjectFormData = {
       });
     },
 
-    * saveStepTwoData({ payload }, { put }) {
-      yield put({
-        type: 'saveStepTwo',
-        payload,
-      });
-    },
-
     * stepTwoPrevious(_, { put }) {
       yield put({
         type: 'stepTwoPrev',
         payload: 0,
+      });
+    },
+
+    * saveStepThreeData(_, { put }) {
+      yield put({
+        type: 'saveStepThree',
+        payload: 3,
       });
     },
 
@@ -166,13 +245,17 @@ const TextProjectFormData = {
       return { ...state, members: action.payload };
     },
     saveStepOne(state, action) {
-      return { ...state, stepOne: action.payload, current: 1 };
+      const { projectId, ...rest } = action.payload;
+      return { ...state, stepOne: { ...rest }, projectId, current: 1 };
     },
     saveRadioData(state, action) {
       return { ...state, forever: action.payload.forever };
     },
     saveStepTwo(state, action) {
       return { ...state, stepTwo: action.payload, current: 2 };
+    },
+    saveStepThree(state, action) {
+      return { ...state, current: action.payload };
     },
     saveOptionData(state, action) {
       return { ...state, optionData: action.payload };
@@ -215,12 +298,17 @@ const TextProjectFormData = {
     stepThreePrev(state, action) {
       return { ...state, current: action.payload };
     },
+    savePreLabelData(state, action) {
+      return { ...state, preLabelData: action.payload };
+    },
+    savePreLabelResultData(state, action) {
+      return { ...state, preLabelResult: action.payload };
+    },
     resetData(state, _) {
       return {
         ...state,
         stepOne: {
           projectName: '',
-          labelType: [],
           passRate: null,
           checkRate: null,
           labeler: [],
@@ -235,6 +323,7 @@ const TextProjectFormData = {
           multiple: true,
         },
         forever: false,
+        labelType: [],
         templates: [],
         optionData: [],
         saveTemplate: false,

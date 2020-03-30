@@ -1,22 +1,20 @@
 import React, { Component } from 'react';
 import { Button, Form } from 'antd/lib/index';
 import TagSelect from '@/components/TagSelect';
-import { connect } from 'dva/index';
+import { connect } from 'dva';
 
-@connect(({ textMark }) => ({
-  textMark,
-}))
+@connect()
 class PopoverView extends Component {
   onValidateForm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, taskId, dataId, onClose, onRefresh, dispatch } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, onClose, onRefresh, dispatch } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
 
         dispatch({
-          type: 'textMark/saveTextMarkResult',
-          payload: { taskId, dataId, labelResult: values.result },
+          type: 'textProjectFormData/savePreLabelResult',
+          payload: values.result,
           callback: () => {
             onClose();
             onRefresh();

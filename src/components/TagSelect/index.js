@@ -113,9 +113,7 @@ class TagSelect extends Component {
 
   render() {
     const { value, expand } = this.state;
-    const { children, hideCheckAll, className, style, expandable, actionsText = {} } = this.props;
-    const checkedAll = this.getAllTags().length === value.length;
-    const { expandText = '展开', collapseText = '收起', selectAllText = '全部' } = actionsText;
+    const { children, className, style, expandable } = this.props;
     const cls = classNames(styles.tagSelect, className, {
       [styles.hasExpandTag]: expandable,
       [styles.expanded]: expand,

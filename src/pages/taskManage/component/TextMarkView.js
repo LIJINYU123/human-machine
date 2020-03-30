@@ -10,7 +10,7 @@ import {
   Tag,
   Divider,
   Row, Col, Radio,
-} from 'antd/lib/index';
+} from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
 import ItemData from '../map';

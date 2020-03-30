@@ -241,21 +241,24 @@ class Step2 extends Component {
             }
           </Form.Item>
         }
-        <Form.Item label={FieldLabels.classifyName} {...formItemLayout}>
-          {
-            getFieldDecorator('classifyName', {
-              rules: [
-                {
-                  required: true,
-                  message: '请输入类别名称',
-                },
-              ],
-              initialValue: classifyName,
-            })(<Input style={{ width: '50%' }} />)
-          }
-        </Form.Item>
         {
-          labelType.length > 0 && labelType[labelType.length - 1] === 'sequenceLabeling' &&
+          labelType.length > 0 && labelType.slice(-1)[0] !== 'textExtension' &&
+          <Form.Item label={FieldLabels.classifyName} {...formItemLayout}>
+            {
+              getFieldDecorator('classifyName', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入类别名称',
+                  },
+                ],
+                initialValue: classifyName,
+              })(<Input style={{ width: '50%' }} />)
+            }
+          </Form.Item>
+        }
+        {
+          labelType.length > 0 && labelType.slice(-1)[0] === 'sequenceLabeling' &&
           <Form.Item label={FieldLabels.saveType} {...formItemLayout}>
             {
               getFieldDecorator('saveType', {
@@ -284,7 +287,7 @@ class Step2 extends Component {
           </Fragment>
         }
         {
-          labelType.length > 0 && labelType[labelType.length - 1] !== 'textExtension' &&
+          labelType.length > 0 && labelType.slice(-1)[0] !== 'textExtension' &&
           <Fragment>
             <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
               {
@@ -305,8 +308,9 @@ class Step2 extends Component {
             />
           </Fragment>
         }
-        <Button type="primary" onClick={this.onValidateForm} loading={submitting} style={{ marginTop: '16px' }}>下一步</Button>
-        <Button style={{ marginLeft: '8px' }} onClick={this.onPrev}>上一步</Button>
+        <Button style={{ marginTop: '16px' }} onClick={this.onPrev}>上一步</Button>
+        <Button style={{ marginLeft: '8px' }}>暂存</Button>
+        <Button type="primary" onClick={this.onValidateForm} loading={submitting} style={{ marginLeft: '8px' }}>下一步</Button>
         <OptionCreateView visible={modalVisible} onCancel={this.handleCancelModal} />
       </Form>
     );

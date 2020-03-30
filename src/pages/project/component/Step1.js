@@ -245,7 +245,8 @@ class Step1 extends Component {
                 },
               }}
             >
-              <Button type="primary" onClick={this.onValidateForm}>下一步</Button>
+              <Button>暂存</Button>
+              <Button style={{ marginLeft: '8px' }} type="primary" onClick={this.onValidateForm}>下一步</Button>
             </Form.Item>
           </Col>
         </Row>

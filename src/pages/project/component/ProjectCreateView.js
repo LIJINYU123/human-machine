@@ -4,6 +4,7 @@ import { connect } from 'dva';
 import Step1 from './Step1';
 import Step2 from './Step2';
 import Step3 from './Step3';
+import Step4 from './Step4';
 import styles from './style.less';
 
 
@@ -22,6 +23,8 @@ class ProjectCreateView extends Component {
       stepComponent = <Step2/>
     } else if (current === 2) {
       stepComponent = <Step3 onCancel={onCancel}/>
+    } else if (current === 3) {
+      stepComponent = <Step4 />
     }
 
     return (
@@ -39,6 +42,7 @@ class ProjectCreateView extends Component {
           <Step title="基本信息"/>
           <Step title="工具配置"/>
           <Step title="上传数据"/>
+          <Step title="试标注并发布"/>
         </Steps>
         {stepComponent}
       </Modal>

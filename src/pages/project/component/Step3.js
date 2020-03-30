@@ -44,72 +44,74 @@ class Step3 extends Component {
 
   handleUpload = () => {
     const { fileList } = this.state;
-    const { stepOne, stepTwo, forever, labelType, optionData, saveTemplate, onCancel, dispatch } = this.props;
-    // eslint-disable-next-line max-len
-    const { projectName, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
-    const { classifyName, multiple } = stepTwo;
+    const { dispatch } = this.props;
+
     const formData = new FormData();
-    formData.append('file', fileList[0]);
-    formData.append('projectName', projectName);
-    formData.append('labelType', labelType.pop());
-    formData.append('passRate', passRate);
-    formData.append('checkRate', checkRate);
-    labeler.forEach(item => {
-      formData.append('labeler', item);
-    });
+    if (fileList.length) {
+      formData.append('file', fileList[0]);
 
-    inspector.forEach(item => {
-      formData.append('inspector', item);
-    });
-
-    formData.append('questionNum', questionNum);
-    if (forever) {
-      formData.append('startTime', '');
-      formData.append('endTime', '');
+      this.setState({
+        uploading: true,
+      });
+      reqwest({
+        url: '/api/project/step-three',
+        method: 'post',
+        processData: false,
+        data: formData,
+        headers: {
+          Authorization: localStorage.getItem('Authorization'),
+          DepartmentId: localStorage.getItem('DepartmentId'),
+        },
+        success: () => {
+          this.setState({
+            // fileList: [],
+            uploading: false,
+          });
+          dispatch({
+            type: 'textProjectFormData/saveStepThreeData',
+          });
+        },
+        error: () => {
+          this.setState({
+            uploading: false,
+          });
+          message.error('文件上传失败');
+        },
+      });
     } else {
-      formData.append('startTime', projectPeriod[0].format('YYYY-MM-DD HH:mm:ss'));
-      formData.append('endTime', projectPeriod[1].format('YYYY-MM-DD HH:mm:ss'));
-    }
-    formData.append('description', description);
-    formData.append('saveTemplate', saveTemplate);
-    if (saveTemplate) {
-      const { templateName } = stepTwo;
-      formData.append('template', JSON.stringify({ templateName, setting: { classifyName, multiple, options: optionData } }));
-    } else {
-      formData.append('template', JSON.stringify({ templateName: '', setting: { classifyName, multiple, options: optionData } }));
+      dispatch({
+        type: 'textProjectFormData/saveStepThreeData',
+      });
     }
 
-    this.setState({
-      uploading: true,
-    });
-    reqwest({
-      url: '/api/text-project/create',
-      method: 'post',
-      processData: false,
-      data: formData,
-      headers: {
-        Authorization: localStorage.getItem('Authorization'),
-        DepartmentId: localStorage.getItem('DepartmentId'),
-      },
-      success: () => {
-        this.setState({
-          fileList: [],
-          uploading: false,
-        });
-        onCancel();
-        dispatch({
-          type: 'project/fetchProject',
-          payload: { sorter: 'createdTime_descend' },
-        });
-        message.success('项目创建成功');
-      },
-      error: () => {
-        this.setState({
-          uploading: false,
-        });
-        message.error('项目创建失败');
-      },
-    });
+    // formData.append('projectName', projectName);
+    // formData.append('labelType', labelType.pop());
+    // formData.append('passRate', passRate);
+    // formData.append('checkRate', checkRate);
+    // labeler.forEach(item => {
+    //   formData.append('labeler', item);
+    // });
+    //
+    // inspector.forEach(item => {
+    //   formData.append('inspector', item);
+    // });
+    //
+    // formData.append('questionNum', questionNum);
+    // if (forever) {
+    //   formData.append('startTime', '');
+    //   formData.append('endTime', '');
+    // } else {
+    //   formData.append('startTime', projectPeriod[0].format('YYYY-MM-DD HH:mm:ss'));
+    //   formData.append('endTime', projectPeriod[1].format('YYYY-MM-DD HH:mm:ss'));
+    // }
+    // formData.append('description', description);
+    // formData.append('saveTemplate', saveTemplate);
+    // if (saveTemplate) {
+    //   const { templateName } = stepTwo;
+    //   formData.append('template', JSON.stringify({ templateName, setting: { classifyName, multiple, options: optionData } }));
+    // } else {
+    //   formData.append('template', JSON.stringify({ templateName: '', setting: { classifyName, multiple, options: optionData } }));
+    // }
   };
 
   onPrev = () => {
@@ -168,15 +170,9 @@ class Step3 extends Component {
         </Row>
         <Row gutter={[16, 16]}>
           <Col>
-            <Button
-              type="primary"
-              onClick={this.handleUpload}
-              disabled={fileList.length === 0}
-              loading={uploading}
-            >
-              {uploading ? '上传中' : '创建'}
-            </Button>
-            <Button style={{ marginLeft: '8px' }} onClick={this.onPrev}>上一步</Button>
+            <Button onClick={this.onPrev}>上一步</Button>
+            <Button style={{ marginLeft: '8px' }}>暂存</Button>
+            <Button style={{ marginLeft: '8px' }} type="primary" onClick={this.handleUpload} loading={uploading}>下一步</Button>
           </Col>
         </Row>
       </div>

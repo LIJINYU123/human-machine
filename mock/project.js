@@ -943,6 +943,26 @@ function createProject(req, res) {
   return res.json({ status: 'ok', message: '创建成功' });
 }
 
+function saveStepOneData(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  return res.json({ status: 'ok', message: body });
+}
+
+function saveStepTwoData(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  return res.json({ status: 'ok', message: body });
+}
+
+function getPreLabelData(req, res, u) {
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+  const params = parse(url, true).query;
+  return res.json([{ sentence: '出差住的酒店是自己订好吗' }])
+}
+
 function saveTextMarkResult(req, res, u, b) {
   const body = (b && b.body) || req.body;
   const { taskId, dataId, labelResult } = body;
@@ -1014,6 +1034,10 @@ export default {
   'POST /api/project/review-result': saveReviewResult,
 
   'POST /api/text-project/create': createProject,
+  'PUT /api/project/step-one': saveStepOneData,
+  'POST /api/project/step-two': saveStepTwoData,
+  'GET /api/project/pre-label-data': getPreLabelData,
+
   'GET /api/text-project/task-detail/:taskId': getTaskDetail,
   'GET /api/text-project/label-data': getLabelData,
   'DELETE /api/text-project/label-data': deleteLabelData,
