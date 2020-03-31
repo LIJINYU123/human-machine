@@ -24,10 +24,6 @@ const { FieldLabels } = ItemData;
   submitting: loading.effects['textProjectFormData/saveStepOneData'],
 }))
 class Step1 extends Component {
-  state = {
-    checked: false,
-  };
-
   componentDidMount() {
     const { dispatch } = this.props;
     dispatch({
@@ -40,10 +36,6 @@ class Step1 extends Component {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        // values.startTime = values.projectPeriod && values.projectPeriod[0].format('YYYY-MM-DD HH:mm:ss');
-        // values.endTime = values.projectPeriod && values.projectPeriod[1].format('YYYY-MM-DD HH:mm:ss');
-        // delete values.projectPeriod;
-
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
           payload: values,

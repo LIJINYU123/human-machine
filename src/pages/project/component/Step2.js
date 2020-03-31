@@ -242,7 +242,7 @@ class Step2 extends Component {
           </Form.Item>
         }
         {
-          labelType.length > 0 && labelType.slice(-1)[0] !== 'textExtension' &&
+          labelType.length > 0 && !['textExtension', 'sequenceLabeling'].includes(labelType.slice(-1)[0]) &&
           <Form.Item label={FieldLabels.classifyName} {...formItemLayout}>
             {
               getFieldDecorator('classifyName', {
@@ -287,19 +287,22 @@ class Step2 extends Component {
           </Fragment>
         }
         {
+          labelType.length > 0 && !['textExtension', 'sequenceLabeling'].includes(labelType.slice(-1)[0]) &&
+          <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
+            {
+              getFieldDecorator('multiple', {
+                initialValue: multiple,
+              })(
+                <Radio.Group name="multiple">
+                  <Radio value>是</Radio>
+                  <Radio value={false}>否</Radio>
+                </Radio.Group>)
+            }
+          </Form.Item>
+        }
+        {
           labelType.length > 0 && labelType.slice(-1)[0] !== 'textExtension' &&
           <Fragment>
-            <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
-              {
-                getFieldDecorator('multiple', {
-                  initialValue: multiple,
-                })(
-                  <Radio.Group name="multiple">
-                    <Radio value>是</Radio>
-                    <Radio value={false}>否</Radio>
-                  </Radio.Group>)
-              }
-            </Form.Item>
             <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAddOption}>选项</Button>
             <DragSortingTable
               data={optionData}

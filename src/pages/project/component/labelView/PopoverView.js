@@ -7,17 +7,15 @@ import { connect } from 'dva';
 class PopoverView extends Component {
   onValidateForm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, onClose, onRefresh, dispatch } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, onClose, dispatch } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-
         dispatch({
           type: 'textProjectFormData/savePreLabelResult',
           payload: values.result,
           callback: () => {
             onClose();
-            onRefresh();
           },
         });
       }

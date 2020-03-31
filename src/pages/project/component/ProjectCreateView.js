@@ -22,9 +22,9 @@ class ProjectCreateView extends Component {
     } else if (current === 1) {
       stepComponent = <Step2/>
     } else if (current === 2) {
-      stepComponent = <Step3 onCancel={onCancel}/>
+      stepComponent = <Step3/>
     } else if (current === 3) {
-      stepComponent = <Step4 />
+      stepComponent = <Step4 onCancel={onCancel}/>
     }
 
     return (

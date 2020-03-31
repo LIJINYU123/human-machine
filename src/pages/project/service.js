@@ -55,6 +55,13 @@ export async function saveStepTwoData(params) {
   });
 }
 
+export async function saveStepFourData(params) {
+  return request('/api/project/step-four', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export async function queryDefaultTemplate(params) {
   return request('/api/project/default-templates', {
     params,

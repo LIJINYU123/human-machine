@@ -104,5 +104,8 @@ export default {
     saveType: '存储方式',
     color: '颜色',
     multiple: '选项多选',
+    wordEntry: '词典名称',
+    wordEntryName: '所属词条',
+    newWordEntry: '新建词条',
   },
 }

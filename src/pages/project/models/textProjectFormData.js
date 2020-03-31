@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryDefaultTemplate, queryMembers, saveStepOneData, saveStepTwoData, queryPreLabelData } from '../service';
+import { queryDefaultTemplate, queryMembers, saveStepOneData, saveStepTwoData, saveStepFourData, queryPreLabelData } from '../service';
 
 
 const TextProjectFormData = {
@@ -85,7 +85,7 @@ const TextProjectFormData = {
         endTime = projectPeriod[1].format('YYYY-MM-DD HH:mm:ss');
       }
       const response = yield call(saveStepOneData, { startTime, endTime, ...rest });
-      if (response.status) {
+      if (response.status === 'ok') {
         yield put({
           type: 'saveStepOne',
           payload: { ...payload, projectId: response.message },
@@ -125,11 +125,23 @@ const TextProjectFormData = {
       const templateName = payload.hasOwnProperty('templateName') ? payload.templateName : '';
 
       const response = yield call(saveStepTwoData, { labelType: labelType.slice(-1)[0], saveTemplate, templateName, setting });
-      if (response.status) {
+      if (response.status === 'ok') {
         yield put({
           type: 'saveStepTwo',
           payload,
         });
+      } else {
+        message.error(response.message);
+      }
+    },
+
+    * sveStepFourData({ payload, callback }, { call }) {
+      const response = yield call(saveStepFourData, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
       }
@@ -226,6 +238,13 @@ const TextProjectFormData = {
       });
     },
 
+    * stepFourPrevious(_, { put }) {
+      yield put({
+        type: 'stepFourPrev',
+        payload: 2,
+      });
+    },
+
     * resetStepData(_, { put }) {
       yield put({
         type: 'resetData',
@@ -296,6 +315,9 @@ const TextProjectFormData = {
       return { ...state, current: action.payload };
     },
     stepThreePrev(state, action) {
+      return { ...state, current: action.payload };
+    },
+    stepFourPrev(state, action) {
       return { ...state, current: action.payload };
     },
     savePreLabelData(state, action) {

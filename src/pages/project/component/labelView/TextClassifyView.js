@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Table, Tag, Popover, Card } from 'antd';
+import { Table, Tag, Popover, Card } from 'antd';
 import PopoverView from './PopoverView';
-import { connect } from 'dva';
 
 
 class TextClassifyView extends Component {
@@ -41,12 +40,11 @@ class TextClassifyView extends Component {
     ];
 
     return (
-      <Card bordered={false}>
-        <Table
-          dataSource={data}
-          columns={columns}
-        />
-      </Card>
+      <Table
+        dataSource={data}
+        columns={columns}
+        pagination={false}
+      />
     );
   }
 }

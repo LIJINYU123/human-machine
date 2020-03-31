@@ -953,13 +953,17 @@ function saveStepTwoData(req, res, u, b) {
   return res.json({ status: 'ok', message: body });
 }
 
+function saveStepFourData(req, res) {
+  return res.json({ status: 'ok', message: '创建成功' });
+}
+
 function getPreLabelData(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     // eslint-disable-next-line prefer-destructuring
     url = req.url;
   }
-  const params = parse(url, true).query;
+  // const params = parse(url, true).query;
   return res.json([{ sentence: '出差住的酒店是自己订好吗' }])
 }
 
@@ -1036,6 +1040,7 @@ export default {
   'POST /api/text-project/create': createProject,
   'PUT /api/project/step-one': saveStepOneData,
   'POST /api/project/step-two': saveStepTwoData,
+  'POST /api/project/step-four': saveStepFourData,
   'GET /api/project/pre-label-data': getPreLabelData,
 
   'GET /api/text-project/task-detail/:taskId': getTaskDetail,
