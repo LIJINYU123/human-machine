@@ -41,6 +41,25 @@ export default {
     videoDialogMark: '其他标注-视频对话标注',
   },
 
+  projectTypes: [
+    {
+      value: 'text',
+      label: '文本',
+    },
+    {
+      value: 'picture',
+      label: '图片',
+    },
+    {
+      value: 'voice',
+      label: '音频',
+    },
+    {
+      value: 'video',
+      label: '视频',
+    },
+  ],
+
   labelTypes: [
     {
       value: 'textMark',
@@ -88,6 +107,7 @@ export default {
 
   FieldLabels: {
     projectName: '项目名称',
+    projectType: '项目类型',
     projectPeriod: '项目周期',
     labeler: '标注员',
     inspector: '质检员',

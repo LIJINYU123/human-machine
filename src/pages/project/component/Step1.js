@@ -17,7 +17,7 @@ import styles from './style.less';
 const { Option } = Select;
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
-const { FieldLabels } = ItemData;
+const { FieldLabels, projectTypes } = ItemData;
 
 @connect(({ textProjectFormData, loading }) => ({
   textProjectFormData,
@@ -55,7 +55,7 @@ class Step1 extends Component {
   render() {
     // eslint-disable-next-line max-len
     const { form: { getFieldDecorator }, textProjectFormData: { stepOne, members, forever } } = this.props;
-    const { projectName, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
+    const { projectName, projectType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
 
     const { labelers, inspectors } = members;
 
@@ -63,6 +63,8 @@ class Step1 extends Component {
 
     // eslint-disable-next-line max-len
     const inspectorOptions = inspectors.map(item => <Option key={item.userId}>{item.userName}</Option>);
+
+    const projectTypeOptions = projectTypes.map(item => <Option key={item.label}>{item.label}</Option>);
 
     const formItemLayout = {
       labelCol: {
@@ -94,21 +96,21 @@ class Step1 extends Component {
             </Form.Item>
           </Col>
           <Col md={12} sm={24}>
-            <Form.Item label={FieldLabels.projectPeriod} {...formItemLayout}>
+            <Form.Item label={FieldLabels.projectType} {...formItemLayout}>
               {
-                getFieldDecorator('projectPeriod', {
+                getFieldDecorator('projectType', {
                   rules: [
                     {
-                      required: !forever,
-                      message: '请选择项目周期',
+                      required: true,
+                      message: '请选择项目类型',
                     },
                   ],
-                  initialValue: projectPeriod,
+                  initialValue: projectType,
                 })(
-                  <RangePicker style={{ width: '70%' }} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
-              }
-              {
-                <Radio style={{ marginLeft: '8px' }} checked={forever} onClick={this.handleRadioClick}>永久</Radio>
+                  <Select dropdownMenuStyle={{
+                  maxHeight: 400,
+                  overflow: 'auto',
+                }} style={{ width: '80%' }}>{projectTypeOptions}</Select>)
               }
             </Form.Item>
           </Col>
@@ -213,6 +215,27 @@ class Step1 extends Component {
               }
             </Form.Item>
           </Col>
+          <Col md={12} sm={24}>
+            <Form.Item label={FieldLabels.projectPeriod} {...formItemLayout}>
+              {
+                getFieldDecorator('projectPeriod', {
+                  rules: [
+                    {
+                      required: !forever,
+                      message: '请选择项目周期',
+                    },
+                  ],
+                  initialValue: projectPeriod,
+                })(
+                  <RangePicker style={{ width: '70%' }} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
+              }
+              {
+                <Radio style={{ marginLeft: '8px' }} checked={forever} onClick={this.handleRadioClick}>永久</Radio>
+              }
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
           <Col md={12} sm={24}>
             <Form.Item label={FieldLabels.description} {...formItemLayout}>
               {

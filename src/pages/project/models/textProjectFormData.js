@@ -7,6 +7,7 @@ const TextProjectFormData = {
   state: {
     stepOne: {
       projectName: '',
+      projectType: '',
       passRate: null,
       checkRate: null,
       labeler: [],
