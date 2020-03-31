@@ -99,6 +99,15 @@ export default {
     },
   ],
 
+  labelTypeToValue: {
+    textClassify: ['textMark', 'textClassify'],
+    sequenceLabeling: ['textMark', 'sequenceLabeling'],
+    textExtension: ['textMark', 'textExtension'],
+    pictureMark: ['pictureMark'],
+    voiceMark: ['voiceMark'],
+    videoDialogMark: ['otherMark', 'videoDialogMark'],
+  },
+
   reviewLabel: {
     approve: '通过',
     reject: '拒绝',

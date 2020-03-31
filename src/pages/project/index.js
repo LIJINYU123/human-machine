@@ -20,6 +20,7 @@ import {
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
 import ProjectCreateView from './component/ProjectCreateView';
+import ProjectEditView from './component/ProjectEditView';
 import ItemData from './map';
 
 const { RangePicker } = DatePicker;
@@ -49,7 +50,9 @@ class TextProjectList extends Component {
     filteredInfo: null,
     searchText: '',
     searchedColumn: '',
+    projectId: '',
     addModalVisible: false,
+    modalVisible: false,
   };
 
   componentDidMount() {
@@ -105,6 +108,13 @@ class TextProjectList extends Component {
     });
   };
 
+  handleEdit = projectId => {
+    this.setState({
+      modalVisible: true,
+      projectId,
+    });
+  };
+
   handleCancelAddModal = () => {
     const { dispatch } = this.props;
 
@@ -113,6 +123,17 @@ class TextProjectList extends Component {
     });
     this.setState({
       addModalVisible: false,
+    });
+  };
+
+  handleCancelEditModal = () => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'textProjectFormData/resetStepData',
+    });
+    this.setState({
+      modalVisible: false,
     });
   };
 
@@ -274,7 +295,7 @@ class TextProjectList extends Component {
 
   render() {
     const { data, loading } = this.props;
-    const { selectedRows, addModalVisible } = this.state;
+    const { selectedRows, addModalVisible, modalVisible, projectId } = this.state;
 
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -313,7 +334,7 @@ class TextProjectList extends Component {
         title: '操作',
         render: (_, project) => (
           <Fragment>
-            <a>编辑</a>
+            <a onClick={() => this.handleEdit(project.projectId)}>编辑</a>
             <Divider type="vertical"/>
             <a onClick={() => this.handleReviewDetails(project)}>详情</a>
             <Divider type="vertical"/>
@@ -343,6 +364,7 @@ class TextProjectList extends Component {
           />
         </Card>
         <ProjectCreateView visible={addModalVisible} onCancel={this.handleCancelAddModal} />
+        <ProjectEditView visible={modalVisible} onCancel={this.handleCancelEditModal} projectId={projectId} />
       </PageHeaderWrapper>
     );
   }

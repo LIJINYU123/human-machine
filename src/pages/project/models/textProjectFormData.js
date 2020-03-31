@@ -1,6 +1,10 @@
 import { message } from 'antd';
-import { queryDefaultTemplate, queryMembers, saveStepOneData, saveStepTwoData, saveStepFourData, queryPreLabelData } from '../service';
+import { queryDefaultTemplate, queryMembers, saveStepOneData, saveStepTwoData, saveStepFourData, queryPreLabelData, queryProjectDetail } from '../service';
+import moment from 'moment';
+import ItemData from '../map';
 
+
+const { labelTypeToValue } = ItemData;
 
 const TextProjectFormData = {
   namespace: 'textProjectFormData',
@@ -56,6 +60,14 @@ const TextProjectFormData = {
       yield put({
         type: 'saveLabelType',
         payload,
+      });
+    },
+
+    * fetchDetail({ payload }, { call, put }) {
+      const response = yield call(queryProjectDetail, payload);
+      yield put({
+        type: 'detail',
+        payload: response,
       });
     },
 
@@ -336,6 +348,29 @@ const TextProjectFormData = {
     savePreLabelResultData(state, action) {
       return { ...state, preLabelResult: action.payload };
     },
+    detail(state, action) {
+      const { projectId, projectName, projectType, passRate, checkRate, labelers, inspectors, questionNum, description, startTime, endTime, labelType, templateName = '', saveTemplate, setting, explain } = action.payload;
+      const { classifyName = '', multiple = true, options = [], saveType = 'nomal', minValue = null, maxValue = null } = setting;
+      let projectPeriod = [];
+      let forever = true;
+      if (startTime !== '' && endTime !== '') {
+        projectPeriod = [moment(startTime, 'YYYY-MM-DD HH:mm:ss'), moment(endTime, 'YYYY-MM-DD HH:mm:ss'), moment(endTime, 'YYYY-MM-DD HH:mm:ss')];
+        forever = false;
+      }
+      return {
+        ...state,
+        projectId,
+        stepOne: { projectName, projectType, passRate, checkRate, labeler: labelers.map(item => item.id), inspector: inspectors.map(item => item.id), questionNum, projectPeriod, description },
+        stepTwo: { templateName, classifyName, multiple, saveType },
+        forever,
+        labelType: labelTypeToValue[labelType],
+        optionData: options,
+        minValue,
+        maxValue,
+        saveTemplate,
+        explain,
+      };
+    },
     resetData(state, _) {
       return {
         ...state,
@@ -354,6 +389,7 @@ const TextProjectFormData = {
           defaultTool: '',
           multiple: true,
         },
+        projectId: '',
         forever: false,
         labelType: [],
         templates: [],

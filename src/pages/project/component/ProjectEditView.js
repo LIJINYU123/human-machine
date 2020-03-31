@@ -13,8 +13,15 @@ const { Step } = Steps;
   current: textProjectFormData.current,
 }))
 class ProjectEditView extends Component {
-  componentDidMount() {
-
+  static getDerivedStateFromProps(nextProps) {
+    const { dispatch } = nextProps;
+    if (nextProps.projectId !== '' && nextProps.visible === true) {
+      dispatch({
+        type: 'textProjectFormData/fetchDetail',
+        payload: nextProps.projectId,
+      });
+    }
+    return null;
   }
 
   render() {
