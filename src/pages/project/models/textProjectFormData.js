@@ -22,8 +22,6 @@ const TextProjectFormData = {
       multiple: true,
       saveType: 'nomal',
     },
-    stepFour: {
-    },
     projectId: '',
     forever: false,
     labelType: [],
@@ -38,6 +36,7 @@ const TextProjectFormData = {
     },
     preLabelData: [],
     preLabelResult: [],
+    explain: '',
     current: 0,
   },
   effects: {
@@ -146,6 +145,13 @@ const TextProjectFormData = {
       } else {
         message.error(response.message);
       }
+    },
+
+    * saveExplain({ payload }, { put }) {
+      yield put({
+        type: 'saveExplainData',
+        payload,
+      });
     },
 
     * savePreLabelResult({ payload, callback }, { put }) {
@@ -320,6 +326,9 @@ const TextProjectFormData = {
     },
     stepFourPrev(state, action) {
       return { ...state, current: action.payload };
+    },
+    saveExplainData(state, action) {
+      return { ...state, explain: action.payload };
     },
     savePreLabelData(state, action) {
       return { ...state, preLabelData: action.payload };

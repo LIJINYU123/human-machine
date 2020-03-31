@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button } from 'antd';
+import { Button, Form } from 'antd';
 import BraftEditor from 'braft-editor';
 import ColorPicker from 'braft-extensions/dist/color-picker';
 import { connect } from 'dva';
@@ -21,13 +21,9 @@ BraftEditor.use(ColorPicker({
   preLabelResult: textProjectFormData.preLabelResult,
   stepTwo: textProjectFormData.stepTwo,
   optionData: textProjectFormData.optionData,
+  explain: textProjectFormData.explain,
 }))
 class Step4 extends Component {
-  state = {
-    editorState: BraftEditor.createEditorState(''),
-    outputHtml: '',
-  };
-
   componentDidMount() {
     const { dispatch, projectId } = this.props;
     dispatch({
@@ -35,13 +31,6 @@ class Step4 extends Component {
       payload: { projectId },
     });
   }
-
-  handleChange = editorState => {
-    this.setState({
-      editorState,
-      outputHtml: editorState.toHTML(),
-    });
-  };
 
   onPrev = () => {
     const { dispatch } = this.props;
@@ -51,20 +40,24 @@ class Step4 extends Component {
   };
 
   handleSaveRule = () => {
-    const { dispatch, onCancel } = this.props;
-    const { outputHtml } = this.state;
-    dispatch({
-      type: 'textProjectFormData/sveStepFourData',
-      payload: { explain: outputHtml },
-      callback: () => {
-        onCancel();
-      },
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    validateFieldsAndScroll(error => {
+      if (!error) {
+        const values = getFieldsValue();
+        dispatch({
+          type: 'textProjectFormData/sveStepFourData',
+          payload: { explain: values.content.toHTML() },
+          callback: () => {
+            onCancel();
+          },
+        });
+      }
     });
+
   };
 
   render () {
-    const { labelType, preLabelData, preLabelResult, stepTwo, optionData } = this.props;
-    const { editorState } = this.state;
+    const { labelType, preLabelData, preLabelResult, stepTwo, optionData, explain, form: { getFieldDecorator } } = this.props;
     const excludeControls = ['media', 'code'];
 
     let labelComponent = <TextClassifyView />;
@@ -78,14 +71,21 @@ class Step4 extends Component {
       <Fragment>
         { labelComponent }
         <div className={styles.title}>标注规则</div>
-        <BraftEditor
-          id="editor-with-color-picker"
-          excludeControls={excludeControls}
-          value={editorState}
-          onChange={this.handleChange}
-          className={styles.editor}
-          contentStyle={{ height: '200px' }}
-        />
+        <Form>
+          <Form.Item>
+            {
+              getFieldDecorator('content', {
+                initialValue: BraftEditor.createEditorState(explain),
+              })(
+                <BraftEditor
+                  id="editor-with-color-picker"
+                  excludeControls={excludeControls}
+                  className={styles.editor}
+                  contentStyle={{ height: '200px' }}
+                />)
+            }
+          </Form.Item>
+        </Form>
         <Button style={{ marginTop: '16px' }} onClick={this.onPrev}>上一步</Button>
         <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleSaveRule}>创建并发布</Button>
       </Fragment>
@@ -94,4 +94,4 @@ class Step4 extends Component {
 }
 
 
-export default Step4;
+export default Form.create()(Step4);

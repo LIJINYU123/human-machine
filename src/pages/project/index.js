@@ -313,6 +313,8 @@ class TextProjectList extends Component {
         title: '操作',
         render: (_, project) => (
           <Fragment>
+            <a>编辑</a>
+            <Divider type="vertical"/>
             <a onClick={() => this.handleReviewDetails(project)}>详情</a>
             <Divider type="vertical"/>
             <Popconfirm title="确定删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(project)}>
