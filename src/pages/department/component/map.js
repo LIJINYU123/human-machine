@@ -1,6 +1,7 @@
 export default {
   FieldLabels: {
     departmentId: '机构标识',
+    departmentType: '机构类型',
     departmentName: '机构名称',
     administrator: '管理员',
     createdTime: '创建时间',
@@ -9,37 +10,68 @@ export default {
 
   Privileges: [
     {
-      name: '文本分类',
-      id: 'textClassify',
+      value: 'textMark',
+      key: 'textMark',
+      title: '文本标注',
+      children: [
+        {
+          value: 'textClassify',
+          key: 'textClassify',
+          title: '文本分类',
+        },
+        {
+          value: 'sequenceLabeling',
+          key: 'sequenceLabeling',
+          title: '序列标注',
+        },
+        {
+          value: 'textExtension',
+          key: 'textExtension',
+          title: '文本扩充',
+        },
+      ],
     },
     {
-      name: '文本匹配',
-      id: 'textMatch',
+      value: 'pictureMark',
+      key: 'pictureMark',
+      title: '图片标注',
     },
     {
-      name: '实体识别',
-      id: 'ner',
+      value: 'voiceMark',
+      key: 'voiceMark',
+      title: '音频标注',
     },
     {
-      name: '图片标注',
-      id: 'pictureMark',
+      value: 'otherMark',
+      key: 'otherMark',
+      title: '其他标注',
+      children: [
+        {
+          value: 'videoDialogMark',
+          key: 'videoDialogMark',
+          title: '视频对话标注',
+        },
+      ],
+    },
+  ],
+
+  DepartmentType: [
+    {
+      id: 'operationCenter',
+      name: '运营中心',
     },
     {
-      name: '音频标注',
-      id: 'voiceMark',
-    },
-    {
-      name: '其他标注-视频对话标注',
-      id: 'videoDialogMark',
+      id: 'company',
+      name: '公司',
     },
   ],
 
   PrivilegeMap: {
-    textClassify: '文本分类',
-    textMatch: '文本匹配',
-    ner: '实体识别',
-    pictureMark: '图片标注',
-    voiceMark: '音频标注',
-    videoDialogMark: '其他标注-视频对话标注',
+    textClassify: '文本',
+    sequenceLabeling: '文本',
+    textExtension: '文本',
+    pictureMark: '图片',
+    voiceMark: '音频',
+    videoDialogMark: '其他',
   },
 }

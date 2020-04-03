@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Modal, Select } from 'antd';
+import { Form, Input, Modal, Select, TreeSelect } from 'antd';
 import ItemData from './map';
 
 const { Option } = Select;
-const { FieldLabels, Privileges } = ItemData;
+const { FieldLabels, Privileges, DepartmentType } = ItemData;
 
 @connect(({ departmentList, loading }) => ({
   departmentList,
@@ -12,14 +12,14 @@ const { FieldLabels, Privileges } = ItemData;
 }))
 class DepDetailView extends Component {
   handleConfirm = () => {
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, departmentInfo, dispatch, onCancel } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
 
         dispatch({
           type: 'departmentList/updateDepartment',
-          payload: values,
+          payload: { departmentId: departmentInfo.departmentId, ...values },
           callback: onCancel,
         });
       }
@@ -28,13 +28,9 @@ class DepDetailView extends Component {
 
   render() {
     // eslint-disable-next-line max-len
-    const { visible, onCancel, departmentInfo, noDepAccounts, form: { getFieldDecorator }, submitting } = this.props;
-    // eslint-disable-next-line max-len
-    const accountOptions = noDepAccounts.map(account => <Option key={account.userId}>{`${account.userId}(${account.name})`}</Option>);
-    // eslint-disable-next-line max-len
-    accountOptions.push(<Option key={departmentInfo.administrator}>{`${departmentInfo.administrator}(${departmentInfo.adminName})`}</Option>);
+    const { visible, onCancel, departmentInfo, form: { getFieldDecorator }, submitting } = this.props;
 
-    const privilegeOptions = Privileges.map(privilege => <Option key={privilege.id}>{privilege.name}</Option>);
+    const typeOptions = DepartmentType.map(type => <Option key={type.id}>{type.name}</Option>);
 
     const formItemLayout = {
       labelCol: {
@@ -49,7 +45,7 @@ class DepDetailView extends Component {
 
     return (
       <Modal
-        title="部门详情"
+        title="机构详情"
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}
@@ -58,13 +54,6 @@ class DepDetailView extends Component {
         destroyOnClose
       >
         <Form {...formItemLayout} hideRequiredMark>
-          <Form.Item label={FieldLabels.departmentId}>
-            {
-              getFieldDecorator('departmentId', {
-                initialValue: departmentInfo.departmentId,
-              })(<Input disabled/>)
-            }
-          </Form.Item>
           <Form.Item label={FieldLabels.departmentName}>
             {
               getFieldDecorator('departmentName', {
@@ -72,30 +61,30 @@ class DepDetailView extends Component {
               })(<Input/>)
             }
           </Form.Item>
+          <Form.Item label={FieldLabels.departmentType}>
+            {
+              getFieldDecorator('departmentType', {
+                initialValue: 'operationCenter',
+              })(
+                <Select
+                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
+                >
+                  {typeOptions}
+                </Select>)
+            }
+          </Form.Item>
           <Form.Item label={FieldLabels.privilege}>
             {
               getFieldDecorator('privilege', {
                 initialValue: departmentInfo.privilege,
-              })(<Select
-                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
-                  mode="multiple"
-                >
-                {privilegeOptions}
-                </Select>)
+              })(<TreeSelect treeData={Privileges} treeCheckable treeDefaultExpandAll/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.administrator}>
             {
               getFieldDecorator('administrator', {
                 initialValue: departmentInfo.administrator,
-              })(
-                <Select
-                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
-                  showSearch
-                  filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-                >
-                  {accountOptions}
-                </Select>)
+              })(<Input />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.createdTime}>

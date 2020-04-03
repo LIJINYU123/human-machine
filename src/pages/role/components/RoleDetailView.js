@@ -5,7 +5,7 @@ import ItemData from './map';
 
 const { TextArea } = Input;
 // eslint-disable-next-line max-len
-const { FieldLabels, roleManageOptions, userManageOptions, projectManageOptions, dataMarkOptions } = ItemData;
+const { FieldLabels, roleManageOptions, userManageOptions, projectManageOptions, templateManageOptions, dataMarkOptions } = ItemData;
 
 @connect(({ roleList, loading }) => ({
   roleList,
@@ -13,13 +13,13 @@ const { FieldLabels, roleManageOptions, userManageOptions, projectManageOptions,
 }))
 class RoleDetailView extends Component {
   handleConfirm = () => {
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, roleInfo, dispatch, onCancel } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        const { roleId, roleName, description, ...rest } = values;
+        const { roleName, description, ...rest } = values;
         const fieldValues = {
-          roleId,
+          roleId: roleInfo.roleId,
           roleName,
           description,
           privileges: { ...rest },
@@ -41,11 +41,11 @@ class RoleDetailView extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 20 },
+        sm: { span: 18 },
       },
     };
     return (
@@ -56,16 +56,10 @@ class RoleDetailView extends Component {
         onCancel={onCancel}
         onOk={this.handleConfirm}
         confirmLoading={submitting}
+        style={{ minWidth: '600px' }}
         destroyOnClose
       >
         <Form {...formItemLayout} hideRequiredMark>
-          <Form.Item label={FieldLabels.roleId}>
-            {
-              getFieldDecorator('roleId', {
-                initialValue: roleInfo.roleId,
-              })(<Input disabled/>)
-            }
-          </Form.Item>
           <Form.Item label={FieldLabels.roleName}>
             {
               getFieldDecorator('roleName', {
@@ -91,28 +85,34 @@ class RoleDetailView extends Component {
             {
               getFieldDecorator('projectManage', {
                 initialValue: privileges ? privileges.projectManage : [],
-              })(<Checkbox.Group options={projectManageOptions} style={{ width: '100%' }} />)
+              })(<Checkbox.Group options={projectManageOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
             }
           </Form.Item>
-          <Form.Item label={FieldLabels.dataMark}>
+          <Form.Item label={FieldLabels.templateManage}>
             {
-              getFieldDecorator('dataMark', {
-                initialValue: privileges ? privileges.dataMark : [],
-              })(<Checkbox.Group options={dataMarkOptions} style={{ width: '100%' }} />)
+              getFieldDecorator('templateManage', {})(
+                <Checkbox.Group options={templateManageOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.roleManage}>
             {
               getFieldDecorator('roleManage', {
                 initialValue: privileges ? privileges.roleManage : [],
-              })(<Checkbox.Group options={roleManageOptions} style={{ width: '100%' }} />)
+              })(<Checkbox.Group options={roleManageOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.userManage}>
             {
               getFieldDecorator('userManage', {
                 initialValue: privileges ? privileges.userManage : [],
-              })(<Checkbox.Group options={userManageOptions} style={{ width: '100%' }} />)
+              })(<Checkbox.Group options={userManageOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
+            }
+          </Form.Item>
+          <Form.Item label={FieldLabels.dataMark}>
+            {
+              getFieldDecorator('dataMark', {
+                initialValue: privileges ? privileges.dataMark : [],
+              })(<Checkbox.Group options={dataMarkOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
             }
           </Form.Item>
         </Form>

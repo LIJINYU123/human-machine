@@ -88,7 +88,7 @@ class NerModalView extends Component {
         destroyOnClose
       >
         <Form {...formItemLayout} hideRequiredMark>
-          <Form.Item label={FieldLabels.wordEntry}>
+          <Form.Item label={markTool.classifyName}>
             {
               getFieldDecorator('optionName', {
                 rules: [
@@ -106,17 +106,20 @@ class NerModalView extends Component {
                 </Select>)
             }
           </Form.Item>
-          <Form.Item label={FieldLabels.saveType}>
-            {
-              getFieldDecorator('saveType', {
-                initialValue: 'wordEntry',
-              })(
-                <Radio.Group name="saveType" onChange={this.handleRadioChange}>
-                  <Radio value="wordEntry">词条名</Radio>
-                  <Radio value="synonym">同义词</Radio>
-                </Radio.Group>)
-            }
-          </Form.Item>
+          {
+            markTool.saveType === 'dict' &&
+            <Form.Item label={FieldLabels.saveType}>
+              {
+                getFieldDecorator('saveType', {
+                  initialValue: 'wordEntry',
+                })(
+                  <Radio.Group name="saveType" onChange={this.handleRadioChange}>
+                    <Radio value="wordEntry">词条名</Radio>
+                    <Radio value="synonym">同义词</Radio>
+                  </Radio.Group>)
+              }
+            </Form.Item>
+          }
           {
             saveType === 'synonym' &&
             <Form.Item label={FieldLabels.wordEntryName}>

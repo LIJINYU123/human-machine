@@ -23,6 +23,7 @@ const TextProjectFormData = {
     stepTwo: {
       templateName: '',
       classifyName: '',
+      defaultTool: '',
       multiple: true,
       saveType: 'nomal',
     },
@@ -395,6 +396,7 @@ const TextProjectFormData = {
         templates: [],
         optionData: [],
         saveTemplate: false,
+        explain: '',
         current: 0,
       };
     },

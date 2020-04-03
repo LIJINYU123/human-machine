@@ -84,12 +84,12 @@ class RoleList extends Component {
 
     const columns = [
       {
-        title: '角色标识',
-        dataIndex: 'roleId',
-      },
-      {
         title: '角色名称',
         dataIndex: 'roleName',
+      },
+      {
+        title: '角色描述',
+        dataIndex: 'description',
       },
       {
         title: '创建时间',

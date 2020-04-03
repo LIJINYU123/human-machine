@@ -573,42 +573,34 @@ let templatesMockData = [
       multiple: true,
       options: [
         {
-          optionId: 'anger',
           optionName: '愤怒',
           color: '#1890ff',
         },
         {
-          optionId: 'hate',
           optionName: '厌恶',
           color: '#1890ff',
         },
         {
-          optionId: 'fear',
           optionName: '害怕',
           color: '#1890ff',
         },
         {
-          optionId: 'sad',
           optionName: '悲伤',
           color: '#1890ff',
         },
         {
-          optionId: 'happy',
           optionName: '高兴',
           color: '#1890ff',
         },
         {
-          optionId: 'like',
           optionName: '喜欢',
           color: '#1890ff',
         },
         {
-          optionId: 'surprise',
           optionName: '惊喜',
           color: '#1890ff',
         },
         {
-          optionId: 'neutral',
           optionName: '中性',
           color: '#1890ff',
         },
@@ -626,17 +618,14 @@ let templatesMockData = [
       multiple: true,
       options: [
         {
-          optionId: 'chenshuju',
           optionName: '肯定陈述句',
           color: '#1890ff',
         },
         {
-          optionId: 'fanwenju',
           optionName: '反问句',
           color: '#1890ff',
         },
         {
-          optionId: 'yiwenju',
           optionName: '疑问句',
           color: '#1890ff',
         },

@@ -1,10 +1,11 @@
 import moment from 'moment';
-import { parse } from "url";
+import { parse } from 'url';
 
 let mockData = [
   {
     departmentId: 'deveopment',
     departmentName: '研发部门',
+    departmentType: 'operationCenter',
     privilege: ['textClassify', 'pictureMark'],
     administrator: 'SYDEV',
     adminName: '研发部管理员',
@@ -14,6 +15,7 @@ let mockData = [
   {
     departmentId: 'operation',
     departmentName: '运营部门',
+    departmentType: 'company',
     privilege: ['textClassify'],
     administrator: 'SYOPE',
     adminName: '运营部管理员',
@@ -53,6 +55,18 @@ function getDepartment(req, res, u) {
       return Date.parse(prev[s[0]]) - Date.parse(next[s[0]]);
     })
   }
+
+  if (params.departmentType) {
+    const types = params.departmentType.split(',');
+    let filterDataSource = [];
+    types.forEach(type => {
+      // eslint-disable-next-line max-len
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.departmentType === type));
+    });
+
+    dataSource = filterDataSource;
+  }
+
   return res.json(dataSource);
 }
 
@@ -70,6 +84,7 @@ function updateDepartment(req, res, u, b) {
     if (body.departmentId === item.departmentId) {
       item.departmentName = body.departmentName;
       item.administrator = body.administrator;
+      item.privilege = body.privilege;
       const result = mockAccounts.filter(account => account.userId === body.administrator);
       item.adminName = result.length ? result[0].name : '';
     }

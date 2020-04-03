@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Form, Input, Modal, Select } from 'antd';
+import { Form, Input, Modal, Select, TreeSelect } from 'antd';
 import ItemData from './map';
 
-const { FieldLabels, Privileges } = ItemData;
+const { FieldLabels, Privileges, DepartmentType } = ItemData;
 const { Option } = Select;
 
 @connect(({ departmentList, loading }) => ({
@@ -58,12 +58,9 @@ class DepCreateView extends Component {
 
   render() {
     // eslint-disable-next-line max-len
-    const { visible, onCancel, noDepAccounts, form: { getFieldDecorator }, submitting } = this.props;
-    // eslint-disable-next-line max-len
-    const accountOptions = noDepAccounts.map(account => <Option key={account.userId}>{`${account.userId}(${account.name})`}</Option>);
+    const { visible, onCancel, form: { getFieldDecorator }, submitting } = this.props;
 
-    // eslint-disable-next-line max-len
-    const privilegeOptions = Privileges.map(privilege => <Option key={privilege.id}>{privilege.name}</Option>);
+    const typeOptions = DepartmentType.map(type => <Option key={type.id}>{type.name}</Option>);
 
     const formItenLayout = {
       labelCol: {
@@ -87,17 +84,6 @@ class DepCreateView extends Component {
         destroyOnClose
       >
         <Form {...formItenLayout} hideRequiredMark>
-          <Form.Item label={FieldLabels.departmentId}>
-            {
-              getFieldDecorator('departmentId', {
-                rules: [
-                  {
-                    validator: this.checkDepId,
-                  },
-                ],
-              })(<Input/>)
-            }
-          </Form.Item>
           <Form.Item label={FieldLabels.departmentName}>
             {
               getFieldDecorator('departmentName', {
@@ -109,6 +95,18 @@ class DepCreateView extends Component {
               })(<Input/>)
             }
           </Form.Item>
+          <Form.Item label={FieldLabels.departmentType}>
+            {
+              getFieldDecorator('departmentType', {
+                initialValue: 'operationCenter',
+              })(
+                <Select
+                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
+                >
+                  {typeOptions}
+                </Select>)
+            }
+          </Form.Item>
           <Form.Item label={FieldLabels.privilege}>
             {
               getFieldDecorator('privilege', {
@@ -118,12 +116,7 @@ class DepCreateView extends Component {
                     message: '请选择机构权限',
                   },
                 ],
-              })(<Select
-                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
-                  mode="multiple"
-                >
-                  {privilegeOptions}
-                </Select>)
+              })(<TreeSelect treeData={Privileges} treeCheckable treeDefaultExpandAll/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.administrator}>
@@ -134,15 +127,7 @@ class DepCreateView extends Component {
                     validator: this.checkAdministrator,
                   },
                 ],
-              })(
-                <Select
-                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
-                  placeholder="请选择管理员"
-                  showSearch
-                  filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-                >
-                  {accountOptions}
-                </Select>)
+              })(<Input/>)
             }
           </Form.Item>
         </Form>

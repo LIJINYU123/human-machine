@@ -64,7 +64,7 @@ class Step4 extends Component {
     if (labelType.slice(-1)[0] === 'textClassify') {
       labelComponent = <TextClassifyView data={preLabelData} markTool={{ classifyName: stepTwo.classifyName, multiple: stepTwo.multiple, options: optionData }} result={preLabelResult} />
     } else if (labelType.slice(-1)[0] === 'sequenceLabeling') {
-      labelComponent = <SequenceLabelView data={preLabelData} markTool={{ options: optionData }} result={preLabelResult} />
+      labelComponent = <SequenceLabelView data={preLabelData} markTool={{ classifyName: stepTwo.classifyName, saveType: stepTwo.saveType, options: optionData }} result={preLabelResult} />
     }
 
     return (

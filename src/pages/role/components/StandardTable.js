@@ -22,7 +22,7 @@ function StandardTable(props) {
       <Table
         rowKey="roleId"
         dataSource={data}
-        pagination={false}
+        pagination={{ showSizeChanger: true, showQuickJumper: true }}
         expandedRowRender={role => renderPrivileges(role.privileges)}
         {...rest}
       />

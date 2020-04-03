@@ -241,22 +241,19 @@ class Step2 extends Component {
             }
           </Form.Item>
         }
-        {
-          labelType.length > 0 && !['textExtension', 'sequenceLabeling'].includes(labelType.slice(-1)[0]) &&
-          <Form.Item label={FieldLabels.classifyName} {...formItemLayout}>
-            {
-              getFieldDecorator('classifyName', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请输入类别名称',
-                  },
-                ],
-                initialValue: classifyName,
-              })(<Input style={{ width: '50%' }} />)
-            }
-          </Form.Item>
-        }
+        <Form.Item label={FieldLabels.classifyName} {...formItemLayout}>
+          {
+            getFieldDecorator('classifyName', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入类别名称',
+                },
+              ],
+              initialValue: classifyName,
+            })(<Input style={{ width: '50%' }} />)
+          }
+        </Form.Item>
         {
           labelType.length > 0 && labelType.slice(-1)[0] === 'sequenceLabeling' &&
           <Form.Item label={FieldLabels.saveType} {...formItemLayout}>
