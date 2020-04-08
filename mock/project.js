@@ -257,6 +257,51 @@ let taskMockData = [
   },
 ];
 
+const memberMockData = [
+  {
+    userId: Mock.Random.string(5),
+    userName: Mock.Random.cname(),
+    roleName: '标注员',
+    receiveNum: Mock.Random.integer(0, 10),
+  },
+  {
+    userId: Mock.Random.string(5),
+    userName: Mock.Random.cname(),
+    roleName: '标注员',
+    receiveNum: Mock.Random.integer(0, 10),
+  },
+  {
+    userId: Mock.Random.string(5),
+    userName: Mock.Random.cname(),
+    roleName: '标注员',
+    receiveNum: Mock.Random.integer(0, 10),
+  },
+  {
+    userId: Mock.Random.string(5),
+    userName: Mock.Random.cname(),
+    roleName: '标注员',
+    receiveNum: Mock.Random.integer(0, 10),
+  },
+  {
+    userId: Mock.Random.string(5),
+    userName: Mock.Random.cname(),
+    roleName: '质检员',
+    receiveNum: Mock.Random.integer(0, 10),
+  },
+  {
+    userId: Mock.Random.string(5),
+    userName: Mock.Random.cname(),
+    roleName: '质检员',
+    receiveNum: Mock.Random.integer(0, 10),
+  },
+  {
+    userId: Mock.Random.string(5),
+    userName: Mock.Random.cname(),
+    roleName: '质检员',
+    receiveNum: Mock.Random.integer(0, 10),
+  },
+];
+
 const taskDetailMockData = [
   {
     taskId: '1',
@@ -797,6 +842,17 @@ function getTaskData(req, res, u) {
   res.json(result);
 }
 
+function getMemberData(req, res, u) {
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+
+  const params = parse(url, true).query;
+
+}
+
 function deleteTaskData(req, res, u, b) {
   const body = (b && b.body) || req.body;
   taskMockData = taskMockData.filter(item => !body.taskIds.includes(item.taskId));
@@ -1053,6 +1109,7 @@ export default {
   'DELETE /api/projects': deleteProjects,
   'GET /api/project/detail/:projectId': getProjectDetail,
   'GET /api/project/task-data': getTaskData,
+  'GET /api/project/member-data': getMemberData,
   'DELETE /api/project/task-data': deleteTaskData,
   'GET /api/project/default-templates': getTemplates,
   'PUT /api/project/default-templates': createTemplate,

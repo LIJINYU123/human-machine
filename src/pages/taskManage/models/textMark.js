@@ -98,13 +98,13 @@ const TextMark = {
       const data = action.payload;
       const checkNum = data.list.filter(item => item.reviewResult !== 'unreview').length;
       const passNum = data.list.filter(item => item.reviewResult === 'approve').length;
-      return { ...state, data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: parseInt(passNum / checkNum * 100, 0) };
+      return { ...state, data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: checkNum !== 0 ? parseInt(passNum / checkNum * 100, 0) : 0 };
     },
     nerData(state, action) {
       const data = action.payload;
       const checkNum = data.list.filter(item => item.reviewResult !== 'unreview').length;
       const passNum = data.list.filter(item => item.reviewResult === 'approve').length;
-      return { ...state, nerData: data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: parseInt(passNum / checkNum * 100, 0) };
+      return { ...state, nerData: data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: checkNum !== 0 ? parseInt(passNum / checkNum * 100, 0) : 0 };
     },
     saveTool(state, action) {
       return { ...state, markTool: action.payload };

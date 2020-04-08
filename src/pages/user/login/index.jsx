@@ -74,7 +74,7 @@ class Login extends Component {
               !submitting &&
               this.renderMessage('账户或密码错误')}
             <UserName
-              name="userName"
+              name="userId"
               placeholder="用户名"
               rules={[
                 {

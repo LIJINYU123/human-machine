@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { Form, Modal, Select } from 'antd';
+import { Form, Modal, Select, Input, InputNumber } from 'antd';
 import ItemData from './map';
 
 const { Option } = Select;
@@ -10,7 +10,7 @@ const { FieldLabels } = ItemData;
   userList,
   submitting: loading.effects['userList/updateDetail'],
 }))
-class UserAddView extends Component {
+class BatchAddView extends Component {
   handleConfirm = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
     validateFieldsAndScroll(error => {
@@ -46,6 +46,7 @@ class UserAddView extends Component {
     const { visible, onCancel, noDepAccounts, roleInfos, form: { getFieldDecorator }, submitting } = this.props;
 
     const accountOptions = noDepAccounts.map(account => <Option key={account.userId}>{`${account.userId}(${account.name})`}</Option>);
+
     // eslint-disable-next-line max-len
     const roleOptions = roleInfos.map(roleInfo => <Option key={roleInfo.roleId}>{roleInfo.roleName}</Option>);
 
@@ -62,7 +63,7 @@ class UserAddView extends Component {
 
     return (
       <Modal
-        title="添加用户"
+        title="新建账户"
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}
@@ -70,31 +71,13 @@ class UserAddView extends Component {
         confirmLoading={submitting}
       >
         <Form {...formItemLayout}>
-          <Form.Item label={FieldLabels.userId}>
-            {
-              getFieldDecorator('userId', {
-                rules: [
-                  {
-                    validator: this.checkUserId,
-                  },
-                ],
-              })(
-                <Select
-                  dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
-                  placeholder="请添加用户"
-                  showSearch
-                  filterOption={(input, option) => option.props.children.toLowerCase().includes(input.toLowerCase())}
-                >
-                  {accountOptions}
-                </Select>)
-            }
-          </Form.Item>
           <Form.Item label={FieldLabels.roleName}>
             {
               getFieldDecorator('roleId', {
                 rules: [
                   {
-                    validator: this.checkRole,
+                    required: true,
+                    message: '请选择角色',
                   },
                 ],
               })(
@@ -106,10 +89,22 @@ class UserAddView extends Component {
                 </Select>)
             }
           </Form.Item>
+          <Form.Item label={FieldLabels.amount}>
+            {
+              getFieldDecorator('amount', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入批量新建账户数量',
+                  },
+                ],
+              })(<InputNumber style={{ width: '100%' }}/>)
+            }
+          </Form.Item>
         </Form>
       </Modal>
     );
   }
 }
 
-export default Form.create()(UserAddView);
+export default Form.create()(BatchAddView);

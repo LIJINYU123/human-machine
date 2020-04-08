@@ -27,6 +27,13 @@ export async function queryTaskData(params) {
   });
 }
 
+// 项目详情页显示的人员列表
+export async function queryMemberData(params) {
+  return request('/api/project/member-data', {
+    params,
+  });
+}
+
 // 创建项目第一步获取标注员和质检员名单
 export async function queryMembers() {
   return request('/api/project/members');

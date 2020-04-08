@@ -158,9 +158,9 @@ export default {
   },
 
   'POST /api/login/account': (req, res) => {
-    const { userName } = req.body;
+    const { userId } = req.body;
 
-    if (userName === 'SYECO') {
+    if (userId === 'SYECO') {
       res.header(
         'Authorization',
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE1NzUwMzkzMjQsInVzZXJuYW1lIjoiYWRtaW4ifQ.eqcIWCQO5z_dU1purEKr66VkMPC6q8WEn4h2DEquOkA',

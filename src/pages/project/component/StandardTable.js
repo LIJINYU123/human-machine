@@ -68,7 +68,6 @@ class StandardTable extends Component {
           } type="info" showIcon/>
         </div>
         <Table
-          rowKey="taskId"
           rowSelection={rowSelection}
           dataSource={list}
           pagination={paginationProps}

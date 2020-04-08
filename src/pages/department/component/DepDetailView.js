@@ -45,7 +45,7 @@ class DepDetailView extends Component {
 
     return (
       <Modal
-        title="机构详情"
+        title="机构编辑"
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}

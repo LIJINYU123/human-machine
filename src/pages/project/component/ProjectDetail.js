@@ -15,6 +15,7 @@ import { connect } from 'dva';
 import styles from './style.less';
 import ItemData from '../map';
 import StandardTable from './StandardTable';
+import MemberDetail from './MemberDetail';
 
 const { statusName, labelTypeName, taskStatusName, taskStatusMap } = ItemData;
 
@@ -35,6 +36,7 @@ class ProjectDetail extends Component {
     projectId: undefined,
     selectedRows: [],
     filteredInfo: {},
+    activeTabKey: 'task',
   };
 
   componentDidMount() {
@@ -130,9 +132,15 @@ class ProjectDetail extends Component {
     });
   };
 
+  handleTabChange = key => {
+    this.setState({
+      activeTabKey: key,
+    });
+  };
+
   render() {
     const { data, basicInfo, loading } = this.props;
-    const { selectedRows } = this.state;
+    const { selectedRows, activeTabKey } = this.state;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -166,6 +174,17 @@ class ProjectDetail extends Component {
         </Link>
       </Fragment>
     );
+
+    const tabList = [
+      {
+        key: 'task',
+        tab: '任务列表',
+      },
+      {
+        key: 'member',
+        tab: '人员列表',
+      },
+    ];
 
     const columns = [
       {
@@ -208,25 +227,36 @@ class ProjectDetail extends Component {
 
     return (
       <PageHeaderWrapper
+        tabList={tabList}
+        tabActiveKey={activeTabKey}
+        onTabChange={this.handleTabChange}
         title={basicInfo.projectName}
         extra={action}
         className={styles.pageHeader}
         content={description}
         extraContent={extra}
       >
-        <Card title="任务列表" className={styles.card} bordered={false}>
-          <div className={styles.tableListOperator}>
-            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
-          </div>
-          <StandardTable
-            selectedRows={selectedRows}
-            loading={loading}
-            data={data}
-            columns={columns}
-            onSelectRow={this.handleSelectRows}
-            onChange={this.handleStandardTableChange}
-          />
-        </Card>
+        {
+          activeTabKey === 'task' &&
+          <Card className={styles.card} bordered={false}>
+            <div className={styles.tableListOperator}>
+              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
+            </div>
+            <StandardTable
+              rowKey="taskId"
+              selectedRows={selectedRows}
+              loading={loading}
+              data={data}
+              columns={columns}
+              onSelectRow={this.handleSelectRows}
+              onChange={this.handleStandardTableChange}
+            />
+          </Card>
+        }
+        {
+          activeTabKey === 'member' &&
+          <MemberDetail />
+        }
       </PageHeaderWrapper>
     );
   }

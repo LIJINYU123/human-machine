@@ -191,6 +191,7 @@ class GroupDetail extends Component {
       >
         <Card title="成员列表" className={styles.card} bordered={false}>
           <div className={styles.tableListOperator}>
+            <Button icon="plus" type="primary">添加</Button>
             <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
           </div>
           <StandardTable

@@ -8,6 +8,10 @@ const ProjectDetail = {
       list: [],
       pagination: {},
     },
+    member: {
+      list: [],
+      pagination: {},
+    },
     basicInfo: {},
   },
 
@@ -26,6 +30,10 @@ const ProjectDetail = {
         type: 'taskData',
         payload: response,
       });
+    },
+
+    * fetchMemberData({ payload }, { call, put }) {
+
     },
 
     * deleteTaskData({ payload, callback }, { call, put }) {

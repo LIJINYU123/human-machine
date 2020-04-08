@@ -6,19 +6,22 @@ import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
 import UserDetailView from './components/UserDetailView';
-import UserAddView from './components/UserAddView';
+import BatchAddView from './components/BatchAddView';
+import ManualAddView from './components/ManualAddView';
 import GroupManage from './components/GroupManage';
 
 const { confirm } = Modal;
 
-@connect(({ userList, loading }) => ({
+@connect(({ userList, groupList, loading }) => ({
   userList,
+  groupList,
   loading: loading.models.userList,
 }))
 class UserManage extends Component {
   state = {
     modalVisible: false,
     addModalVisible: false,
+    manualAddVisible: false,
     selectedRows: [],
     searchText: '',
     userInfo: {},
@@ -38,6 +41,15 @@ class UserManage extends Component {
     dispatch({
       type: 'userList/fetchUsers',
       payload: params,
+    });
+
+    dispatch({
+      type: 'userList/fetchRoles',
+    });
+
+    dispatch({
+      type: 'groupList/fetchGroups',
+      payload: { sorter: 'createdTime_descend' },
     });
 
     const privilegeStr = localStorage.getItem('Privileges');
@@ -111,7 +123,7 @@ class UserManage extends Component {
   };
 
   handleModify = user => {
-    const { dispatch, userList: { data } } = this.props;
+    const { userList: { data } } = this.props;
 
     const { list } = data;
     const result = list.filter(item => item.userId === user.userId);
@@ -119,33 +131,32 @@ class UserManage extends Component {
       userInfo: result[0],
     });
 
-    dispatch({
-      type: 'userList/fetchRoles',
-    });
-
     this.setState({
       modalVisible: true,
     });
   };
 
-  handleAddto = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'userList/fetchNoDepAccounts',
-    });
-
-    dispatch({
-      type: 'userList/fetchRoles',
-    });
-
+  handleBatchAdd = () => {
     this.setState({
       addModalVisible: true,
+    });
+  };
+
+  handleManualAdd = () => {
+    this.setState({
+      manualAddVisible: true,
     });
   };
 
   handleCancelAddModal = () => {
     this.setState({
       addModalVisible: false,
+    });
+  };
+
+  handleCancelManualModal = () => {
+    this.setState({
+      manualAddVisible: false,
     });
   };
 
@@ -247,9 +258,17 @@ class UserManage extends Component {
     }
   };
 
+  manualAndAuto = key => {
+    if (key === 'batch') {
+      this.handleBatchAdd();
+    } else {
+      this.handleManualAdd();
+    }
+  };
+
   render() {
-    const { userList: { data, roleInfos, accounts }, loading } = this.props;
-    const { selectedRows, userInfo, addAuthority, modifyAuthority, deleteAuthority, activeTabKey } = this.state;
+    const { userList: { data, roleInfos, accounts }, groupList: { groups }, loading } = this.props;
+    const { selectedRows, userInfo, addAuthority, modifyAuthority, deleteAuthority, activeTabKey, modalVisible, addModalVisible, manualAddVisible } = this.state;
 
     const MoreBtn = ({ userId, status }) => (
       <Dropdown
@@ -261,6 +280,20 @@ class UserManage extends Component {
         }
       >
         <a>更多<Icon type="down"/></a>
+      </Dropdown>
+    );
+
+    const AddBtn = () => (
+      <Dropdown
+        trigger={['click']}
+        overlay={
+          <Menu onClick={({ key }) => this.manualAndAuto(key)}>
+            <Menu.Item key="manual">手动创建</Menu.Item>
+            <Menu.Item key="batch">批量创建</Menu.Item>
+          </Menu>
+        }
+      >
+        <Button icon="down" type="primary">创建</Button>
       </Dropdown>
     );
 
@@ -336,8 +369,8 @@ class UserManage extends Component {
           <Fragment>
             <Card bordered={false}>
               <div className={styles.tableListOperator}>
-                <Button icon="plus" type="primary" onClick={this.handleAddto} disabled={!addAuthority}>添加</Button>
-                <Button icon="delete" type="danger" disabled={!selectedRows.length || !deleteAuthority} onClick={this.showDeleteConfirm}>移除</Button>
+                <AddBtn/>
+                <Button icon="delete" type="danger" disabled={!selectedRows.length || !deleteAuthority} onClick={this.showDeleteConfirm}>删除</Button>
               </div>
               <StandardTable
                 selectedRows={selectedRows}
@@ -348,8 +381,9 @@ class UserManage extends Component {
                 onChange={this.handleStandardTableChange}
               />
             </Card>
-            <UserDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} userInfo={userInfo} roleInfos={roleInfos} />
-            <UserAddView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} roleInfos={roleInfos} noDepAccounts={accounts} />
+            <UserDetailView visible={modalVisible} onCancel={this.handleCancelModal} userInfo={userInfo} roleInfos={roleInfos} />
+            <BatchAddView visible={addModalVisible} onCancel={this.handleCancelAddModal} roleInfos={roleInfos} noDepAccounts={accounts} />
+            <ManualAddView visible={manualAddVisible} onCancel={this.handleCancelManualModal} roleInfos={roleInfos} groupInfos={groups} />
           </Fragment>
         }
         {
