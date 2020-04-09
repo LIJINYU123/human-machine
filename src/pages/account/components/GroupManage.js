@@ -27,7 +27,7 @@ class GroupManage extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'groupList/fetchGroups',
-      payload: { sorter: 'createdTime_descend' },
+      payload: { sorter: 'updateTime_descend' },
     });
   }
 
@@ -72,7 +72,7 @@ class GroupManage extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'groupList/fetchGroups',
-      payload: { sorter: 'createdTime_descend' },
+      payload: { sorter: 'updateTime_descend' },
     });
   };
 
@@ -105,7 +105,7 @@ class GroupManage extends Component {
       callback: () => {
         dispatch({
           type: 'groupList/fetchGroups',
-          payload: { sorter: 'createdTime_descend' },
+          payload: { sorter: 'updateTime_descend' },
         });
       },
     });
@@ -120,7 +120,7 @@ class GroupManage extends Component {
       callback: () => {
         dispatch({
           type: 'groupList/fetchGroups',
-          payload: { sorter: 'createdTime_descend' },
+          payload: { sorter: 'updateTime_descend' },
         });
         this.setState({
           selectedRows: [],
@@ -215,8 +215,8 @@ class GroupManage extends Component {
         render: (val, group) => <Button type="link" onClick={() => this.handleReviewDetails(group)}>{val}</Button>,
       },
       {
-        title: '创建时间',
-        dataIndex: 'createdTime',
+        title: '更新时间',
+        dataIndex: 'updateTime',
         sorter: true,
         defaultSortOrder: 'descend',
       },

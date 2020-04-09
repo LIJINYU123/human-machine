@@ -41,7 +41,7 @@ class TemplateManage extends Component {
 
     dispatch({
       type: 'templateManage/fetchTemplate',
-      payload: { sorter: 'createdTime_descend' },
+      payload: { sorter: 'updateTime_descend' },
     });
   }
 
@@ -119,7 +119,7 @@ class TemplateManage extends Component {
       callback: () => {
         dispatch({
           type: 'templateManage/fetchTemplate',
-          payload: { sorter: 'createdTime_descend' },
+          payload: { sorter: 'updateTime_descend' },
         });
         this.setState({
           selectedRows: [],
@@ -139,7 +139,7 @@ class TemplateManage extends Component {
       callback: () => {
         dispatch({
           type: 'templateManage/fetchTemplate',
-          payload: { sorter: 'createdTime_descend' },
+          payload: { sorter: 'updateTime_descend' },
         });
         this.setState({
           selectedRows: [],
@@ -235,8 +235,8 @@ class TemplateManage extends Component {
         ellipsis: true,
       },
       {
-        title: '创建时间',
-        dataIndex: 'createdTime',
+        title: '更新时间',
+        dataIndex: 'updateTime',
         sorter: true,
         defaultSortOrder: 'descend',
       },

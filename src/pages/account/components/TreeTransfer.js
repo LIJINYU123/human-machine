@@ -44,6 +44,7 @@ class TreeTransfer extends Component {
                   checkable
                   defaultExpandAll
                   checkedKeys={checkedKeys}
+                  style={{ maxHeight: 400, overflow: 'auto' }}
                   onCheck={(_, { node: { props: { eventKey } } }) => {
                     onItemSelect(eventKey, !this.isChecked(checkedKeys, eventKey));
                   }}

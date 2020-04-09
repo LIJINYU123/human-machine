@@ -9,6 +9,7 @@ import UserDetailView from './components/UserDetailView';
 import BatchAddView from './components/BatchAddView';
 import ManualAddView from './components/ManualAddView';
 import GroupManage from './components/GroupManage';
+import md5 from 'md5';
 
 const { confirm } = Modal;
 
@@ -38,7 +39,7 @@ class UserManage extends Component {
   componentDidMount() {
     const { dispatch, location } = this.props;
     const params = {
-      sorter: 'registerTime_descend',
+      sorter: 'updateTime_descend',
     };
 
     dispatch({
@@ -52,7 +53,7 @@ class UserManage extends Component {
 
     dispatch({
       type: 'groupList/fetchGroups',
-      payload: { sorter: 'createdTime_descend' },
+      payload: { sorter: 'updateTime_descend' },
     });
 
     const privilegeStr = localStorage.getItem('Privileges');
@@ -76,6 +77,10 @@ class UserManage extends Component {
         userIds: selectedRows.map(row => row.userId),
       },
       callback: () => {
+        dispatch({
+          type: 'userList/fetchUsers',
+          payload: { sorter: 'updateTime_descend' },
+        });
         this.setState({
           selectedRows: [],
         });
@@ -151,6 +156,14 @@ class UserManage extends Component {
     });
   };
 
+  handleResetPassword = user => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'userList/resetPassword',
+      payload: { userId: user.userId, password: md5('eco@1234') },
+    });
+  };
+
   handleBatchAdd = () => {
     this.setState({
       addModalVisible: true,
@@ -181,6 +194,12 @@ class UserManage extends Component {
     dispatch({
       type: 'userList/deleteUsers',
       payload: { userIds: [userId] },
+      callback: () => {
+        dispatch({
+          type: 'userList/fetchUsers',
+          payload: { sorter: 'updateTime_descend' },
+        });
+      },
     });
   };
 
@@ -193,7 +212,7 @@ class UserManage extends Component {
       callback: () => {
         dispatch({
           type: 'userList/fetchUsers',
-          payload: { sorter: 'registerTime_descend' },
+          payload: { sorter: 'updateTime_descend' },
         });
       },
     });
@@ -297,7 +316,7 @@ class UserManage extends Component {
         overlay={
           <Menu onClick={({ key }) => this.activeAndDelete(key, userId, status)}>
             <Menu.Item key="active">{status === 'active' ? '停用' : '启用'}</Menu.Item>
-            <Menu.Item key="delete">移除</Menu.Item>
+            <Menu.Item key="delete">删除</Menu.Item>
           </Menu>
         }
       >
@@ -351,10 +370,10 @@ class UserManage extends Component {
       },
       {
         title: '组别',
-        dataIndex: 'groups',
+        dataIndex: 'groupId',
         render: val => {
-          if (val.length) {
-            return val.map(group => <Tag color="blue">{group.groupName}</Tag>);
+          if (groups.length) {
+            return val.map(groupId => <Tag color="blue">{groups.filter(group => group.groupId === groupId)[0].groupName}</Tag>);
           }
           return '';
         },
@@ -365,8 +384,8 @@ class UserManage extends Component {
         render: val => <Badge status={val === 'active' ? 'success' : 'error'} text={val === 'active' ? '已启用' : '已停用'}/>,
       },
       {
-        title: '注册时间',
-        dataIndex: 'registerTime',
+        title: '更新时间',
+        dataIndex: 'updateTime',
         sorter: true,
         defaultSortOrder: 'descend',
       },
@@ -376,7 +395,7 @@ class UserManage extends Component {
           <Fragment>
             { modifyAuthority && <a onClick={() => this.handleModify(user)}>编辑</a> }
             { modifyAuthority && <Divider type="vertical"/> }
-            <a>重置密码</a>
+            <a onClick={() => this.handleResetPassword(user)}>重置密码</a>
             <Divider type="vertical"/>
             <MoreBtn key="more" userId={user.userId} status={user.status}/>
           </Fragment>
@@ -407,7 +426,7 @@ class UserManage extends Component {
                 onChange={this.handleStandardTableChange}
               />
             </Card>
-            <UserDetailView visible={modalVisible} onCancel={this.handleCancelModal} userInfo={userInfo} roleInfos={roleInfos} />
+            <UserDetailView visible={modalVisible} onCancel={this.handleCancelModal} userInfo={userInfo} roleInfos={roleInfos} groupInfos={groups} />
             <BatchAddView visible={addModalVisible} onCancel={this.handleCancelAddModal} roleInfos={roleInfos} noDepAccounts={accounts} />
             <ManualAddView visible={manualAddVisible} onCancel={this.handleCancelManualModal} roleInfos={roleInfos} groupInfos={groups} />
           </Fragment>

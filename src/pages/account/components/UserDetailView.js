@@ -13,20 +13,20 @@ const { FieldLabels } = ItemData;
 class UserDetailView extends Component {
   handleConfirm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel, userInfo } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        const { userId, roleId } = values;
-        const fieldValues = {
-          userId,
-          roleId,
-          departmentId: userInfo.departmentId,
-        };
         dispatch({
           type: 'userList/updateDetail',
-          payload: fieldValues,
-          callback: onCancel,
+          payload: values,
+          callback: () => {
+            dispatch({
+              type: 'userList/fetchUsers',
+              payload: { sorter: 'registerTime_descend' },
+            });
+            onCancel();
+          },
         })
       }
     });
@@ -34,11 +34,11 @@ class UserDetailView extends Component {
 
   render() {
     // eslint-disable-next-line max-len
-    const { visible, onCancel, userInfo, roleInfos, form: { getFieldDecorator }, submitting } = this.props;
+    const { visible, onCancel, userInfo, roleInfos, groupInfos, form: { getFieldDecorator }, submitting } = this.props;
     // eslint-disable-next-line max-len
     const roleSelects = roleInfos.map(roleInfo => <Option key={roleInfo.roleId}>{roleInfo.roleName}</Option>);
 
-    const filterResult = roleInfos.filter(roleInfo => roleInfo.roleName === userInfo.roleName);
+    const groupSelects = groupInfos.map(info => <Option key={info.groupId}>{info.groupName}</Option>);
 
     const formItemLayout = {
       labelCol: {
@@ -72,11 +72,18 @@ class UserDetailView extends Component {
           <Form.Item label={FieldLabels.roleName}>
             {
               getFieldDecorator('roleId', {
-                initialValue: filterResult.length ? filterResult[0].roleId : '',
+                initialValue: userInfo.roleId,
               })(
                 <Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
                   {roleSelects}
                 </Select>)
+            }
+          </Form.Item>
+          <Form.Item label={FieldLabels.group}>
+            {
+              getFieldDecorator('groupId', {
+                initialValue: userInfo.groupId,
+              })(<Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} mode="multiple">{groupSelects}</Select>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.registerTime}>

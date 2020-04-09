@@ -10,8 +10,9 @@ let mockData = [
     name: Mock.Random.cname(),
     roleId: 'administrator',
     roleName: '管理员',
-    groups: [{ groupId: '1', groupName: '用户组1' }, { groupId: '2', groupName: '用户组2' }],
+    groupId: ['1', '2'],
     registerTime: '2019-12-20 10:00:00',
+    updateTime: '2019-12-20 10:00:00',
     status: 'active',
     departmentId: 'development',
   },
@@ -21,8 +22,9 @@ let mockData = [
     name: Mock.Random.cname(),
     roleId: 'administrator',
     roleName: '管理员',
-    groups: [{ groupId: '3', groupName: '用户组3' }, { groupId: '4', groupName: '用户组4' }],
+    groupId: ['3', '4'],
     registerTime: '2019-12-21 09:00:00',
+    updateTime: '2019-12-21 09:00:00',
     status: 'active',
     departmentId: 'development',
   },
@@ -32,8 +34,9 @@ let mockData = [
     name: Mock.Random.cname(),
     roleId: 'labeler',
     roleName: '标注员',
-    groups: [{ groupId: '5', groupName: '用户组5' }, { groupId: '6', groupName: '用户组6' }],
+    groupId: ['5', '6'],
     registerTime: '2019-12-22 13:00:00',
+    updateTime: '2019-12-22 13:00:00',
     status: 'active',
     departmentId: 'development',
   },
@@ -43,8 +46,9 @@ let mockData = [
     name: Mock.Random.cname(),
     roleId: 'labeler',
     roleName: '标注员',
-    groups: [{ groupId: '7', groupName: '用户组7' }, { groupId: '8', groupName: '用户组8' }],
+    groupId: ['7', '8'],
     registerTime: '2019-12-25 16:00:00',
+    updateTime: '2019-12-25 16:00:00',
     status: 'active',
     departmentId: 'development',
   },
@@ -54,8 +58,9 @@ let mockData = [
     name: Mock.Random.cname(),
     roleId: 'inspector',
     roleName: '质检员',
-    groups: [{ groupId: '9', groupName: '用户组9' }, { groupId: '10', groupName: '用户组10' }],
+    groupId: ['1', '2'],
     registerTime: '2020-01-08 09:00:00',
+    updateTime: '2020-01-08 09:00:00',
     status: 'active',
     departmentId: 'operation',
   },
@@ -65,8 +70,9 @@ let mockData = [
     name: Mock.Random.cname(),
     roleId: 'labeler',
     roleName: '标注员',
-    groups: [{ groupId: '11', groupName: '用户组11' }, { groupId: '12', groupName: '用户组12' }],
+    groupId: ['2'],
     registerTime: '2020-01-09 13:00:00',
+    updateTime: '2020-01-09 13:00:00',
     status: 'active',
     departmentId: 'operation',
   },
@@ -74,10 +80,11 @@ let mockData = [
     id: Mock.Random.string(5),
     userId: 'SY0117',
     name: Mock.Random.cname(),
-    roleId: 'labeler',
-    roleName: '标注员',
-    groups: [{ groupId: '13', groupName: '用户组13' }, { groupId: '14', groupName: '用户组14' }],
+    roleId: 'inspector',
+    roleName: '质检员',
+    groupId: ['4', '5'],
     registerTime: '2019-12-25 16:00:00',
+    updateTime: '2019-12-25 16:00:00',
     status: 'inactive',
     departmentId: 'operation',
   },
@@ -109,6 +116,7 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-10 10:00:00',
+    updateTime: '2020-03-10 10:00:00',
   },
   {
     groupId: '2',
@@ -135,6 +143,7 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-11 10:00:00',
+    updateTime: '2020-03-11 10:00:00',
   },
   {
     groupId: '3',
@@ -161,6 +170,88 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-12 10:00:00',
+    updateTime: '2020-03-12 10:00:00',
+  },
+  {
+    groupId: '4',
+    groupName: '质检组A',
+    userAmount: 3,
+    userInfo: [
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+    ],
+    createdTime: '2020-03-13 10:00:00',
+    updateTime: '2020-03-13 10:00:00',
+  },
+  {
+    groupId: '5',
+    groupName: '质检组B',
+    userAmount: 3,
+    userInfo: [
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+    ],
+    createdTime: '2020-03-14 10:00:00',
+    updateTime: '2020-03-14 10:00:00',
+  },
+  {
+    groupId: '6',
+    groupName: '质检组C',
+    userAmount: 3,
+    userInfo: [
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+      {
+        userId: Mock.Random.string(5),
+        name: Mock.Random.cname(),
+        roleId: 'inspector',
+        roleName: '质检员',
+      },
+    ],
+    createdTime: '2020-03-15 10:00:00',
+    updateTime: '2020-03-15 10:00:00',
   },
 ];
 
@@ -249,13 +340,13 @@ function deleteUser(req, res, u, b) {
 }
 
 function updateUser(req, res, u, b) {
-  const departmentId = req.get('DepartmentId');
+  const departmentId = req.header('DepartmentId');
   const body = (b && b.body) || req.body;
   const accounts = [];
   mockData.forEach(item => {
     if (body.userId === item.userId) {
       item.roleName = roleMap[body.roleId];
-      item.departmentId = departmentId;
+      item.groupId = body.groupId;
     }
     accounts.push(item.userId);
   });
@@ -284,6 +375,12 @@ function updateStatus(req, res, u, b) {
   });
 
   return res.json({ message: '更新成功', status: 'ok' });
+}
+
+// 重置用户密码
+function resetPassword(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  return res.json({ message: '重置成功', status: 'ok' });
 }
 
 function manualAddUsers(req, res, u, b) {
@@ -380,6 +477,7 @@ function modifyGroup(req, res, u, b) {
   groupData.forEach(group => {
     if (group.groupId === body.groupId) {
       group.groupName = body.groupName;
+      group.updateTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
     }
   });
   return res.json({ message: '更新成功', status: 'ok' });
@@ -432,6 +530,7 @@ export default {
   'DELETE /api/users': deleteUser,
   'POST /api/user/detail': updateUser,
   'POST /api/user/status': updateStatus,
+  'POST /api/user/password': resetPassword,
   'PUT /api/user/manual-add': manualAddUsers,
   'PUT /api/user/batch-add': batchAddUsers,
   'GET /api/groups': getGroups,

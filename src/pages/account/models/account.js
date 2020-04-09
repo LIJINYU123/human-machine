@@ -1,4 +1,4 @@
-import { queryUserList, deleteUser, queryRoleList, updateUserDetail, updateUserStatus, manualAddUsers, batchAddUsers } from '../service';
+import { queryUserList, deleteUser, queryRoleList, updateUserDetail, updateUserStatus, manualAddUsers, batchAddUsers, resetPassword } from '../service';
 import { queryNoDepAccounts } from '../../department/service';
 import { message } from 'antd/lib/index';
 
@@ -21,20 +21,16 @@ const Account = {
       });
     },
 
-    * deleteUsers({ payload, callback }, { call, put }) {
+    * deleteUsers({ payload, callback }, { call }) {
       const response = yield call(deleteUser, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryUserList);
-        yield put({
-          type: 'user',
-          payload: result,
-        });
-        if (callback) {
-          callback();
-        }
       } else {
         message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
       }
     },
 
@@ -77,15 +73,19 @@ const Account = {
       }
     },
 
-    * updateDetail({ payload, callback }, { call, put }) {
+    * resetPassword({ payload }, { call }) {
+      const response = yield call(resetPassword, payload);
+      if (response.status === 'ok') {
+        message.success(response.message)
+      } else {
+        message.error(response.message);
+      }
+    },
+
+    * updateDetail({ payload, callback }, { call }) {
       const response = yield call(updateUserDetail, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryUserList);
-        yield put({
-          type: 'user',
-          payload: result,
-        });
       } else {
         message.error(response.message);
       }

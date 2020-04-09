@@ -613,6 +613,7 @@ let templatesMockData = [
     templateName: '情感配置模板',
     description: '这是情感工具配置模板',
     createdTime: '2020-03-10 10:10:00',
+    updateTime: '2020-03-10 10:10:00',
     setting: {
       classifyName: '情感',
       multiple: true,
@@ -658,6 +659,7 @@ let templatesMockData = [
     templateName: '句式配置模板',
     description: '这是句式工具配置模板',
     createdTime: '2020-03-11 12:10:00',
+    updateTime: '2020-03-11 12:10:00',
     setting: {
       classifyName: '句式',
       multiple: true,
@@ -683,6 +685,7 @@ let templatesMockData = [
     templateName: '相似度配置模板',
     description: '这是相似度配置模板',
     createdTime: '2020-03-11 12:10:00',
+    updateTime: '2020-03-11 12:10:00',
     setting: {
       classifyName: '相似度',
       multiple: false,
@@ -706,6 +709,7 @@ let templatesMockData = [
     templateName: '实体识别配置模板',
     description: '这是句式工具配置模板',
     createdTime: '2020-03-12 13:10:00',
+    updateTime: '2020-03-12 13:10:00',
     setting: {
       classifyName: '实体',
       saveType: 'nomal',
@@ -996,6 +1000,7 @@ function updateTemplate(req, res, u, b) {
       template.templateName = body.templateName;
       template.description = body.description;
       template.setting = body.setting;
+      template.updateTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
     }
   });
   return res.json({ message: '更新成功', status: 'ok' });

@@ -33,6 +33,13 @@ export async function updateUserStatus(params) {
   });
 }
 
+export async function resetPassword(params) {
+  return request('/api/user/password', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export async function manualAddUsers(params) {
   return request('/api/user/manual-add', {
     method: 'PUT',
