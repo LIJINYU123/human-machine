@@ -55,7 +55,7 @@ class TemplateManage extends Component {
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
+               placeholder="搜索"
                value={selectedKeys[0]}
                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -228,6 +228,11 @@ class TemplateManage extends Component {
         render: val => labelTypeName[val],
         filters: labelTypeFilters,
         filteredValue: filteredInfo.labelType || null,
+      },
+      {
+        title: '创建人',
+        dataIndex: 'creatorId',
+        ...this.getColumnSearchProps('creatorId'),
       },
       {
         title: '描述',

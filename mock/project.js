@@ -614,6 +614,8 @@ let templatesMockData = [
     description: '这是情感工具配置模板',
     createdTime: '2020-03-10 10:10:00',
     updateTime: '2020-03-10 10:10:00',
+    creatorId: Mock.Random.string('lower', 5),
+    creatorName: Mock.Random.cname(),
     setting: {
       classifyName: '情感',
       multiple: true,
@@ -660,6 +662,8 @@ let templatesMockData = [
     description: '这是句式工具配置模板',
     createdTime: '2020-03-11 12:10:00',
     updateTime: '2020-03-11 12:10:00',
+    creatorId: Mock.Random.string('lower', 5),
+    creatorName: Mock.Random.cname(),
     setting: {
       classifyName: '句式',
       multiple: true,
@@ -686,6 +690,8 @@ let templatesMockData = [
     description: '这是相似度配置模板',
     createdTime: '2020-03-11 12:10:00',
     updateTime: '2020-03-11 12:10:00',
+    creatorId: Mock.Random.string('lower', 5),
+    creatorName: Mock.Random.cname(),
     setting: {
       classifyName: '相似度',
       multiple: false,
@@ -710,6 +716,8 @@ let templatesMockData = [
     description: '这是句式工具配置模板',
     createdTime: '2020-03-12 13:10:00',
     updateTime: '2020-03-12 13:10:00',
+    creatorId: Mock.Random.string('lower', 5),
+    creatorName: Mock.Random.cname(),
     setting: {
       classifyName: '实体',
       saveType: 'nomal',
@@ -854,7 +862,6 @@ function getMemberData(req, res, u) {
   }
 
   const params = parse(url, true).query;
-
 }
 
 function deleteTaskData(req, res, u, b) {
@@ -980,6 +987,11 @@ function getTemplates(req, res, u) {
   if (params.templateName) {
     // eslint-disable-next-line max-len
     dataSource = dataSource.filter(item => item.templateName.toLowerCase().includes(params.templateName.toLowerCase()));
+  }
+
+  if (params.creatorId) {
+    // eslint-disable-next-line max-len
+    dataSource = dataSource.filter(item => item.creatorId.toLowerCase().includes(params.creatorId.toLowerCase()));
   }
 
   return res.json(dataSource);
