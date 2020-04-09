@@ -33,6 +33,20 @@ export async function updateUserStatus(params) {
   });
 }
 
+export async function manualAddUsers(params) {
+  return request('/api/user/manual-add', {
+    method: 'PUT',
+    data: params,
+  });
+}
+
+export async function batchAddUsers(params) {
+  return request('/api/user/batch-add', {
+    method: 'PUT',
+    data: params,
+  });
+}
+
 export async function queryRoleList() {
   return request('/api/roles');
 }

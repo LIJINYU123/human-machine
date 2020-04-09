@@ -1,4 +1,4 @@
-import { queryUserList, deleteUser, queryRoleList, updateUserDetail, updateUserStatus } from '../service';
+import { queryUserList, deleteUser, queryRoleList, updateUserDetail, updateUserStatus, manualAddUsers, batchAddUsers } from '../service';
 import { queryNoDepAccounts } from '../../department/service';
 import { message } from 'antd/lib/index';
 
@@ -35,6 +35,32 @@ const Account = {
         }
       } else {
         message.error(response.message);
+      }
+    },
+
+    * manualAddUsers({ payload, callback }, { call }) {
+      const response = yield call(manualAddUsers, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
+    },
+
+    * batchAddUsers({ payload, callback }, { call }) {
+      const response = yield call(batchAddUsers, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
       }
     },
 

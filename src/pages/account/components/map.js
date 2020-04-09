@@ -4,7 +4,7 @@ export default {
     userId: '账户名',
     role: '角色',
     group: '组别',
-    name: '真实姓名',
+    name: '用户名',
     roleName: '角色名称',
     registerTime: '注册时间',
     groupName: '组别名称',

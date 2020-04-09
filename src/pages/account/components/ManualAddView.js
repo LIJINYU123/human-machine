@@ -8,8 +8,9 @@ const { FieldLabels } = ItemData;
 
 let count = 1;
 
-@connect(({ userList, laoding }) => ({
+@connect(({ userList, loading }) => ({
   userList,
+  submitting: loading.effects['userList/manualAddUsers'],
 }))
 class ManualAddView extends Component {
   state = {
@@ -18,11 +19,35 @@ class ManualAddView extends Component {
 
   handleConform = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    const { userKeys } = this.state;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        console.log(values);
+        const users = [];
+        userKeys.forEach(key => {
+          users.push({ userId: values[`userId-${key}`], roleId: values[`roleId-${key}`], groupId: values[`groupId-${key}`] });
+        });
+        dispatch({
+          type: 'userList/manualAddUsers',
+          payload: { users },
+          callback: () => {
+            dispatch({
+              type: 'userList/fetchUsers',
+              payload: { sorter: 'registerTime_descend' },
+            });
+            onCancel();
+          },
+        });
       }
+    });
+  };
+
+  handleCancel = () => {
+    const { onCancel } = this.props;
+    onCancel();
+    count = 1;
+    this.setState({
+      userKeys: [count],
     });
   };
 
@@ -48,7 +73,7 @@ class ManualAddView extends Component {
   };
 
   render() {
-    const { form: { getFieldDecorator }, visible, onCancel, roleInfos, groupInfos, userList: { manualKeys } } = this.props;
+    const { form: { getFieldDecorator }, visible, roleInfos, groupInfos, submitting } = this.props;
 
     const { userKeys } = this.state;
 
@@ -72,9 +97,11 @@ class ManualAddView extends Component {
         title="新建账户"
         maskClosable={false}
         visible={visible}
-        onCancel={onCancel}
+        onCancel={this.handleCancel}
         onOk={this.handleConform}
+        confirmLoading={submitting}
         style={{ minWidth: '1000px' }}
+        destroyOnClose
       >
         <Form {...formItemLayout}>
           {

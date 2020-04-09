@@ -53,7 +53,7 @@ class UserDetailView extends Component {
 
     return (
       <Modal
-        title="用户信息"
+        title="账户编辑"
         maskClosable={false}
         visible={visible}
         onCancel={onCancel}
@@ -66,14 +66,7 @@ class UserDetailView extends Component {
             {
               getFieldDecorator('userId', {
                 initialValue: userInfo.userId,
-              })(<Input disabled/>)
-            }
-          </Form.Item>
-          <Form.Item label={FieldLabels.name}>
-            {
-              getFieldDecorator('name', {
-                initialValue: userInfo.name,
-              })(<Input disabled/>)
+              })(<Input />)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.roleName}>

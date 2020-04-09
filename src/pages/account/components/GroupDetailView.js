@@ -38,7 +38,7 @@ class GroupDetailView extends Component {
   }
 
   handleConfirm = () => {
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel, currentGroup, targetKeys } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel, onRefresh, currentGroup, targetKeys } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
@@ -46,10 +46,7 @@ class GroupDetailView extends Component {
           type: 'groupList/modifyGroup',
           payload: { ...values, groupId: currentGroup.groupId, userIds: targetKeys },
           callback: () => {
-            dispatch({
-              type: 'groupList/fetchGroups',
-              payload: { sorter: 'createdTime_descend' },
-            });
+            onRefresh();
             onCancel();
           },
         });
@@ -75,7 +72,7 @@ class GroupDetailView extends Component {
   };
 
   render() {
-    const { visible, onCancel, form: { getFieldDecorator }, currentGroup, targetKeys, submitting } = this.props;
+    const { visible, onCancel, form: { getFieldDecorator }, inputDisabled, currentGroup, targetKeys, submitting } = this.props;
     const { treeData } = this.state;
 
     const formItemLayout = {
@@ -109,7 +106,7 @@ class GroupDetailView extends Component {
                   },
                 ],
                 initialValue: currentGroup.groupName,
-              })(<Input />)
+              })(<Input disabled={inputDisabled}/>)
             }
           </Form.Item>
         </Form>

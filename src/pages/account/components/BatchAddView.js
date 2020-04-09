@@ -8,7 +8,7 @@ const { FieldLabels } = ItemData;
 
 @connect(({ userList, loading }) => ({
   userList,
-  submitting: loading.effects['userList/updateDetail'],
+  submitting: loading.effects['userList/batchAddUsers'],
 }))
 class BatchAddView extends Component {
   handleConfirm = () => {
@@ -17,9 +17,15 @@ class BatchAddView extends Component {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
-          type: 'userList/updateDetail',
+          type: 'userList/batchAddUsers',
           payload: values,
-          callback: onCancel,
+          callback: () => {
+            dispatch({
+              type: 'userList/fetchUsers',
+              payload: { sorter: 'registerTime_descend' },
+            });
+            onCancel();
+          },
         })
       }
     });
@@ -43,9 +49,7 @@ class BatchAddView extends Component {
 
   render() {
     // eslint-disable-next-line max-len
-    const { visible, onCancel, noDepAccounts, roleInfos, form: { getFieldDecorator }, submitting } = this.props;
-
-    const accountOptions = noDepAccounts.map(account => <Option key={account.userId}>{`${account.userId}(${account.name})`}</Option>);
+    const { visible, onCancel, roleInfos, form: { getFieldDecorator }, submitting } = this.props;
 
     // eslint-disable-next-line max-len
     const roleOptions = roleInfos.map(roleInfo => <Option key={roleInfo.roleId}>{roleInfo.roleName}</Option>);
@@ -69,6 +73,7 @@ class BatchAddView extends Component {
         onCancel={onCancel}
         onOk={this.handleConfirm}
         confirmLoading={submitting}
+        destroyOnClose
       >
         <Form {...formItemLayout}>
           <Form.Item label={FieldLabels.roleName}>

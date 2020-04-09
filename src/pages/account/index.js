@@ -12,6 +12,8 @@ import GroupManage from './components/GroupManage';
 
 const { confirm } = Modal;
 
+const getValue = obj => (obj ? obj.join(',') : []);
+
 @connect(({ userList, groupList, loading }) => ({
   userList,
   groupList,
@@ -23,9 +25,10 @@ class UserManage extends Component {
     addModalVisible: false,
     manualAddVisible: false,
     selectedRows: [],
-    searchText: '',
     userInfo: {},
+    filteredInfo: null,
     searchedColumn: '',
+    searchText: '',
     addAuthority: false,
     modifyAuthority: false,
     deleteAuthority: false,
@@ -104,9 +107,21 @@ class UserManage extends Component {
 
   handleStandardTableChange = (pagination, filterArg, sorter) => {
     const { dispatch } = this.props;
+
+    this.setState({
+      filteredInfo: filterArg,
+    });
+
+    const filters = Object.keys(filterArg).reduce((obj, key) => {
+      const newObj = { ...obj };
+      newObj[key] = getValue(filterArg[key]);
+      return newObj;
+    }, {});
+
     const params = {
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
+      ...filters,
     };
 
     if (sorter.field) {
@@ -269,6 +284,13 @@ class UserManage extends Component {
   render() {
     const { userList: { data, roleInfos, accounts }, groupList: { groups }, loading } = this.props;
     const { selectedRows, userInfo, addAuthority, modifyAuthority, deleteAuthority, activeTabKey, modalVisible, addModalVisible, manualAddVisible } = this.state;
+    const roleFilters = roleInfos.map(info => ({
+      text: info.roleName,
+      value: info.roleId,
+    }));
+
+    let { filteredInfo } = this.state;
+    filteredInfo = filteredInfo || {};
 
     const MoreBtn = ({ userId, status }) => (
       <Dropdown
@@ -310,18 +332,22 @@ class UserManage extends Component {
 
     const columns = [
       {
-        title: '用户名',
+        title: '账户名',
         dataIndex: 'userId',
         ...this.getColumnSearchProps('userId'),
       },
       {
-        title: '真实姓名',
+        title: '用户名',
         dataIndex: 'name',
         ...this.getColumnSearchProps('name'),
+        render: val => <a>{val}</a>,
       },
       {
         title: '角色名称',
-        dataIndex: 'roleName',
+        dataIndex: 'roleId',
+        render: val => (roleInfos.length ? roleInfos.filter(item => item.roleId === val)[0].roleName : val),
+        filters: roleFilters,
+        filteredValue: filteredInfo.roleId || null,
       },
       {
         title: '组别',

@@ -7,6 +7,7 @@ const Group = {
     groups: [],
     targetKeys: [],
     userInfos: [],
+    roleInfos: [],
   },
   effects: {
     * fetchGroups({ payload }, { call, put }) {
@@ -92,7 +93,18 @@ const Group = {
       return { ...state, targetKeys: action.payload };
     },
     userInfo(state, action) {
-      return { ...state, userInfos: action.payload };
+      return {
+        ...state,
+        userInfos: action.payload,
+        roleInfos: action.payload.reduce((obj, info) => {
+          const newObj = [...obj];
+          const roleNames = newObj.map(item => item.roleName);
+          if (!roleNames.includes(info.roleName)) {
+            newObj.push({ roleId: info.roleId, roleName: info.roleName });
+          }
+          return newObj;
+        }, []),
+      };
     },
   },
 };

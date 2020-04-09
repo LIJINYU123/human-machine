@@ -68,6 +68,14 @@ class GroupManage extends Component {
     });
   };
 
+  handleRefresh = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'groupList/fetchGroups',
+      payload: { sorter: 'createdTime_descend' },
+    });
+  };
+
   handleStandardTableChange = (pagination, filterArg, sorter) => {
     const { dispatch } = this.props;
     const params = {
@@ -242,7 +250,7 @@ class GroupManage extends Component {
           />
         </Card>
         <GroupAddView visible={addModalVisible} onCancel={this.handleCancelAddModal} groups={groups} />
-        <GroupDetailView visible={modalVisible} onCancel={this.handleCancelModifyModal} groups={groups} currentGroup={currentGroup} />
+        <GroupDetailView visible={modalVisible} inputDisabled={false} onCancel={this.handleCancelModifyModal} onRefresh={this.handleRefresh} groups={groups} currentGroup={currentGroup} />
       </Fragment>
     );
   }

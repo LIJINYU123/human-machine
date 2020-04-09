@@ -3,24 +3,26 @@ import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Button, Input, Icon } from 'antd';
 import Highlighter from 'react-highlight-words';
-import Link from 'umi/link';
 import { connect } from 'dva';
 import StandardTable from './StandardTable';
+import GroupDetailView from './GroupDetailView';
 import styles from './style.less';
-import ItemData from './map';
 
-const { RoleName } = ItemData;
+const getValue = obj => (obj ? obj.join(',') : []);
 
 @connect(({ groupList, loading }) => ({
   groupList,
+  loading: loading.effects['groupList/fetchUserInfo'],
 }))
 class GroupDetail extends Component {
   state = {
     groupId: '',
     groupName: '',
     selectedRows: [],
+    filteredInfo: null,
     searchText: '',
     searchedColumn: '',
+    modalVisible: false,
   };
 
   componentDidMount() {
@@ -41,16 +43,24 @@ class GroupDetail extends Component {
     });
   };
 
-  handleStandardTableChange = (pagination, filterArg, sorter) => {
+  handleStandardTableChange = (pagination, filterArg, _) => {
     const { dispatch } = this.props;
     const { groupId } = this.state;
+    this.setState({
+      filteredInfo: filterArg,
+    });
+
+    const filters = Object.keys(filterArg).reduce((obj, key) => {
+      const newObj = { ...obj };
+      newObj[key] = getValue(filterArg[key]);
+      return newObj;
+    }, {});
+
     const params = {
       groupId,
+      ...filters,
     };
 
-    if (this.state.searchText !== '') {
-      params[this.state.searchedColumn] = this.state.searchText;
-    }
     dispatch({
       type: 'groupList/fetchUserInfo',
       payload: params,
@@ -87,6 +97,33 @@ class GroupDetail extends Component {
           selectedRows: [],
         });
       },
+    });
+  };
+
+  handleAdd = () => {
+    const { dispatch, groupList: { userInfos } } = this.props;
+    dispatch({
+      type: 'groupList/saveTargetKeys',
+      payload: userInfos.map(user => user.userId),
+    });
+
+    this.setState({
+      modalVisible: true,
+    });
+  };
+
+  handleCancelModal = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
+  handleRefresh = () => {
+    const { dispatch } = this.props;
+    const { groupId } = this.state;
+    dispatch({
+      type: 'groupList/fetchUserInfo',
+      payload: { groupId },
     });
   };
 
@@ -160,8 +197,16 @@ class GroupDetail extends Component {
   };
 
   render() {
-    const { groupList: { userInfos } } = this.props;
-    const { selectedRows, groupId, groupName } = this.state;
+    const { groupList: { groups, userInfos, roleInfos }, loading } = this.props;
+    const { selectedRows, groupId, groupName, modalVisible } = this.state;
+
+    const roleFilters = roleInfos.map(info => ({
+      text: info.roleName,
+      value: info.roleId,
+    }));
+
+    let { filteredInfo } = this.state;
+    filteredInfo = filteredInfo || {};
 
     const action = (
       <Button type="primary" onClick={this.handleGoBack}>返回</Button>
@@ -171,15 +216,18 @@ class GroupDetail extends Component {
       {
         title: '用户名',
         dataIndex: 'name',
+        ...this.getColumnSearchProps('name'),
       },
       {
         title: '角色名称',
         dataIndex: 'roleId',
-        render: val => RoleName[val],
+        render: val => roleInfos.filter(item => item.roleId === val)[0].roleName,
+        filters: roleFilters,
+        filteredValue: filteredInfo.roleId || null,
       },
       {
         title: '操作',
-        render: (_, user) => <a onClick={() => this.handleDelete(user, groupId)}>删除</a>,
+        render: (_, user) => <a onClick={() => this.handleDelete(user, groupId)}>移除</a>,
       },
     ];
 
@@ -191,17 +239,19 @@ class GroupDetail extends Component {
       >
         <Card title="成员列表" className={styles.card} bordered={false}>
           <div className={styles.tableListOperator}>
-            <Button icon="plus" type="primary">添加</Button>
-            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
+            <Button icon="plus" type="primary" onClick={this.handleAdd}>添加</Button>
+            <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>移除</Button>
           </div>
           <StandardTable
             selectedRows={selectedRows}
+            loading={loading}
             data={userInfos}
             columns={columns}
             onSelectRow={this.handleSelectRows}
             onChange={this.handleStandardTableChange}
           />
         </Card>
+        <GroupDetailView visible={modalVisible} inputDisabled onCancel={this.handleCancelModal} onRefresh={this.handleRefresh} groups={groups} currentGroup={{ groupId, groupName }} />
       </PageHeaderWrapper>
     );
   }
