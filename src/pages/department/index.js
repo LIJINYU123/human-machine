@@ -1,14 +1,14 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Icon, Input, Popconfirm, Table, Tag } from 'antd';
+import { Button, Card, Divider, Icon, Input, Popconfirm, Table, Tag, Modal } from 'antd';
 import Highlighter from 'react-highlight-words';
 import DepCreateView from './component/DepCreateView';
 import DepDetailView from './component/DepDetailView';
 import styles from './style.less';
 import ItemData from './component/map';
 
-
+const { confirm } = Modal;
 const { PrivilegeMap, DepartmentType } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
@@ -109,6 +109,19 @@ class DepartmentList extends Component {
     dispatch({
       type: 'departmentList/deleteDepartment',
       payload: { departmentId: department.departmentId },
+    });
+  };
+
+  showDeleteConform = department => {
+    confirm({
+      title: '请问是否确定删除该机构？',
+      content: <div><span style={{ color: 'red' }}>删除后机构下所有账户均被删除且不可恢复</span><br/><br/><span>你还要继续吗？</span></div>,
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: () => {
+        this.handleDelete(department);
+      },
     });
   };
 
@@ -231,9 +244,7 @@ class DepartmentList extends Component {
           <Fragment>
             <a onClick={() => this.handleModify(department)}>编辑</a>
             <Divider type="vertical" />
-            <Popconfirm placement="topRight" title="确定删除该机构吗？删除后机构下的所有数据，包括用户，角色，项目等信息将一并删除" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(department)}>
-              <a>删除</a>
-            </Popconfirm>
+            <a onClick={() => this.showDeleteConform(department)}>删除</a>
           </Fragment>
         ),
       },

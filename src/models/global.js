@@ -1,9 +1,12 @@
-import { queryNotices } from '@/services/user';
+import { queryNotices, queryAgency } from '@/services/user';
+
 const GlobalModel = {
   namespace: 'global',
   state: {
     collapsed: false,
     notices: [],
+    agencies: [],
+    currentAgency: '',
   },
   effects: {
     *fetchNotices(_, { call, put, select }) {
@@ -21,6 +24,21 @@ const GlobalModel = {
           totalCount: data.length,
           unreadCount,
         },
+      });
+    },
+
+    * fetchAgency(_, { call, put }) {
+      const data = yield call(queryAgency);
+      yield put({
+        type: 'saveAgency',
+        payload: data,
+      });
+    },
+
+    * changeAgency({ payload }, { put }) {
+      yield put({
+        type: 'saveCurrentAgency',
+        payload,
       });
     },
 
@@ -98,6 +116,14 @@ const GlobalModel = {
         ...state,
         notices: state.notices.filter(item => item.type !== payload),
       };
+    },
+
+    saveAgency(state, { payload }) {
+      return { ...state, agencies: payload, currentAgency: payload.length ? payload[0].departmentName : '' };
+    },
+
+    saveCurrentAgency(state, { payload }) {
+      return { ...state, currentAgency: payload }
     },
   },
   subscriptions: {

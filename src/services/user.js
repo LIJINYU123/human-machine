@@ -1,4 +1,5 @@
 import request from '@/utils/request';
+
 export async function query() {
   return request('/api/users');
 }
@@ -11,4 +12,8 @@ export async function queryNotices() {
 
 export async function queryDirectory() {
   return request('/api/directory');
+}
+
+export async function queryAgency() {
+  return request('/api/department');
 }

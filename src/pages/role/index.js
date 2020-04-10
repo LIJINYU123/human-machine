@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Popconfirm } from 'antd';
+import { Button, Card, Divider, Popconfirm, Modal } from 'antd';
 import StandardTable from './components/StandardTable';
 import RoleDetailView from './components/RoleDetailView';
 import RoleCreateView from './components/RoleCreateView';
 import styles from './style.less';
+
+const { confirm } = Modal;
 
 @connect(({ roleList, loading }) => ({
   roleList,
@@ -60,6 +62,19 @@ class RoleList extends Component {
     });
   };
 
+  showDeleteConform = role => {
+    confirm({
+      title: '请问是否确定删除该角色？',
+      content: <div><span style={{ color: 'red' }}>删除后，不可恢复且该角色下的账户将无法登录</span><br/><br/><span>你还要继续吗？</span></div>,
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: () => {
+        this.handleDelete(role);
+      },
+    });
+  };
+
   handleCancelModal = () => {
     this.setState({
       modalVisible: false,
@@ -101,9 +116,7 @@ class RoleList extends Component {
           <Fragment>
             { modifyAuthority && <a onClick={() => this.handleModify(role)}>编辑</a> }
             { modifyAuthority && deleteAuthority && <Divider type="vertical"/> }
-            <Popconfirm title="确认删除该角色吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(role)}>
-              { deleteAuthority && <a>删除</a> }
-            </Popconfirm>
+            { deleteAuthority && <a onClick={() => this.showDeleteConform(role)}>删除</a> }
           </Fragment>
         ),
       },

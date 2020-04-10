@@ -3,7 +3,7 @@ import { parse } from 'url';
 
 let mockData = [
   {
-    departmentId: 'deveopment',
+    departmentId: 'development',
     departmentName: '研发部门',
     departmentType: 'operationCenter',
     privilege: ['textClassify', 'pictureMark'],
@@ -22,6 +22,7 @@ let mockData = [
     userAmount: 20,
     createdTime: '2020-01-06 00:00:00',
   },
+
 ];
 
 const mockAccounts = [

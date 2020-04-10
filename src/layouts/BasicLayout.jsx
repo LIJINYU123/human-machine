@@ -95,6 +95,9 @@ const BasicLayout = props => {
         type: 'user/fetchDirectory',
       });
       dispatch({
+        type: 'global/fetchAgency',
+      });
+      dispatch({
         type: 'settings/getSetting',
       });
     }

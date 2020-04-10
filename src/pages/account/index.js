@@ -373,7 +373,13 @@ class UserManage extends Component {
         dataIndex: 'groupId',
         render: val => {
           if (groups.length) {
-            return val.map(groupId => <Tag color="blue">{groups.filter(group => group.groupId === groupId)[0].groupName}</Tag>);
+            return val.map(groupId => {
+              const filterGroups = groups.filter(group => group.groupId === groupId);
+              if (filterGroups.length) {
+                return (<Tag color="blue">{filterGroups[0].groupName}</Tag>);
+              }
+              return '';
+            });
           }
           return '';
         },
