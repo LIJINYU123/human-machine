@@ -12,7 +12,7 @@ let mockData = [
     roleName: '管理员',
     groupId: ['1', '2'],
     registerTime: '2019-12-20 10:00:00',
-    updateTime: '2019-12-20 10:00:00',
+    updatedTime: '2019-12-20 10:00:00',
     status: 'active',
     departmentId: 'development',
   },
@@ -24,7 +24,7 @@ let mockData = [
     roleName: '管理员',
     groupId: ['3', '4'],
     registerTime: '2019-12-21 09:00:00',
-    updateTime: '2019-12-21 09:00:00',
+    updatedTime: '2019-12-21 09:00:00',
     status: 'active',
     departmentId: 'development',
   },
@@ -36,7 +36,7 @@ let mockData = [
     roleName: '标注员',
     groupId: ['5', '6'],
     registerTime: '2019-12-22 13:00:00',
-    updateTime: '2019-12-22 13:00:00',
+    updatedTime: '2019-12-22 13:00:00',
     status: 'active',
     departmentId: 'development',
   },
@@ -48,7 +48,7 @@ let mockData = [
     roleName: '标注员',
     groupId: ['7', '8'],
     registerTime: '2019-12-25 16:00:00',
-    updateTime: '2019-12-25 16:00:00',
+    updatedTime: '2019-12-25 16:00:00',
     status: 'active',
     departmentId: 'development',
   },
@@ -60,7 +60,7 @@ let mockData = [
     roleName: '质检员',
     groupId: ['1', '2'],
     registerTime: '2020-01-08 09:00:00',
-    updateTime: '2020-01-08 09:00:00',
+    updatedTime: '2020-01-08 09:00:00',
     status: 'active',
     departmentId: 'operation',
   },
@@ -72,7 +72,7 @@ let mockData = [
     roleName: '标注员',
     groupId: ['2'],
     registerTime: '2020-01-09 13:00:00',
-    updateTime: '2020-01-09 13:00:00',
+    updatedTime: '2020-01-09 13:00:00',
     status: 'active',
     departmentId: 'operation',
   },
@@ -84,7 +84,7 @@ let mockData = [
     roleName: '质检员',
     groupId: ['4', '5'],
     registerTime: '2019-12-25 16:00:00',
-    updateTime: '2019-12-25 16:00:00',
+    updatedTime: '2019-12-25 16:00:00',
     status: 'inactive',
     departmentId: 'operation',
   },
@@ -116,7 +116,7 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-10 10:00:00',
-    updateTime: '2020-03-10 10:00:00',
+    updatedTime: '2020-03-10 10:00:00',
   },
   {
     groupId: '2',
@@ -143,7 +143,7 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-11 10:00:00',
-    updateTime: '2020-03-11 10:00:00',
+    updatedTime: '2020-03-11 10:00:00',
   },
   {
     groupId: '3',
@@ -170,7 +170,7 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-12 10:00:00',
-    updateTime: '2020-03-12 10:00:00',
+    updatedTime: '2020-03-12 10:00:00',
   },
   {
     groupId: '4',
@@ -197,7 +197,7 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-13 10:00:00',
-    updateTime: '2020-03-13 10:00:00',
+    updatedTime: '2020-03-13 10:00:00',
   },
   {
     groupId: '5',
@@ -224,7 +224,7 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-14 10:00:00',
-    updateTime: '2020-03-14 10:00:00',
+    updatedTime: '2020-03-14 10:00:00',
   },
   {
     groupId: '6',
@@ -251,7 +251,7 @@ let groupData = [
       },
     ],
     createdTime: '2020-03-15 10:00:00',
-    updateTime: '2020-03-15 10:00:00',
+    updatedTime: '2020-03-15 10:00:00',
   },
 ];
 
@@ -477,7 +477,7 @@ function modifyGroup(req, res, u, b) {
   groupData.forEach(group => {
     if (group.groupId === body.groupId) {
       group.groupName = body.groupName;
-      group.updateTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
+      group.updatedTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
     }
   });
   return res.json({ message: '更新成功', status: 'ok' });

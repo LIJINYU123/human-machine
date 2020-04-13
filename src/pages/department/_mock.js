@@ -11,6 +11,7 @@ let mockData = [
     adminName: '研发部管理员',
     userAmount: 10,
     createdTime: '2020-01-08 00:00:00',
+    updatedTime: '2020-01-08 00:00:00',
   },
   {
     departmentId: 'operation',
@@ -21,6 +22,7 @@ let mockData = [
     adminName: '运营部管理员',
     userAmount: 20,
     createdTime: '2020-01-06 00:00:00',
+    updatedTime: '2020-01-06 00:00:00',
   },
 
 ];
@@ -74,6 +76,7 @@ function getDepartment(req, res, u) {
 function createDepartment(req, res, u, b) {
   const body = (b && b.body) || req.body;
   body.createdTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
+  body.updatedTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
   body.userAmount = 0;
   mockData.push(body);
   return res.json({ message: '创建成功', status: 'ok' });

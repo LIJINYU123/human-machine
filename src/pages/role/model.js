@@ -8,37 +8,31 @@ const Model = {
     roleInfo: {},
   },
   effects: {
-    * fetchRole(_, { call, put }) {
-      const response = yield call(queryRoleList);
+    * fetchRole({ payload }, { call, put }) {
+      const response = yield call(queryRoleList, payload);
       yield put({
         type: 'role',
         payload: response,
       });
     },
 
-    * deleteRole({ payload }, { call, put }) {
+    * deleteRole({ payload, callback }, { call }) {
       const response = yield call(deleteRole, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryRoleList);
-        yield put({
-          type: 'role',
-          payload: result,
-        });
       } else {
         message.error(response.message);
       }
+
+      if (callback) {
+        callback();
+      }
     },
 
-    * createRole({ payload, callback }, { call, put }) {
+    * createRole({ payload, callback }, { call }) {
       const response = yield call(createRole, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryRoleList);
-        yield put({
-          type: 'role',
-          payload: result,
-        });
       } else {
         message.error(response.message);
       }
@@ -56,15 +50,10 @@ const Model = {
       });
     },
 
-    * updateDetail({ payload, callback }, { call, put }) {
+    * updateDetail({ payload, callback }, { call }) {
       const response = yield call(updateRoleDetail, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryRoleList);
-        yield put({
-          type: 'role',
-          payload: result,
-        });
       } else {
         message.error(response.message);
       }

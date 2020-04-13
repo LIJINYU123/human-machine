@@ -38,7 +38,7 @@ class TaskCenter extends Component {
   componentDidMount() {
     const { dispatch } = this.props;
     const params = {
-      sorter: 'createdTime_descend',
+      sorter: 'updatedTime_descend',
     };
     dispatch({
       type: 'taskCenter/fetchProject',
@@ -166,7 +166,7 @@ class TaskCenter extends Component {
   handleRadioChange = event => {
     const { dispatch } = this.props;
     const params = {
-      sorter: 'createdTime_descend',
+      sorter: 'updatedTime_descend',
     };
     if (event.target.value === 'text') {
       params.labelType = 'textClassify,textMatch,ner';

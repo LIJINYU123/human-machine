@@ -29,7 +29,13 @@ class RoleCreateView extends Component {
         dispatch({
           type: 'roleList/createRole',
           payload: fieldValues,
-          callback: onCancel,
+          callback: () => {
+            dispatch({
+              type: 'roleList/fetchRole',
+              payload: { sorter: 'updatedTime_descend' },
+            });
+            onCancel();
+          },
         });
       }
     });

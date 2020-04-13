@@ -216,7 +216,7 @@ class GroupManage extends Component {
       },
       {
         title: '更新时间',
-        dataIndex: 'updateTime',
+        dataIndex: 'updatedTime',
         sorter: true,
         defaultSortOrder: 'descend',
       },

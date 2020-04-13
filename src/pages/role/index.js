@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Popconfirm, Modal } from 'antd';
+import { Button, Card, Divider, Modal } from 'antd';
 import StandardTable from './components/StandardTable';
 import RoleDetailView from './components/RoleDetailView';
 import RoleCreateView from './components/RoleCreateView';
@@ -28,6 +28,7 @@ class RoleList extends Component {
 
     dispatch({
       type: 'roleList/fetchRole',
+      payload: { sorter: 'updatedTime_descend' },
     });
 
     const privilegeStr = localStorage.getItem('Privileges');
@@ -59,6 +60,12 @@ class RoleList extends Component {
     dispatch({
       type: 'roleList/deleteRole',
       payload: { roleId: role.roleId },
+      callback: () => {
+        dispatch({
+          type: 'roleList/fetchRole',
+          payload: { sorter: 'updatedTime_descend' },
+        });
+      },
     });
   };
 
@@ -107,8 +114,10 @@ class RoleList extends Component {
         dataIndex: 'description',
       },
       {
-        title: '创建时间',
-        dataIndex: 'createdTime',
+        title: '更新时间',
+        dataIndex: 'updatedTime',
+        sorter: true,
+        defaultSortOrder: 'descend',
       },
       {
         title: '操作',

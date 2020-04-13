@@ -9,12 +9,17 @@ import TemplateDetailView from './component/TemplateDetailView';
 import styles from './style.less';
 import ItemData from './map';
 
-const { labelTypeName } = ItemData;
+const { labelTypeName, typeName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
 const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
   text: labelTypeName[key],
+  value: key,
+}));
+
+const typeFilters = Object.keys(typeName).map(key => ({
+  text: typeName[key],
   value: key,
 }));
 
@@ -223,7 +228,14 @@ class TemplateManage extends Component {
         ...this.getColumnSearchProps('templateName'),
       },
       {
-        title: '工具类型',
+        title: '类型',
+        dataIndex: 'type',
+        render: val => typeName[val],
+        filters: typeFilters,
+        filteredValue: filteredInfo.type || null,
+      },
+      {
+        title: '标注工具',
         dataIndex: 'labelType',
         render: val => labelTypeName[val],
         filters: labelTypeFilters,
@@ -241,7 +253,7 @@ class TemplateManage extends Component {
       },
       {
         title: '更新时间',
-        dataIndex: 'updateTime',
+        dataIndex: 'updatedTime',
         sorter: true,
         defaultSortOrder: 'descend',
       },

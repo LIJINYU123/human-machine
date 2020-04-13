@@ -28,7 +28,13 @@ class RoleDetailView extends Component {
         dispatch({
           type: 'roleList/updateDetail',
           payload: fieldValues,
-          callback: onCancel,
+          callback: () => {
+            dispatch({
+              type: 'roleList/fetchRole',
+              payload: { sorter: 'updatedTime_descend' },
+            });
+            onCancel();
+          },
         });
       }
     });

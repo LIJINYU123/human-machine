@@ -87,13 +87,6 @@ class DepDetailView extends Component {
               })(<Input />)
             }
           </Form.Item>
-          <Form.Item label={FieldLabels.createdTime}>
-            {
-              getFieldDecorator('createdTime', {
-                initialValue: departmentInfo.createdTime,
-              })(<Input disabled/>)
-            }
-          </Form.Item>
         </Form>
       </Modal>
     );

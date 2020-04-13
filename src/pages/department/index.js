@@ -36,7 +36,7 @@ class DepartmentList extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'departmentList/fetchDepartment',
-      payload: { sorter: 'createdTime_descend' },
+      payload: { sorter: 'updatedTime_descend' },
     });
   }
 
@@ -233,8 +233,8 @@ class DepartmentList extends Component {
         ),
       },
       {
-        title: '创建时间',
-        dataIndex: 'createdTime',
+        title: '更新时间',
+        dataIndex: 'updatedTime',
         sorter: true,
         defaultSortOrder: 'descend',
       },

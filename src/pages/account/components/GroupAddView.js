@@ -50,7 +50,7 @@ class GroupAddView extends Component {
           callback: () => {
             dispatch({
               type: 'groupList/fetchGroups',
-              payload: { sorter: 'createdTime_descend' },
+              payload: { sorter: 'updatedTime_descend' },
             });
             onCancel();
           },

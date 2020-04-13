@@ -1,15 +1,22 @@
 export default {
   labelTypeName: {
-    textClassify: '文本分类',
-    sequenceLabeling: '序列标注',
-    textExtension: '文本扩充',
-    pictureMark: '图片标注',
-    voiceMark: '音频标注',
-    videoDialogMark: '其他标注-视频对话标注',
+    textClassify: '标准分类工具',
+    sequenceLabeling: '标准序列工具',
+    textExtension: '标准扩充工具',
+    pictureMark: '标准矩形框工具',
+    voiceMark: '标准音频标注工具',
+    videoDialogMark: '定制视频标注工具',
+  },
+
+  typeName: {
+    text: '文本',
+    picture: '图片',
+    voice: '音频',
+    other: '其它',
   },
 
   FieldLabels: {
-    labelType: '工具类型',
+    labelType: '标注工具',
     templateName: '模板名称',
     description: '模板描述',
     classifyName: '类别名称',
@@ -21,38 +28,50 @@ export default {
 
   labelTypes: [
     {
-      value: 'textMark',
-      label: '文本标注',
+      value: 'text',
+      label: '文本',
       children: [
         {
           value: 'textClassify',
-          label: '文本分类',
+          label: '标准分类工具',
         },
         {
           value: 'sequenceLabeling',
-          label: '序列标注',
+          label: '标准序列工具',
         },
         {
           value: 'textExtension',
-          label: '文本扩充',
+          label: '标准扩充工具',
         },
       ],
     },
     {
-      value: 'pictureMark',
-      label: '图片标注',
+      value: 'picture',
+      label: '图片',
+      children: [
+        {
+          value: 'pictureMark',
+          label: '标准矩形框工具',
+        },
+      ],
     },
     {
-      value: 'voiceMark',
-      label: '音频标注',
+      value: 'voice',
+      label: '音频',
+      children: [
+        {
+          value: 'voiceMark',
+          label: '标准音频标注工具',
+        },
+      ],
     },
     {
-      value: 'otherMark',
-      label: '其他标注',
+      value: 'other',
+      label: '其他',
       children: [
         {
           value: 'videoDialogMark',
-          label: '视频对话标注',
+          label: '定制视频标注工具',
         },
       ],
     },

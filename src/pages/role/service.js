@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
-export async function queryRoleList() {
-  return request('/api/roles');
+export async function queryRoleList(params) {
+  return request('/api/roles', { params });
 }
 
 export async function deleteRole(params) {

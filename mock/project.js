@@ -259,44 +259,51 @@ let taskMockData = [
 
 const memberMockData = [
   {
-    userId: Mock.Random.string(5),
+    userId: Mock.Random.string('lower', 5),
     userName: Mock.Random.cname(),
+    roleId: 'labeler',
     roleName: '标注员',
     receiveNum: Mock.Random.integer(0, 10),
   },
   {
-    userId: Mock.Random.string(5),
+    userId: Mock.Random.string('lower', 5),
     userName: Mock.Random.cname(),
+    roleId: 'labeler',
     roleName: '标注员',
     receiveNum: Mock.Random.integer(0, 10),
   },
   {
-    userId: Mock.Random.string(5),
+    userId: Mock.Random.string('lower', 5),
     userName: Mock.Random.cname(),
+    roleId: 'labeler',
     roleName: '标注员',
     receiveNum: Mock.Random.integer(0, 10),
   },
   {
-    userId: Mock.Random.string(5),
+    userId: Mock.Random.string('lower', 5),
     userName: Mock.Random.cname(),
+    roleId: 'labeler',
     roleName: '标注员',
     receiveNum: Mock.Random.integer(0, 10),
   },
   {
-    userId: Mock.Random.string(5),
+    userId: Mock.Random.string('lower', 5),
     userName: Mock.Random.cname(),
+    roleId: 'inspector',
     roleName: '质检员',
     receiveNum: Mock.Random.integer(0, 10),
   },
   {
-    userId: Mock.Random.string(5),
+    userId: Mock.Random.string('lower', 5),
     userName: Mock.Random.cname(),
+    roleId: 'inspector',
     roleName: '质检员',
     receiveNum: Mock.Random.integer(0, 10),
   },
   {
-    userId: Mock.Random.string(5),
+    userId: Mock.Random.string('lower', 5),
     userName: Mock.Random.cname(),
+    roleId: 'inspector',
     roleName: '质检员',
     receiveNum: Mock.Random.integer(0, 10),
   },
@@ -608,12 +615,13 @@ const nerLabelData = [
 
 let templatesMockData = [
   {
+    templateId: Mock.Random.string(5),
+    type: 'text',
     labelType: 'textClassify',
-    templateId: '1',
     templateName: '情感配置模板',
     description: '这是情感工具配置模板',
     createdTime: '2020-03-10 10:10:00',
-    updateTime: '2020-03-10 10:10:00',
+    updatedTime: '2020-03-10 10:10:00',
     creatorId: Mock.Random.string('lower', 5),
     creatorName: Mock.Random.cname(),
     setting: {
@@ -656,12 +664,13 @@ let templatesMockData = [
     },
   },
   {
+    templateId: Mock.Random.string(5),
     labelType: 'textClassify',
-    templateId: '2',
+    type: 'text',
     templateName: '句式配置模板',
     description: '这是句式工具配置模板',
     createdTime: '2020-03-11 12:10:00',
-    updateTime: '2020-03-11 12:10:00',
+    updatedTime: '2020-03-11 12:10:00',
     creatorId: Mock.Random.string('lower', 5),
     creatorName: Mock.Random.cname(),
     setting: {
@@ -684,12 +693,13 @@ let templatesMockData = [
     },
   },
   {
+    templateId: Mock.Random.string(5),
     labelType: 'textClassify',
-    templateId: '3',
+    type: 'text',
     templateName: '相似度配置模板',
     description: '这是相似度配置模板',
     createdTime: '2020-03-11 12:10:00',
-    updateTime: '2020-03-11 12:10:00',
+    updatedTime: '2020-03-11 12:10:00',
     creatorId: Mock.Random.string('lower', 5),
     creatorName: Mock.Random.cname(),
     setting: {
@@ -710,12 +720,13 @@ let templatesMockData = [
     },
   },
   {
+    templateId: Mock.Random.string(5),
     labelType: 'sequenceLabeling',
-    templateId: '4',
+    type: 'text',
     templateName: '实体识别配置模板',
     description: '这是句式工具配置模板',
     createdTime: '2020-03-12 13:10:00',
-    updateTime: '2020-03-12 13:10:00',
+    updatedTime: '2020-03-12 13:10:00',
     creatorId: Mock.Random.string('lower', 5),
     creatorName: Mock.Random.cname(),
     setting: {
@@ -862,6 +873,18 @@ function getMemberData(req, res, u) {
   }
 
   const params = parse(url, true).query;
+  let dataSource = memberMockData;
+
+  if (params.userName) {
+    dataSource = dataSource.filter(item => item.userName.toLowerCase().includes(params.userName.toLowerCase()));
+  }
+
+  if (params.roleId) {
+    const roleIds = params.roleId.split(',');
+    dataSource = dataSource.filter(item => roleIds.includes(item.roleId));
+  }
+
+  res.json(dataSource);
 }
 
 function deleteTaskData(req, res, u, b) {
@@ -973,15 +996,14 @@ function getTemplates(req, res, u) {
     })
   }
 
+  if (params.type) {
+    const types = params.type.split(',');
+    dataSource = dataSource.filter(item => types.includes(item.type));
+  }
+
   if (params.labelType) {
     const types = params.labelType.split(',');
-    let filterDataSource = [];
-    types.forEach(type => {
-      // eslint-disable-next-line max-len
-      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.labelType === type));
-    });
-
-    dataSource = filterDataSource;
+    dataSource = dataSource.filter(item => types.includes(item.labelType));
   }
 
   if (params.templateName) {
@@ -1000,7 +1022,9 @@ function getTemplates(req, res, u) {
 function createTemplate(req, res, u, b) {
   const body = (b && b.body) || req.body;
   body.createdTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
-  body.templateId = Mock.Random.word();
+  body.updatedTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
+  body.templateId = Mock.Random.string(5);
+  body.creatorId = Mock.Random.string(5);
   templatesMockData.push(body);
   return res.json({ message: '创建成功', status: 'ok' });
 }
@@ -1012,7 +1036,7 @@ function updateTemplate(req, res, u, b) {
       template.templateName = body.templateName;
       template.description = body.description;
       template.setting = body.setting;
-      template.updateTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
+      template.updatedTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
     }
   });
   return res.json({ message: '更新成功', status: 'ok' });

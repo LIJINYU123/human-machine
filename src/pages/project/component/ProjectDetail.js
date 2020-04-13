@@ -8,7 +8,7 @@ import {
   Statistic,
   Badge,
   Divider,
-  Popconfirm, Progress, Tooltip,
+  Popconfirm, Progress, Tooltip, Modal,
 } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
@@ -23,6 +23,8 @@ const statusFilters = Object.keys(taskStatusName).map(key => ({
   text: taskStatusName[key],
   value: key,
 }));
+
+const { confirm } = Modal;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -121,6 +123,16 @@ class ProjectDetail extends Component {
     });
   };
 
+  showDeleteConfirm = () => {
+    confirm({
+      title: '确认删除这些任务吗？',
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: this.handleBatchDelete,
+    });
+  };
+
   handleReviewDetails = task => {
     const { projectId } = this.state;
     router.push({
@@ -140,7 +152,7 @@ class ProjectDetail extends Component {
 
   render() {
     const { data, basicInfo, loading } = this.props;
-    const { selectedRows, activeTabKey } = this.state;
+    const { selectedRows, projectId, activeTabKey } = this.state;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -167,22 +179,23 @@ class ProjectDetail extends Component {
     );
 
     const action = (
-      <Fragment>
-        <Button>编辑</Button>
-        <Link to="/project">
-          <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
-        </Link>
-      </Fragment>
+      <Link to="/project">
+        <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
+      </Link>
     );
 
     const tabList = [
       {
-        key: 'task',
-        tab: '任务列表',
+        key: 'project',
+        tab: '项目信息',
       },
       {
         key: 'member',
-        tab: '人员列表',
+        tab: '项目进度',
+      },
+      {
+        key: 'task',
+        tab: '任务列表',
       },
     ];
 
@@ -239,8 +252,9 @@ class ProjectDetail extends Component {
         {
           activeTabKey === 'task' &&
           <Card className={styles.card} bordered={false}>
-            <div className={styles.tableListOperator}>
-              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.handleBatchDelete}>删除</Button>
+            <div style={{ marginBottom: '16px' }}>
+              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
+              <Button type="primary" style={{ float: 'right' }}>项目完成</Button>
             </div>
             <StandardTable
               rowKey="taskId"
@@ -255,7 +269,7 @@ class ProjectDetail extends Component {
         }
         {
           activeTabKey === 'member' &&
-          <MemberDetail />
+          <MemberDetail projectId={projectId} />
         }
       </PageHeaderWrapper>
     );

@@ -145,6 +145,7 @@ class TemplateCreateView extends Component {
           type: 'createTemplate/addTemplate',
           payload: {
             labelType: labelType.slice(-1)[0],
+            type: labelType[0],
             templateName,
             description,
             setting,
@@ -152,7 +153,7 @@ class TemplateCreateView extends Component {
           callback: () => {
             dispatch({
               type: 'templateManage/fetchTemplate',
-              payload: { sorter: 'createdTime_descend' },
+              payload: { sorter: 'updatedTime_descend' },
             });
             onCancel();
             this.setState({
@@ -202,7 +203,7 @@ class TemplateCreateView extends Component {
                 rules: [
                   {
                     required: true,
-                    message: '请选择工具类型',
+                    message: '请选择标注工具',
                   },
                 ],
               })(<Cascader onChange={this.handleCascaderChange} options={labelTypes} style={{ width: '50%' }}/>)

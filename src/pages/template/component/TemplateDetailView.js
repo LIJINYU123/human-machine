@@ -142,7 +142,7 @@ class TemplateDetailView extends Component {
           callback: () => {
             dispatch({
               type: 'templateManage/fetchTemplate',
-              payload: { sorter: 'createdTime_descend' },
+              payload: { sorter: 'updatedTime_descend' },
             });
             onCancel();
             this.setState({

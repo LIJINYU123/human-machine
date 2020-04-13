@@ -57,7 +57,7 @@ class TextTaskList extends Component {
     const { dispatch } = this.props;
 
     const params = {
-      sorter: 'createdTime_descend',
+      sorter: 'updatedTime_descend',
     };
     dispatch({
       type: 'textTask/fetchTask',
