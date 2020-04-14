@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Button, Form } from 'antd/lib/index';
+import { Button, Form } from 'antd';
 import TagSelect from '@/components/TagSelect';
-import { connect } from 'dva/index';
+import { connect } from 'dva';
 
 @connect(({ textMark }) => ({
   textMark,

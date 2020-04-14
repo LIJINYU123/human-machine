@@ -1,23 +1,22 @@
 import React, { Component, Fragment } from 'react';
-import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import {
   Card,
   Button,
   Descriptions,
   Statistic,
-  Badge,
-  Divider,
-  Popconfirm, Progress, Tooltip, Modal, Input, Icon, Table,
+  Input, Icon, Table, Radio,
 } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import styles from './style.less';
 import ItemData from '../map';
 import TaskList from './TaskList';
+import BasicView from './BasicView';
 import Highlighter from 'react-highlight-words';
+import ProjectEditView from './ProjectEditView';
 
-const { statusName, labelTypeName } = ItemData;
+const { statusName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -33,6 +32,7 @@ class ProjectDetail extends Component {
     labelerId: '',
     inspectorId: '',
     activeTabKey: 'member',
+    modalVisible: false,
   };
 
   componentDidMount() {
@@ -157,9 +157,26 @@ class ProjectDetail extends Component {
     }
   };
 
+  handleCancelModal = () => {
+    const { dispatch } = this.props;
+
+    dispatch({
+      type: 'textProjectFormData/resetStepData',
+    });
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
+  handleEdit = () => {
+    this.setState({
+      modalVisible: true,
+    });
+  };
+
   render() {
     const { memberDetail: { members }, basicInfo, loading } = this.props;
-    const { projectId, activeTabKey, labelerId, inspectorId } = this.state;
+    const { projectId, activeTabKey, labelerId, inspectorId, modalVisible } = this.state;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -182,31 +199,35 @@ class ProjectDetail extends Component {
 
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
-        <Descriptions.Item label="工具类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
-        <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
-        <Descriptions.Item label="项目周期">{basicInfo.endTime}</Descriptions.Item>
-        <Descriptions.Item label="标注员">{basicInfo.labelers ? basicInfo.labelers[0].name : ''}{basicInfo.labelers ? <Tooltip title={basicInfo.labelers.map(labeler => labeler.name).join('，')}>...</Tooltip> : ''}</Descriptions.Item>
-        <Descriptions.Item label="质检员">{basicInfo.inspectors ? basicInfo.inspectors[0].name : ''}{basicInfo.inspectors ? <Tooltip title={basicInfo.inspectors.map(inspector => inspector.name).join('，')}>...</Tooltip> : ''}</Descriptions.Item>
+        <Descriptions.Item label="负责人">{basicInfo.owner ? basicInfo.owner.name : ''}</Descriptions.Item>
+        <Descriptions.Item label="项目周期" span={2}>{`${basicInfo.startTime} - ${basicInfo.endTime}`}</Descriptions.Item>
+        <Descriptions.Item label="项目类型">{basicInfo.projectType}</Descriptions.Item>
         <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
         <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>
-        <Descriptions.Item label="项目描述">{basicInfo.description}</Descriptions.Item>
       </Descriptions>
     );
 
     const action = (
-      <Link to="/project">
-        <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
-      </Link>
+      <Fragment>
+        <Radio.Group>
+          <Radio.Button value="complete"><Icon type="check"/>项目完成</Radio.Button>
+          <Radio.Button value="export"><Icon type="download"/>导出结果</Radio.Button>
+        </Radio.Group>
+        <Button onClick={this.handleEdit}>编辑</Button>
+        <Link to="/project">
+          <Button type="primary" >返回</Button>
+        </Link>
+      </Fragment>
     );
 
     const tabList = [
       {
-        key: 'project',
-        tab: '项目信息',
-      },
-      {
         key: 'member',
         tab: '项目进度',
+      },
+      {
+        key: 'project',
+        tab: '项目信息',
       },
       {
         key: 'task',
@@ -251,6 +272,7 @@ class ProjectDetail extends Component {
         {
           activeTabKey === 'member' &&
           <Card bordered={false}>
+            <h4 style={{ marginBottom: '16px' }}>标注情况： 100/200， 剩余：100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;质检情况： 10/20，剩余：10</h4>
             <Table
               rowKey="userId"
               columns={columns}
@@ -262,9 +284,14 @@ class ProjectDetail extends Component {
           </Card>
         }
         {
+          activeTabKey === 'project' &&
+          <BasicView />
+        }
+        {
           activeTabKey === 'task' &&
           <TaskList projectId={projectId} labelerId={labelerId} inspectorId={inspectorId} />
         }
+        <ProjectEditView visible={modalVisible} onCancel={this.handleCancelModal} projectId={projectId} />
       </PageHeaderWrapper>
     );
   }

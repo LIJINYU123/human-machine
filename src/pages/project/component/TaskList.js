@@ -224,7 +224,6 @@ class TaskList extends Component {
       <Card className={styles.card} bordered={false}>
         <div style={{ marginBottom: '16px' }}>
           <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
-          <Button type="primary" style={{ float: 'right' }}>项目完成</Button>
         </div>
         <StandardTable
           rowKey="taskId"

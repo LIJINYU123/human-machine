@@ -59,7 +59,7 @@ class TextProjectList extends Component {
     const { dispatch } = this.props;
 
     const params = {
-      sorter: 'updatedTime_descend',
+      sorter: 'createdTime_descend',
     };
     dispatch({
       type: 'project/fetchProject',
