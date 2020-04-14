@@ -67,7 +67,7 @@ const projectDetailMockData = [
     passRate: 90,
     checkRate: 10,
     labelers: [{ name: '张三', id: 'SY0111' }, { name: '王五', id: 'SY0112' }],
-    inspectors: [{ name: '质检员1', id: 'SY0114' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
+    inspectors: [{ name: '质检员1', id: 'SY0124' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
     questionNum: 10,
     description: '该项目是关于用户行为的分类标注',
     createdTime: '2020-01-13 10:00:00',
@@ -89,7 +89,7 @@ const projectDetailMockData = [
     passRate: 95,
     checkRate: 15,
     labelers: [{ name: '张三', id: 'SY0111' }, { name: '王五', id: 'SY0112' }],
-    inspectors: [{ name: '质检员1', id: 'SY0114' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
+    inspectors: [{ name: '质检员1', id: 'SY0124' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
     questionNum: 20,
     template: { templateName: '文本分类模板', setting: {} },
     description: '该项目是关于用户行为的分类标注',
@@ -112,7 +112,7 @@ const projectDetailMockData = [
     passRate: 98,
     checkRate: 10,
     labelers: [{ name: '张三', id: 'SY0111' }, { name: '王五', id: 'SY0112' }],
-    inspectors: [{ name: '质检员1', id: 'SY0114' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
+    inspectors: [{ name: '质检员1', id: 'SY0124' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
     questionNum: 10,
     template: { templateName: '序列标注模板', setting: {} },
     description: '该项目是关于用户行为的分类标注',
@@ -135,7 +135,7 @@ const projectDetailMockData = [
     passRate: 90,
     checkRate: 10,
     labelers: [{ name: '张三', id: 'SY0111' }, { name: '王五', id: 'SY0112' }],
-    inspectors: [{ name: '质检员1', id: 'SY0114' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
+    inspectors: [{ name: '质检员1', id: 'SY0124' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
     questionNum: 10,
     template: { templateName: '文本分类模板', setting: {} },
     description: '该项目是关于用户行为的分类标注',
@@ -158,7 +158,7 @@ const projectDetailMockData = [
     passRate: 95,
     checkRate: 10,
     labelers: [{ name: '张三', id: 'SY0111' }, { name: '王五', id: 'SY0112' }],
-    inspectors: [{ name: '质检员1', id: 'SY0114' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
+    inspectors: [{ name: '质检员1', id: 'SY0124' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
     questionNum: 10,
     template: { templateName: '文本分类模板', setting: {} },
     description: '该项目是关于用户行为的分类标注',
@@ -181,7 +181,7 @@ const projectDetailMockData = [
     passRate: 90,
     checkRate: 15,
     labelers: [{ name: '张三', id: 'SY0111' }, { name: '王五', id: 'SY0112' }],
-    inspectors: [{ name: '质检员1', id: 'SY0114' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
+    inspectors: [{ name: '质检员1', id: 'SY0124' }, { name: '质检员2', id: 'SY0125' }, { name: '质检员3', id: 'SY0126' }],
     questionNum: 10,
     template: { templateName: '文本分类模板', setting: {} },
     description: '该项目是关于用户行为的分类标注',
@@ -201,72 +201,97 @@ const projectDetailMockData = [
 
 let taskMockData = [
   {
-    projectId: '1',
-    taskId: '1',
+    projectId: Mock.Random.string(5),
+    taskId: Mock.Random.string(5),
     taskName: '任务1',
     labelerName: '',
     labelerId: '',
     inspectorName: '',
     inspectorId: '',
-    schedule: 0,
+    labelSchedule: 0,
+    reviewSchedule: 0,
+    restLabelNum: 200,
+    completeLabelNum: 0,
+    invalidNum: 0,
+    reviewNum: 0,
     status: 'initial',
   },
   {
-    projectId: '1',
-    taskId: '2',
+    projectId: Mock.Random.string(5),
+    taskId: Mock.Random.string(5),
     taskName: '任务2',
     labelerName: '张三',
-    labelerId: 'SY0123',
+    labelerId: 'SY0111',
     inspectorName: '',
     inspectorId: '',
-    schedule: 40,
+    labelSchedule: 40,
+    reviewSchedule: 0,
+    restLabelNum: 200,
+    completeLabelNum: 80,
+    invalidNum: 0,
+    reviewNum: 0,
     status: 'labeling',
   },
   {
-    projectId: '1',
-    taskId: '3',
+    projectId: Mock.Random.string(5),
+    taskId: Mock.Random.string(5),
     taskName: '任务3',
     labelerName: '王五',
     labelerId: 'SY0112',
     inspectorName: '质检员1',
     inspectorId: 'SY0124',
-    schedule: 100,
+    labelSchedule: 100,
+    reviewSchedule: 40,
+    restLabelNum: 0,
+    completeLabelNum: 200,
+    invalidNum: 0,
+    reviewNum: 10,
     status: 'review',
   },
   {
-    projectId: '1',
-    taskId: '4',
+    projectId: Mock.Random.string(5),
+    taskId: Mock.Random.string(5),
     taskName: '任务4',
     labelerName: '杨六',
     labelerId: 'SY0113',
     inspectorName: '质检员2',
     inspectorId: 'SY0125',
-    schedule: 100,
+    labelSchedule: 100,
+    reviewSchedule: 50,
+    restLabelNum: 0,
+    completeLabelNum: 200,
+    invalidNum: 0,
+    reviewNum: 10,
     status: 'reject',
   },
   {
-    projectId: '1',
-    taskId: '5',
+    projectId: Mock.Random.string(5),
+    taskId: Mock.Random.string(5),
     taskName: '任务5',
     labelerName: '杨六',
     labelerId: 'SY0113',
     inspectorName: '质检员2',
     inspectorId: 'SY0125',
-    schedule: 100,
+    labelSchedule: 100,
+    reviewSchedule: 100,
+    restLabelNum: 0,
+    completeLabelNum: 200,
+    invalidNum: 0,
+    reviewNum: 20,
     status: 'complete',
   },
 ];
 
 const memberMockData = [
   {
-    userId: Mock.Random.string('lower', 5),
+    userId: 'SY0111',
     userName: Mock.Random.cname(),
     roleId: 'labeler',
     roleName: '标注员',
     receiveNum: Mock.Random.integer(0, 10),
   },
   {
-    userId: Mock.Random.string('lower', 5),
+    userId: 'SY0112',
     userName: Mock.Random.cname(),
     roleId: 'labeler',
     roleName: '标注员',
@@ -840,12 +865,17 @@ function getTaskData(req, res, u) {
   let dataSource = taskMockData;
   if (params.status) {
     const statuses = params.status.split(',');
-    let filterDataSource = [];
-    statuses.forEach(status => {
-      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.status === status));
-    });
+    dataSource = dataSource.filter(item => statuses.includes(item.status));
+  }
 
-    dataSource = filterDataSource;
+  if (params.labelerId) {
+    const labelerIds = params.labelerId.split(',');
+    dataSource = dataSource.filter(item => labelerIds.includes(item.labelerId));
+  }
+
+  if (params.inspectorId) {
+    const inspectorIds = params.inspectorId.split(',');
+    dataSource = dataSource.filter(item => inspectorIds.includes(item.inspectorId));
   }
 
   let pageSize = 10;

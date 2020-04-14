@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import router from 'umi/router';
 import { Button, Card, Icon, Input, Table } from 'antd';
 import { connect } from 'dva';
 import Highlighter from 'react-highlight-words';
@@ -108,14 +107,8 @@ class MemberDetail extends Component {
     });
   };
 
-  jumpToTaskList = record => {
-    router.push({
-      pathname: '',
-    });
-  };
-
   render() {
-    const { memberDetail: { members }, loading } = this.props;
+    const { memberDetail: { members }, onChange, loading } = this.props;
 
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -138,7 +131,7 @@ class MemberDetail extends Component {
       {
         title: '角色名称',
         dataIndex: 'roleId',
-        render: val => roleFilters.filter(item => item.value === val)[0].text,
+        render: (_, record) => record.roleName,
         filters: roleFilters,
         filteredValue: filteredInfo.roleId || null,
       },
@@ -148,7 +141,7 @@ class MemberDetail extends Component {
       },
       {
         title: '标注任务详情',
-        render: (_, user) => <a>任务列表</a>,
+        render: (_, record) => <a onClick={() => { onChange(record) }}>任务列表</a>,
       },
     ];
 

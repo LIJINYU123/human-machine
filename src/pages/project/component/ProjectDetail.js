@@ -38,19 +38,28 @@ class ProjectDetail extends Component {
     projectId: undefined,
     selectedRows: [],
     filteredInfo: {},
-    activeTabKey: 'task',
+    activeTabKey: 'member',
   };
 
   componentDidMount() {
     const { dispatch, location } = this.props;
+    const { filteredInfo } = this.state;
     dispatch({
       type: 'projectDetail/fetchDetail',
       payload: location.state.projectId,
     });
 
+    const params = { projectId: location.state.projectId };
+
+    if (filteredInfo.hasOwnProperty('labelerId')) {
+      params.labelerId = filteredInfo.labelerId.join(',');
+    } else if (filteredInfo.hasOwnProperty('inspectorId')) {
+      params.inspectorId = filteredInfo.inspectorId.join(',');
+    }
+
     dispatch({
       type: 'projectDetail/fetchTaskData',
-      payload: { projectId: location.state.projectId },
+      payload: params,
     });
 
     this.setState({
@@ -150,12 +159,29 @@ class ProjectDetail extends Component {
     });
   };
 
+  jumpToTaskList = record => {
+    this.setState({
+      activeTabKey: 'task',
+      filteredInfo: record.roleId === 'labeler' ? { labelerId: [record.userId] } : { inspectorId: [record.userId] },
+    });
+  };
+
   render() {
     const { data, basicInfo, loading } = this.props;
     const { selectedRows, projectId, activeTabKey } = this.state;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
+    const labelerFilters = Object.keys(basicInfo).length ? basicInfo.labelers.map(labeler => ({
+      text: labeler.name,
+      value: labeler.id,
+    })) : [];
+
+    // eslint-disable-next-line max-len
+    const inspectorFilters = Object.keys(basicInfo).length ? basicInfo.inspectors.map(inspector => ({
+      text: inspector.name,
+      value: inspector.id,
+    })) : [];
 
     const extra = (
       <div className={styles.moreInfo}>
@@ -206,16 +232,43 @@ class ProjectDetail extends Component {
       },
       {
         title: '标注员',
-        dataIndex: 'labelerName',
+        dataIndex: 'labelerId',
+        render: (_, record) => record.labelerName,
+        filters: labelerFilters,
+        filteredValue: filteredInfo.labelerId || null,
       },
       {
         title: '质检员',
-        dataIndex: 'inspectorName',
+        dataIndex: 'inspectorId',
+        render: (_, record) => record.inspectorName,
+        filters: inspectorFilters,
+        filteredValue: filteredInfo.inspectorId || null,
       },
       {
         title: '标注进度',
-        dataIndex: 'schedule',
+        dataIndex: 'labelSchedule',
         render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
+      },
+      {
+        title: '质检进度',
+        dataIndex: 'reviewSchedule',
+        render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
+      },
+      {
+        title: '剩余标注数',
+        dataIndex: 'restLabelNum',
+      },
+      {
+        title: '已标注数',
+        dataIndex: 'completeLabelNum',
+      },
+      {
+        title: '无效题数',
+        dataIndex: 'invalidNum',
+      },
+      {
+        title: '质检数',
+        dataIndex: 'reviewNum',
       },
       {
         title: '任务状态',
@@ -269,7 +322,7 @@ class ProjectDetail extends Component {
         }
         {
           activeTabKey === 'member' &&
-          <MemberDetail projectId={projectId} />
+          <MemberDetail projectId={projectId} onChange={this.jumpToTaskList} />
         }
       </PageHeaderWrapper>
     );
