@@ -81,6 +81,9 @@ const projectDetailMockData = [
     explain: '这是标注规则',
     schedule: 0,
     status: 'initial',
+    completeLabelNum: 0,
+    allLabelNum: 200,
+    reviewNum: 0,
     departmentId: 'operation',
   },
   {
@@ -104,6 +107,9 @@ const projectDetailMockData = [
     explain: '',
     schedule: 0,
     status: 'initial',
+    completeLabelNum: 0,
+    allLabelNum: 500,
+    reviewNum: 0,
     departmentId: 'operation',
   },
   {
@@ -127,6 +133,9 @@ const projectDetailMockData = [
     explain: '',
     schedule: 80,
     status: 'inProgress',
+    completeLabelNum: 600,
+    allLabelNum: 1000,
+    reviewNum: 50,
     departmentId: 'operation',
   },
   {
@@ -150,6 +159,9 @@ const projectDetailMockData = [
     explain: '',
     schedule: 100,
     status: 'complete',
+    completeLabelNum: 1000,
+    allLabelNum: 1000,
+    reviewNum: 100,
     departmentId: 'operation',
   },
   {
@@ -173,6 +185,9 @@ const projectDetailMockData = [
     explain: '这是标注规则',
     schedule: 60,
     status: 'suspend',
+    completeLabelNum: 1000,
+    allLabelNum: 1000,
+    reviewNum: 50,
     departmentId: 'operation',
   },
   {
@@ -196,6 +211,9 @@ const projectDetailMockData = [
     explain: '',
     schedule: 70,
     status: 'expired',
+    completeLabelNum: 1000,
+    allLabelNum: 1000,
+    reviewNum: 50,
     departmentId: 'operation',
   },
 ];

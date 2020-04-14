@@ -272,7 +272,7 @@ class ProjectDetail extends Component {
         {
           activeTabKey === 'member' &&
           <Card bordered={false}>
-            <h4 style={{ marginBottom: '16px' }}>标注情况： 100/200， 剩余：100&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;质检情况： 10/20，剩余：10</h4>
+            <h4 style={{ marginBottom: '16px' }}>{`标注情况： ${basicInfo.completeLabelNum}/${basicInfo.allLabelNum}， 剩余：${basicInfo.allLabelNum - basicInfo.completeLabelNum}`}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{`质检情况： ${basicInfo.reviewNum}/${parseInt(basicInfo.allLabelNum * basicInfo.checkRate * 0.01, 0)}，剩余：${parseInt(basicInfo.allLabelNum * basicInfo.checkRate * 0.01, 0) - basicInfo.reviewNum}`}</h4>
             <Table
               rowKey="userId"
               columns={columns}
