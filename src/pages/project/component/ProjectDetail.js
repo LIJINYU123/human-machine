@@ -8,58 +8,43 @@ import {
   Statistic,
   Badge,
   Divider,
-  Popconfirm, Progress, Tooltip, Modal,
+  Popconfirm, Progress, Tooltip, Modal, Input, Icon, Table,
 } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva';
 import styles from './style.less';
 import ItemData from '../map';
-import StandardTable from './StandardTable';
-import MemberDetail from './MemberDetail';
+import TaskList from './TaskList';
+import Highlighter from 'react-highlight-words';
 
-const { statusName, labelTypeName, taskStatusName, taskStatusMap } = ItemData;
-
-const statusFilters = Object.keys(taskStatusName).map(key => ({
-  text: taskStatusName[key],
-  value: key,
-}));
-
-const { confirm } = Modal;
+const { statusName, labelTypeName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
-@connect(({ projectDetail, loading }) => ({
-  data: projectDetail.data,
+@connect(({ memberDetail, projectDetail, loading }) => ({
+  memberDetail,
   basicInfo: projectDetail.basicInfo,
-  loading: loading.effects['projectDetail/fetchDetail'],
+  loading: loading.effects['memberDetail/fetchMemberData'],
 }))
 class ProjectDetail extends Component {
   state = {
     projectId: undefined,
-    selectedRows: [],
     filteredInfo: {},
+    labelerId: '',
+    inspectorId: '',
     activeTabKey: 'member',
   };
 
   componentDidMount() {
     const { dispatch, location } = this.props;
-    const { filteredInfo } = this.state;
     dispatch({
       type: 'projectDetail/fetchDetail',
       payload: location.state.projectId,
     });
 
-    const params = { projectId: location.state.projectId };
-
-    if (filteredInfo.hasOwnProperty('labelerId')) {
-      params.labelerId = filteredInfo.labelerId.join(',');
-    } else if (filteredInfo.hasOwnProperty('inspectorId')) {
-      params.inspectorId = filteredInfo.inspectorId.join(',');
-    }
-
     dispatch({
-      type: 'projectDetail/fetchTaskData',
-      payload: params,
+      type: 'memberDetail/fetchMemberData',
+      payload: { projectId: location.state.projectId },
     });
 
     this.setState({
@@ -67,14 +52,8 @@ class ProjectDetail extends Component {
     });
   }
 
-  handleSelectRows = rows => {
-    this.setState({
-      selectedRows: rows,
-    });
-  };
-
-  handleStandardTableChange = (pagination, filterArg, _) => {
-    const { dispatch } = this.props;
+  handleTableChange = (pagination, filterArg, _) => {
+    const { dispatch, projectId } = this.props;
     this.setState({
       filteredInfo: filterArg,
     });
@@ -86,102 +65,112 @@ class ProjectDetail extends Component {
     }, {});
 
     const params = {
-      projectId: this.state.projectId,
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
+      projectId,
       ...filters,
     };
 
     dispatch({
-      type: 'projectDetail/fetchTaskData',
+      type: 'memberDetail/fetchMemberData',
       payload: params,
     });
   };
 
-  handleDelete = taskInfo => {
-    const { dispatch } = this.props;
-    const { projectId } = this.state;
-    dispatch({
-      type: 'projectDetail/deleteTaskData',
-      payload: {
-        projectId,
-        taskIds: [taskInfo.taskId],
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
+  getColumnSearchProps = dataIndex => ({
+    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
+      <div style={{ padding: 8 }}>
+        <Input ref={node => { this.searchInput = node; }}
+               placeholder={`搜索 ${dataIndex}`}
+               value={selectedKeys[0]}
+               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+               onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+               style={{ width: 188, marginBottom: 8, display: 'block' }}
+        />
+        <Button
+          type="primary"
+          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
+          icon="search"
+          size="small"
+          style={{ width: 90, marginRight: 8 }}
+        >
+          搜索
+        </Button>
+        <Button
+          onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}
+        >
+          重置
+        </Button>
+      </div>
+    ),
+    filterIcon: filtered => (<Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />),
+    onFilterDropdownVisibleChange: visible => {
+      if (visible) {
+        setTimeout(() => this.searchInput.select());
+      }
+    },
+    render: text => (this.state.searchedColumn === dataIndex ? (
+      <Highlighter
+        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+        searchWords={[this.state.searchText]}
+        autoEscape
+        textToHighlight={text.toString()}
+      />
+    ) : text),
+  });
+
+  handleSearch = (selectedKeys, confirm, dataIndex) => {
+    confirm();
+
+    this.setState({
+      searchText: selectedKeys[0],
+      searchedColumn: dataIndex,
     });
   };
 
-  handleBatchDelete = () => {
-    const { dispatch } = this.props;
-    const { projectId, selectedRows } = this.state;
-    dispatch({
-      type: 'projectDetail/deleteTaskData',
-      payload: {
-        projectId,
-        taskIds: selectedRows.map(row => row.taskId),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
-    });
-  };
-
-  showDeleteConfirm = () => {
-    confirm({
-      title: '确认删除这些任务吗？',
-      okText: '删除',
-      okType: 'danger',
-      cancelText: '取消',
-      onOk: this.handleBatchDelete,
-    });
-  };
-
-  handleReviewDetails = task => {
-    const { projectId } = this.state;
-    router.push({
-      pathname: '/project/text/task-detail',
-      state: {
-        taskId: task.taskId,
-        projectId,
-      },
+  handleReset = clearFilters => {
+    clearFilters();
+    this.setState({
+      searchText: '',
     });
   };
 
   handleTabChange = key => {
     this.setState({
       activeTabKey: key,
+      labelerId: '',
+      inspectorId: '',
     });
   };
 
   jumpToTaskList = record => {
     this.setState({
       activeTabKey: 'task',
-      filteredInfo: record.roleId === 'labeler' ? { labelerId: [record.userId] } : { inspectorId: [record.userId] },
     });
+
+    if (record.roleId === 'labeler') {
+      this.setState({
+        labelerId: record.userId,
+      });
+    } else {
+      this.setState({
+        inspectorId: record.userId,
+      });
+    }
   };
 
   render() {
-    const { data, basicInfo, loading } = this.props;
-    const { selectedRows, projectId, activeTabKey } = this.state;
+    const { memberDetail: { members }, basicInfo, loading } = this.props;
+    const { projectId, activeTabKey, labelerId, inspectorId } = this.state;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
-    const labelerFilters = Object.keys(basicInfo).length ? basicInfo.labelers.map(labeler => ({
-      text: labeler.name,
-      value: labeler.id,
-    })) : [];
-
-    // eslint-disable-next-line max-len
-    const inspectorFilters = Object.keys(basicInfo).length ? basicInfo.inspectors.map(inspector => ({
-      text: inspector.name,
-      value: inspector.id,
-    })) : [];
+    const roleFilters = members.reduce((obj, member) => {
+      const newObj = [...obj];
+      const roleNames = newObj.map(item => item.text);
+      if (!roleNames.includes(member.roleName)) {
+        newObj.push({ value: member.roleId, text: member.roleName })
+      }
+      return newObj;
+    }, []);
 
     const extra = (
       <div className={styles.moreInfo}>
@@ -227,67 +216,24 @@ class ProjectDetail extends Component {
 
     const columns = [
       {
-        title: '任务名称',
-        dataIndex: 'taskName',
+        title: '用户名',
+        dataIndex: 'userName',
+        ...this.getColumnSearchProps('userName'),
       },
       {
-        title: '标注员',
-        dataIndex: 'labelerId',
-        render: (_, record) => record.labelerName,
-        filters: labelerFilters,
-        filteredValue: filteredInfo.labelerId || null,
+        title: '角色名称',
+        dataIndex: 'roleId',
+        render: (_, record) => record.roleName,
+        filters: roleFilters,
+        filteredValue: filteredInfo.roleId || null,
       },
       {
-        title: '质检员',
-        dataIndex: 'inspectorId',
-        render: (_, record) => record.inspectorName,
-        filters: inspectorFilters,
-        filteredValue: filteredInfo.inspectorId || null,
+        title: '领取任务数',
+        dataIndex: 'receiveNum',
       },
       {
-        title: '标注进度',
-        dataIndex: 'labelSchedule',
-        render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
-      },
-      {
-        title: '质检进度',
-        dataIndex: 'reviewSchedule',
-        render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
-      },
-      {
-        title: '剩余标注数',
-        dataIndex: 'restLabelNum',
-      },
-      {
-        title: '已标注数',
-        dataIndex: 'completeLabelNum',
-      },
-      {
-        title: '无效题数',
-        dataIndex: 'invalidNum',
-      },
-      {
-        title: '质检数',
-        dataIndex: 'reviewNum',
-      },
-      {
-        title: '任务状态',
-        dataIndex: 'status',
-        filters: statusFilters,
-        filteredValue: filteredInfo.status || null,
-        render: val => <Badge status={taskStatusMap[val]} text={taskStatusName[val]}/>,
-      },
-      {
-        title: '操作',
-        render: (_, task) => (
-          <Fragment>
-            <a onClick={() => this.handleReviewDetails(task)}>详情</a>
-            <Divider type="vertical"/>
-            <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(task)}>
-              <a>删除</a>
-            </Popconfirm>
-          </Fragment>
-        ),
+        title: '标注任务详情',
+        render: (_, record) => <a onClick={() => this.jumpToTaskList(record)}>任务列表</a>,
       },
     ];
 
@@ -303,26 +249,21 @@ class ProjectDetail extends Component {
         extraContent={extra}
       >
         {
-          activeTabKey === 'task' &&
-          <Card className={styles.card} bordered={false}>
-            <div style={{ marginBottom: '16px' }}>
-              <Button icon="delete" type="danger" disabled={!selectedRows.length} onClick={this.showDeleteConfirm}>删除</Button>
-              <Button type="primary" style={{ float: 'right' }}>项目完成</Button>
-            </div>
-            <StandardTable
-              rowKey="taskId"
-              selectedRows={selectedRows}
-              loading={loading}
-              data={data}
+          activeTabKey === 'member' &&
+          <Card bordered={false}>
+            <Table
+              rowKey="userId"
               columns={columns}
-              onSelectRow={this.handleSelectRows}
-              onChange={this.handleStandardTableChange}
+              dataSource={members}
+              onChange={this.handleTableChange}
+              pagination={{ showSizeChanger: true, showQuickJumper: true }}
+              loading={loading}
             />
           </Card>
         }
         {
-          activeTabKey === 'member' &&
-          <MemberDetail projectId={projectId} onChange={this.jumpToTaskList} />
+          activeTabKey === 'task' &&
+          <TaskList projectId={projectId} labelerId={labelerId} inspectorId={inspectorId} />
         }
       </PageHeaderWrapper>
     );
