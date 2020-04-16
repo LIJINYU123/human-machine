@@ -239,6 +239,14 @@ class TextMarkView extends Component {
     this.setState({ inputValue: event.target.value });
   };
 
+  jumpToAnswerMode = () => {
+    const { basicInfo } = this.state;
+    router.push({
+      pathname: '/task-manage/my-task/classify-mark',
+      state: { basicInfo },
+    });
+  };
+
   render() {
     const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue } = this.state;
     const { data, checkRate, passRate, markTool, loading } = this.props;
@@ -271,7 +279,7 @@ class TextMarkView extends Component {
         <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
         <Radio.Group defaultValue="overview" style={{ marginRight: '16px' }}>
           <Radio.Button value="overview">概览模式</Radio.Button>
-          <Radio.Button value="focus">答题模式</Radio.Button>
+          <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
         <Button type="primary" icon="check">提交</Button>
       </Fragment>

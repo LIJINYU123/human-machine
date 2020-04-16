@@ -9,7 +9,7 @@ import {
   Tag,
   Popover,
   Row,
-  Col, Divider,
+  Col, Divider, Radio,
 } from 'antd/lib/index';
 import { connect } from 'dva/index';
 import Highlighter from 'react-highlight-words';
@@ -291,6 +291,10 @@ class NerMarkView extends Component {
       <Fragment>
         <span style={{ marginRight: '16px' }}>质检率：{`${checkRate}%`}</span>
         <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
+        <Radio.Group defaultValue="overview" style={{ marginRight: '16px' }}>
+          <Radio.Button value="overview">概览模式</Radio.Button>
+          <Radio.Button value="focus">答题模式</Radio.Button>
+        </Radio.Group>
         <Button type="primary" icon="check">提交</Button>
       </Fragment>
     );

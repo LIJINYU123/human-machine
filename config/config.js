@@ -206,6 +206,13 @@ export default {
               hideInMenu: true,
             },
             {
+              name: '文本标注',
+              icon: 'container',
+              path: '/task-manage/my-task/classify-mark',
+              component: './taskManage/component/ClassifyAnswerView',
+              hideInMenu: true,
+            },
+            {
               name: '个人中心',
               icon: 'profile',
               path: '/person',

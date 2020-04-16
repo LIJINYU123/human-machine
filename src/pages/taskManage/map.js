@@ -55,4 +55,8 @@ export default {
     wordEntryName: '所属词条',
     newWordEntry: '新建词条',
   },
+
+  AnswerModeLabels: {
+    text: '文本',
+  },
 }
