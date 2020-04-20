@@ -201,15 +201,22 @@ export default {
             {
               name: '文本标注',
               icon: 'container',
-              path: '/task-manage/my-task/ner-mark',
-              component: './taskManage/component/NerMarkView',
+              path: '/task-manage/my-task/sequence-mark',
+              component: './taskManage/component/SequenceMarkView',
               hideInMenu: true,
             },
             {
               name: '文本标注',
               icon: 'container',
-              path: '/task-manage/my-task/classify-mark',
+              path: '/task-manage/my-task/answer-mode/classify',
               component: './taskManage/component/ClassifyAnswerView',
+              hideInMenu: true,
+            },
+            {
+              name: '文本标注',
+              icon: 'container',
+              path: '/task-manage/my-task/answer-mode/sequence',
+              component: './taskManage/component/SequenceAnswerView',
               hideInMenu: true,
             },
             {

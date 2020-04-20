@@ -65,3 +65,23 @@ export async function deleteTextMarkResult(params) {
     data: params,
   });
 }
+
+export async function queryOneTextQuestion(params) {
+  return request('/api/text-project/one-question', {
+    params,
+  });
+}
+
+export async function queryNextTextQuestion(params) {
+  return request('/api/text-project/next-question', {
+    method: 'POST',
+    data: params,
+  });
+}
+
+export async function queryPrevTextQuestion(params) {
+  return request('/api/text-project/prev-question', {
+    method: 'POST',
+    data: params,
+  })
+}

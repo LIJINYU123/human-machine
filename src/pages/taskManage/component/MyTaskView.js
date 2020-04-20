@@ -141,7 +141,7 @@ class MyTaskView extends Component {
       });
     } else if (task.labelType === 'ner') {
       router.push({
-        pathname: '/task-manage/my-task/ner-mark',
+        pathname: '/task-manage/my-task/sequence-mark',
         state: {
           taskInfo: task,
         },

@@ -10,6 +10,7 @@ const TagSelectOption = ({ children, checked, onChange, value }) => (
     checked={!!checked}
     key={value}
     onChange={state => onChange && onChange(value, state)}
+    style={{ cursor: 'pointer' }}
   >
     {children}
   </CheckableTag>

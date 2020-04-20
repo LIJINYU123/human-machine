@@ -241,9 +241,10 @@ class TextMarkView extends Component {
 
   jumpToAnswerMode = () => {
     const { basicInfo } = this.state;
+    const { markTool } = this.props;
     router.push({
-      pathname: '/task-manage/my-task/classify-mark',
-      state: { basicInfo },
+      pathname: '/task-manage/my-task/answer-mode/classify',
+      state: { basicInfo, markTool },
     });
   };
 

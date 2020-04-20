@@ -10,7 +10,7 @@ const { Option } = Select;
   data: textMark.nerData,
   markTool: textMark.markTool,
 }))
-class NerModalView extends Component {
+class SequenceModalView extends Component {
   state = {
     selectOptionName: '',
     saveType: 'wordEntry',
@@ -179,4 +179,4 @@ class NerModalView extends Component {
   }
 }
 
-export default Form.create()(NerModalView);
+export default Form.create()(SequenceModalView);

@@ -58,5 +58,7 @@ export default {
 
   AnswerModeLabels: {
     text: '文本',
+    reviewResult: '质检结果',
+    remark: '备注',
   },
 }

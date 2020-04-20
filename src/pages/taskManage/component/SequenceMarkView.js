@@ -16,7 +16,7 @@ import Highlighter from 'react-highlight-words';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import StandardTable from './StandardTable';
-import NerModalView from './NerModalView';
+import SequenceModalView from './SequenceModalView';
 import ItemData from '../map';
 import styles from './style.less';
 
@@ -40,7 +40,7 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   passRate: textMark.passRate,
   loading: loading.effects['textMark/fetchNerData'],
 }))
-class NerMarkView extends Component {
+class SequenceMarkView extends Component {
   state = {
     basicInfo: undefined,
     filteredInfo: {},
@@ -261,6 +261,14 @@ class NerMarkView extends Component {
     });
   };
 
+  jumpToAnswerMode = () => {
+    const { basicInfo } = this.state;
+    router.push({
+      pathname: '/task-manage/my-task/answer-mode/sequence',
+      state: { basicInfo },
+    });
+  };
+
   render() {
     const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue } = this.state;
     const { data, checkRate, passRate, loading } = this.props;
@@ -293,7 +301,7 @@ class NerMarkView extends Component {
         <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
         <Radio.Group defaultValue="overview" style={{ marginRight: '16px' }}>
           <Radio.Button value="overview">概览模式</Radio.Button>
-          <Radio.Button value="focus">答题模式</Radio.Button>
+          <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
         <Button type="primary" icon="check">提交</Button>
       </Fragment>
@@ -395,10 +403,10 @@ class NerMarkView extends Component {
           />
         </Card>
         {/* eslint-disable-next-line max-len */}
-        <NerModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} projectId={basicInfo.projectId} taskId={basicInfo.taskId} dataId={dataId} />
+        <SequenceModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} projectId={basicInfo.projectId} taskId={basicInfo.taskId} dataId={dataId} />
       </PageHeaderWrapper>
     );
   }
 }
 
-export default NerMarkView;
+export default SequenceMarkView;

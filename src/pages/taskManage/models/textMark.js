@@ -1,5 +1,5 @@
 import { message } from 'antd/lib/index';
-import { queryLabelData, queryMarkTools, saveTextMarkResult, deleteTextMarkResult, saveReviewResult } from '../service';
+import { queryLabelData, queryMarkTools, saveTextMarkResult, deleteTextMarkResult, saveReviewResult, queryOneTextQuestion, queryNextTextQuestion, queryPrevTextQuestion } from '../service';
 
 const TextMark = {
   namespace: 'textMark',
@@ -15,6 +15,7 @@ const TextMark = {
     checkRate: 0,
     passRate: 0,
     markTool: {},
+    questionInfo: {},
   },
 
   effects: {
@@ -91,6 +92,39 @@ const TextMark = {
         callback();
       }
     },
+
+    // 答题模式，获取一道题目
+    * fetchQuestion({ payload }, { call, put }) {
+      const response = yield call(queryOneTextQuestion, payload);
+      yield put({
+        type: 'saveQuestion',
+        payload: response,
+      });
+    },
+
+    // 答题模式，获取下一道题目
+    * fetchNext({ payload, callback }, { call, put }) {
+      const response = yield call(queryNextTextQuestion, payload);
+      yield put({
+        type: 'saveQuestion',
+        payload: response,
+      });
+      if (callback) {
+        callback();
+      }
+    },
+
+    // 答题模式，获取上一道题目
+    * fetchPrev({ payload, callback }, { call, put }) {
+      const response = yield call(queryPrevTextQuestion, payload);
+      yield put({
+        type: 'saveQuestion',
+        payload: response,
+      });
+      if (callback) {
+        callback();
+      }
+    },
   },
 
   reducers: {
@@ -108,6 +142,9 @@ const TextMark = {
     },
     saveTool(state, action) {
       return { ...state, markTool: action.payload };
+    },
+    saveQuestion(state, action) {
+      return { ...state, questionInfo: action.payload };
     },
   },
 };

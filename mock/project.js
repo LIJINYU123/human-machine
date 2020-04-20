@@ -403,6 +403,7 @@ let labelMockData = [
     labelResult: ['高兴', '愤怒'],
     reviewResult: 'approve',
     remark: '这是条评论1',
+    invalid: false,
   },
   {
     dataId: '2',
@@ -410,6 +411,7 @@ let labelMockData = [
     labelResult: ['高兴', '愤怒'],
     reviewResult: 'approve',
     remark: '这是条评论2',
+    invalid: false,
   },
   {
     dataId: '3',
@@ -417,69 +419,79 @@ let labelMockData = [
     labelResult: [],
     reviewResult: 'reject',
     remark: '这是条评论3',
+    invalid: false,
   },
   {
     dataId: '4',
     data: { sentence: '员工自己可以挑选喜欢的酒店订吗' },
     labelResult: ['高兴', '愤怒'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论4',
+    invalid: false,
   },
   {
     dataId: '5',
     data: { sentence: '自己是不是可以随便订酒店' },
     labelResult: ['中性'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论5',
+    invalid: false,
   },
   {
     dataId: '6',
     data: { sentence: '为公司出差住宿可以给多少预算' },
     labelResult: ['中性'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论6',
+    invalid: false,
   },
   {
     dataId: '7',
     data: { sentence: '出差的话可以住几星级的酒店' },
     labelResult: ['高兴', '喜欢'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论7',
+    invalid: false,
   },
   {
     dataId: '8',
     data: { sentence: '协议酒店可以不住吗' },
     labelResult: ['中性'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论8',
+    invalid: false,
   },
   {
     dataId: '9',
     data: { sentence: '协议酒店不住会出事吗' },
     labelResult: ['喜欢'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论9',
+    invalid: false,
   },
   {
     dataId: '10',
     data: { sentence: '在国内出差住400一晚的酒店可以吗' },
     labelResult: ['喜欢'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论10',
+    invalid: false,
   },
   {
     dataId: '11',
     data: { sentence: '在国内出差能够住几星级的酒店' },
     labelResult: ['喜欢'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论11',
+    invalid: false,
   },
   {
     dataId: '12',
     data: { sentence: '在国内出差的话住宿有没有一个标准' },
     labelResult: ['喜欢'],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '这是条评论12',
+    invalid: false,
   },
 ];
 
@@ -490,6 +502,7 @@ const matchLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '2',
@@ -497,6 +510,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论2',
+    invalid: false,
   },
   {
     dataId: '3',
@@ -504,6 +518,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论3',
+    invalid: false,
   },
   {
     dataId: '4',
@@ -511,6 +526,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论4',
+    invalid: false,
   },
   {
     dataId: '5',
@@ -518,6 +534,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论5',
+    invalid: false,
   },
   {
     dataId: '6',
@@ -525,6 +542,7 @@ const matchLabelData = [
     labelResult: ['不相似'],
     reviewResult: 'approve',
     remark: '这是条评论6',
+    invalid: false,
   },
   {
     dataId: '7',
@@ -532,6 +550,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论7',
+    invalid: false,
   },
   {
     dataId: '8',
@@ -539,6 +558,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论8',
+    invalid: false,
   },
   {
     dataId: '9',
@@ -546,6 +566,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论8',
+    invalid: false,
   },
   {
     dataId: '10',
@@ -553,6 +574,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论10',
+    invalid: false,
   },
   {
     dataId: '11',
@@ -560,6 +582,7 @@ const matchLabelData = [
     labelResult: ['不相似'],
     reviewResult: 'approve',
     remark: '这是条评论11',
+    invalid: false,
   },
   {
     dataId: '12',
@@ -567,6 +590,7 @@ const matchLabelData = [
     labelResult: ['相似'],
     reviewResult: 'approve',
     remark: '这是条评论12',
+    invalid: false,
   },
 ];
 
@@ -577,6 +601,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '2',
@@ -584,6 +609,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '3',
@@ -591,6 +617,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '4',
@@ -598,6 +625,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '5',
@@ -605,6 +633,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '6',
@@ -612,6 +641,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '7',
@@ -619,6 +649,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '8',
@@ -626,6 +657,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '9',
@@ -633,6 +665,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '10',
@@ -640,6 +673,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '11',
@@ -647,6 +681,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
   {
     dataId: '12',
@@ -654,6 +689,7 @@ const nerLabelData = [
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
+    invalid: false,
   },
 ];
 
@@ -1174,6 +1210,92 @@ function deleteTextMarkResult(req, res, u, b) {
   return res.json({ status: 'ok', message: '删除成功' });
 }
 
+function getOneTextQuestion(req, res, u) {
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url;
+  }
+
+  const params = parse(url, true).query;
+  let response = {};
+
+  response = labelMockData[0];
+  response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
+  // response = {
+  //   dataId: '2',
+  //   data: { sentence: '出差住的酒店是自己订好吗' },
+  //   labelResult: ['高兴', '愤怒'],
+  //   reviewResult: 'approve',
+  //   remark: '这是条评论2',
+  //   schedule: { completeNum: 100, restNum: 50, invalidNum: 20 },
+  // }
+  return res.json(response);
+}
+
+function getNextTextQuestion(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  const { dataId, roleId } = body;
+  let response = {};
+
+  if (roleId === 'labeler') {
+    const { labelResult, invalid } = body;
+    labelMockData.forEach((item, index) => {
+      if (item.dataId === dataId) {
+        // 更新当前题目
+        item.labelResult = labelResult;
+        item.invalid = invalid;
+
+        // 获取下一道题目
+        if (index === labelMockData.length - 1) {
+          response = labelMockData[index];
+        } else {
+          response = labelMockData[index + 1];
+        }
+        response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
+      }
+    });
+  } else if (roleId === 'inspector') {
+    const { labelResult, reviewResult, remark } = body;
+    labelMockData.forEach((item, index) => {
+      if (item.dataId === dataId) {
+        // 更新当前题目
+        item.labelResult = labelResult;
+        item.reviewResult = reviewResult;
+        item.remark = remark;
+
+        // 获取下一道题目
+        if (index === labelMockData.length - 1) {
+          response = labelMockData[index];
+        } else {
+          response = labelMockData[index + 1];
+        }
+        response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
+      }
+    });
+  }
+  return res.json(response);
+}
+
+function getPrevTextQuestion(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  const { dataId } = body;
+  let response = {};
+  labelMockData.forEach((item, index) => {
+    if (item.dataId === dataId) {
+      // 获取上一道题目
+      if (index === 0) {
+        response = labelMockData[0];
+      } else {
+        response = labelMockData[index - 1];
+      }
+
+      response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
+    }
+  });
+  return res.json(response);
+}
+
 function saveReviewResult(req, res, u, b) {
   const body = (b && b.body) || req.body;
   const { dataId, taskId, result } = body;
@@ -1221,4 +1343,7 @@ export default {
 
   'POST /api/text-project/label-result': saveTextMarkResult,
   'DELETE /api/text-project/label-result': deleteTextMarkResult,
+  'GET /api/text-project/one-question': getOneTextQuestion,
+  'POST /api/text-project/next-question': getNextTextQuestion,
+  'POST /api/text-project/prev-question': getPrevTextQuestion,
 };

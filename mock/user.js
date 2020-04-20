@@ -118,15 +118,22 @@ export default {
         {
           name: '文本标注',
           icon: 'container',
-          path: '/task-manage/my-task/ner-mark',
-          component: './taskManage/component/NerMarkView',
+          path: '/task-manage/my-task/sequence-mark',
+          component: './taskManage/component/SequenceMarkView',
           hideInMenu: true,
         },
         {
           name: '文本标注',
           icon: 'container',
-          path: '/task-manage/my-task/classify-mark',
+          path: '/task-manage/my-task/answer-mode/classify',
           component: './taskManage/component/ClassifyAnswerView',
+          hideInMenu: true,
+        },
+        {
+          name: '文本标注',
+          icon: 'container',
+          path: '/task-manage/my-task/answer-mode/sequence',
+          component: './taskManage/component/SequenceAnswerView',
           hideInMenu: true,
         },
         {
@@ -177,7 +184,9 @@ export default {
       res.header('Privileges', JSON.stringify({
         roleManage: ['add', 'modify', 'query', 'delete'],
         userManage: ['add', 'modify', 'query', 'delete'],
+        dataMark: ['mark', 'review'],
       }));
+      res.header('RoleID', 'inspector');
       res.send({
         status: 'ok',
         message: 'success',
@@ -186,17 +195,19 @@ export default {
       return;
     }
 
-    if (userName === 'SYDEV') {
+    if (userId === 'SYDEV') {
       res.header(
         'Authorization',
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE1NzUwMzkzMjQsInVzZXJuYW1lIjoiYWRtaW4ifQ.eqcIWCQO5z_dU1purEKr66VkMPC6q8WEn4h2DEquOkA',
       );
-      res.header('UserID', 'SYDEV');
-      res.header('DepartmentId', 'development');
+      res.header('UserID', 'SYECO');
+      res.header('DepartmentId', 'operation');
       res.header('Privileges', JSON.stringify({
         roleManage: ['add', 'modify', 'query', 'delete'],
         userManage: ['add', 'modify', 'query', 'delete'],
+        dataMark: ['mark'],
       }));
+      res.header('RoleID', 'labeler');
       res.send({
         status: 'ok',
         message: 'success',

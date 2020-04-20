@@ -101,14 +101,16 @@ request.interceptors.request.use(async (url, options) => {
 
 request.interceptors.response.use((response, _) => {
   const token = response.headers.get('Authorization');
-  const userid = response.headers.get('UserID');
+  const userId = response.headers.get('UserID');
   const departmentId = response.headers.get('DepartmentId');
   const privileges = response.headers.get('Privileges');
-  if (token && userid && departmentId && privileges) {
+  const roleId = response.headers.get('RoleID');
+  if (token && userId && roleId && departmentId && privileges) {
     localStorage.setItem('Authorization', token);
-    localStorage.setItem('UserID', userid);
+    localStorage.setItem('UserID', userId);
     localStorage.setItem('DepartmentId', departmentId);
     localStorage.setItem('Privileges', privileges);
+    localStorage.setItem('RoleID', roleId);
   }
 
   return response;
