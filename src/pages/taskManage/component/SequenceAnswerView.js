@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Checkbox, Descriptions, Form, Input, Radio, Tag, Row, Col, Table } from 'antd';
+import { Button, Card, Checkbox, Descriptions, Form, Input, Radio, Tag, Row, Col, Table, Popover } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import TagSelect from '@/components/TagSelect';
+import WordEntryModalView from './WordEntryModalView';
 import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './style.less';
@@ -17,6 +17,12 @@ class SequenceAnswerView extends Component {
   state = {
     basicInfo: undefined,
     markTool: undefined,
+    popoverVisible: false,
+    word: '',
+    optionName: '',
+    startIndex: '',
+    endIndex: '',
+    modalVisible: false,
     markAuthority: false,
     reviewAuthority: false,
   };
@@ -119,26 +125,81 @@ class SequenceAnswerView extends Component {
     });
   };
 
-  // onPressEnter = () => {
-  //   const input = document.getElementById('textArea');
-  //   console.log(input.selectionStart);
-  // };
-  //
-  // onTextAreaChange = () => {
-  //   console.log('call onTextAreaChange');
-  //   const input = document.getElementById('textArea');
-  //   input.selectionStart = 0;
-  //   input.selectionEnd = 0;
-  // };
-
   handleClick = () => {
+    const { questionInfo } = this.props;
+    // eslint-disable-next-line max-len
     const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
-    console.log(word);
+    // eslint-disable-next-line max-len
+    if (questionInfo.data.sentence.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd).length > 1) {
+      this.setState({
+        popoverVisible: true,
+        // eslint-disable-next-line max-len
+        word: questionInfo.data.sentence.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd),
+        startIndex: word.anchorNode.firstChild.selectionStart,
+        endIndex: word.anchorNode.firstChild.selectionEnd,
+      })
+    } else {
+      this.setState({
+        popoverVisible: false,
+        word: '',
+        startIndex: 0,
+        endIndex: 0,
+      })
+    }
+  };
+
+  handleClickTag = optionName => {
+    const { form: { getFieldsValue, setFieldsValue } } = this.props;
+    const { markTool, word, startIndex, endIndex } = this.state;
+    if (markTool.saveType === 'nomal') {
+      const values = getFieldsValue();
+      const prevLabelResult = values.labelResult;
+      prevLabelResult.push({ word, optionName, startIndex, endIndex });
+      setFieldsValue({
+        labelResult: prevLabelResult,
+      });
+      this.setState({
+        optionName,
+      });
+    } else {
+      this.setState({
+        optionName,
+        modalVisible: true,
+        popoverVisible: false,
+      })
+    }
+  };
+
+  handleDelete = index => {
+    const { form: { getFieldsValue, setFieldsValue } } = this.props;
+    const values = getFieldsValue();
+    const prevLabelResult = values.labelResult;
+    prevLabelResult.splice(index, 1);
+    setFieldsValue({
+      labelResult: prevLabelResult,
+    });
+  };
+
+  handleCancelModal = () => {
+    this.setState({
+      modalVisible: false,
+    });
+  };
+
+  handleConfirmModal = (saveType, wordEntry, newWordEntry) => {
+    const { form: { getFieldsValue, setFieldsValue } } = this.props;
+    const { word, optionName, startIndex, endIndex } = this.state;
+    const values = getFieldsValue();
+    const prevLabelResult = values.labelResult;
+    prevLabelResult.push({ word, optionName, startIndex, endIndex, saveType, wordEntry, newWordEntry });
+    setFieldsValue({
+      labelResult: prevLabelResult,
+    });
   };
 
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
-    const { basicInfo, markTool, reviewAuthority } = this.state;
+    const { basicInfo, markTool, reviewAuthority, popoverVisible, modalVisible, optionName } = this.state;
 
     const action = (
       <Fragment>
@@ -177,6 +238,64 @@ class SequenceAnswerView extends Component {
       },
     };
 
+    const columns = [
+      {
+        title: '结果',
+        dataIndex: 'word',
+        ellipsis: true,
+      },
+      {
+        title: '选项',
+        dataIndex: 'optionName',
+        width: 100,
+      },
+      {
+        title: '操作',
+        width: 50,
+        render: (_, record, index) => (
+          <a onClick={() => this.handleDelete(index)}>删除</a>
+        ),
+      },
+    ];
+
+    const dictColumns = [
+      {
+        title: '结果',
+        dataIndex: 'word',
+        ellipsis: true,
+      },
+      {
+        title: '选项',
+        dataIndex: 'optionName',
+        width: 100,
+      },
+      {
+        title: '存储方式',
+        dataIndex: 'saveType',
+        width: 100,
+        render: (val, record) => {
+          if (val === 'wordEntry') {
+            return '词条名';
+          }
+          if (record.newWordEntry !== '') {
+            return `同义词：${record.newWordEntry}`;
+          }
+          return `同义词：${record.wordEntry}`;
+        },
+      },
+      {
+        title: '操作',
+        width: 50,
+        render: (_, record, index) => (
+          <a onClick={() => this.handleDelete(index)}>删除</a>
+        ),
+      },
+    ];
+
+    const popoverContent = (
+      markTool.options.map(option => <Tag color={option.color} style={{ cursor: 'pointer' }} onClick={() => this.handleClickTag(option.optionName)}>{option.optionName}</Tag>)
+    );
+
     return (
       <PageHeaderWrapper
         title={basicInfo.taskName}
@@ -188,18 +307,32 @@ class SequenceAnswerView extends Component {
           <Form>
             <Form.Item label={markTool.classifyName} {...formItemLayout}>
               <Fragment>
-                { markTool.options.map(option => <Tag color="blue">{option.optionName}</Tag>) }
+                { markTool.options.map(option => <Tag color={option.color}>{option.optionName}</Tag>) }
               </Fragment>
-              <Tag color="blue">句子</Tag>
             </Form.Item>
             <Row>
               <Col md={12} sm={24}>
                 <Form.Item label={AnswerModeLabels.text} {...formItemLayout2}>
-                  <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : '' } style={{ width: '80%' }} autoSize/>
+                  <Popover visible={popoverVisible} content={popoverContent}>
+                    <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : '' } style={{ width: '80%' }} onClick={this.handleClick} autoSize/>
+                  </Popover>
                 </Form.Item>
               </Col>
               <Col md={12} sm={24}>
-                <Table bordered/>
+                <Form.Item>
+                  {
+                    getFieldDecorator('labelResult', {
+                      initialValue: questionInfo.labelResult,
+                      valuePropName: 'dataSource',
+                    })(
+                      <Table
+                        size="small"
+                        columns={markTool.saveType === 'nomal' ? columns : dictColumns}
+                        pagination={false}
+                        bordered
+                      />)
+                  }
+                </Form.Item>
               </Col>
             </Row>
             {
@@ -243,8 +376,8 @@ class SequenceAnswerView extends Component {
                 },
               }}
             >
-              <Button>上一题</Button>
-              <Button type="primary" style={{ marginLeft: '16px' }}>下一题</Button>
+              <Button onClick={this.handlePrevQuestion}>上一题</Button>
+              <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
               {
                 !reviewAuthority &&
                 getFieldDecorator('invalid', {
@@ -256,6 +389,7 @@ class SequenceAnswerView extends Component {
             </Form.Item>
           </Form>
         </Card>
+        <WordEntryModalView visible={modalVisible} onCancel={this.handleCancelModal} onConfirm={this.handleConfirmModal} projectId={basicInfo.projectId} optionName={optionName} />
       </PageHeaderWrapper>
     );
   }

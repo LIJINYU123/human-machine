@@ -598,7 +598,7 @@ const splitLabelData = [
   {
     dataId: Mock.Random.string(5),
     data: { sentence: '受到疫情影响，陷入停摆的意甲联赛何时重启还没有定论，更有都灵、桑普多利亚、博洛尼亚、帕尔马、斯帕尔、布雷西亚、乌迪内斯等7支球队反对重新比赛，所以C罗仍然留在家乡马德拉岛。近日，C罗因参加侄女生日、产生群体聚集而引发争议。不过葡萄牙巨星对此并不在意，回到家中后依旧照常进行健身和训练。' },
-    labelResult: [],
+    labelResult: [{ word: '受到疫情影响，陷入停摆的意甲联赛何时重启还没有定论，更有都灵、桑普多利亚、博洛尼亚、帕尔马、斯帕尔、布雷西亚、乌迪内斯等7支球队反对重新比赛，所以C罗仍然留在家乡马德拉岛。', optionName: '句子' }],
     reviewResult: '',
     remark: '',
     invalid: false,
@@ -1312,6 +1312,10 @@ function getOneTextQuestion(req, res, u) {
   let response = {};
   if (params.taskId.indexOf('match') === 0) {
     [response] = matchLabelData;
+  } else if (params.taskId.indexOf('ner') === 0) {
+    [response] = nerLabelData;
+  } else if (params.taskId.indexOf('split') === 0) {
+    [response] = splitLabelData;
   } else {
     [response] = labelMockData;
   }
@@ -1327,6 +1331,10 @@ function getNextTextQuestion(req, res, u, b) {
   let textMockData = [];
   if (taskId.indexOf('match') === 0) {
     textMockData = matchLabelData;
+  } else if (taskId.indexOf('ner') === 0) {
+    textMockData = nerLabelData;
+  } else if (taskId.indexOf('split') === 0) {
+    textMockData = splitLabelData;
   } else {
     textMockData = labelMockData;
   }
@@ -1377,6 +1385,10 @@ function getPrevTextQuestion(req, res, u, b) {
   let textMockData = [];
   if (taskId.indexOf('match') === 0) {
     textMockData = matchLabelData;
+  } else if (taskId.indexOf('ner') === 0) {
+    textMockData = nerLabelData;
+  } else if (taskId.indexOf('split') === 0) {
+    textMockData = splitLabelData;
   } else {
     textMockData = labelMockData;
   }

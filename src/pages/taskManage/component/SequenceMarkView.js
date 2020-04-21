@@ -162,6 +162,7 @@ class SequenceMarkView extends Component {
       onClick: event => {
         // eslint-disable-next-line max-len
         const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
+        console.log(word);
         if (cell.sentence.substring(word.anchorOffset, word.focusOffset).length > 1) {
           this.setState({
             dataId: cell.dataId,
@@ -324,6 +325,7 @@ class SequenceMarkView extends Component {
       {
         title: '标注结果',
         dataIndex: 'labelResult',
+        ellipsis: true,
         render: (val, record) => {
           if (val.length) {
             const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.optionName}.${v.wordEntry}` : `${v.word}: ${v.optionName}`));

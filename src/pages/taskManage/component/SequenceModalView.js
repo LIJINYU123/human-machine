@@ -109,7 +109,7 @@ class SequenceModalView extends Component {
 
     return (
       <Modal
-        title="实体识别"
+        title="序列标注"
         maskClosable={false}
         visible={visible}
         onCancel={this.handleClose}
