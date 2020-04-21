@@ -30,12 +30,19 @@ export default {
   },
 
   labelTypeName: {
-    textClassify: '文本分类',
-    textMatch: '文本匹配',
-    ner: '实体识别',
-    pictureMark: '图片标注',
-    voiceMark: '音频标注',
-    videoDialogMark: '其他标注-视频对话标注',
+    textClassify: '标准分类工具',
+    sequenceLabeling: '标准序列工具',
+    textExtension: '标准扩充工具',
+    pictureMark: '标准矩形框工具',
+    voiceMark: '标准音频标注工具',
+    videoDialogMark: '定制视频标注工具',
+  },
+
+  projectTypeName: {
+    text: '文本',
+    picture: '图片',
+    voice: '音频',
+    other: '其他',
   },
 
   reviewLabel: {
@@ -58,6 +65,9 @@ export default {
 
   AnswerModeLabels: {
     text: '文本',
+    text1: '文本1',
+    text2: '文本2',
+    question: '问题',
     reviewResult: '质检结果',
     remark: '备注',
   },

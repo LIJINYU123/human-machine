@@ -35,10 +35,11 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
 }));
 
 @connect(({ textMark, loading }) => ({
-  data: textMark.nerData,
+  data: textMark.sequenceData,
   checkRate: textMark.checkRate,
   passRate: textMark.passRate,
-  loading: loading.effects['textMark/fetchNerData'],
+  markTool: textMark.markTool,
+  loading: loading.effects['textMark/fetchSequenceData'],
 }))
 class SequenceMarkView extends Component {
   state = {
@@ -67,8 +68,12 @@ class SequenceMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'textMark/fetchNerData',
+      type: 'textMark/fetchSequenceData',
       payload: { taskId: basicInfo.taskId },
+    });
+    dispatch({
+      type: 'textMark/fetchMarkTool',
+      payload: { projectId: basicInfo.projectId },
     });
   }
 
@@ -102,7 +107,7 @@ class SequenceMarkView extends Component {
     };
 
     dispatch({
-      type: 'textMark/fetchNerData',
+      type: 'textMark/fetchSequenceData',
       payload: params,
     });
   };
@@ -238,7 +243,7 @@ class SequenceMarkView extends Component {
     };
 
     dispatch({
-      type: 'textMark/fetchNerData',
+      type: 'textMark/fetchSequenceData',
       payload: params,
     });
   };
@@ -263,9 +268,10 @@ class SequenceMarkView extends Component {
 
   jumpToAnswerMode = () => {
     const { basicInfo } = this.state;
+    const { markTool } = this.props;
     router.push({
       pathname: '/task-manage/my-task/answer-mode/sequence',
-      state: { basicInfo },
+      state: { basicInfo, markTool },
     });
   };
 
@@ -311,6 +317,7 @@ class SequenceMarkView extends Component {
       {
         title: '文本',
         dataIndex: 'sentence',
+        ellipsis: true,
         onCell: this.handleClickCell,
         ...this.getColumnSearchProps('sentence'),
       },

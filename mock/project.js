@@ -594,6 +594,89 @@ const matchLabelData = [
   },
 ];
 
+const splitLabelData = [
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '受到疫情影响，陷入停摆的意甲联赛何时重启还没有定论，更有都灵、桑普多利亚、博洛尼亚、帕尔马、斯帕尔、布雷西亚、乌迪内斯等7支球队反对重新比赛，所以C罗仍然留在家乡马德拉岛。近日，C罗因参加侄女生日、产生群体聚集而引发争议。不过葡萄牙巨星对此并不在意，回到家中后依旧照常进行健身和训练。' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '这不，他又在社交媒体上晒出自己的健身照。照片里的总裁露出灿烂笑容，双手竖起拇指给自己点赞，而人们的关注点，集中在他那极为健硕的大腿肌肉，C罗就是靠它们来轰出力量十足的射门的。C罗还配文道：“努力锻炼，保持身心健康。”由此可见，在居家隔离期间，他一直非常注意保持身体状态，随时做好返回都灵、恢复训练、为尤文再战意甲的准备。此前有消息称，意甲球队会在5月4日开始复训，但意大利体育部长斯帕达弗拉表示，这一时间点无法保证。' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '拜仁俱乐部官方宣布，球队和年轻新星阿方索-戴维斯续约至2025年，他有未来成为世界足坛第一左后卫的潜力。戴维斯表示：“我很高兴和拜仁续约，拜仁是世界上最好的俱乐部之一，能为拜仁效力让我梦想成真。从来到这里的第一天起，一切都很顺利。我希望在这里尽可能多的夺得冠军，赢得一切是拜仁的DNA。”鲁梅尼格表示：“戴维斯在拜仁的成长和进步非常迅速，他以令人信服的表现赢得了这份合同，我很很高兴他能长期留在拜仁。”' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '2000年11月2日出生于加纳，加拿大籍，在2019年冬季转会窗以1000万欧元加盟拜仁，此前他效力于温哥华白浪。本赛季至今，戴维斯代表拜仁出战21场德甲，贡献1粒进球和3次助攻，欧冠出战4场，有3次助攻。最近一段时间，拜仁已经先后与弗里克、穆勒、以及戴维斯完成了续约，此外蒂亚戈、诺伊尔、阿拉巴等人的续约谈判也在进行中。' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '近日，申花俱乐部已安排球队在上海康桥训练基地集结训练，全力备战新赛季。4月20日，球队新援曾诚接受了媒体的公开采访，他表示降薪需要俱乐部和球员多沟通、理解。据《东方早报》记者宋承良在现场报道，曾诚谈到降薪时表示：“这个事情需要球员和俱乐部之间进行沟通，不管是作为球员方面还是俱乐部方面，都需要多一些理解和支持。”' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '日前，中国人寿（601628.SH）、中国人保（601319.SH）、中国平安（601318.SH）、中国太保（601601.SH）和新华保险（601336.SH）悉数披露一季度保费收入，五家上市险企累计原保险保费收入直冲万亿元，一季度共斩获9481.63亿元，同比增4.07%。除中国平安保费增速下滑外，其余四家均不同程度上升。' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '不过，拆分具体业务看，五家寿险公司却呈明显分化格局。其中，新华保险、中国人寿两家老牌寿险公司一季度表现抢眼，原保费收入同比分别大增34.93%和13%。但同期，平安寿险、太保寿险和人保寿险的原保费收入则同比下滑，其中平安寿险降幅达11%。' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '分化的原因有多重因素，疫情影响展业只是一方面，核心还是头部寿险公司发力点不一样，像平安和太保更加注重的是新业务价值，因此并没有过分在意总保费和新单保费这些指标，在淡化开门红的概念，但像国寿和新华这样的传统寿险公司，是既要规模也要价值，因此一季度保费收入增速领先。' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '整体来看，五家头部寿险机构合计原保费收入达6856.89亿元，较去年同期多增228.07亿元，同比增速为3.44%。单家公司保费收入排名上，中国人寿依旧占据一哥地位，1―3月原保费收入为3078亿元，同比增13%。4月17日，中国人寿相关负责人在接受时代周报记者采访时表示，“公司全年的发展策略是聚焦价值导向，以长期期交业务和保障型业务为主，努力实现全年新业务价值平稳增长的目标”。' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: Mock.Random.string(5),
+    data: { sentence: '疫情防控关键期，一季度保险代理人展业难度较大的情况下，五大上市险企寿险业务的总保费收入相对平稳。不过，一季度原保费收入同比增速排名方面，则被新华保险夺魁，公司1―3月原保费收入累计为582.46亿元，同比大增34.93%，远高于去年9.47%的增速水平。对比新华保险和中国人寿，同样在寿险市场份额较高的中国平安，一季度原保费收入增速有所掉队。' },
+    labelResult: [],
+    reviewResult: '',
+    remark: '',
+    invalid: false,
+  },
+];
+
 const nerLabelData = [
   {
     dataId: '1',
@@ -998,6 +1081,8 @@ function getLabelData(req, res, u) {
     dataSource = nerLabelData;
   } else if (params.taskId.indexOf('match') === 0) {
     dataSource = matchLabelData;
+  } else if (params.taskId.indexOf('split') === 0) {
+    dataSource = splitLabelData;
   } else {
     dataSource = labelMockData;
   }
@@ -1189,6 +1274,12 @@ function saveTextMarkResult(req, res, u, b) {
         item.labelResult = labelResult;
       }
     });
+  } else if (taskId.indexOf('split') === 0) {
+    splitLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.labelResult = labelResult;
+      }
+    });
   } else {
     labelMockData.forEach(item => {
       if (item.dataId === dataId) {
@@ -1219,45 +1310,46 @@ function getOneTextQuestion(req, res, u) {
 
   const params = parse(url, true).query;
   let response = {};
-
-  response = labelMockData[0];
+  if (params.taskId.indexOf('match') === 0) {
+    [response] = matchLabelData;
+  } else {
+    [response] = labelMockData;
+  }
   response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
-  // response = {
-  //   dataId: '2',
-  //   data: { sentence: '出差住的酒店是自己订好吗' },
-  //   labelResult: ['高兴', '愤怒'],
-  //   reviewResult: 'approve',
-  //   remark: '这是条评论2',
-  //   schedule: { completeNum: 100, restNum: 50, invalidNum: 20 },
-  // }
+
   return res.json(response);
 }
 
 function getNextTextQuestion(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  const { dataId, roleId } = body;
+  const { taskId, dataId, roleId } = body;
   let response = {};
-
+  let textMockData = [];
+  if (taskId.indexOf('match') === 0) {
+    textMockData = matchLabelData;
+  } else {
+    textMockData = labelMockData;
+  }
   if (roleId === 'labeler') {
     const { labelResult, invalid } = body;
-    labelMockData.forEach((item, index) => {
+    textMockData.forEach((item, index) => {
       if (item.dataId === dataId) {
         // 更新当前题目
         item.labelResult = labelResult;
         item.invalid = invalid;
 
         // 获取下一道题目
-        if (index === labelMockData.length - 1) {
-          response = labelMockData[index];
+        if (index === textMockData.length - 1) {
+          response = textMockData[index];
         } else {
-          response = labelMockData[index + 1];
+          response = textMockData[index + 1];
         }
         response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
       }
     });
   } else if (roleId === 'inspector') {
     const { labelResult, reviewResult, remark } = body;
-    labelMockData.forEach((item, index) => {
+    textMockData.forEach((item, index) => {
       if (item.dataId === dataId) {
         // 更新当前题目
         item.labelResult = labelResult;
@@ -1265,10 +1357,10 @@ function getNextTextQuestion(req, res, u, b) {
         item.remark = remark;
 
         // 获取下一道题目
-        if (index === labelMockData.length - 1) {
-          response = labelMockData[index];
+        if (index === textMockData.length - 1) {
+          response = textMockData[index];
         } else {
-          response = labelMockData[index + 1];
+          response = textMockData[index + 1];
         }
         response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
       }
@@ -1279,15 +1371,22 @@ function getNextTextQuestion(req, res, u, b) {
 
 function getPrevTextQuestion(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  const { dataId } = body;
+  const { taskId, dataId } = body;
   let response = {};
-  labelMockData.forEach((item, index) => {
+
+  let textMockData = [];
+  if (taskId.indexOf('match') === 0) {
+    textMockData = matchLabelData;
+  } else {
+    textMockData = labelMockData;
+  }
+  textMockData.forEach((item, index) => {
     if (item.dataId === dataId) {
       // 获取上一道题目
       if (index === 0) {
-        response = labelMockData[0];
+        [response] = textMockData;
       } else {
-        response = labelMockData[index - 1];
+        response = textMockData[index - 1];
       }
 
       response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };

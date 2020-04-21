@@ -8,7 +8,7 @@ import ItemData from './map';
 import Highlighter from 'react-highlight-words';
 import router from 'umi/router';
 
-const { statusMap, statusName, labelTypeName } = ItemData;
+const { statusMap, statusName, projectTypeName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -17,8 +17,8 @@ const statusFilters = Object.keys(statusName).map(key => ({
   value: key,
 }));
 
-const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
-  text: labelTypeName[key],
+const projectTypeFilters = Object.keys(projectTypeName).map(key => ({
+  text: projectTypeName[key],
   value: key,
 }));
 
@@ -192,10 +192,10 @@ class TaskCenter extends Component {
         ...this.getColumnSearchProps('projectName'),
       },
       {
-        title: '标注类型',
-        dataIndex: 'labelType',
-        render: val => labelTypeName[val],
-        filters: labelTypeFilters,
+        title: '项目类型',
+        dataIndex: 'projectType',
+        render: val => projectTypeName[val],
+        filters: projectTypeFilters,
         filteredValue: filteredInfo.labelType || null,
       },
       {

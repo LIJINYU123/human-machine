@@ -7,7 +7,7 @@ const { FieldLabels } = ItemData;
 const { Option } = Select;
 
 @connect(({ textMark }) => ({
-  data: textMark.nerData,
+  data: textMark.sequenceData,
   markTool: textMark.markTool,
 }))
 class SequenceModalView extends Component {
@@ -90,7 +90,7 @@ class SequenceModalView extends Component {
 
     const entityOptions = Object.keys(markTool).length ? markTool.options.map(option => <Option value={option.optionName}>{option.optionName}</Option>) : [];
     let wordEntryOptions = [];
-    if (selectOptionName !== '') {
+    if (selectOptionName !== '' && markTool.saveType === 'dict') {
       const filterOptions = markTool.options.filter(option => option.optionName === selectOptionName);
       // eslint-disable-next-line max-len
       wordEntryOptions = filterOptions[0].extraInfo.map(wordEntry => <Option key={wordEntry}>{wordEntry}</Option>);
@@ -118,7 +118,7 @@ class SequenceModalView extends Component {
         destroyOnClose
       >
         <Form {...formItemLayout} hideRequiredMark>
-          <Form.Item label={FieldLabels.toolName}>
+          <Form.Item label={markTool.classifyName}>
             {
               getFieldDecorator('optionName', {
                 rules: [
@@ -136,17 +136,20 @@ class SequenceModalView extends Component {
                 </Select>)
             }
           </Form.Item>
-          <Form.Item label={FieldLabels.saveType}>
-            {
-              getFieldDecorator('saveType', {
-                initialValue: 'wordEntry',
-              })(
-                <Radio.Group name="saveType" onChange={this.handleRadioChange}>
-                  <Radio value="wordEntry">词条名</Radio>
-                  <Radio value="synonym">同义词</Radio>
-                </Radio.Group>)
-            }
-          </Form.Item>
+          {
+            markTool.saveType === 'dict' &&
+            <Form.Item label={FieldLabels.saveType}>
+              {
+                getFieldDecorator('saveType', {
+                  initialValue: 'wordEntry',
+                })(
+                  <Radio.Group name="saveType" onChange={this.handleRadioChange}>
+                    <Radio value="wordEntry">词条名</Radio>
+                    <Radio value="synonym">同义词</Radio>
+                  </Radio.Group>)
+              }
+            </Form.Item>
+          }
           {
             saveType === 'synonym' &&
             <Form.Item label={FieldLabels.wordEntryName}>

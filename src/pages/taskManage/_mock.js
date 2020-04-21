@@ -5,7 +5,7 @@ const projectMockData = [
   {
     projectId: '1',
     projectName: '文本分类_0123',
-    labelType: 'textClassify',
+    projectType: 'text',
     status: 'initial',
     availableNum: 4,
     createdTime: '2020-01-13 10:00:00',
@@ -13,7 +13,7 @@ const projectMockData = [
   {
     projectId: '2',
     projectName: '文本匹配_0124',
-    labelType: 'textMatch',
+    projectType: 'text',
     status: 'initial',
     availableNum: 3,
     createdTime: '2020-01-14 10:00:00',
@@ -21,7 +21,7 @@ const projectMockData = [
   {
     projectId: '3',
     projectName: '实体识别_0125',
-    labelType: 'ner',
+    projectType: 'text',
     status: 'inProgress',
     availableNum: 0,
     createdTime: '2020-01-15 10:00:00',
@@ -29,7 +29,7 @@ const projectMockData = [
   {
     projectId: '4',
     projectName: '文本匹配_0127',
-    labelType: 'textMatch',
+    projectType: 'text',
     status: 'complete',
     availableNum: 0,
     createdTime: '2020-01-16 10:00:00',
@@ -37,7 +37,7 @@ const projectMockData = [
   {
     projectId: '5',
     projectName: '文本匹配_0128',
-    labelType: 'textMatch',
+    projectType: 'text',
     status: 'suspend',
     availableNum: 8,
     createdTime: '2020-01-16 10:00:00',
@@ -74,7 +74,7 @@ const taskMockData = [
     projectName: '文本匹配123',
     taskId: '3',
     taskName: '任务3',
-    labelType: 'textMatch',
+    labelType: 'textClassify',
     questionNum: 300,
     schedule: 100,
     status: 'review',
@@ -86,7 +86,7 @@ const taskMockData = [
     projectName: '文本匹配123',
     taskId: 'match4',
     taskName: '任务4',
-    labelType: 'textMatch',
+    labelType: 'textClassify',
     questionNum: 400,
     schedule: 100,
     status: 'reject',
@@ -98,7 +98,7 @@ const taskMockData = [
     projectName: '实体识别678',
     taskId: '5',
     taskName: '任务5',
-    labelType: 'ner',
+    labelType: 'sequenceLabeling',
     questionNum: 100,
     schedule: 100,
     status: 'complete',
@@ -110,7 +110,7 @@ const taskMockData = [
     projectName: '实体识别456',
     taskId: 'ner6',
     taskName: '任务6',
-    labelType: 'ner',
+    labelType: 'sequenceLabeling',
     questionNum: 100,
     schedule: 30,
     status: 'labeling',
@@ -118,10 +118,22 @@ const taskMockData = [
     owner: 'SYECO',
   },
   {
+    projectId: 'split_project1',
+    projectName: '句子切分abcd',
+    taskId: 'split7',
+    taskName: '任务7',
+    labelType: 'sequenceLabeling',
+    questionNum: 300,
+    schedule: 20,
+    status: 'labeling',
+    receiveTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+    owner: 'SYECO',
+  },
+  {
     projectId: '1',
     projectName: '文本分类456',
-    taskId: '7',
-    taskName: '任务7',
+    taskId: '8',
+    taskName: '任务8',
     labelType: 'textClassify',
     questionNum: 100,
     schedule: 100,
@@ -203,6 +215,7 @@ const nerMarkToolsMockData = [
   {
     classifyName: '实体',
     multiple: true,
+    saveType: 'dict',
     options: [
       {
         optionName: '歌手',
@@ -223,6 +236,20 @@ const nerMarkToolsMockData = [
         optionName: '歌名',
         color: '#1890ff',
         extraInfo: ['十年', '红玫瑰', '告白气球'],
+      },
+    ],
+  },
+];
+
+const splitMarkToolsMockData = [
+  {
+    classifyName: '句子切分',
+    multiple: false,
+    saveType: 'nomal',
+    options: [
+      {
+        optionName: '句子',
+        color: '#1890ff',
       },
     ],
   },
@@ -423,6 +450,8 @@ function getMarkTools(req, res, u) {
     res.json(nerMarkToolsMockData[0]);
   } else if (params.projectId.indexOf('match') === 0) {
     res.json(matchMarkToolsMockData[0]);
+  } else if (params.projectId.indexOf('split') === 0) {
+    res.json(splitMarkToolsMockData[0]);
   } else {
     res.json(markToolsMockData[0]);
   }

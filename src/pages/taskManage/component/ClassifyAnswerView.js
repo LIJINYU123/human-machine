@@ -37,9 +37,12 @@ class ClassifyAnswerView extends Component {
   componentDidMount() {
     const roleId = localStorage.getItem('RoleID');
     const { dispatch } = this.props;
+    const { basicInfo } = this.state;
     dispatch({
       type: 'textMark/fetchQuestion',
       payload: {
+        projectId: basicInfo.projectId,
+        taskId: basicInfo.taskId,
         roleId,
       },
     });
@@ -56,51 +59,69 @@ class ClassifyAnswerView extends Component {
 
   handleNextQuestion = () => {
     const roleId = localStorage.getItem('RoleID');
+    const { basicInfo } = this.state;
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
     const values = getFieldsValue();
     dispatch({
       type: 'textMark/fetchNext',
       payload: {
+        projectId: basicInfo.projectId,
+        taskId: basicInfo.taskId,
         roleId,
         dataId: questionInfo.dataId,
         ...values,
       },
       callback: () => {
         const { questionInfo } = this.props;
-        setFieldsValue({
-          labelResult: questionInfo.labelResult,
-          reviewResult: questionInfo.reviewResult,
-          remark: questionInfo.remark,
-          invalid: questionInfo.invalid,
-        });
+        if (roleId === 'labeler') {
+          setFieldsValue({
+            labelResult: questionInfo.labelResult,
+            invalid: questionInfo.invalid,
+          });
+        } else if (roleId === 'inspector') {
+          setFieldsValue({
+            labelResult: questionInfo.labelResult,
+            reviewResult: questionInfo.reviewResult,
+            remark: questionInfo.remark,
+          });
+        }
       },
     });
   };
 
   handlePrevQuestion = () => {
     const roleId = localStorage.getItem('RoleID');
+    const { basicInfo } = this.state;
     const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
     dispatch({
       type: 'textMark/fetchPrev',
       payload: {
+        projectId: basicInfo.projectId,
+        taskId: basicInfo.taskId,
         roleId,
         dataId: questionInfo.dataId,
       },
       callback: () => {
         const { questionInfo } = this.props;
-        setFieldsValue({
-          labelResult: questionInfo.labelResult,
-          reviewResult: questionInfo.reviewResult,
-          remark: questionInfo.remark,
-          invalid: questionInfo.invalid,
-        });
+        if (roleId === 'labeler') {
+          setFieldsValue({
+            labelResult: questionInfo.labelResult,
+            invalid: questionInfo.invalid,
+          });
+        } else if (roleId === 'inspector') {
+          setFieldsValue({
+            labelResult: questionInfo.labelResult,
+            reviewResult: questionInfo.reviewResult,
+            remark: questionInfo.remark,
+          });
+        }
       },
     });
   };
 
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
-    const { basicInfo, markTool, markAuthority, reviewAuthority } = this.state;
+    const { basicInfo, markTool, reviewAuthority } = this.state;
     const action = (
       <Fragment>
         <Button icon="check">提交质检</Button>
@@ -148,11 +169,24 @@ class ClassifyAnswerView extends Component {
         <Card bordered={false}>
           <Form {...formItemLayout}>
             <Row>
-              <Col md={12} sm={24}>
-                <Form.Item label={AnswerModeLabels.text} {...formItemLayout2}>
-                  <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : '' } style={{ width: '80%' }} autoSize/>
-                </Form.Item>
-              </Col>
+              {
+                questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence') &&
+                <Col md={12} sm={24}>
+                  <Form.Item label={AnswerModeLabels.text} {...formItemLayout2}>
+                    <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : '' } style={{ width: '80%' }} autoSize/>
+                  </Form.Item>
+                </Col>
+              }
+              {
+                questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence1') &&
+                <Fragment>
+                  <Col md={12} sm={24}>
+                    <Form.Item label={AnswerModeLabels.text1} {...formItemLayout2}>
+                      <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence1 : '' } style={{ width: '80%' }} autoSize/>
+                    </Form.Item>
+                  </Col>
+                </Fragment>
+              }
               <Col md={12} sm={24}>
                 <Form.Item label="标注结果" {...formItemLayout2}>
                   <Fragment>
@@ -163,6 +197,12 @@ class ClassifyAnswerView extends Component {
                 </Form.Item>
               </Col>
             </Row>
+            {
+              questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence2') &&
+              <Form.Item label={AnswerModeLabels.text2}>
+                <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence2 : '' } style={{ width: '80%' }} autoSize/>
+              </Form.Item>
+            }
             <Form.Item label={markTool.classifyName}>
               {
                 getFieldDecorator('labelResult', {

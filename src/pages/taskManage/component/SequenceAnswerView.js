@@ -10,15 +10,41 @@ import ItemData from '../map';
 const { TextArea } = Input;
 const { AnswerModeLabels } = ItemData;
 
+@connect(({ textMark }) => ({
+  questionInfo: textMark.questionInfo,
+}))
 class SequenceAnswerView extends Component {
   state = {
     basicInfo: undefined,
+    markTool: undefined,
+    markAuthority: false,
+    reviewAuthority: false,
   };
 
   componentWillMount() {
     const { location } = this.props;
+    const privilegeStr = localStorage.getItem('Privileges');
+    const privileges = JSON.parse(privilegeStr);
+    const { dataMark } = privileges;
     this.setState({
       basicInfo: location.state.basicInfo,
+      markTool: location.state.markTool,
+      markAuthority: dataMark.includes('mark'),
+      reviewAuthority: dataMark.includes('review'),
+    });
+  }
+
+  componentDidMount() {
+    const roleId = localStorage.getItem('RoleID');
+    const { dispatch } = this.props;
+    const { basicInfo } = this.state;
+    dispatch({
+      type: 'textMark/fetchQuestion',
+      payload: {
+        projectId: basicInfo.projectId,
+        taskId: basicInfo.taskId,
+        roleId,
+      },
     });
   }
 
@@ -27,6 +53,68 @@ class SequenceAnswerView extends Component {
       pathname: '/task-manage/my-task/sequence-mark',
       state: {
         taskInfo: this.state.basicInfo,
+      },
+    });
+  };
+
+  handleNextQuestion = () => {
+    const roleId = localStorage.getItem('RoleID');
+    const { basicInfo } = this.state;
+    const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
+    const values = getFieldsValue();
+    dispatch({
+      type: 'textMark/fetchNext',
+      payload: {
+        projectId: basicInfo.projectId,
+        taskId: basicInfo.taskId,
+        roleId,
+        dataId: questionInfo.dataId,
+        ...values,
+      },
+      callback: () => {
+        const { questionInfo } = this.props;
+        if (roleId === 'labeler') {
+          setFieldsValue({
+            labelResult: questionInfo.labelResult,
+            invalid: questionInfo.invalid,
+          });
+        } else if (roleId === 'inspector') {
+          setFieldsValue({
+            labelResult: questionInfo.labelResult,
+            reviewResult: questionInfo.reviewResult,
+            remark: questionInfo.remark,
+          });
+        }
+      },
+    });
+  };
+
+  handlePrevQuestion = () => {
+    const roleId = localStorage.getItem('RoleID');
+    const { basicInfo } = this.state;
+    const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
+    dispatch({
+      type: 'textMark/fetchPrev',
+      payload: {
+        projectId: basicInfo.projectId,
+        taskId: basicInfo.taskId,
+        roleId,
+        dataId: questionInfo.dataId,
+      },
+      callback: () => {
+        const { questionInfo } = this.props;
+        if (roleId === 'labeler') {
+          setFieldsValue({
+            labelResult: questionInfo.labelResult,
+            invalid: questionInfo.invalid,
+          });
+        } else if (roleId === 'inspector') {
+          setFieldsValue({
+            labelResult: questionInfo.labelResult,
+            reviewResult: questionInfo.reviewResult,
+            remark: questionInfo.remark,
+          });
+        }
       },
     });
   };
@@ -49,8 +137,8 @@ class SequenceAnswerView extends Component {
   };
 
   render() {
-    const { form: { getFieldDecorator } } = this.props;
-    const { basicInfo } = this.state;
+    const { form: { getFieldDecorator }, questionInfo } = this.props;
+    const { basicInfo, markTool, reviewAuthority } = this.state;
 
     const action = (
       <Fragment>
@@ -61,9 +149,9 @@ class SequenceAnswerView extends Component {
 
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
-        <Descriptions.Item label="已答题数">100</Descriptions.Item>
-        <Descriptions.Item label="剩余题数">50</Descriptions.Item>
-        <Descriptions.Item label="无效题数">10</Descriptions.Item>
+        <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
+        <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
+        <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
       </Descriptions>
     );
 
@@ -98,31 +186,51 @@ class SequenceAnswerView extends Component {
       >
         <Card bordered={false}>
           <Form>
-            <Form.Item label="句式切分" {...formItemLayout}>
+            <Form.Item label={markTool.classifyName} {...formItemLayout}>
+              <Fragment>
+                { markTool.options.map(option => <Tag color="blue">{option.optionName}</Tag>) }
+              </Fragment>
               <Tag color="blue">句子</Tag>
             </Form.Item>
             <Row>
               <Col md={12} sm={24}>
                 <Form.Item label={AnswerModeLabels.text} {...formItemLayout2}>
-                  <TextArea
-                    id="textArea"
-                    value="中新网客户端北京4月16日电(左宇坤)两天的周末，一觉醒来大半天没了，再来一觉周末过去了。假期不够用？想多来一点？近日，多地提出推行每周2.5天假期，“周末plus”真的要来了。为了促进疫情后消费市场复苏，4月11日，南京市召开战疫情扩内需稳增长“四新”行动动员发布会，提出“培育新消费，打造夜间经济品牌，试行每周2.5天休息制度”。" autoSize onClick={this.handleClick}
-                  />
+                  <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : '' } style={{ width: '80%' }} autoSize/>
                 </Form.Item>
               </Col>
-              <Col md={{ span: 10, offset: 2 }} sm={24}>
+              <Col md={12} sm={24}>
                 <Table bordered/>
               </Col>
             </Row>
-            <Form.Item label={AnswerModeLabels.reviewResult} {...formItemLayout}>
-              <Radio.Group>
-                <Radio.Button value="approve">通过</Radio.Button>
-                <Radio.Button value="reject">拒绝</Radio.Button>
-              </Radio.Group>
-            </Form.Item>
-            <Form.Item label={AnswerModeLabels.remark} {...formItemLayout}>
-              <Input style={{ width: '80%' }}/>
-            </Form.Item>
+            {
+              questionInfo.hasOwnProperty('question') &&
+              <Form.Item label={AnswerModeLabels.question} {...formItemLayout2}>
+                <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.question : '' } style={{ width: '80%' }} autoSize/>
+              </Form.Item>
+            }
+            {
+              reviewAuthority &&
+              <Fragment>
+                <Form.Item label={AnswerModeLabels.reviewResult} {...formItemLayout}>
+                  {
+                    getFieldDecorator('reviewResult', {
+                      initialValue: questionInfo.reviewResult,
+                    })(
+                      <Radio.Group>
+                        <Radio.Button value="approve">通过</Radio.Button>
+                        <Radio.Button value="reject">拒绝</Radio.Button>
+                      </Radio.Group>)
+                  }
+                </Form.Item>
+                <Form.Item label={AnswerModeLabels.remark} {...formItemLayout}>
+                  {
+                    getFieldDecorator('remark', {
+                      initialValue: questionInfo.remark,
+                    })(<TextArea style={{ width: '80%' }} autoSize/>)
+                  }
+                </Form.Item>
+              </Fragment>
+            }
             <Form.Item
               wrapperCol={{
                 xs: {
@@ -137,7 +245,14 @@ class SequenceAnswerView extends Component {
             >
               <Button>上一题</Button>
               <Button type="primary" style={{ marginLeft: '16px' }}>下一题</Button>
-              <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>
+              {
+                !reviewAuthority &&
+                getFieldDecorator('invalid', {
+                  initialValue: questionInfo.invalid,
+                  valuePropName: 'checked',
+                })(
+                  <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>)
+              }
             </Form.Item>
           </Form>
         </Card>

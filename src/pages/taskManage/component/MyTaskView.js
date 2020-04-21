@@ -132,14 +132,14 @@ class MyTaskView extends Component {
   });
 
   handleJumpToMarkView = task => {
-    if (['textClassify', 'textMatch'].includes(task.labelType)) {
+    if (task.labelType === 'textClassify') {
       router.push({
         pathname: '/task-manage/my-task/text-mark',
         state: {
           taskInfo: task,
         },
       });
-    } else if (task.labelType === 'ner') {
+    } else if (task.labelType === 'sequenceLabeling') {
       router.push({
         pathname: '/task-manage/my-task/sequence-mark',
         state: {
@@ -172,7 +172,7 @@ class MyTaskView extends Component {
         ...this.getColumnSearchProps('projectName'),
       },
       {
-        title: '标注类型',
+        title: '标注工具',
         dataIndex: 'labelType',
         render: val => labelTypeName[val],
         filters: labelTypeFilters,
