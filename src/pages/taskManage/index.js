@@ -33,10 +33,12 @@ class TaskCenter extends Component {
     filteredInfo: null,
     searchText: '',
     searchedColumn: '',
+    roleId: '',
   };
 
   componentDidMount() {
     const { dispatch } = this.props;
+    const roleId = localStorage.getItem('RoleID');
     const params = {
       sorter: 'updatedTime_descend',
     };
@@ -46,6 +48,9 @@ class TaskCenter extends Component {
     });
     dispatch({
       type: 'detail/fetchTaskNumber',
+    });
+    this.setState({
+      roleId,
     });
   }
 
@@ -146,10 +151,11 @@ class TaskCenter extends Component {
   };
 
   handleJumptoInProgress = () => {
+    const { roleId } = this.state;
     router.push({
       pathname: '/task-manage/my-task',
       state: {
-        status: 'labeling,reject',
+        status: roleId === 'labeler' ? 'labeling,reject' : 'review',
       },
     });
   };
@@ -181,7 +187,7 @@ class TaskCenter extends Component {
   };
 
   render() {
-    const { data, inProgressNum, completeNum, loading } = this.props;
+    const { data, inProgressNum, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 

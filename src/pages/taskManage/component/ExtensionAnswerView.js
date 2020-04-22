@@ -29,7 +29,6 @@ class ExtensionAnswerView extends Component {
   }
 
   componentDidMount() {
-    const roleId = localStorage.getItem('RoleID');
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
@@ -37,7 +36,6 @@ class ExtensionAnswerView extends Component {
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
-        roleId,
       },
     });
   }
@@ -52,8 +50,7 @@ class ExtensionAnswerView extends Component {
   };
 
   handleNextQuestion = () => {
-    const roleId = localStorage.getItem('RoleID');
-    const { basicInfo } = this.state;
+    const { basicInfo, roleId } = this.state;
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
     const values = getFieldsValue();
     dispatch({
@@ -61,7 +58,6 @@ class ExtensionAnswerView extends Component {
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
-        roleId,
         dataId: questionInfo.dataId,
         ...values,
       },
@@ -84,15 +80,13 @@ class ExtensionAnswerView extends Component {
   };
 
   handlePrevQuestion = () => {
-    const roleId = localStorage.getItem('RoleID');
-    const { basicInfo } = this.state;
+    const { basicInfo, roleId } = this.state;
     const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
     dispatch({
       type: 'extensionMark/fetchPrev',
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
-        roleId,
         dataId: questionInfo.dataId,
       },
       callback: () => {
@@ -119,7 +113,6 @@ class ExtensionAnswerView extends Component {
     const prevLabelResult = values.labelResult;
     if (values.extensionText !== '') {
       prevLabelResult.push(values.extensionText);
-      console.log(prevLabelResult);
       setFieldsValue({
         labelResult: prevLabelResult,
         extensionText: '',

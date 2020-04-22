@@ -153,18 +153,6 @@ const taskMockData = [
     receiveTime: '2020-04-20 10:00:00',
     owner: 'SYECO',
   },
-  {
-    projectId: '1',
-    projectName: '文本分类456',
-    taskId: '10',
-    taskName: '任务10',
-    labelType: 'textClassify',
-    questionNum: 100,
-    schedule: 100,
-    status: 'complete',
-    receiveTime: '2020-02-27 10:00:00',
-    owner: 'SYDEV',
-  },
 ];
 
 const markToolsMockData = [
@@ -413,7 +401,7 @@ function getMyTask(req, res, u) {
   }
   const params = parse(url, true).query;
 
-  let dataSource = taskMockData.filter(item => item.owner === userId);
+  let dataSource = taskMockData;
   if (params.sorter) {
     const s = params.sorter.split('_');
     dataSource = dataSource.sort((prev, next) => {
@@ -475,9 +463,15 @@ function getMyTask(req, res, u) {
 
 function getMyTaskNumber(req, res) {
   const userId = req.header('UserID');
+  const roleId = req.header('RoleID');
   let filterDataSource;
   const dataSource = taskMockData.filter(item => item.owner === userId);
-  filterDataSource = dataSource.filter(item => ['labeling', 'reject'].includes(item.status));
+  if (roleId === 'labeler') {
+    filterDataSource = dataSource.filter(item => ['labeling', 'reject'].includes(item.status));
+  } else {
+    filterDataSource = dataSource.filter(item => item.status === 'review');
+  }
+
   const inProgressNum = filterDataSource.length;
   filterDataSource = dataSource.filter(item => item.status === 'complete');
   const completeNum = filterDataSource.length;

@@ -31,7 +31,15 @@ class MyTaskView extends Component {
     filteredInfo: {},
     searchText: '',
     searchedColumn: '',
+    roleId: '',
   };
+
+  componentWillMount() {
+    const roleId = localStorage.getItem('RoleID');
+    this.setState({
+      roleId,
+    });
+  }
 
   componentDidMount() {
     const { dispatch, location } = this.props;
@@ -158,6 +166,7 @@ class MyTaskView extends Component {
 
   render() {
     const { data, loading } = this.props;
+    const { roleId } = this.state;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -210,7 +219,7 @@ class MyTaskView extends Component {
       {
         title: '操作',
         render: (_, task) => (
-          <a onClick={() => this.handleJumpToMarkView(task)}>标注</a>
+          <a onClick={() => this.handleJumpToMarkView(task)}>{ roleId === 'labeler' ? '标注' : '质检' }</a>
         ),
       },
     ];

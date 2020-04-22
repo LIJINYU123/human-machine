@@ -1492,8 +1492,9 @@ function getOneTextQuestion(req, res, u) {
 }
 
 function getNextTextQuestion(req, res, u, b) {
+  const roleId = req.get('RoleID');
   const body = (b && b.body) || req.body;
-  const { taskId, dataId, roleId } = body;
+  const { taskId, dataId } = body;
   let response = {};
   let textMockData = [];
   if (taskId.indexOf('match') === 0) {

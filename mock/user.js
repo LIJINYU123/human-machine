@@ -2,15 +2,41 @@ function getFakeCaptcha(req, res) {
   return res.json('captcha-xxx');
 } // 代码中会兼容本地 service mock 以及部署站点的静态数据
 
+function getCurrentUser(req, res) {
+  const userId = req.get('UserID');
+  if (userId === 'SYECO') {
+    res.json(
+      {
+        name: 'SYECO',
+        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        userid: 'SYECO',
+        unreadCount: 8,
+        notifyCount: 9,
+      });
+  } else if (userId === 'SYDEV') {
+    res.json(
+      {
+        name: 'SYECO',
+        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        userid: 'SYECO',
+        unreadCount: 8,
+        notifyCount: 9,
+      });
+  } else {
+    res.json(
+      {
+        name: '李锦宇',
+        avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
+        userid: 'SY0111',
+        unreadCount: 8,
+        notifyCount: 9,
+      });
+  }
+}
+
 export default {
   // 支持值为 Object 和 Array
-  'GET /api/currentUser': {
-    name: '李锦宇',
-    avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-    userid: 'SY0111',
-    unreadCount: 8,
-    notifyCount: 9,
-  },
+  'GET /api/currentUser': getCurrentUser,
   // GET POST 可省略
   'GET /api/users': [
     {

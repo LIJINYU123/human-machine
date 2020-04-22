@@ -30,7 +30,6 @@ class ClassifyAnswerView extends Component {
   }
 
   componentDidMount() {
-    const roleId = localStorage.getItem('RoleID');
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
@@ -38,7 +37,6 @@ class ClassifyAnswerView extends Component {
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
-        roleId,
       },
     });
   }
@@ -53,8 +51,7 @@ class ClassifyAnswerView extends Component {
   };
 
   handleNextQuestion = () => {
-    const roleId = localStorage.getItem('RoleID');
-    const { basicInfo } = this.state;
+    const { basicInfo, roleId } = this.state;
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
     const values = getFieldsValue();
     dispatch({
@@ -62,7 +59,6 @@ class ClassifyAnswerView extends Component {
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
-        roleId,
         dataId: questionInfo.dataId,
         ...values,
       },
@@ -85,15 +81,13 @@ class ClassifyAnswerView extends Component {
   };
 
   handlePrevQuestion = () => {
-    const roleId = localStorage.getItem('RoleID');
-    const { basicInfo } = this.state;
+    const { basicInfo, roleId } = this.state;
     const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
     dispatch({
       type: 'textMark/fetchPrev',
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
-        roleId,
         dataId: questionInfo.dataId,
       },
       callback: () => {

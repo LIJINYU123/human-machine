@@ -63,7 +63,8 @@ const request = extend({
 
 request.interceptors.request.use(async (url, options) => {
   const token = localStorage.getItem('Authorization');
-  const userid = localStorage.getItem('UserID');
+  const userId = localStorage.getItem('UserID');
+  const roleId = localStorage.getItem('RoleID');
   const departmentId = localStorage.getItem('DepartmentId');
 
   if ((url.indexOf('login/account') !== -1 || url.indexOf('register') !== -1 || url.indexOf('reset/password') !== -1) && !token) {
@@ -79,7 +80,7 @@ request.interceptors.request.use(async (url, options) => {
     };
   }
 
-  if (token && userid) {
+  if (token && userId && roleId) {
     const { headers } = options;
     return {
       url,
@@ -87,7 +88,8 @@ request.interceptors.request.use(async (url, options) => {
         headers: {
           ...headers,
           Authorization: token,
-          UserID: userid,
+          UserID: userId,
+          RoleID: roleId,
           DepartmentId: departmentId,
         },
       },

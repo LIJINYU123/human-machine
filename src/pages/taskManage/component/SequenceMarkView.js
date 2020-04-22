@@ -310,8 +310,13 @@ class SequenceMarkView extends Component {
 
     const extraContent = (
       <Fragment>
-        <span style={{ marginRight: '16px' }}>质检率：{`${checkRate}%`}</span>
-        <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
+        {
+          roleId === 'inspector' &&
+          <Fragment>
+            <span style={{ marginRight: '16px' }}>质检率：{`${checkRate}%`}</span>
+            <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
+          </Fragment>
+        }
         <Radio.Group defaultValue="overview" style={{ marginRight: '16px' }}>
           <Radio.Button value="overview">概览模式</Radio.Button>
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
