@@ -319,13 +319,6 @@ class SequenceMarkView extends Component {
 
     const columns = [
       {
-        title: '文本',
-        dataIndex: 'sentence',
-        ellipsis: true,
-        onCell: this.handleClickCell,
-        ...this.getColumnSearchProps('sentence'),
-      },
-      {
         title: '标注结果',
         dataIndex: 'labelResult',
         ellipsis: true,
@@ -396,6 +389,32 @@ class SequenceMarkView extends Component {
         },
       },
     ];
+
+    if (data.list.length && data.list[0].data.hasOwnProperty('sentence')) {
+      columns.splice(0, 0, {
+        title: '文本',
+        dataIndex: 'sentence',
+        ellipsis: true,
+        onCell: this.handleClickCell,
+        ...this.getColumnSearchProps('sentence'),
+      });
+    } else {
+      columns.splice(0, 0, {
+          title: '文本1',
+          dataIndex: 'sentence1',
+          ellipsis: true,
+          onCell: this.handleClickCell,
+          ...this.getColumnSearchProps('sentence1'),
+        });
+
+      columns.splice(1, 0, {
+        title: '文本2',
+        dataIndex: 'sentence2',
+        ellipsis: true,
+        onCell: this.handleClickCell,
+        ...this.getColumnSearchProps('sentence2'),
+      });
+    }
 
     return (
       <PageHeaderWrapper

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Checkbox, Descriptions, Form, Input, Radio, Tag, Row, Col, Table, Popover } from 'antd';
+import { Button, Card, Checkbox, Descriptions, Form, Input, Radio, Tag, Row, Col, Table, Popover, ConfigProvider, Empty } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import WordEntryModalView from './WordEntryModalView';
 import router from 'umi/router';
@@ -130,11 +130,19 @@ class SequenceAnswerView extends Component {
     // eslint-disable-next-line max-len
     const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
     // eslint-disable-next-line max-len
-    if (questionInfo.data.sentence.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd).length > 1) {
+    if (questionInfo.data.hasOwnProperty('sentence') && questionInfo.data.sentence.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd).length > 1) {
       this.setState({
         popoverVisible: true,
         // eslint-disable-next-line max-len
         word: questionInfo.data.sentence.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd),
+        startIndex: word.anchorNode.firstChild.selectionStart,
+        endIndex: word.anchorNode.firstChild.selectionEnd,
+      })
+    } else if (questionInfo.data.hasOwnProperty('sentence1') && questionInfo.data.sentence1.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd).length > 1) {
+      this.setState({
+        popoverVisible: true,
+        // eslint-disable-next-line max-len
+        word: questionInfo.data.sentence1.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd),
         startIndex: word.anchorNode.firstChild.selectionStart,
         endIndex: word.anchorNode.firstChild.selectionEnd,
       })
@@ -272,7 +280,7 @@ class SequenceAnswerView extends Component {
       {
         title: '存储方式',
         dataIndex: 'saveType',
-        width: 100,
+        width: 150,
         render: (val, record) => {
           if (val === 'wordEntry') {
             return '词条名';
@@ -332,20 +340,22 @@ class SequenceAnswerView extends Component {
                 </Col>
               }
               <Col md={12} sm={24}>
-                <Form.Item>
-                  {
-                    getFieldDecorator('labelResult', {
-                      initialValue: questionInfo.labelResult,
-                      valuePropName: 'dataSource',
-                    })(
-                      <Table
-                        size="small"
-                        columns={markTool.saveType === 'nomal' ? columns : dictColumns}
-                        pagination={false}
-                        bordered
-                      />)
-                  }
-                </Form.Item>
+                <ConfigProvider renderEmpty={() => <Empty imageStyle={{ height: 10 }} />}>
+                  <Form.Item>
+                    {
+                      getFieldDecorator('labelResult', {
+                        initialValue: questionInfo.labelResult,
+                        valuePropName: 'dataSource',
+                      })(
+                        <Table
+                          size="small"
+                          columns={markTool.saveType === 'nomal' ? columns : dictColumns}
+                          pagination={false}
+                          bordered
+                        />)
+                    }
+                  </Form.Item>
+                </ConfigProvider>
               </Col>
             </Row>
             {

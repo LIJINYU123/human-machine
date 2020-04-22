@@ -18,7 +18,12 @@ const SequenceMark = {
     * fetchSequenceData({ payload }, { call, put }) {
       const response = yield call(queryLabelData, payload);
       response.list.forEach(item => {
-        item.sentence = item.data.sentence;
+        if (Object.keys(item.data).length === 1) {
+          item.sentence = item.data.sentence;
+        } else {
+          item.sentence1 = item.data.sentence1;
+          item.sentence2 = item.data.sentence2;
+        }
       });
       yield put({
         type: 'sequenceData',

@@ -875,6 +875,45 @@ const extensionLabelData = [
   },
 ];
 
+const readingLabelData = [
+  {
+    dataId: '1',
+    data: { sentence1: '4月21日晚间，贵州茅台发布了2019年年度报告，贵州茅台实现营业总收入888.54亿元，同比增长15.10%；实现净利润412.06亿元，同比增长17.05%。其中，茅台酒创造营收758.02亿元，其他系列酒则实现营收95.42亿元。公司营收、净利均再创历史新高。公司拟每股派发现金红利17.0元（含税），分红比例小幅提升至51.9%。',
+            sentence2: '贵州茅台2019年的净利润是多少？' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '2',
+    data: { sentence1: '腾讯证券4月22日讯，流媒体视频服务巨头奈飞（NASDAQ:NFLX）在美股市场周二收盘（北京时间周三凌晨）以后公布了该公司的2020财年第一季度财报。这份财报显示，奈飞第一季度营收为57.68亿美元，与去年同期的45.21亿美元相比增长27.6%；净利润为7.09亿美元，与去年同期3.44亿美元相比增长一倍以上；每股摊薄收益为1.57美元，高于去年同期的0.76美元。',
+            sentence2: '奈非第一季度营收是多少？' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '3',
+    data: { sentence1: '按业务部门划分：来自于美国和加拿大流媒体视频服务的营收为27.03亿美元，相比之下去年同期为22.57亿美元，来自于欧洲、中东和非洲流媒体视频服务的营收为17.23亿美元，相比之下去年同期为12.33亿美元',
+            sentence2: '来自美国和加拿大的服务营收是多少？' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '4',
+    data: { sentence1: '腾讯证券4月22日讯，“阅后即焚”通信应用Snapchat的母公司Snap（NYSE:SNAP）在美股市场周二收盘以后（北京时间周三凌晨）公布了该公司截至3月31日的2020财年第一季度财报。这份报告显示，Snap第一季度营收为4.625亿美元，与去年同期的3.204亿美元相比增长44%',
+            sentence2: 'SnapChat第一季度营收是多少？' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+];
+
 let templatesMockData = [
   {
     templateId: Mock.Random.string(5),
@@ -1182,6 +1221,8 @@ function getLabelData(req, res, u) {
     dataSource = matchLabelData;
   } else if (params.taskId.indexOf('split') === 0) {
     dataSource = splitLabelData;
+  } else if (params.taskId.indexOf('reading') === 0) {
+    dataSource = readingLabelData;
   } else if (params.taskId.indexOf('extension') === 0) {
     dataSource = extensionLabelData;
   } else {
@@ -1381,6 +1422,12 @@ function saveTextMarkResult(req, res, u, b) {
         item.labelResult = labelResult;
       }
     });
+  } else if (taskId.indexOf('reading') === 0) {
+    readingLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.labelResult = labelResult;
+      }
+    });
   } else {
     labelMockData.forEach(item => {
       if (item.dataId === dataId) {
@@ -1394,11 +1441,26 @@ function saveTextMarkResult(req, res, u, b) {
 
 function deleteTextMarkResult(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  nerLabelData.forEach(item => {
-    if (item.dataId === body.dataId) {
-      item.labelResult.splice(body.index, 1);
-    }
-  });
+  const { taskId, dataId } = body;
+  if (taskId.indexOf('ner') === 0) {
+    nerLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.labelResult.splice(body.index, 1);
+      }
+    });
+  } else if (taskId.indexOf('split') === 0) {
+    splitLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.labelResult.splice(body.index, 1);
+      }
+    });
+  } else if (taskId.indexOf('reading') === 0) {
+    readingLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.labelResult.splice(body.index, 1);
+      }
+    });
+  }
   return res.json({ status: 'ok', message: '删除成功' });
 }
 
@@ -1419,6 +1481,8 @@ function getOneTextQuestion(req, res, u) {
     [response] = splitLabelData;
   } else if (params.taskId.indexOf('extension') === 0) {
     [response] = extensionLabelData;
+  } else if (params.taskId.indexOf('reading') === 0) {
+    [response] = readingLabelData;
   } else {
     [response] = labelMockData;
   }
@@ -1440,6 +1504,8 @@ function getNextTextQuestion(req, res, u, b) {
     textMockData = splitLabelData;
   } else if (taskId.indexOf('extension') === 0) {
     textMockData = extensionLabelData;
+  } else if (taskId.indexOf('reading') === 0) {
+    [response] = readingLabelData;
   } else {
     textMockData = labelMockData;
   }
@@ -1496,6 +1562,8 @@ function getPrevTextQuestion(req, res, u, b) {
     textMockData = splitLabelData;
   } else if (taskId.indexOf('extension') === 0) {
     textMockData = extensionLabelData;
+  } else if (taskId.indexOf('reading') === 0) {
+    [response] = readingLabelData;
   } else {
     textMockData = labelMockData;
   }

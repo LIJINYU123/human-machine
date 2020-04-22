@@ -142,10 +142,22 @@ const taskMockData = [
     owner: 'SYECO',
   },
   {
+    projectId: 'reading_project1',
+    projectName: '阅读理解20200422',
+    taskId: 'reading9',
+    taskName: '任务9',
+    labelType: 'sequenceLabeling',
+    questionNum: 500,
+    schedule: 60,
+    status: 'labeling',
+    receiveTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+    owner: 'SYECO',
+  },
+  {
     projectId: '1',
     projectName: '文本分类456',
-    taskId: '9',
-    taskName: '任务9',
+    taskId: '10',
+    taskName: '任务10',
     labelType: 'textClassify',
     questionNum: 100,
     schedule: 100,
@@ -231,7 +243,7 @@ const nerMarkToolsMockData = [
     options: [
       {
         optionName: '歌手',
-        color: '#1890ff',
+        color: '#006d75',
         extraInfo: [
           '周杰伦',
           '林俊杰',
@@ -239,14 +251,14 @@ const nerMarkToolsMockData = [
       },
       {
         optionName: '景点',
-        color: '#1890ff',
+        color: '#a0d911',
         extraInfo: [
           '外滩', '长城',
         ],
       },
       {
         optionName: '歌名',
-        color: '#1890ff',
+        color: '#faad14',
         extraInfo: ['十年', '红玫瑰', '告白气球'],
       },
     ],
@@ -262,6 +274,20 @@ const splitMarkToolsMockData = [
       {
         optionName: '句子',
         color: '#1890ff',
+      },
+    ],
+  },
+];
+
+const readingMarkToolsMockData = [
+  {
+    classifyName: '阅读理解',
+    multiple: false,
+    saveType: 'nomal',
+    options: [
+      {
+        optionName: '答案',
+        color: '#52c41a',
       },
     ],
   },
@@ -473,6 +499,8 @@ function getMarkTools(req, res, u) {
     res.json(matchMarkToolsMockData[0]);
   } else if (params.projectId.indexOf('split') === 0) {
     res.json(splitMarkToolsMockData[0]);
+  } else if (params.projectId.indexOf('reading') === 0) {
+    res.json(readingMarkToolsMockData[0]);
   } else if (params.projectId.indexOf('extension') === 0) {
     res.json(extensionMarkToolsMockData[0]);
   } else {
