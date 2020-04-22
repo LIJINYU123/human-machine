@@ -23,20 +23,15 @@ class SequenceAnswerView extends Component {
     startIndex: '',
     endIndex: '',
     modalVisible: false,
-    markAuthority: false,
-    reviewAuthority: false,
+    roleId: '',
   };
 
   componentWillMount() {
     const { location } = this.props;
-    const privilegeStr = localStorage.getItem('Privileges');
-    const privileges = JSON.parse(privilegeStr);
-    const { dataMark } = privileges;
     this.setState({
       basicInfo: location.state.basicInfo,
       markTool: location.state.markTool,
-      markAuthority: dataMark.includes('mark'),
-      reviewAuthority: dataMark.includes('review'),
+      roleId: location.state.roleId,
     });
   }
 
@@ -207,11 +202,17 @@ class SequenceAnswerView extends Component {
 
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
-    const { basicInfo, markTool, reviewAuthority, popoverVisible, modalVisible, optionName } = this.state;
+    const { basicInfo, markTool, popoverVisible, modalVisible, optionName, roleId } = this.state;
 
     const action = (
       <Fragment>
-        <Button icon="check">提交质检</Button>
+        { roleId === 'labeler' && <Button icon="check">提交质检</Button> }
+        { roleId === 'inspector' &&
+          <Button.Group>
+            <Button icon="close">驳回</Button>
+            <Button icon="check">通过</Button>
+          </Button.Group>
+        }
         <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.goBackToSequenceMark}>返回</Button>
       </Fragment>
     );
@@ -365,7 +366,7 @@ class SequenceAnswerView extends Component {
               </Form.Item>
             }
             {
-              reviewAuthority &&
+              roleId === 'inspector' &&
               <Fragment>
                 <Form.Item label={AnswerModeLabels.reviewResult} {...formItemLayout}>
                   {
@@ -402,7 +403,7 @@ class SequenceAnswerView extends Component {
               <Button onClick={this.handlePrevQuestion}>上一题</Button>
               <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
               {
-                !reviewAuthority &&
+                roleId === 'labeler' &&
                 getFieldDecorator('invalid', {
                   initialValue: questionInfo.invalid,
                   valuePropName: 'checked',

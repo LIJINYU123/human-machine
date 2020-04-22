@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Statistic, Form, Row, Col, Descriptions, Input, Checkbox, Radio, Tag } from 'antd';
+import { Button, Card, Statistic, Form, Row, Col, Descriptions, Input, Checkbox, Radio, Tag, Icon } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import TagSelect from '@/components/TagSelect';
 import router from 'umi/router';
@@ -17,20 +17,15 @@ class ClassifyAnswerView extends Component {
   state = {
     basicInfo: undefined,
     markTool: undefined,
-    markAuthority: false,
-    reviewAuthority: false,
+    roleId: '',
   };
 
   componentWillMount() {
     const { location } = this.props;
-    const privilegeStr = localStorage.getItem('Privileges');
-    const privileges = JSON.parse(privilegeStr);
-    const { dataMark } = privileges;
     this.setState({
       basicInfo: location.state.basicInfo,
       markTool: location.state.markTool,
-      markAuthority: dataMark.includes('mark'),
-      reviewAuthority: dataMark.includes('review'),
+      roleId: location.state.roleId,
     });
   }
 
@@ -121,10 +116,16 @@ class ClassifyAnswerView extends Component {
 
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
-    const { basicInfo, markTool, reviewAuthority } = this.state;
+    const { basicInfo, markTool, roleId } = this.state;
     const action = (
       <Fragment>
-        <Button icon="check">提交质检</Button>
+        { roleId === 'labeler' && <Button icon="check">提交质检</Button> }
+        { roleId === 'inspector' &&
+          <Button.Group>
+            <Button icon="close">驳回</Button>
+            <Button icon="check">通过</Button>
+          </Button.Group>
+        }
         <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.goBackToTextMark}>返回</Button>
       </Fragment>
     );
@@ -214,7 +215,7 @@ class ClassifyAnswerView extends Component {
               }
             </Form.Item>
             {
-              reviewAuthority &&
+              roleId === 'inspector' &&
               <Fragment>
                 <Form.Item label={AnswerModeLabels.reviewResult}>
                   {
@@ -251,7 +252,7 @@ class ClassifyAnswerView extends Component {
               <Button onClick={this.handlePrevQuestion}>上一题</Button>
               <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
               {
-                !reviewAuthority &&
+                roleId === 'labeler' &&
                 getFieldDecorator('invalid', {
                   initialValue: questionInfo.invalid,
                   valuePropName: 'checked',

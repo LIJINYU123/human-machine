@@ -21,11 +21,10 @@ class ExtensionAnswerView extends Component {
 
   componentWillMount() {
     const { location } = this.props;
-    const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.basicInfo,
       markTool: location.state.markTool,
-      roleId,
+      roleId: location.state.roleId,
     });
   }
 
@@ -143,7 +142,13 @@ class ExtensionAnswerView extends Component {
     const { basicInfo, markTool, roleId } = this.state;
     const action = (
       <Fragment>
-        <Button icon="check">提交质检</Button>
+        { roleId === 'labeler' && <Button icon="check">提交质检</Button> }
+        { roleId === 'inspector' &&
+          <Button.Group>
+            <Button icon="close">驳回</Button>
+            <Button icon="check">通过</Button>
+          </Button.Group>
+        }
         <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.goBackToExtensionMark}>返回</Button>
       </Fragment>
     );

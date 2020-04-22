@@ -1505,7 +1505,7 @@ function getNextTextQuestion(req, res, u, b) {
   } else if (taskId.indexOf('extension') === 0) {
     textMockData = extensionLabelData;
   } else if (taskId.indexOf('reading') === 0) {
-    [response] = readingLabelData;
+    textMockData = readingLabelData;
   } else {
     textMockData = labelMockData;
   }
@@ -1563,7 +1563,7 @@ function getPrevTextQuestion(req, res, u, b) {
   } else if (taskId.indexOf('extension') === 0) {
     textMockData = extensionLabelData;
   } else if (taskId.indexOf('reading') === 0) {
-    [response] = readingLabelData;
+    textMockData = readingLabelData;
   } else {
     textMockData = labelMockData;
   }

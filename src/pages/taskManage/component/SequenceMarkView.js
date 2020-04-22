@@ -55,12 +55,15 @@ class SequenceMarkView extends Component {
     endIndex: 0,
     remarkPopoverVisible: {},
     inputValue: '',
+    roleId: '',
   };
 
   componentWillMount() {
     const { location } = this.props;
+    const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
+      roleId,
     });
   }
 
@@ -271,16 +274,16 @@ class SequenceMarkView extends Component {
   };
 
   jumpToAnswerMode = () => {
-    const { basicInfo } = this.state;
+    const { basicInfo, roleId } = this.state;
     const { markTool } = this.props;
     router.push({
       pathname: '/task-manage/my-task/answer-mode/sequence',
-      state: { basicInfo, markTool },
+      state: { basicInfo, markTool, roleId },
     });
   };
 
   render() {
-    const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue } = this.state;
+    const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -313,7 +316,16 @@ class SequenceMarkView extends Component {
           <Radio.Button value="overview">概览模式</Radio.Button>
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
-        <Button type="primary" icon="check">提交</Button>
+        {
+          roleId === 'labeler' && <Button type="primary" icon="check">提交质检</Button>
+        }
+        {
+          roleId === 'inspector' &&
+          <Button.Group>
+            <Button icon="close">驳回</Button>
+            <Button icon="check">通过</Button>
+          </Button.Group>
+        }
       </Fragment>
     );
 

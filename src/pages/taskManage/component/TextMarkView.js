@@ -51,12 +51,15 @@ class TextMarkView extends Component {
     popoverVisible: {},
     remarkPopoverVisible: {},
     inputValue: '',
+    roleId: '',
   };
 
   componentWillMount() {
     const { location } = this.props;
+    const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
+      roleId,
     });
   }
 
@@ -244,16 +247,16 @@ class TextMarkView extends Component {
   };
 
   jumpToAnswerMode = () => {
-    const { basicInfo } = this.state;
+    const { basicInfo, roleId } = this.state;
     const { markTool } = this.props;
     router.push({
       pathname: '/task-manage/my-task/answer-mode/classify',
-      state: { basicInfo, markTool },
+      state: { basicInfo, markTool, roleId },
     });
   };
 
   render() {
-    const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue } = this.state;
+    const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate, markTool, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -286,168 +289,107 @@ class TextMarkView extends Component {
           <Radio.Button value="overview">概览模式</Radio.Button>
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
-        <Button type="primary" icon="check">提交</Button>
+        {
+          roleId === 'labeler' && <Button type="primary" icon="check">提交质检</Button>
+        }
+        {
+          roleId === 'inspector' &&
+            <Button.Group>
+              <Button icon="close">驳回</Button>
+              <Button icon="check">通过</Button>
+            </Button.Group>
+        }
       </Fragment>
     );
 
-    let columns = [];
+    const columns = [
+      {
+        title: '标注结果',
+        dataIndex: 'labelResult',
+        render: (val, info) => {
+          if (val.length) {
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={val} />} placement="top">{val.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
+          }
+          return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={[]} />} placement="top"><a>标注</a></Popover>
+        },
+        filters: labelResultFilters,
+        filteredValue: filteredInfo.result || null,
+      },
+      {
+        title: '质检结果',
+        dataIndex: 'reviewResult',
+        render: (val, info) => {
+          let renderItem;
+          if (val === 'approve') {
+            renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
+          } else if (val === 'reject') {
+            renderItem = <span style={{ color: '#f5222d', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
+          } else {
+            renderItem = <a>{reviewLabel[val]}</a>;
+          }
+          return <Popover title="质检" trigger="click" content={<Row>
+            <Col sm={10} xs={24}>
+              <div style={{ position: 'relative', textAlign: 'center' }}>
+                <a onClick={() => this.handleApproveOperate(info.dataId, basicInfo.taskId, info.remark)}>通过</a>
+              </div>
+            </Col>
+            <Col sm={2} xs={24}>
+              <Divider type="vertical"/>
+            </Col>
+            <Col sm={10} xs={24}>
+              <div style={{ position: 'relative', textAlign: 'center' }}>
+                <a onClick={() => this.handleRejectOperate(info.dataId, basicInfo.taskId, info.remark)}>拒绝</a>
+              </div>
+            </Col>
+          </Row>}>{renderItem}</Popover>;
+        },
+        filters: reviewFilters,
+        filteredValue: filteredInfo.reviewResult || null,
+      },
+      {
+        title: '备注',
+        dataIndex: 'remark',
+        render: (val, info) => {
+          let renderItem;
+          if (val === '') {
+            renderItem = <a>备注</a>;
+          } else {
+            renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
+          }
+          return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '450px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
+            <Row gutter={16}>
+              <Col sm={16}>
+                <Input value={inputValue} onChange={this.handleInputChange} onPressEnter={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)} />
+              </Col>
+              <Col sm={4}>
+                <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
+              </Col>
+              <Col sm={4}>
+                <Button onClick={this.handleRemarkCancel}>取消</Button>
+              </Col>
+            </Row>
+          }>{renderItem}</Popover>
+        },
+      },
+    ];
+
     if (data.list.length && data.list[0].data.hasOwnProperty('sentence')) {
-      columns = [
-        {
-          title: '文本',
-          dataIndex: 'sentence',
-          ...this.getColumnSearchProps('sentence'),
-        },
-        {
-          title: '标注结果',
-          dataIndex: 'labelResult',
-          render: (val, info) => {
-            if (val.length) {
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={val} />} placement="top">{val.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
-            }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={[]} />} placement="top"><a>标注</a></Popover>
-          },
-          filters: labelResultFilters,
-          filteredValue: filteredInfo.result || null,
-        },
-        {
-          title: '质检结果',
-          dataIndex: 'reviewResult',
-          render: (val, info) => {
-            let renderItem;
-            if (val === 'approve') {
-              renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
-            } else if (val === 'reject') {
-              renderItem = <span style={{ color: '#f5222d', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
-            } else {
-              renderItem = <a>{reviewLabel[val]}</a>;
-            }
-            return <Popover title="质检" trigger="click" content={<Row>
-              <Col sm={10} xs={24}>
-                <div style={{ position: 'relative', textAlign: 'center' }}>
-                  <a onClick={() => this.handleApproveOperate(info.dataId, basicInfo.taskId, info.remark)}>通过</a>
-                </div>
-              </Col>
-              <Col sm={2} xs={24}>
-                <Divider type="vertical"/>
-              </Col>
-              <Col sm={10} xs={24}>
-                <div style={{ position: 'relative', textAlign: 'center' }}>
-                  <a onClick={() => this.handleRejectOperate(info.dataId, basicInfo.taskId, info.remark)}>拒绝</a>
-                </div>
-              </Col>
-            </Row>}>{renderItem}</Popover>;
-          },
-          filters: reviewFilters,
-          filteredValue: filteredInfo.reviewResult || null,
-        },
-        {
-          title: '备注',
-          dataIndex: 'remark',
-          render: (val, info) => {
-            let renderItem;
-            if (val === '') {
-              renderItem = <a>备注</a>;
-            } else {
-              renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
-            }
-            return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '450px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
-              <Row gutter={16}>
-                <Col sm={16}>
-                  <Input value={inputValue} onChange={this.handleInputChange} onPressEnter={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)} />
-                </Col>
-                <Col sm={4}>
-                  <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
-                </Col>
-                <Col sm={4}>
-                  <Button onClick={this.handleRemarkCancel}>取消</Button>
-                </Col>
-              </Row>
-            }>{renderItem}</Popover>
-          },
-        },
-      ];
+      columns.splice(0, 0, {
+        title: '文本',
+        dataIndex: 'sentence',
+        ...this.getColumnSearchProps('sentence'),
+      });
     } else {
-      columns = [
-        {
-          title: '文本1',
-          dataIndex: 'sentence1',
-          ...this.getColumnSearchProps('sentence1'),
-        },
-        {
-          title: '文本2',
-          dataIndex: 'sentence2',
-          ...this.getColumnSearchProps('sentence2'),
-        },
-        {
-          title: '标注结果',
-          dataIndex: 'labelResult',
-          render: (val, info) => {
-            if (val.length) {
-              return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={val} />} placement="top">{val.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
-            }
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelIds={[]} />} placement="top"><a>标注</a></Popover>
-          },
-          filters: labelResultFilters,
-          filteredValue: filteredInfo.result || null,
-        },
-        {
-          title: '质检结果',
-          dataIndex: 'reviewResult',
-          render: (val, info) => {
-            let renderItem;
-            if (val === 'approve') {
-              renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
-            } else if (val === 'reject') {
-              renderItem = <span style={{ color: '#f5222d', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
-            } else {
-              renderItem = <a>{reviewLabel[val]}</a>;
-            }
-            return <Popover title="质检" trigger="click" content={<Row>
-              <Col sm={10} xs={24}>
-                <div style={{ position: 'relative', textAlign: 'center' }}>
-                  <a onClick={() => this.handleApproveOperate(info.dataId, basicInfo.taskId)}>通过</a>
-                </div>
-              </Col>
-              <Col sm={2} xs={24}>
-                <Divider type="vertical" />
-              </Col>
-              <Col sm={10} xs={24}>
-                <div style={{ position: 'relative', textAlign: 'center' }}>
-                  <a onClick={() => this.handleRejectOperate(info.dataId, basicInfo.taskId)}>拒绝</a>
-                </div>
-              </Col>
-            </Row>}>{renderItem}</Popover>;
-          },
-          filters: reviewFilters,
-          filteredValue: filteredInfo.reviewResult || null,
-        },
-        {
-          title: '备注',
-          dataIndex: 'remark',
-          render: (val, info) => {
-            let renderItem;
-            if (val === '') {
-              renderItem = <a>备注</a>;
-            } else {
-              renderItem = <span style={{ cursor: 'pointer' }}>{val}</span>
-            }
-            return <Popover visible={remarkPopoverVisible.hasOwnProperty(`remark${info.dataId}`)} title="备注" trigger="click" placement="topRight" overlayStyle={{ minWidth: '450px' }} onVisibleChange={() => this.handleRemarkPopiverVisible(info.dataId, val)} content={
-              <Row gutter={16}>
-                <Col sm={16}>
-                  <Input value={inputValue} onChange={this.handleInputChange} />
-                </Col>
-                <Col sm={4}>
-                  <Button type="primary" onClick={() => this.handleRemarkConfirm(info.dataId, basicInfo.taskId, info.reviewResult)}>确定</Button>
-                </Col>
-                <Col sm={4}>
-                  <Button onClick={this.handleRemarkCancel}>取消</Button>
-                </Col>
-              </Row>
-            }>{renderItem}</Popover>
-          },
-        },
-      ];
+      columns.splice(0, 0, {
+        title: '文本1',
+        dataIndex: 'sentence1',
+        ...this.getColumnSearchProps('sentence1'),
+      });
+      columns.splice(1, 0, {
+        title: '文本2',
+        dataIndex: 'sentence2',
+        ...this.getColumnSearchProps('sentence2'),
+      });
     }
 
     return (

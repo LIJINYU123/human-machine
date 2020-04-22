@@ -44,12 +44,15 @@ class ExtensionMarkView extends Component {
     searchedColumn: '',
     remarkPopoverVisible: {},
     inputValue: '',
+    roleId: '',
   };
 
   componentWillMount() {
     const { location } = this.props;
+    const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
+      roleId,
     });
   }
 
@@ -228,16 +231,16 @@ class ExtensionMarkView extends Component {
   };
 
   jumpToAnswerMode = () => {
-    const { basicInfo } = this.state;
+    const { basicInfo, roleId } = this.state;
     const { markTool } = this.props;
     router.push({
       pathname: '/task-manage/my-task/answer-mode/extension',
-      state: { basicInfo, markTool },
+      state: { basicInfo, markTool, roleId },
     });
   };
 
   render() {
-    const { basicInfo, remarkPopoverVisible, inputValue } = this.state;
+    const { basicInfo, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -270,7 +273,16 @@ class ExtensionMarkView extends Component {
           <Radio.Button value="overview">概览模式</Radio.Button>
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
-        <Button type="primary" icon="check">提交</Button>
+        {
+          roleId === 'labeler' && <Button type="primary" icon="check">提交质检</Button>
+        }
+        {
+          roleId === 'inspector' &&
+          <Button.Group>
+            <Button icon="close">驳回</Button>
+            <Button icon="check">通过</Button>
+          </Button.Group>
+        }
       </Fragment>
     );
 
@@ -281,7 +293,7 @@ class ExtensionMarkView extends Component {
         ...this.getColumnSearchProps('sentence'),
       },
       {
-        title: '文本扩写',
+        title: '标注结果',
         render: () => <a>查看</a>,
       },
       {
