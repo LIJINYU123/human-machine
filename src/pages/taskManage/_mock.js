@@ -130,10 +130,22 @@ const taskMockData = [
     owner: 'SYECO',
   },
   {
+    projectId: 'extension_project1',
+    projectName: '文本扩写20200422',
+    taskId: 'extension8',
+    taskName: '任务8',
+    labelType: 'textExtension',
+    questionNum: 400,
+    schedule: 50,
+    status: 'labeling',
+    receiveTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+    owner: 'SYECO',
+  },
+  {
     projectId: '1',
     projectName: '文本分类456',
-    taskId: '8',
-    taskName: '任务8',
+    taskId: '9',
+    taskName: '任务9',
     labelType: 'textClassify',
     questionNum: 100,
     schedule: 100,
@@ -252,6 +264,15 @@ const splitMarkToolsMockData = [
         color: '#1890ff',
       },
     ],
+  },
+];
+
+const extensionMarkToolsMockData = [
+  {
+    classifyName: '文本扩写',
+    multiple: false,
+    minValue: 10,
+    maxValue: 20,
   },
 ];
 
@@ -452,6 +473,8 @@ function getMarkTools(req, res, u) {
     res.json(matchMarkToolsMockData[0]);
   } else if (params.projectId.indexOf('split') === 0) {
     res.json(splitMarkToolsMockData[0]);
+  } else if (params.projectId.indexOf('extension') === 0) {
+    res.json(extensionMarkToolsMockData[0]);
   } else {
     res.json(markToolsMockData[0]);
   }

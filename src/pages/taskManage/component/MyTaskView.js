@@ -146,6 +146,13 @@ class MyTaskView extends Component {
           taskInfo: task,
         },
       });
+    } else if (task.labelType === 'textExtension') {
+      router.push({
+        pathname: '/task-manage/my-task/extension-mark',
+        state: {
+          taskInfo: task,
+        },
+      });
     }
   };
 

@@ -1,10 +1,10 @@
-import { message } from 'antd/lib/index';
-import { queryLabelData, queryMarkTools, saveTextMarkResult, deleteTextMarkResult, saveReviewResult, queryOneTextQuestion, queryNextTextQuestion, queryPrevTextQuestion } from '../service';
+import { message } from 'antd';
+import { deleteTextMarkResult, queryLabelData, queryMarkTools, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult } from '../service';
 
-const TextMark = {
-  namespace: 'textMark',
+const SequenceMark = {
+  namespace: 'sequenceMark',
   state: {
-    data: {
+    sequenceData: {
       list: [],
       pagination: {},
     },
@@ -15,18 +15,13 @@ const TextMark = {
   },
 
   effects: {
-    * fetchLabelData({ payload }, { call, put }) {
+    * fetchSequenceData({ payload }, { call, put }) {
       const response = yield call(queryLabelData, payload);
       response.list.forEach(item => {
-        if (Object.keys(item.data).length === 1) {
-          item.sentence = item.data.sentence;
-        } else {
-          item.sentence1 = item.data.sentence1;
-          item.sentence2 = item.data.sentence2;
-        }
+        item.sentence = item.data.sentence;
       });
       yield put({
-        type: 'labelData',
+        type: 'sequenceData',
         payload: response,
       });
     },
@@ -54,6 +49,19 @@ const TextMark = {
 
     * saveReviewResult({ payload, callback }, { call }) {
       const response = yield call(saveReviewResult, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
+    },
+
+    * deleteTextMarkResult({ payload, callback }, { call }) {
+      const response = yield call(deleteTextMarkResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
       } else {
@@ -100,11 +108,11 @@ const TextMark = {
   },
 
   reducers: {
-    labelData(state, action) {
+    sequenceData(state, action) {
       const data = action.payload;
       const checkNum = data.list.filter(item => item.reviewResult !== 'unreview').length;
       const passNum = data.list.filter(item => item.reviewResult === 'approve').length;
-      return { ...state, data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: checkNum !== 0 ? parseInt(passNum / checkNum * 100, 0) : 0 };
+      return { ...state, sequenceData: data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: checkNum !== 0 ? parseInt(passNum / checkNum * 100, 0) : 0 };
     },
     saveTool(state, action) {
       return { ...state, markTool: action.payload };
@@ -115,4 +123,4 @@ const TextMark = {
   },
 };
 
-export default TextMark;
+export default SequenceMark;

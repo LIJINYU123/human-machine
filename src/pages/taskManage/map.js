@@ -67,6 +67,7 @@ export default {
     text: '文本',
     text1: '文本1',
     text2: '文本2',
+    extension: '扩写',
     question: '问题',
     reviewResult: '质检结果',
     remark: '备注',

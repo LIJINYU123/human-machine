@@ -199,7 +199,9 @@ class TextMarkView extends Component {
     dispatch({
       type: 'textMark/saveReviewResult',
       payload: { dataId, taskId, result: { reviewResult: 'approve', remark } },
-      callback: this.handleRefreshView(),
+      callback: () => {
+        this.handleRefreshView();
+      },
     });
   };
 
@@ -208,7 +210,9 @@ class TextMarkView extends Component {
     dispatch({
       type: 'textMark/saveReviewResult',
       payload: { dataId, taskId, result: { reviewResult: 'reject', remark } },
-      callback: this.handleRefreshView(),
+      callback: () => {
+        this.handleRefreshView();
+      },
     });
   };
 

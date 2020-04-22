@@ -598,7 +598,7 @@ const splitLabelData = [
   {
     dataId: Mock.Random.string(5),
     data: { sentence: '受到疫情影响，陷入停摆的意甲联赛何时重启还没有定论，更有都灵、桑普多利亚、博洛尼亚、帕尔马、斯帕尔、布雷西亚、乌迪内斯等7支球队反对重新比赛，所以C罗仍然留在家乡马德拉岛。近日，C罗因参加侄女生日、产生群体聚集而引发争议。不过葡萄牙巨星对此并不在意，回到家中后依旧照常进行健身和训练。' },
-    labelResult: [{ word: '受到疫情影响，陷入停摆的意甲联赛何时重启还没有定论，更有都灵、桑普多利亚、博洛尼亚、帕尔马、斯帕尔、布雷西亚、乌迪内斯等7支球队反对重新比赛，所以C罗仍然留在家乡马德拉岛。', optionName: '句子' }],
+    labelResult: [],
     reviewResult: '',
     remark: '',
     invalid: false,
@@ -769,6 +769,105 @@ const nerLabelData = [
   {
     dataId: '12',
     data: { sentence: '我喜欢逛万达广场' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+];
+
+const extensionLabelData = [
+  {
+    dataId: '1',
+    data: { sentence: '出差如何预订酒店' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '2',
+    data: { sentence: '酒店需要自己预订吗' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '3',
+    data: { sentence: '出差的住宿标准是什么' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '4',
+    data: { sentence: '出差必须选择协议酒店吗' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '5',
+    data: { sentence: '不选择协议酒店有什么后果' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '6',
+    data: { sentence: '没有协议酒店怎么办' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '7',
+    data: { sentence: '国内酒店的住宿标准' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '8',
+    data: { sentence: '国内酒店费用如何报销' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '9',
+    data: { sentence: '住宿报销费用包含服务费和税费吗' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '10',
+    data: { sentence: '国内住宿必须选择协议酒店吗' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '11',
+    data: { sentence: '海外酒店的适用范围有哪些' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '12',
+    data: { sentence: '海外酒店住宿标准是什么' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -1083,6 +1182,8 @@ function getLabelData(req, res, u) {
     dataSource = matchLabelData;
   } else if (params.taskId.indexOf('split') === 0) {
     dataSource = splitLabelData;
+  } else if (params.taskId.indexOf('extension') === 0) {
+    dataSource = extensionLabelData;
   } else {
     dataSource = labelMockData;
   }
@@ -1316,6 +1417,8 @@ function getOneTextQuestion(req, res, u) {
     [response] = nerLabelData;
   } else if (params.taskId.indexOf('split') === 0) {
     [response] = splitLabelData;
+  } else if (params.taskId.indexOf('extension') === 0) {
+    [response] = extensionLabelData;
   } else {
     [response] = labelMockData;
   }
@@ -1335,6 +1438,8 @@ function getNextTextQuestion(req, res, u, b) {
     textMockData = nerLabelData;
   } else if (taskId.indexOf('split') === 0) {
     textMockData = splitLabelData;
+  } else if (taskId.indexOf('extension') === 0) {
+    textMockData = extensionLabelData;
   } else {
     textMockData = labelMockData;
   }
@@ -1389,6 +1494,8 @@ function getPrevTextQuestion(req, res, u, b) {
     textMockData = nerLabelData;
   } else if (taskId.indexOf('split') === 0) {
     textMockData = splitLabelData;
+  } else if (taskId.indexOf('extension') === 0) {
+    textMockData = extensionLabelData;
   } else {
     textMockData = labelMockData;
   }
@@ -1415,6 +1522,10 @@ function saveReviewResult(req, res, u, b) {
     labelData = nerLabelData;
   } else if (taskId.indexOf('match') === 0) {
     labelData = matchLabelData;
+  } else if (taskId.indexOf('split') === 0) {
+    labelData = splitLabelData;
+  } else if (taskId.indexOf('extension') === 0) {
+    labelData = extensionLabelData;
   } else {
     labelData = labelMockData;
   }

@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Checkbox, Descriptions, Form, Input, Radio, Tag, Row, Col, Table, Popover } from 'antd';
+import { Button, Card, Descriptions, Form, Input, Row, Col, Table, Radio, Checkbox, ConfigProvider, Empty } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import WordEntryModalView from './WordEntryModalView';
 import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './style.less';
@@ -10,33 +9,23 @@ import ItemData from '../map';
 const { TextArea } = Input;
 const { AnswerModeLabels } = ItemData;
 
-@connect(({ sequenceMark }) => ({
-  questionInfo: sequenceMark.questionInfo,
+@connect(({ extensionMark }) => ({
+  questionInfo: extensionMark.questionInfo,
 }))
-class SequenceAnswerView extends Component {
+class ExtensionAnswerView extends Component {
   state = {
     basicInfo: undefined,
     markTool: undefined,
-    popoverVisible: false,
-    word: '',
-    optionName: '',
-    startIndex: '',
-    endIndex: '',
-    modalVisible: false,
-    markAuthority: false,
-    reviewAuthority: false,
+    roleId: '',
   };
 
   componentWillMount() {
     const { location } = this.props;
-    const privilegeStr = localStorage.getItem('Privileges');
-    const privileges = JSON.parse(privilegeStr);
-    const { dataMark } = privileges;
+    const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.basicInfo,
       markTool: location.state.markTool,
-      markAuthority: dataMark.includes('mark'),
-      reviewAuthority: dataMark.includes('review'),
+      roleId,
     });
   }
 
@@ -45,7 +34,7 @@ class SequenceAnswerView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'sequenceMark/fetchQuestion',
+      type: 'extensionMark/fetchQuestion',
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
@@ -54,9 +43,9 @@ class SequenceAnswerView extends Component {
     });
   }
 
-  goBackToSequenceMark = () => {
+  goBackToExtensionMark = () => {
     router.push({
-      pathname: '/task-manage/my-task/sequence-mark',
+      pathname: '/task-manage/my-task/extension-mark',
       state: {
         taskInfo: this.state.basicInfo,
       },
@@ -69,7 +58,7 @@ class SequenceAnswerView extends Component {
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
     const values = getFieldsValue();
     dispatch({
-      type: 'sequenceMark/fetchNext',
+      type: 'extensionMark/fetchNext',
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
@@ -100,7 +89,7 @@ class SequenceAnswerView extends Component {
     const { basicInfo } = this.state;
     const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
     dispatch({
-      type: 'sequenceMark/fetchPrev',
+      type: 'extensionMark/fetchPrev',
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
@@ -125,48 +114,17 @@ class SequenceAnswerView extends Component {
     });
   };
 
-  handleClick = () => {
-    const { questionInfo } = this.props;
-    // eslint-disable-next-line max-len
-    const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
-    // eslint-disable-next-line max-len
-    if (questionInfo.data.sentence.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd).length > 1) {
-      this.setState({
-        popoverVisible: true,
-        // eslint-disable-next-line max-len
-        word: questionInfo.data.sentence.substring(word.anchorNode.firstChild.selectionStart, word.anchorNode.firstChild.selectionEnd),
-        startIndex: word.anchorNode.firstChild.selectionStart,
-        endIndex: word.anchorNode.firstChild.selectionEnd,
-      })
-    } else {
-      this.setState({
-        popoverVisible: false,
-        word: '',
-        startIndex: 0,
-        endIndex: 0,
-      })
-    }
-  };
-
-  handleClickTag = optionName => {
+  onPressEnter = () => {
     const { form: { getFieldsValue, setFieldsValue } } = this.props;
-    const { markTool, word, startIndex, endIndex } = this.state;
-    if (markTool.saveType === 'nomal') {
-      const values = getFieldsValue();
-      const prevLabelResult = values.labelResult;
-      prevLabelResult.push({ word, optionName, startIndex, endIndex });
+    const values = getFieldsValue();
+    const prevLabelResult = values.labelResult;
+    if (values.extensionText !== '') {
+      prevLabelResult.push(values.extensionText);
+      console.log(prevLabelResult);
       setFieldsValue({
         labelResult: prevLabelResult,
+        extensionText: '',
       });
-      this.setState({
-        optionName,
-      });
-    } else {
-      this.setState({
-        optionName,
-        modalVisible: true,
-        popoverVisible: false,
-      })
     }
   };
 
@@ -180,31 +138,13 @@ class SequenceAnswerView extends Component {
     });
   };
 
-  handleCancelModal = () => {
-    this.setState({
-      modalVisible: false,
-    });
-  };
-
-  handleConfirmModal = (saveType, wordEntry, newWordEntry) => {
-    const { form: { getFieldsValue, setFieldsValue } } = this.props;
-    const { word, optionName, startIndex, endIndex } = this.state;
-    const values = getFieldsValue();
-    const prevLabelResult = values.labelResult;
-    prevLabelResult.push({ word, optionName, startIndex, endIndex, saveType, wordEntry, newWordEntry });
-    setFieldsValue({
-      labelResult: prevLabelResult,
-    });
-  };
-
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
-    const { basicInfo, markTool, reviewAuthority, popoverVisible, modalVisible, optionName } = this.state;
-
+    const { basicInfo, markTool, roleId } = this.state;
     const action = (
       <Fragment>
         <Button icon="check">提交质检</Button>
-        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.goBackToSequenceMark}>返回</Button>
+        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.goBackToExtensionMark}>返回</Button>
       </Fragment>
     );
 
@@ -241,13 +181,7 @@ class SequenceAnswerView extends Component {
     const columns = [
       {
         title: '结果',
-        dataIndex: 'word',
         ellipsis: true,
-      },
-      {
-        title: '选项',
-        dataIndex: 'optionName',
-        width: 100,
       },
       {
         title: '操作',
@@ -257,44 +191,6 @@ class SequenceAnswerView extends Component {
         ),
       },
     ];
-
-    const dictColumns = [
-      {
-        title: '结果',
-        dataIndex: 'word',
-        ellipsis: true,
-      },
-      {
-        title: '选项',
-        dataIndex: 'optionName',
-        width: 100,
-      },
-      {
-        title: '存储方式',
-        dataIndex: 'saveType',
-        width: 100,
-        render: (val, record) => {
-          if (val === 'wordEntry') {
-            return '词条名';
-          }
-          if (record.newWordEntry !== '') {
-            return `同义词：${record.newWordEntry}`;
-          }
-          return `同义词：${record.wordEntry}`;
-        },
-      },
-      {
-        title: '操作',
-        width: 50,
-        render: (_, record, index) => (
-          <a onClick={() => this.handleDelete(index)}>删除</a>
-        ),
-      },
-    ];
-
-    const popoverContent = (
-      markTool.options.map(option => <Tag color={option.color} style={{ cursor: 'pointer' }} onClick={() => this.handleClickTag(option.optionName)}>{option.optionName}</Tag>)
-    );
 
     return (
       <PageHeaderWrapper
@@ -307,55 +203,43 @@ class SequenceAnswerView extends Component {
           <Form>
             <Form.Item label={markTool.classifyName} {...formItemLayout}>
               <Fragment>
-                { markTool.options.map(option => <Tag color={option.color}>{option.optionName}</Tag>) }
+                <span>{markTool.minValue}</span>
+                <span>&nbsp;~&nbsp;</span>
+                <span>{markTool.maxValue}</span>
               </Fragment>
             </Form.Item>
             <Row>
-              {
-                questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence') &&
-                <Col md={12} sm={24}>
-                  <Form.Item label={AnswerModeLabels.text} {...formItemLayout2}>
-                    <Popover visible={popoverVisible} content={popoverContent}>
-                      <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : ''} style={{ width: '80%' }} onClick={this.handleClick} autoSize/>
-                    </Popover>
-                  </Form.Item>
-                </Col>
-              }
-              {
-                questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence1') &&
-                <Col md={12} sm={24}>
-                  <Form.Item label={AnswerModeLabels.text1} {...formItemLayout2}>
-                    <Popover visible={popoverVisible} content={popoverContent}>
-                      <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence1 : ''} style={{ width: '80%' }} onClick={this.handleClick} autoSize/>
-                    </Popover>
-                  </Form.Item>
-                </Col>
-              }
               <Col md={12} sm={24}>
-                <Form.Item>
-                  {
-                    getFieldDecorator('labelResult', {
-                      initialValue: questionInfo.labelResult,
-                      valuePropName: 'dataSource',
-                    })(
-                      <Table
+                <Form.Item label={AnswerModeLabels.text} {...formItemLayout2}>
+                  <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : ''} style={{ width: '80%' }} autoSize/>
+                </Form.Item>
+              </Col>
+              <Col md={12} sm={24}>
+                <ConfigProvider renderEmpty={() => <Empty imageStyle={{ height: 10 }} />}>
+                  <Form.Item>
+                    {
+                      getFieldDecorator('labelResult', {
+                        initialValue: questionInfo.labelResult,
+                        valuePropName: 'dataSource',
+                      })(<Table
                         size="small"
-                        columns={markTool.saveType === 'nomal' ? columns : dictColumns}
+                        columns={columns}
                         pagination={false}
                         bordered
                       />)
-                  }
-                </Form.Item>
+                    }
+                  </Form.Item>
+                </ConfigProvider>
               </Col>
             </Row>
+            <Form.Item label={AnswerModeLabels.extension} {...formItemLayout}>
+              {
+                getFieldDecorator('extensionText')(
+                  <Input onPressEnter={this.onPressEnter} style={{ width: '80%' }}/>)
+              }
+            </Form.Item>
             {
-              questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence2') &&
-              <Form.Item label={AnswerModeLabels.text2} {...formItemLayout}>
-                <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence2 : '' } style={{ width: '80%' }} autoSize/>
-              </Form.Item>
-            }
-            {
-              reviewAuthority &&
+              roleId === 'inspector' &&
               <Fragment>
                 <Form.Item label={AnswerModeLabels.reviewResult} {...formItemLayout}>
                   {
@@ -392,7 +276,7 @@ class SequenceAnswerView extends Component {
               <Button onClick={this.handlePrevQuestion}>上一题</Button>
               <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
               {
-                !reviewAuthority &&
+                roleId === 'labeler' &&
                 getFieldDecorator('invalid', {
                   initialValue: questionInfo.invalid,
                   valuePropName: 'checked',
@@ -402,10 +286,9 @@ class SequenceAnswerView extends Component {
             </Form.Item>
           </Form>
         </Card>
-        <WordEntryModalView visible={modalVisible} onCancel={this.handleCancelModal} onConfirm={this.handleConfirmModal} projectId={basicInfo.projectId} optionName={optionName} />
       </PageHeaderWrapper>
     );
   }
 }
 
-export default Form.create()(SequenceAnswerView);
+export default Form.create()(ExtensionAnswerView);

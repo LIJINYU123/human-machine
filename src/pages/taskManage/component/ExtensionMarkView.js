@@ -2,25 +2,24 @@ import React, { Component, Fragment } from 'react';
 import {
   Button,
   Card,
+  Col,
   Descriptions,
-  Icon,
-  Input,
-  Statistic,
-  Tag,
+  Divider,
+  Icon, Input,
   Popover,
+  Radio,
   Row,
-  Col, Divider, Radio,
-} from 'antd/lib/index';
-import { connect } from 'dva/index';
+  Statistic
+} from 'antd';
+import { connect } from 'dva';
 import Highlighter from 'react-highlight-words';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import StandardTable from './StandardTable';
-import SequenceModalView from './SequenceModalView';
 import ItemData from '../map';
 import styles from './style.less';
 
-const { labelTypeName, taskStatusName, reviewLabel, labelResult } = ItemData;
+const { labelTypeName, taskStatusName, reviewLabel } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -29,30 +28,20 @@ const reviewFilters = Object.keys(reviewLabel).map(key => ({
   value: key,
 }));
 
-const labelResultFilters = Object.keys(labelResult).map(key => ({
-  text: labelResult[key],
-  value: key,
-}));
-
-@connect(({ sequenceMark, loading }) => ({
-  data: sequenceMark.sequenceData,
-  checkRate: sequenceMark.checkRate,
-  passRate: sequenceMark.passRate,
-  markTool: sequenceMark.markTool,
-  loading: loading.effects['sequenceMark/fetchSequenceData'],
+@connect(({ extensionMark, loading }) => ({
+  data: extensionMark.data,
+  checkRate: extensionMark.checkRate,
+  passRate: extensionMark.passRate,
+  markTool: extensionMark.markTool,
+  loading: loading.effects['extensionMark/fetchLabelData'],
 }))
-class SequenceMarkView extends Component {
+class ExtensionMarkView extends Component {
   state = {
     basicInfo: undefined,
     filteredInfo: {},
     pagination: {},
     searchText: '',
     searchedColumn: '',
-    dataId: '',
-    modalVisible: false,
-    word: '',
-    startIndex: 0,
-    endIndex: 0,
     remarkPopoverVisible: {},
     inputValue: '',
   };
@@ -68,11 +57,11 @@ class SequenceMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'sequenceMark/fetchSequenceData',
+      type: 'extensionMark/fetchLabelData',
       payload: { taskId: basicInfo.taskId },
     });
     dispatch({
-      type: 'sequenceMark/fetchMarkTool',
+      type: 'extensionMark/fetchMarkTool',
       payload: { projectId: basicInfo.projectId },
     });
   }
@@ -107,77 +96,10 @@ class SequenceMarkView extends Component {
     };
 
     dispatch({
-      type: 'sequenceMark/fetchSequenceData',
+      type: 'extensionMark/fetchLabelData',
       payload: params,
     });
   };
-
-  // 处理质检通过或者拒绝的处理函数
-  handleApproveOperate = (dataId, taskId, remark) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'sequenceMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult: 'approve', remark } },
-      callback: () => {
-        this.handleRefreshView();
-      },
-    });
-  };
-
-  handleRejectOperate = (dataId, taskId, remark) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'sequenceMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult: 'reject', remark } },
-      callback: () => {
-        this.handleRefreshView();
-      },
-    });
-  };
-
-  handleRemarkPopiverVisible = (dataId, value) => {
-    const popoverValue = {};
-    popoverValue[`remark${dataId}`] = true;
-    this.setState({ remarkPopoverVisible: popoverValue, inputValue: value });
-  };
-
-  handleRemarkConfirm = (dataId, taskId, reviewResult) => {
-    const { dispatch } = this.props;
-    const { inputValue } = this.state;
-    dispatch({
-      type: 'sequenceMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult, remark: inputValue } },
-      callback: () => {
-        this.handleRefreshView();
-        this.setState({ remarkPopoverVisible: {} });
-      },
-    });
-  };
-
-  handleRemarkCancel = () => {
-    this.setState({ remarkPopoverVisible: {} });
-  };
-
-  handleInputChange = event => {
-    this.setState({ inputValue: event.target.value });
-  };
-
-  handleClickCell = cell => ({
-      onClick: event => {
-        // eslint-disable-next-line max-len
-        const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
-        if (cell.sentence.substring(word.anchorOffset, word.focusOffset).length > 1) {
-          this.setState({
-            dataId: cell.dataId,
-            modalVisible: true,
-            word: cell.sentence.substring(word.anchorOffset, word.focusOffset),
-            startIndex: word.anchorOffset,
-            endIndex: word.focusOffset,
-          });
-        }
-        // console.log(cell.sentence.substring(word.anchorOffset, word.focusOffset));
-      },
-    });
 
   getColumnSearchProps = dataIndex => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
@@ -237,6 +159,59 @@ class SequenceMarkView extends Component {
     });
   };
 
+  // 处理质检通过或者拒绝的处理函数
+  handleApproveOperate = (dataId, taskId, remark) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'extensionMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult: 'approve', remark } },
+      callback: () => {
+        this.handleRefreshView();
+      },
+    });
+  };
+
+  handleRejectOperate = (dataId, taskId, remark) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'extensionMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult: 'reject', remark } },
+      callback: () => {
+        this.handleRefreshView();
+      },
+    });
+  };
+
+  handleRemarkPopiverVisible = (dataId, value) => {
+    const popoverValue = {};
+    popoverValue[`remark${dataId}`] = true;
+    this.setState({ remarkPopoverVisible: popoverValue, inputValue: value });
+  };
+
+  handleRemarkConfirm = (dataId, taskId, reviewResult) => {
+    const { dispatch } = this.props;
+    const { inputValue } = this.state;
+    dispatch({
+      type: 'extensionMark/saveReviewResult',
+      payload: { dataId, taskId, result: { reviewResult, remark: inputValue } },
+      callback: () => {
+        this.handleRefreshView();
+        this.setState({ remarkPopoverVisible: {} });
+      },
+    });
+  };
+
+  // 备注模态输入框取消处理函数
+  handleRemarkCancel = () => {
+    this.setState({ remarkPopoverVisible: {} });
+  };
+
+  // 备注模态输入框change处理函数
+  handleInputChange = event => {
+    this.setState({ inputValue: event.target.value });
+  };
+
+  // 数据变动，刷新页面处理函数
   handleRefreshView = () => {
     const { dispatch } = this.props;
     const { pagination, basicInfo } = this.state;
@@ -247,26 +222,8 @@ class SequenceMarkView extends Component {
     };
 
     dispatch({
-      type: 'sequenceMark/fetchSequenceData',
+      type: 'extensionMark/fetchLabelData',
       payload: params,
-    });
-  };
-
-  handleCancelModal = () => {
-    this.setState({
-      modalVisible: false,
-    });
-  };
-
-  handleCloseTag = (index, dataId) => {
-    const { dispatch } = this.props;
-    const { basicInfo } = this.state;
-    dispatch({
-      type: 'sequenceMark/deleteTextMarkResult',
-      payload: { taskId: basicInfo.taskId, dataId, index },
-      callback: () => {
-        this.handleRefreshView();
-      },
     });
   };
 
@@ -274,14 +231,14 @@ class SequenceMarkView extends Component {
     const { basicInfo } = this.state;
     const { markTool } = this.props;
     router.push({
-      pathname: '/task-manage/my-task/answer-mode/sequence',
+      pathname: '/task-manage/my-task/answer-mode/extension',
       state: { basicInfo, markTool },
     });
   };
 
   render() {
-    const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue } = this.state;
-    const { data, checkRate, passRate, loading } = this.props;
+    const { basicInfo, remarkPopoverVisible, inputValue } = this.state;
+    const { data, checkRate, passRate } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -321,23 +278,11 @@ class SequenceMarkView extends Component {
       {
         title: '文本',
         dataIndex: 'sentence',
-        ellipsis: true,
-        onCell: this.handleClickCell,
         ...this.getColumnSearchProps('sentence'),
       },
       {
-        title: '标注结果',
-        dataIndex: 'labelResult',
-        ellipsis: true,
-        render: (val, record) => {
-          if (val.length) {
-            const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.optionName}.${v.wordEntry}` : `${v.word}: ${v.optionName}`));
-            return labelValues.map((value, index) => (<Tag color="blue" closable onClose={() => this.handleCloseTag(index, record.dataId)}>{value}</Tag>));
-          }
-          return '';
-        },
-        filters: labelResultFilters,
-        filteredValue: filteredInfo.result || null,
+        title: '文本扩写',
+        render: () => <a>查看</a>,
       },
       {
         title: '质检结果',
@@ -349,7 +294,7 @@ class SequenceMarkView extends Component {
           } else if (val === 'reject') {
             renderItem = <span style={{ color: '#f5222d', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
           } else {
-            renderItem = <a>未质检</a>;
+            renderItem = <a>{reviewLabel[val]}</a>;
           }
           return <Popover title="质检" trigger="click" content={<Row>
             <Col sm={10} xs={24}>
@@ -408,17 +353,14 @@ class SequenceMarkView extends Component {
         <Card title="标注数据" bordered={false} extra={extraContent}>
           <StandardTable
             rowKey="sentence"
-            loading={loading}
             data={data}
             columns={columns}
             onChange={this.handleStandardTableChange}
           />
         </Card>
-        {/* eslint-disable-next-line max-len */}
-        <SequenceModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} projectId={basicInfo.projectId} taskId={basicInfo.taskId} dataId={dataId} />
       </PageHeaderWrapper>
     );
   }
 }
 
-export default SequenceMarkView;
+export default ExtensionMarkView;

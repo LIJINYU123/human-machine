@@ -125,6 +125,13 @@ export default {
         {
           name: '文本标注',
           icon: 'container',
+          path: '/task-manage/my-task/extension-mark',
+          component: './taskManage/component/ExtensionMarkView',
+          hideInMenu: true,
+        },
+        {
+          name: '文本标注',
+          icon: 'container',
           path: '/task-manage/my-task/answer-mode/classify',
           component: './taskManage/component/ClassifyAnswerView',
           hideInMenu: true,
@@ -134,6 +141,13 @@ export default {
           icon: 'container',
           path: '/task-manage/my-task/answer-mode/sequence',
           component: './taskManage/component/SequenceAnswerView',
+          hideInMenu: true,
+        },
+        {
+          name: '文本标注',
+          icon: 'container',
+          path: '/task-manage/my-task/answer-mode/extension',
+          component: './taskManage/component/ExtensionAnswerView',
           hideInMenu: true,
         },
         {

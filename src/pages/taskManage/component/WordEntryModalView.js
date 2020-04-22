@@ -6,8 +6,8 @@ import ItemData from '../map';
 const { FieldLabels } = ItemData;
 const { Option } = Select;
 
-@connect(({ textMark }) => ({
-  markTool: textMark.markTool,
+@connect(({ sequenceMark }) => ({
+  markTool: sequenceMark.markTool,
 }))
 class WordEntryModalView extends Component {
   state = {
@@ -18,7 +18,7 @@ class WordEntryModalView extends Component {
   componentDidMount() {
     const { projectId, dispatch } = this.props;
     dispatch({
-      type: 'textMark/fetchMarkTool',
+      type: 'sequenceMark/fetchMarkTool',
       payload: { projectId },
     });
   }
@@ -63,7 +63,10 @@ class WordEntryModalView extends Component {
     const { visible, markTool, optionName, form: { getFieldDecorator } } = this.props;
     const { saveType, addWordEntry } = this.state;
     const filterOptions = markTool.options.filter(option => option.optionName === optionName);
-    const wordEntryOptions = filterOptions.length ? filterOptions[0].extraInfo.map(wordEntry => <Option key={wordEntry}>{wordEntry}</Option>) : [];
+    let wordEntryOptions = [];
+    if (markTool.saveType === 'dict') {
+      wordEntryOptions = filterOptions.length ? filterOptions[0].extraInfo.map(wordEntry => <Option key={wordEntry}>{wordEntry}</Option>) : [];
+    }
 
     const formItemLayout = {
       labelCol: {

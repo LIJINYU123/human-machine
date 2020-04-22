@@ -6,9 +6,9 @@ import ItemData from '../map';
 const { FieldLabels } = ItemData;
 const { Option } = Select;
 
-@connect(({ textMark }) => ({
-  data: textMark.sequenceData,
-  markTool: textMark.markTool,
+@connect(({ sequenceMark }) => ({
+  data: sequenceMark.sequenceData,
+  markTool: sequenceMark.markTool,
 }))
 class SequenceModalView extends Component {
   state = {
@@ -20,7 +20,7 @@ class SequenceModalView extends Component {
   componentDidMount() {
     const { projectId, dispatch } = this.props;
     dispatch({
-      type: 'textMark/fetchMarkTool',
+      type: 'sequenceMark/fetchMarkTool',
       payload: { projectId },
     });
   }
@@ -64,7 +64,7 @@ class SequenceModalView extends Component {
         prevResult.push(values);
 
         dispatch({
-          type: 'textMark/saveTextMarkResult',
+          type: 'sequenceMark/saveTextMarkResult',
           payload: { taskId, dataId, labelResult: prevResult },
           callback: () => {
             onCancel();
