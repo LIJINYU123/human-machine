@@ -157,17 +157,6 @@ class ExtensionAnswerView extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 2 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 10 },
-      },
-    };
-
-    const formItemLayout2 = {
-      labelCol: {
-        xs: { span: 24 },
         sm: { span: 4 },
       },
       wrapperCol: {
@@ -198,23 +187,88 @@ class ExtensionAnswerView extends Component {
         content={description}
       >
         <Card bordered={false}>
-          <Form>
-            <Form.Item label={markTool.classifyName} {...formItemLayout}>
-              <Fragment>
-                <span>{markTool.minValue}</span>
-                <span>&nbsp;~&nbsp;</span>
-                <span>{markTool.maxValue}</span>
-              </Fragment>
-            </Form.Item>
+          <Form {...formItemLayout}>
             <Row>
               <Col md={12} sm={24}>
-                <Form.Item label={AnswerModeLabels.text} {...formItemLayout2}>
-                  <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : ''} style={{ width: '80%' }} autoSize/>
-                </Form.Item>
+                <Row>
+                  <Form.Item label={markTool.classifyName}>
+                    <Fragment>
+                      <span>{markTool.minValue}</span>
+                      <span>&nbsp;~&nbsp;</span>
+                      <span>{markTool.maxValue}</span>
+                    </Fragment>
+                  </Form.Item>
+                </Row>
+                <Row>
+                  <Form.Item label={AnswerModeLabels.text}>
+                    <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : ''} style={{ width: '80%' }} autoSize/>
+                  </Form.Item>
+                </Row>
+                <Row>
+                  <Form.Item label={AnswerModeLabels.extension}>
+                    {
+                      getFieldDecorator('extensionText')(
+                        <Input onPressEnter={this.onPressEnter} style={{ width: '80%' }}/>)
+                    }
+                  </Form.Item>
+                </Row>
+                <Row>
+                  {
+                    roleId === 'inspector' &&
+                    <Form.Item label={AnswerModeLabels.reviewResult}>
+                      {
+                        getFieldDecorator('reviewResult', {
+                          initialValue: questionInfo.reviewResult,
+                        })(
+                          <Radio.Group>
+                            <Radio.Button value="approve">通过</Radio.Button>
+                            <Radio.Button value="reject">拒绝</Radio.Button>
+                          </Radio.Group>)
+                      }
+                    </Form.Item>
+                  }
+                </Row>
+                <Row>
+                  {
+                    roleId === 'inspector' &&
+                    <Form.Item label={AnswerModeLabels.remark}>
+                      {
+                        getFieldDecorator('remark', {
+                          initialValue: questionInfo.remark,
+                        })(<TextArea style={{ width: '80%' }} autoSize/>)
+                      }
+                    </Form.Item>
+                  }
+                </Row>
+                <Row>
+                  <Form.Item
+                    wrapperCol={{
+                      xs: {
+                        span: 24,
+                        offset: 0,
+                      },
+                      sm: {
+                        span: formItemLayout.wrapperCol.sm.span,
+                        offset: formItemLayout.labelCol.sm.span,
+                      },
+                    }}
+                  >
+                    <Button onClick={this.handlePrevQuestion}>上一题</Button>
+                    <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
+                    {
+                      roleId === 'labeler' &&
+                      getFieldDecorator('invalid', {
+                        initialValue: questionInfo.invalid,
+                        valuePropName: 'checked',
+                      })(
+                        <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>)
+                    }
+                  </Form.Item>
+                </Row>
               </Col>
               <Col md={12} sm={24}>
                 <ConfigProvider renderEmpty={() => <Empty imageStyle={{ height: 10 }} />}>
-                  <Form.Item>
+                  <Form.Item wrapperCol={{ span: 24 }}>
                     {
                       getFieldDecorator('labelResult', {
                         initialValue: questionInfo.labelResult,
@@ -230,58 +284,6 @@ class ExtensionAnswerView extends Component {
                 </ConfigProvider>
               </Col>
             </Row>
-            <Form.Item label={AnswerModeLabels.extension} {...formItemLayout}>
-              {
-                getFieldDecorator('extensionText')(
-                  <Input onPressEnter={this.onPressEnter} style={{ width: '80%' }}/>)
-              }
-            </Form.Item>
-            {
-              roleId === 'inspector' &&
-              <Fragment>
-                <Form.Item label={AnswerModeLabels.reviewResult} {...formItemLayout}>
-                  {
-                    getFieldDecorator('reviewResult', {
-                      initialValue: questionInfo.reviewResult,
-                    })(
-                      <Radio.Group>
-                        <Radio.Button value="approve">通过</Radio.Button>
-                        <Radio.Button value="reject">拒绝</Radio.Button>
-                      </Radio.Group>)
-                  }
-                </Form.Item>
-                <Form.Item label={AnswerModeLabels.remark} {...formItemLayout}>
-                  {
-                    getFieldDecorator('remark', {
-                      initialValue: questionInfo.remark,
-                    })(<TextArea style={{ width: '80%' }} autoSize/>)
-                  }
-                </Form.Item>
-              </Fragment>
-            }
-            <Form.Item
-              wrapperCol={{
-                xs: {
-                  span: 24,
-                  offset: 0,
-                },
-                sm: {
-                  span: formItemLayout.wrapperCol.sm.span,
-                  offset: formItemLayout.labelCol.sm.span,
-                },
-              }}
-            >
-              <Button onClick={this.handlePrevQuestion}>上一题</Button>
-              <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
-              {
-                roleId === 'labeler' &&
-                getFieldDecorator('invalid', {
-                  initialValue: questionInfo.invalid,
-                  valuePropName: 'checked',
-                })(
-                  <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>)
-              }
-            </Form.Item>
           </Form>
         </Card>
       </PageHeaderWrapper>

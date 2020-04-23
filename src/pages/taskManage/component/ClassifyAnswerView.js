@@ -135,17 +135,6 @@ class ClassifyAnswerView extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 2 },
-      },
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 10 },
-      },
-    };
-
-    const formItemLayout2 = {
-      labelCol: {
-        xs: { span: 24 },
         sm: { span: 4 },
       },
       wrapperCol: {
@@ -164,26 +153,99 @@ class ClassifyAnswerView extends Component {
         <Card bordered={false}>
           <Form {...formItemLayout}>
             <Row>
-              {
-                questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence') &&
-                <Col md={12} sm={24}>
-                  <Form.Item label={AnswerModeLabels.text} {...formItemLayout2}>
-                    <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : '' } style={{ width: '80%' }} autoSize/>
-                  </Form.Item>
-                </Col>
-              }
-              {
-                questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence1') &&
-                <Fragment>
-                  <Col md={12} sm={24}>
-                    <Form.Item label={AnswerModeLabels.text1} {...formItemLayout2}>
+              <Col md={12} sm={24}>
+                <Row>
+                  {
+                    questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence') &&
+                    <Form.Item label={AnswerModeLabels.text}>
+                      <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence : '' } style={{ width: '80%' }} autoSize/>
+                    </Form.Item>
+                  }
+                </Row>
+                <Row>
+                  {
+                    questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence1') &&
+                    <Form.Item label={AnswerModeLabels.text1}>
                       <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence1 : '' } style={{ width: '80%' }} autoSize/>
                     </Form.Item>
-                  </Col>
-                </Fragment>
-              }
+                  }
+                </Row>
+                <Row>
+                  {
+                    questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence2') &&
+                    <Form.Item label={AnswerModeLabels.text2}>
+                      <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence2 : '' } style={{ width: '80%' }} autoSize/>
+                    </Form.Item>
+                  }
+                </Row>
+                <Row>
+                  <Form.Item label={markTool.classifyName}>
+                    {
+                      getFieldDecorator('labelResult', {
+                        initialValue: questionInfo.labelResult,
+                      })(
+                        <TagSelect expandable multiple={markTool.multiple}>
+                          {markTool.options.map(option => <TagSelect.Option value={option.optionName}>{option.optionName}</TagSelect.Option>)}
+                        </TagSelect>)
+                    }
+                  </Form.Item>
+                </Row>
+                <Row>
+                  {
+                    roleId === 'inspector' &&
+                    <Form.Item label={AnswerModeLabels.reviewResult}>
+                      {
+                        getFieldDecorator('reviewResult', {
+                          initialValue: questionInfo.reviewResult,
+                        })(
+                          <Radio.Group>
+                            <Radio.Button value="approve">通过</Radio.Button>
+                            <Radio.Button value="reject">拒绝</Radio.Button>
+                          </Radio.Group>)
+                      }
+                    </Form.Item>
+                  }
+                </Row>
+                <Row>
+                  {
+                    roleId === 'inspector' &&
+                    <Form.Item label={AnswerModeLabels.remark}>
+                      {
+                        getFieldDecorator('remark', {
+                          initialValue: questionInfo.remark,
+                        })(<TextArea style={{ width: '80%' }} autoSize/>)
+                      }
+                    </Form.Item>
+                  }
+                </Row>
+                <Row>
+                  <Form.Item
+                    wrapperCol={{
+                      xs: {
+                        span: 24,
+                        offset: 0,
+                      },
+                      sm: {
+                        span: formItemLayout.wrapperCol.sm.span,
+                        offset: formItemLayout.labelCol.sm.span,
+                      },
+                    }}
+                  >
+                    <Button onClick={this.handlePrevQuestion}>上一题</Button>
+                    <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
+                    {
+                      roleId === 'labeler' &&
+                      getFieldDecorator('invalid', {
+                        initialValue: questionInfo.invalid,
+                        valuePropName: 'checked',
+                      })(
+                        <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>)
+                    }
+                  </Form.Item>
+                </Row>
+              </Col>
               <Col md={12} sm={24}>
-                <Form.Item label="标注结果" {...formItemLayout2}>
+                <Form.Item label="标注结果">
                   <Fragment>
                     {
                       Object.keys(questionInfo).length ? questionInfo.labelResult.map(item => <Tag color="blue">{item}</Tag>) : ''
@@ -192,68 +254,6 @@ class ClassifyAnswerView extends Component {
                 </Form.Item>
               </Col>
             </Row>
-            {
-              questionInfo.hasOwnProperty('data') && questionInfo.data.hasOwnProperty('sentence2') &&
-              <Form.Item label={AnswerModeLabels.text2}>
-                <TextArea value={Object.keys(questionInfo).length ? questionInfo.data.sentence2 : '' } style={{ width: '80%' }} autoSize/>
-              </Form.Item>
-            }
-            <Form.Item label={markTool.classifyName}>
-              {
-                getFieldDecorator('labelResult', {
-                  initialValue: questionInfo.labelResult,
-                })(
-                  <TagSelect expandable multiple={markTool.multiple}>
-                    {markTool.options.map(option => <TagSelect.Option value={option.optionName}>{option.optionName}</TagSelect.Option>)}
-                  </TagSelect>)
-              }
-            </Form.Item>
-            {
-              roleId === 'inspector' &&
-              <Fragment>
-                <Form.Item label={AnswerModeLabels.reviewResult}>
-                  {
-                    getFieldDecorator('reviewResult', {
-                      initialValue: questionInfo.reviewResult,
-                    })(
-                      <Radio.Group>
-                        <Radio.Button value="approve">通过</Radio.Button>
-                        <Radio.Button value="reject">拒绝</Radio.Button>
-                      </Radio.Group>)
-                  }
-                </Form.Item>
-                <Form.Item label={AnswerModeLabels.remark}>
-                  {
-                    getFieldDecorator('remark', {
-                      initialValue: questionInfo.remark,
-                    })(<TextArea style={{ width: '80%' }} autoSize/>)
-                  }
-                </Form.Item>
-              </Fragment>
-            }
-            <Form.Item
-              wrapperCol={{
-                xs: {
-                  span: 24,
-                  offset: 0,
-                },
-                sm: {
-                  span: formItemLayout.wrapperCol.sm.span,
-                  offset: formItemLayout.labelCol.sm.span,
-                },
-              }}
-            >
-              <Button onClick={this.handlePrevQuestion}>上一题</Button>
-              <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
-              {
-                roleId === 'labeler' &&
-                getFieldDecorator('invalid', {
-                  initialValue: questionInfo.invalid,
-                  valuePropName: 'checked',
-                })(
-                  <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>)
-              }
-            </Form.Item>
           </Form>
         </Card>
       </PageHeaderWrapper>
