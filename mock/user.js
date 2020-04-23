@@ -16,9 +16,9 @@ function getCurrentUser(req, res) {
   } else if (userId === 'SYDEV') {
     res.json(
       {
-        name: 'SYECO',
+        name: 'SYDEV',
         avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-        userid: 'SYECO',
+        userid: 'SYDEV',
         unreadCount: 8,
         notifyCount: 9,
       });
@@ -240,7 +240,7 @@ export default {
         'Authorization',
         'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmUiOjE1NzUwMzkzMjQsInVzZXJuYW1lIjoiYWRtaW4ifQ.eqcIWCQO5z_dU1purEKr66VkMPC6q8WEn4h2DEquOkA',
       );
-      res.header('UserID', 'SYECO');
+      res.header('UserID', 'SYDEV');
       res.header('DepartmentId', 'operation');
       res.header('Privileges', JSON.stringify({
         roleManage: ['add', 'modify', 'query', 'delete'],

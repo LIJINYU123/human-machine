@@ -72,7 +72,7 @@ const taskMockData = [
   {
     projectId: '1',
     projectName: '文本匹配123',
-    taskId: '3',
+    taskId: 'match3',
     taskName: '任务3',
     labelType: 'textClassify',
     questionNum: 300,

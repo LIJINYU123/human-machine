@@ -318,7 +318,7 @@ class TextMarkView extends Component {
       {
         title: '质检结果',
         dataIndex: 'reviewResult',
-        render: (val, info) => {
+        render: roleId === 'inspector' ? (val, info) => {
           let renderItem;
           if (val === 'approve') {
             renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
@@ -342,14 +342,14 @@ class TextMarkView extends Component {
               </div>
             </Col>
           </Row>}>{renderItem}</Popover>;
-        },
+        } : val => reviewLabel[val],
         filters: reviewFilters,
         filteredValue: filteredInfo.reviewResult || null,
       },
       {
         title: '备注',
         dataIndex: 'remark',
-        render: (val, info) => {
+        render: roleId === 'inspector' ? (val, info) => {
           let renderItem;
           if (val === '') {
             renderItem = <a>备注</a>;
@@ -369,7 +369,7 @@ class TextMarkView extends Component {
               </Col>
             </Row>
           }>{renderItem}</Popover>
-        },
+        } : val => val,
       },
     ];
 
