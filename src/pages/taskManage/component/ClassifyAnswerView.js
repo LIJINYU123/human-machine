@@ -41,12 +41,14 @@ class ClassifyAnswerView extends Component {
     });
   }
 
-  goBackToTextMark = () => {
-    router.push({
-      pathname: '/task-manage/my-task/text-mark',
-      state: {
-        taskInfo: this.state.basicInfo,
-      },
+  handleGoBack = () => {
+    router.goBack();
+  };
+
+  handleTagChange = value => {
+    const { form: { setFieldsValue } } = this.props;
+    setFieldsValue({
+      labelResult: value,
     });
   };
 
@@ -109,7 +111,7 @@ class ClassifyAnswerView extends Component {
   };
 
   render() {
-    const { form: { getFieldDecorator }, questionInfo } = this.props;
+    const { form: { getFieldDecorator, getFieldsValue }, questionInfo } = this.props;
     const { basicInfo, markTool, roleId } = this.state;
     const action = (
       <Fragment>
@@ -120,7 +122,7 @@ class ClassifyAnswerView extends Component {
             <Button icon="check">通过</Button>
           </Button.Group>
         }
-        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.goBackToTextMark}>返回</Button>
+        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>
       </Fragment>
     );
 
@@ -184,7 +186,7 @@ class ClassifyAnswerView extends Component {
                       getFieldDecorator('labelResult', {
                         initialValue: questionInfo.labelResult,
                       })(
-                        <TagSelect expandable multiple={markTool.multiple}>
+                        <TagSelect expandable multiple={markTool.multiple} onChange={this.handleTagChange}>
                           {markTool.options.map(option => <TagSelect.Option value={option.optionName}>{option.optionName}</TagSelect.Option>)}
                         </TagSelect>)
                     }
@@ -248,7 +250,7 @@ class ClassifyAnswerView extends Component {
                 <Form.Item label="标注结果">
                   <Fragment>
                     {
-                      Object.keys(questionInfo).length ? questionInfo.labelResult.map(item => <Tag color="blue">{item}</Tag>) : ''
+                      getFieldsValue().labelResult.map(item => <Tag color="blue">{item}</Tag>)
                     }
                   </Fragment>
                 </Form.Item>

@@ -5,7 +5,6 @@ import Highlighter from 'react-highlight-words';
 import StandardTable from './StandardTable';
 import { connect } from 'dva/index';
 import ItemData from '../map';
-import Link from 'umi/link';
 import router from 'umi/router';
 
 const { taskStatusMap, taskStatusName, labelTypeName } = ItemData;
@@ -164,6 +163,10 @@ class MyTaskView extends Component {
     }
   };
 
+  handleGoback = () => {
+    router.goBack();
+  };
+
   render() {
     const { data, loading } = this.props;
     const { roleId } = this.state;
@@ -171,9 +174,7 @@ class MyTaskView extends Component {
     filteredInfo = filteredInfo || {};
 
     const action = (
-      <Link to="/task-manage">
-        <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
-      </Link>
+      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoback}>返回</Button>
     );
 
     const columns = [

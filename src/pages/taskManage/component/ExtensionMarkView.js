@@ -5,11 +5,11 @@ import {
   Col,
   Descriptions,
   Divider,
-  Icon, Input,
+  Icon, Input, List,
   Popover,
   Radio,
   Row,
-  Statistic
+  Statistic,
 } from 'antd';
 import { connect } from 'dva';
 import Highlighter from 'react-highlight-words';
@@ -69,13 +69,8 @@ class ExtensionMarkView extends Component {
     });
   }
 
-  handleGobackMyTask = () => {
-    router.push({
-      pathname: '/task-manage/my-task',
-      state: {
-        status: 'labeling,reject',
-      },
-    });
+  handleGoBack = () => {
+    router.goBack();
   };
 
   handleStandardTableChange = (pagination, filterArg, _) => {
@@ -262,7 +257,7 @@ class ExtensionMarkView extends Component {
     );
 
     const action = (
-      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGobackMyTask}>返回</Button>
+      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoBack}>返回</Button>
     );
 
     const extraContent = (
@@ -299,7 +294,8 @@ class ExtensionMarkView extends Component {
       },
       {
         title: '标注结果',
-        render: () => <a>查看</a>,
+        dataIndex: 'labelResult',
+        render: val => <Popover trigger="click" content={<List dataSource={val} renderItem={item => <List.Item>{item}</List.Item>} size="small"/>}><a>查看</a></Popover>,
       },
       {
         title: '质检结果',

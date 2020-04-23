@@ -7,7 +7,7 @@ import {
   Statistic,
   Input, Icon, Table, Radio,
 } from 'antd';
-import Link from 'umi/link';
+import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './style.less';
 import ItemData from '../map';
@@ -174,6 +174,10 @@ class ProjectDetail extends Component {
     });
   };
 
+  handleGoBack = () => {
+    router.goBack();
+  };
+
   render() {
     const { memberDetail: { members }, basicInfo, loading } = this.props;
     const { projectId, activeTabKey, labelerId, inspectorId, modalVisible } = this.state;
@@ -214,9 +218,7 @@ class ProjectDetail extends Component {
           <Radio.Button value="export"><Icon type="download"/>导出结果</Radio.Button>
         </Radio.Group>
         <Button onClick={this.handleEdit}>编辑</Button>
-        <Link to="/project">
-          <Button type="primary" >返回</Button>
-        </Link>
+        <Button type="primary" onClick={this.handleGoBack}>返回</Button>
       </Fragment>
     );
 

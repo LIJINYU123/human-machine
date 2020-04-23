@@ -47,13 +47,8 @@ class SequenceAnswerView extends Component {
     });
   }
 
-  goBackToSequenceMark = () => {
-    router.push({
-      pathname: '/task-manage/my-task/sequence-mark',
-      state: {
-        taskInfo: this.state.basicInfo,
-      },
-    });
+  handleGoBack = () => {
+    router.goBack();
   };
 
   handleNextQuestion = () => {
@@ -213,7 +208,7 @@ class SequenceAnswerView extends Component {
             <Button icon="check">通过</Button>
           </Button.Group>
         }
-        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.goBackToSequenceMark}>返回</Button>
+        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>
       </Fragment>
     );
 

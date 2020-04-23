@@ -40,13 +40,8 @@ class ExtensionAnswerView extends Component {
     });
   }
 
-  goBackToExtensionMark = () => {
-    router.push({
-      pathname: '/task-manage/my-task/extension-mark',
-      state: {
-        taskInfo: this.state.basicInfo,
-      },
-    });
+  handleGoBack = () => {
+    router.goBack();
   };
 
   handleNextQuestion = () => {
@@ -142,7 +137,7 @@ class ExtensionAnswerView extends Component {
             <Button icon="check">通过</Button>
           </Button.Group>
         }
-        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.goBackToExtensionMark}>返回</Button>
+        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>
       </Fragment>
     );
 

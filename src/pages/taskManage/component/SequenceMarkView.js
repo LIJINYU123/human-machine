@@ -80,13 +80,8 @@ class SequenceMarkView extends Component {
     });
   }
 
-  handleGobackMyTask = () => {
-    router.push({
-      pathname: '/task-manage/my-task',
-      state: {
-        status: 'labeling,reject',
-      },
-    });
+  handleGoback = () => {
+    router.goBack()
   };
 
   handleStandardTableChange = (pagination, filterArg, _) => {
@@ -169,7 +164,7 @@ class SequenceMarkView extends Component {
       onClick: event => {
         // eslint-disable-next-line max-len
         const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
-        if (cell.sentence.substring(word.anchorOffset, word.focusOffset).length > 1) {
+        if (cell.hasOwnProperty('sentence') && cell.sentence.substring(word.anchorOffset, word.focusOffset).length > 1) {
           this.setState({
             dataId: cell.dataId,
             modalVisible: true,
@@ -177,8 +172,15 @@ class SequenceMarkView extends Component {
             startIndex: word.anchorOffset,
             endIndex: word.focusOffset,
           });
+        } else if (cell.hasOwnProperty('sentence1') && cell.sentence1.substring(word.anchorOffset, word.focusOffset).length > 1) {
+          this.setState({
+            dataId: cell.dataId,
+            modalVisible: true,
+            word: cell.sentence1.substring(word.anchorOffset, word.focusOffset),
+            startIndex: word.anchorOffset,
+            endIndex: word.focusOffset,
+          });
         }
-        // console.log(cell.sentence.substring(word.anchorOffset, word.focusOffset));
       },
     });
 
@@ -305,7 +307,7 @@ class SequenceMarkView extends Component {
     );
 
     const action = (
-      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGobackMyTask}>返回</Button>
+      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoback}>返回</Button>
     );
 
     const extraContent = (

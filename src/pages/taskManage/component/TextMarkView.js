@@ -76,13 +76,8 @@ class TextMarkView extends Component {
     });
   }
 
-  handleGobackMyTask = () => {
-    router.push({
-      pathname: '/task-manage/my-task',
-      state: {
-        status: 'labeling,reject',
-      },
-    });
+  handleGoBack = () => {
+    router.goBack();
   };
 
   handleStandardTableChange = (pagination, filterArg, _) => {
@@ -278,7 +273,7 @@ class TextMarkView extends Component {
     );
 
     const action = (
-      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGobackMyTask}>返回</Button>
+      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoBack}>返回</Button>
     );
 
     const extraContent = (

@@ -3,7 +3,6 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Card, Button, Descriptions, Row, Col, Progress, Badge } from 'antd/lib/index';
 import StandardTable from './StandardTable';
 import styles from './style.less';
-import Link from 'umi/link';
 import { connect } from 'dva/index';
 import router from 'umi/router';
 import ItemData from '../map';
@@ -122,6 +121,10 @@ class ProjectDetail extends Component {
     }
   };
 
+  handleGoback = () => {
+    router.goBack()
+  };
+
   render() {
     const { data, basicInfo, inProgressNum, loading } = this.props;
     const { roleId } = this.state;
@@ -138,9 +141,7 @@ class ProjectDetail extends Component {
     );
 
     const action = (
-      <Link to="/task-manage">
-        <Button type="primary" style={{ marginLeft: '8px' }}>返回</Button>
-      </Link>
+      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoback}>返回</Button>
     );
 
     const columns = [

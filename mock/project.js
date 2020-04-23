@@ -780,7 +780,7 @@ const extensionLabelData = [
   {
     dataId: '1',
     data: { sentence: '出差如何预订酒店' },
-    labelResult: [],
+    labelResult: ['出差的话怎么去预订酒店', '去其他地方出差这酒店怎么预订', '在外地出差的话怎么预订酒店', '出差的时候预订酒店的流程是怎样的'],
     reviewResult: 'unreview',
     remark: '',
     invalid: false,
@@ -788,7 +788,7 @@ const extensionLabelData = [
   {
     dataId: '2',
     data: { sentence: '酒店需要自己预订吗' },
-    labelResult: [],
+    labelResult: ['出差可不可以直接自己订酒店', '酒店是公司帮忙订吗', '出差住的酒店是自己订好吗', '酒店可以在什么地方订', '自己能够去订酒店吗', '自己是不是可以随便订酒店'],
     reviewResult: 'unreview',
     remark: '',
     invalid: false,
@@ -796,7 +796,7 @@ const extensionLabelData = [
   {
     dataId: '3',
     data: { sentence: '出差的住宿标准是什么' },
-    labelResult: [],
+    labelResult: ['为公司出差住宿可以给多少预算', '为了工作出差住酒店能报销多少', '出差可以住预算多少的酒店', '出差住宿的话可以选择多少钱一晚的酒店'],
     reviewResult: 'unreview',
     remark: '',
     invalid: false,
@@ -804,7 +804,7 @@ const extensionLabelData = [
   {
     dataId: '4',
     data: { sentence: '出差必须选择协议酒店吗' },
-    labelResult: [],
+    labelResult: ['协议酒店是出差的时候必须选择的吗', '协议酒店是非选不可吗', '不住协议酒店的话会怎么样', '协议酒店是在出差的时候必须要选的吗'],
     reviewResult: 'unreview',
     remark: '',
     invalid: false,
