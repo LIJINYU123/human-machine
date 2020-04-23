@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Descriptions, Row, Col } from 'antd/lib/index';
+import { Card, Button, Descriptions, Row, Col, Progress, Badge } from 'antd/lib/index';
 import StandardTable from './StandardTable';
 import styles from './style.less';
-import ItemData from '../map';
 import Link from 'umi/link';
 import { connect } from 'dva/index';
 import router from 'umi/router';
+import ItemData from '../map';
 
-const { labelTypeName } = ItemData;
+const { taskStatusMap, taskStatusName, labelTypeName } = ItemData;
 
 @connect(({ detail, loading }) => ({
   data: detail.data,
@@ -20,7 +20,15 @@ const { labelTypeName } = ItemData;
 class ProjectDetail extends Component {
   state = {
     projectId: undefined,
+    roleId: '',
   };
+
+  componentWillMount() {
+    const { location } = this.props;
+    this.setState({
+      roleId: location.state.roleId,
+    });
+  }
 
   componentDidMount() {
     const { dispatch, location } = this.props;
@@ -89,8 +97,34 @@ class ProjectDetail extends Component {
     });
   };
 
+  handleJumpToMarkView = task => {
+    if (task.labelType === 'textClassify') {
+      router.push({
+        pathname: '/task-manage/my-task/text-mark',
+        state: {
+          taskInfo: task,
+        },
+      });
+    } else if (task.labelType === 'sequenceLabeling') {
+      router.push({
+        pathname: '/task-manage/my-task/sequence-mark',
+        state: {
+          taskInfo: task,
+        },
+      });
+    } else if (task.labelType === 'textExtension') {
+      router.push({
+        pathname: '/task-manage/my-task/extension-mark',
+        state: {
+          taskInfo: task,
+        },
+      });
+    }
+  };
+
   render() {
     const { data, basicInfo, inProgressNum, loading } = this.props;
+    const { roleId } = this.state;
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
         <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
@@ -115,8 +149,31 @@ class ProjectDetail extends Component {
         dataIndex: 'taskName',
       },
       {
+        title: '标注工具',
+        dataIndex: 'labelType',
+        render: val => labelTypeName[val],
+      },
+      {
+        title: '题数',
+        dataIndex: 'questionNum',
+      },
+      {
+        title: '标注进度',
+        dataIndex: 'schedule',
+        render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
+      },
+      {
+        title: '任务状态',
+        dataIndex: 'status',
+        render: val => <Badge status={taskStatusMap[val]} text={taskStatusName[val]}/>,
+      },
+      {
+        title: '领取时间',
+        dataIndex: 'receiveTime',
+      },
+      {
         title: '操作',
-        render: (val, record) => <a>标注</a>,
+        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{roleId === 'labeler' ? '标注' : '质检'}</a>,
       },
     ];
 
@@ -128,7 +185,7 @@ class ProjectDetail extends Component {
       </div>
     );
 
-    const extraContent = <Button type="primary">领取新任务</Button>;
+    const extraContent = <Button type="primary" disabled={data.list.length}>领取新任务</Button>;
 
     return (
       <PageHeaderWrapper

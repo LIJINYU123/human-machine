@@ -146,6 +146,7 @@ class TaskCenter extends Component {
       pathname: '/task-manage/project-detail',
       state: {
         projectId: project.projectId,
+        roleId: this.state.roleId,
       },
     });
   };
@@ -254,7 +255,7 @@ class TaskCenter extends Component {
           <Card bordered={false}>
             <Row>
               <Col sm={24} xs={24}>
-                <Info title="我的待办" value={`${inProgressNum}个任务`} onClick={this.handleJumptoInProgress} bordered />
+                <Info title="我的待办" value={`${inProgressNum}个任务`} onClick={this.handleJumptoInProgress} bordered={false} />
               </Col>
             </Row>
           </Card>

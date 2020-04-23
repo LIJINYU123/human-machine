@@ -74,15 +74,7 @@ const ProjectDetail = {
       return { ...state, basicInfo: action.payload };
     },
     taskData(state, action) {
-      const response = action.payload;
-      response.list = response.list.map(item => ({
-        projectId: item.projectId,
-        taskId: item.taskId,
-        taskName: item.taskName,
-        status: item.status === 'initial',
-      }));
-      // eslint-disable-next-line max-len
-      return { ...state, data: response };
+      return { ...state, data: action.payload };
     },
     saveMyData(state, action) {
       const response = action.payload;

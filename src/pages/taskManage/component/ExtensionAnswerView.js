@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Descriptions, Form, Input, Row, Col, Table, Radio, Checkbox, ConfigProvider, Empty } from 'antd';
+import { Button, Card, Descriptions, Form, Input, Row, Col, Table, Radio, Checkbox, Icon, ConfigProvider, Empty } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import router from 'umi/router';
 import { connect } from 'dva';
@@ -208,7 +208,7 @@ class ExtensionAnswerView extends Component {
                   <Form.Item label={AnswerModeLabels.extension}>
                     {
                       getFieldDecorator('extensionText')(
-                        <Input onPressEnter={this.onPressEnter} style={{ width: '80%' }}/>)
+                        <Input onPressEnter={this.onPressEnter} placeholder="回车确认" suffix={<Icon type="enter" />} style={{ width: '80%' }}/>)
                     }
                   </Form.Item>
                 </Row>

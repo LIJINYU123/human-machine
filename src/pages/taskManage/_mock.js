@@ -372,21 +372,27 @@ function getTaskData(req, res, u) {
   }
   const params = parse(url, true).query;
 
-  let pageSize = 10;
-  if (params.pageSize) {
-    pageSize = parseInt(`${params.pageSize}`, 0);
-  }
+  // let pageSize = 10;
+  // if (params.pageSize) {
+  //   pageSize = parseInt(`${params.pageSize}`, 0);
+  // }
 
   let dataSource = taskMockData;
   dataSource = dataSource.filter(item => item.owner === userId);
 
   const result = {
-    list: dataSource,
-    pagination: {
-      total: dataSource.length,
-      pageSize,
-      current: parseInt(`${params.currentPage}`, 10) || 1,
-    },
+    list: [{
+      projectId: 'ner_project1',
+      projectName: '实体识别456',
+      taskId: 'ner6',
+      taskName: '任务6',
+      labelType: 'sequenceLabeling',
+      questionNum: 100,
+      schedule: 30,
+      status: 'labeling',
+      receiveTime: '2020-02-26 10:00:00',
+      owner: 'SYECO',
+    }],
   };
 
   res.json(result);
