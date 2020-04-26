@@ -23,9 +23,10 @@ class ManualAddView extends Component {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
+        console.log(values);
         const users = [];
         userKeys.forEach(key => {
-          users.push({ userId: values[`userId-${key}`], roleId: values[`roleId-${key}`], groupId: values[`groupId-${key}`] });
+          users.push({ userId: values[`userId-${key}`], roleId: values[`roleId-${key}`], groupId: typeof values[`groupId-${key}`] !== 'undefined' ? values[`groupId-${key}`] : [] });
         });
         dispatch({
           type: 'userList/manualAddUsers',

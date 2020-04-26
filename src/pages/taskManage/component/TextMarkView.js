@@ -313,7 +313,7 @@ class TextMarkView extends Component {
           return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={[]} />} placement="top"><a>标注</a></Popover>
         },
         filters: labelResultFilters,
-        filteredValue: filteredInfo.result || null,
+        filteredValue: filteredInfo.labelResult || null,
       },
       {
         title: '质检结果',

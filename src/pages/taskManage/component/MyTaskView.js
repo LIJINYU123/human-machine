@@ -160,6 +160,13 @@ class MyTaskView extends Component {
           taskInfo: task,
         },
       });
+    } else if (task.labelType === 'pictureMark') {
+      router.push({
+        pathname: '/task-manage/my-task/image-mark',
+        state: {
+          taskInfo: task,
+        },
+      });
     }
   };
 

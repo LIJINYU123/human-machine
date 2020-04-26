@@ -78,10 +78,7 @@ class GroupManage extends Component {
 
   handleStandardTableChange = (pagination, filterArg, sorter) => {
     const { dispatch } = this.props;
-    const params = {
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-    };
+    const params = {};
 
     if (sorter.field) {
       params.sorter = `${sorter.field}_${sorter.order}`;
@@ -212,7 +209,7 @@ class GroupManage extends Component {
       {
         title: '用户数目',
         dataIndex: 'userAmount',
-        render: (val, group) => <Button type="link" onClick={() => this.handleReviewDetails(group)}>{val}</Button>,
+        render: (_, group) => <Button type="link" onClick={() => this.handleReviewDetails(group)}>{group.userInfo.length}</Button>,
       },
       {
         title: '更新时间',

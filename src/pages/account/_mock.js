@@ -94,7 +94,6 @@ let groupData = [
   {
     groupId: '1',
     groupName: '标注组A',
-    userAmount: 3,
     userInfo: [
       {
         userId: 'SY0123',
@@ -121,7 +120,6 @@ let groupData = [
   {
     groupId: '2',
     groupName: '标注组B',
-    userAmount: 3,
     userInfo: [
       {
         userId: 'SY0126',
@@ -148,7 +146,6 @@ let groupData = [
   {
     groupId: '3',
     groupName: '标注组C',
-    userAmount: 3,
     userInfo: [
       {
         userId: 'SY0129',
@@ -175,7 +172,6 @@ let groupData = [
   {
     groupId: '4',
     groupName: '质检组A',
-    userAmount: 3,
     userInfo: [
       {
         userId: Mock.Random.string(5),
@@ -202,7 +198,6 @@ let groupData = [
   {
     groupId: '5',
     groupName: '质检组B',
-    userAmount: 3,
     userInfo: [
       {
         userId: Mock.Random.string(5),
@@ -229,7 +224,6 @@ let groupData = [
   {
     groupId: '6',
     groupName: '质检组C',
-    userAmount: 3,
     userInfo: [
       {
         userId: Mock.Random.string(5),
@@ -393,8 +387,9 @@ function manualAddUsers(req, res, u, b) {
       name: Mock.Random.cname(),
       roleId: user.roleId,
       roleName: '',
-      groups: user.groupId.map(id => ({ groupId: id, groupName: '用户组x' })),
+      groupId: user.groupId,
       registerTime: moment().local('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+      updatedTime: moment().local('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
       status: 'active',
       departmentId,
     });
@@ -413,8 +408,9 @@ function batchAddUsers(req, res, u, b) {
       name: Mock.Random.cname(),
       roleId: body.roleId,
       roleName: '',
-      groups: [],
+      groupId: [],
       registerTime: moment().local('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+      updatedTime: moment().local('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
       status: 'active',
       departmentId,
     })
@@ -461,6 +457,7 @@ function addGroup(req, res, u, b) {
     userAmount: body.userIds.length,
     userInfo: body.userIds.map(id => ({ userId: id, name: Mock.Random.cname(), roleId: 'inspector', roleName: '标注员' })),
     createdTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
+    updatedTime: moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss'),
   });
 
   return res.json({ message: '创建成功', status: 'ok' });

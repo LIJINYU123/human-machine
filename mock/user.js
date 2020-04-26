@@ -156,6 +156,13 @@ export default {
           hideInMenu: true,
         },
         {
+          name: '图片标注',
+          icon: 'container',
+          path: '/task-manage/my-task/image-mark',
+          component: './taskManage/component/ImageMarkView',
+          hideInMenu: true,
+        },
+        {
           name: '文本标注',
           icon: 'container',
           path: '/task-manage/my-task/answer-mode/classify',
@@ -174,6 +181,13 @@ export default {
           icon: 'container',
           path: '/task-manage/my-task/answer-mode/extension',
           component: './taskManage/component/ExtensionAnswerView',
+          hideInMenu: true,
+        },
+        {
+          name: '图片标注',
+          icon: 'container',
+          path: '/task-manage/my-task/answer-mode/image',
+          component: './taskManage/component/ImageAnswerView',
           hideInMenu: true,
         },
         {

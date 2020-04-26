@@ -17,9 +17,10 @@ class UserDetailView extends Component {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
+        const { registerTime, ...rest } = values;
         dispatch({
           type: 'userList/updateDetail',
-          payload: values,
+          payload: rest,
           callback: () => {
             dispatch({
               type: 'userList/fetchUsers',

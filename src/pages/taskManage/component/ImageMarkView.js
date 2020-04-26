@@ -2,24 +2,23 @@ import React, { Component, Fragment } from 'react';
 import {
   Button,
   Card,
+  Col,
   Descriptions,
-  Icon,
-  Input,
-  Statistic,
-  Tag,
+  Divider, Input,
+  List,
   Popover,
+  Radio,
   Row,
-  Col, Divider, Radio,
-} from 'antd/lib/index';
-import { connect } from 'dva/index';
-import Highlighter from 'react-highlight-words';
-import router from 'umi/router';
+  Statistic,
+} from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import StandardTable from './StandardTable';
-import SequenceModalView from './SequenceModalView';
-import ItemData from '../map';
 import styles from './style.less';
+import ItemData from '../map';
+import router from 'umi/router';
+import { connect } from 'dva/index';
 
+const { Meta } = Card;
 const { labelTypeName, taskStatusName, reviewLabel, labelResult } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
@@ -34,25 +33,18 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   value: key,
 }));
 
-@connect(({ sequenceMark, loading }) => ({
-  data: sequenceMark.sequenceData,
-  checkRate: sequenceMark.checkRate,
-  passRate: sequenceMark.passRate,
-  markTool: sequenceMark.markTool,
-  loading: loading.effects['sequenceMark/fetchSequenceData'],
+@connect(({ imageMark, loading }) => ({
+  data: imageMark.data,
+  checkRate: imageMark.checkRate,
+  passRate: imageMark.passRate,
+  markTool: imageMark.markTool,
+  loading: loading.effects['imageMark/fetchLabelData'],
 }))
-class SequenceMarkView extends Component {
+class ImageMarkView extends Component {
   state = {
     basicInfo: undefined,
     filteredInfo: {},
     pagination: {},
-    searchText: '',
-    searchedColumn: '',
-    dataId: '',
-    modalVisible: false,
-    word: '',
-    startIndex: 0,
-    endIndex: 0,
     remarkPopoverVisible: {},
     inputValue: '',
     roleId: '',
@@ -71,17 +63,17 @@ class SequenceMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'sequenceMark/fetchSequenceData',
+      type: 'imageMark/fetchLabelData',
       payload: { taskId: basicInfo.taskId },
     });
     dispatch({
-      type: 'sequenceMark/fetchMarkTool',
+      type: 'imageMark/fetchMarkTool',
       payload: { projectId: basicInfo.projectId },
     });
   }
 
-  handleGoback = () => {
-    router.goBack()
+  handleGoBack = () => {
+    router.goBack();
   };
 
   handleStandardTableChange = (pagination, filterArg, _) => {
@@ -105,7 +97,7 @@ class SequenceMarkView extends Component {
     };
 
     dispatch({
-      type: 'sequenceMark/fetchSequenceData',
+      type: 'imageMark/fetchLabelData',
       payload: params,
     });
   };
@@ -114,7 +106,7 @@ class SequenceMarkView extends Component {
   handleApproveOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'sequenceMark/saveReviewResult',
+      type: 'imageMark/saveReviewResult',
       payload: { dataId, taskId, result: { reviewResult: 'approve', remark } },
       callback: () => {
         this.handleRefreshView();
@@ -125,7 +117,7 @@ class SequenceMarkView extends Component {
   handleRejectOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'sequenceMark/saveReviewResult',
+      type: 'imageMark/saveReviewResult',
       payload: { dataId, taskId, result: { reviewResult: 'reject', remark } },
       callback: () => {
         this.handleRefreshView();
@@ -143,7 +135,7 @@ class SequenceMarkView extends Component {
     const { dispatch } = this.props;
     const { inputValue } = this.state;
     dispatch({
-      type: 'sequenceMark/saveReviewResult',
+      type: 'imageMark/saveReviewResult',
       payload: { dataId, taskId, result: { reviewResult, remark: inputValue } },
       callback: () => {
         this.handleRefreshView();
@@ -152,96 +144,17 @@ class SequenceMarkView extends Component {
     });
   };
 
+  // 备注模态输入框取消处理函数
   handleRemarkCancel = () => {
     this.setState({ remarkPopoverVisible: {} });
   };
 
+  // 备注模态输入框change处理函数
   handleInputChange = event => {
     this.setState({ inputValue: event.target.value });
   };
 
-  handleClickCell = cell => ({
-      onClick: event => {
-        // eslint-disable-next-line max-len
-        const word = window.getSelection ? window.getSelection() : document.selection.createRange().text;
-        if (cell.hasOwnProperty('sentence') && cell.sentence.substring(word.anchorOffset, word.focusOffset).length > 1) {
-          this.setState({
-            dataId: cell.dataId,
-            modalVisible: true,
-            word: cell.sentence.substring(word.anchorOffset, word.focusOffset),
-            startIndex: word.anchorOffset,
-            endIndex: word.focusOffset,
-          });
-        } else if (cell.hasOwnProperty('sentence1') && cell.sentence1.substring(word.anchorOffset, word.focusOffset).length > 1) {
-          this.setState({
-            dataId: cell.dataId,
-            modalVisible: true,
-            word: cell.sentence1.substring(word.anchorOffset, word.focusOffset),
-            startIndex: word.anchorOffset,
-            endIndex: word.focusOffset,
-          });
-        }
-      },
-    });
-
-  getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
-               value={selectedKeys[0]}
-               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-               onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-               style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Button
-          type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          搜索
-        </Button>
-        <Button
-          onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}
-        >
-          重置
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (<Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => this.searchInput.select());
-      }
-    },
-    render: text => (this.state.searchedColumn === dataIndex ? (
-      <Highlighter
-        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-        searchWords={[this.state.searchText]}
-        autoEscape
-        textToHighlight={text.toString()}
-      />
-    ) : text),
-  });
-
-  handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-
-    this.setState({
-      searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
-    });
-  };
-
-  handleReset = clearFilters => {
-    clearFilters();
-    this.setState({
-      searchText: '',
-    });
-  };
-
+  // 数据变动，刷新页面处理函数
   handleRefreshView = () => {
     const { dispatch } = this.props;
     const { pagination, basicInfo } = this.state;
@@ -252,26 +165,8 @@ class SequenceMarkView extends Component {
     };
 
     dispatch({
-      type: 'sequenceMark/fetchSequenceData',
+      type: 'imageMark/fetchLabelData',
       payload: params,
-    });
-  };
-
-  handleCancelModal = () => {
-    this.setState({
-      modalVisible: false,
-    });
-  };
-
-  handleCloseTag = (index, dataId) => {
-    const { dispatch } = this.props;
-    const { basicInfo } = this.state;
-    dispatch({
-      type: 'sequenceMark/deleteTextMarkResult',
-      payload: { taskId: basicInfo.taskId, dataId, index },
-      callback: () => {
-        this.handleRefreshView();
-      },
     });
   };
 
@@ -279,14 +174,14 @@ class SequenceMarkView extends Component {
     const { basicInfo, roleId } = this.state;
     const { markTool } = this.props;
     router.push({
-      pathname: '/task-manage/my-task/answer-mode/sequence',
+      pathname: '/task-manage/my-task/answer-mode/image',
       state: { basicInfo, markTool, roleId },
     });
   };
 
   render() {
-    const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue, roleId } = this.state;
-    const { data, checkRate, passRate, loading } = this.props;
+    const { basicInfo, remarkPopoverVisible, inputValue, roleId } = this.state;
+    const { data, checkRate, passRate } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
@@ -307,7 +202,7 @@ class SequenceMarkView extends Component {
     );
 
     const action = (
-      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoback}>返回</Button>
+      <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoBack}>返回</Button>
     );
 
     const extraContent = (
@@ -338,16 +233,14 @@ class SequenceMarkView extends Component {
 
     const columns = [
       {
+        title: '图片名称',
+        dataIndex: 'sentence',
+        render: val => <Popover content={<Card style={{ width: 240 }} cover={<img alt="example" src="https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588315105&t=ed577b96f4f9a0b688d569c4b4789268" />} hoverable><Meta description="http://10.89.100.14/img/0002fdafdf.png"/></Card>}><a>{val}</a></Popover>,
+      },
+      {
         title: '标注结果',
         dataIndex: 'labelResult',
-        ellipsis: true,
-        render: (val, record) => {
-          if (val.length) {
-            const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.optionName}.${v.wordEntry}` : `${v.word}: ${v.optionName}`));
-            return labelValues.map((value, index) => (<Tag color="blue" closable onClose={() => this.handleCloseTag(index, record.dataId)}>{value}</Tag>));
-          }
-          return '';
-        },
+        render: val => <a>查看</a>,
         filters: labelResultFilters,
         filteredValue: filteredInfo.labelResult || null,
       },
@@ -361,7 +254,7 @@ class SequenceMarkView extends Component {
           } else if (val === 'reject') {
             renderItem = <span style={{ color: '#f5222d', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
           } else {
-            renderItem = <a>未质检</a>;
+            renderItem = <a>{reviewLabel[val]}</a>;
           }
           return <Popover title="质检" trigger="click" content={<Row>
             <Col sm={10} xs={24}>
@@ -409,32 +302,6 @@ class SequenceMarkView extends Component {
       },
     ];
 
-    if (data.list.length && data.list[0].data.hasOwnProperty('sentence')) {
-      columns.splice(0, 0, {
-        title: '文本',
-        dataIndex: 'sentence',
-        ellipsis: true,
-        onCell: this.handleClickCell,
-        ...this.getColumnSearchProps('sentence'),
-      });
-    } else {
-      columns.splice(0, 0, {
-          title: '文本1',
-          dataIndex: 'sentence1',
-          ellipsis: true,
-          onCell: this.handleClickCell,
-          ...this.getColumnSearchProps('sentence1'),
-        });
-
-      columns.splice(1, 0, {
-        title: '文本2',
-        dataIndex: 'sentence2',
-        ellipsis: true,
-        onCell: this.handleClickCell,
-        ...this.getColumnSearchProps('sentence2'),
-      });
-    }
-
     return (
       <PageHeaderWrapper
         title={basicInfo.taskName}
@@ -446,17 +313,14 @@ class SequenceMarkView extends Component {
         <Card title="标注数据" bordered={false} extra={extraContent}>
           <StandardTable
             rowKey="sentence"
-            loading={loading}
             data={data}
             columns={columns}
             onChange={this.handleStandardTableChange}
           />
         </Card>
-        {/* eslint-disable-next-line max-len */}
-        <SequenceModalView visible={modalVisible} word={word} startIndex={startIndex} endIndex={endIndex} onCancel={this.handleCancelModal} onRefresh={this.handleRefreshView} projectId={basicInfo.projectId} taskId={basicInfo.taskId} dataId={dataId} />
       </PageHeaderWrapper>
     );
   }
 }
 
-export default SequenceMarkView;
+export default ImageMarkView;

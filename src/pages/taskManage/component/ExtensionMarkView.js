@@ -19,12 +19,17 @@ import StandardTable from './StandardTable';
 import ItemData from '../map';
 import styles from './style.less';
 
-const { labelTypeName, taskStatusName, reviewLabel } = ItemData;
+const { labelTypeName, taskStatusName, reviewLabel, labelResult } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
 const reviewFilters = Object.keys(reviewLabel).map(key => ({
   text: reviewLabel[key],
+  value: key,
+}));
+
+const labelResultFilters = Object.keys(labelResult).map(key => ({
+  text: labelResult[key],
   value: key,
 }));
 
@@ -296,6 +301,8 @@ class ExtensionMarkView extends Component {
         title: '标注结果',
         dataIndex: 'labelResult',
         render: val => <Popover trigger="click" content={<List dataSource={val} renderItem={item => <List.Item>{item}</List.Item>} size="small"/>}><a>查看</a></Popover>,
+        filters: labelResultFilters,
+        filteredValue: filteredInfo.labelResult || null,
       },
       {
         title: '质检结果',

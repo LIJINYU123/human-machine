@@ -153,6 +153,18 @@ const taskMockData = [
     receiveTime: '2020-04-20 10:00:00',
     owner: 'SYECO',
   },
+  {
+    projectId: 'image_project1',
+    projectName: '图片标注20200424',
+    taskId: 'image10',
+    taskName: '任务10',
+    labelType: 'pictureMark',
+    questionNum: 100,
+    schedule: 50,
+    status: 'labeling',
+    receiveTime: '2020-04-24 10:00:00',
+    owner: 'SYECO',
+  },
 ];
 
 const markToolsMockData = [
@@ -408,16 +420,6 @@ function getMyTask(req, res, u) {
   const params = parse(url, true).query;
 
   let dataSource = taskMockData;
-  if (params.sorter) {
-    const s = params.sorter.split('_');
-    dataSource = dataSource.sort((prev, next) => {
-      if (s[1] === 'descend') {
-        return Date.parse(next[s[0]]) - Date.parse(prev[s[0]]);
-      }
-
-      return Date.parse(prev[s[0]]) - Date.parse(next[s[0]]);
-    })
-  }
 
   if (params.status) {
     const statuses = params.status.split(',');
@@ -448,6 +450,17 @@ function getMyTask(req, res, u) {
   if (params.taskName) {
     // eslint-disable-next-line max-len
     dataSource = dataSource.filter(item => item.taskName.toLowerCase().includes(params.taskName.toLowerCase()));
+  }
+
+  if (params.sorter) {
+    const s = params.sorter.split('_');
+    dataSource = dataSource.sort((prev, next) => {
+      if (s[1] === 'descend') {
+        return Date.parse(next[s[0]]) - Date.parse(prev[s[0]]);
+      }
+
+      return Date.parse(prev[s[0]]) - Date.parse(next[s[0]]);
+    })
   }
 
   let pageSize = 10;

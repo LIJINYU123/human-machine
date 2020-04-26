@@ -875,6 +875,89 @@ const extensionLabelData = [
   },
 ];
 
+const imageLabelData = [
+  {
+    dataId: '1',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '2',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '3',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '4',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '5',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '6',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '7',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '8',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '9',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '10',
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+];
+
 const readingLabelData = [
   {
     dataId: '1',
@@ -1225,6 +1308,8 @@ function getLabelData(req, res, u) {
     dataSource = readingLabelData;
   } else if (params.taskId.indexOf('extension') === 0) {
     dataSource = extensionLabelData;
+  } else if (params.taskId.indexOf('image') === 0) {
+    dataSource = imageLabelData;
   } else {
     dataSource = labelMockData;
   }
@@ -1240,12 +1325,12 @@ function getLabelData(req, res, u) {
     dataSource = filterDataSource;
   }
 
-  if (params.result) {
-    const result = params.result.split(',');
+  if (params.labelResult) {
+    const result = params.labelResult.split(',');
     if (result.length === 1 && result[0] === 'processed') {
-      dataSource = dataSource.filter(item => Object.keys(item.result).length > 0);
+      dataSource = dataSource.filter(item => Object.keys(item.labelResult).length > 0);
     } else if (result.length === 1 && result[0] === 'unprocessed') {
-      dataSource = dataSource.filter(item => Object.keys(item.result).length === 0);
+      dataSource = dataSource.filter(item => Object.keys(item.labelResult).length === 0);
     }
   }
 
@@ -1483,6 +1568,8 @@ function getOneTextQuestion(req, res, u) {
     [response] = extensionLabelData;
   } else if (params.taskId.indexOf('reading') === 0) {
     [response] = readingLabelData;
+  } else if (params.taskId.indexOf('image') === 0) {
+    [response] = imageLabelData;
   } else {
     [response] = labelMockData;
   }

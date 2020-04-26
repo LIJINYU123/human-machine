@@ -95,6 +95,7 @@ class GroupAddView extends Component {
         onCancel={onCancel}
         onOk={this.handleConfirm}
         confirmLoading={submitting}
+        destroyOnClose
       >
         <Form {...formItemLayout}>
           <Form.Item label={FieldLabels.groupName}>

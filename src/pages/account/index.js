@@ -9,7 +9,6 @@ import UserDetailView from './components/UserDetailView';
 import BatchAddView from './components/BatchAddView';
 import ManualAddView from './components/ManualAddView';
 import GroupManage from './components/GroupManage';
-import md5 from 'md5';
 
 const { confirm } = Modal;
 
@@ -160,7 +159,7 @@ class UserManage extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'userList/resetPassword',
-      payload: { userId: user.userId, password: md5('eco@1234') },
+      payload: { userId: user.userId },
     });
   };
 
