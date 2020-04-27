@@ -33,11 +33,11 @@ const Model = {
             window.location.href = redirect;
             return;
           }
-          // yield put(routerRedux.replace(redirect))
+          yield put(routerRedux.replace(redirect))
         } else {
           window.location.href = `${urlParams.origin}/`;
         }
-        yield put(routerRedux.replace('/'));
+        yield put(routerRedux.replace(redirect || '/'));
       } else {
         message.error(response.message);
       }
