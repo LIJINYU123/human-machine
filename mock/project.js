@@ -878,15 +878,15 @@ const extensionLabelData = [
 const imageLabelData = [
   {
     dataId: '1',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
-    labelResult: [],
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588315105&t=ed577b96f4f9a0b688d569c4b4789268' },
+    labelResult: [{ id: 10, location: { left: 100, top: 50, right: 100, bottom: 50 }, color: '#52c41a', optionName: '家电', objProps: { left: 100, top: 150, width: 100, height: 50 } }, { id: 11, location: { left: 100, top: 50, right: 100, bottom: 50 }, color: '#13c2c2', optionName: '家具', objProps: { left: 150, top: 200, width: 100, height: 50 } }],
     reviewResult: 'unreview',
     remark: '',
     invalid: false,
   },
   {
     dataId: '2',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -894,7 +894,7 @@ const imageLabelData = [
   },
   {
     dataId: '3',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2972732503,3430499099&fm=11&gp=0.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -902,7 +902,7 @@ const imageLabelData = [
   },
   {
     dataId: '4',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587967009871&di=f45c97b34d614a7e59e4316bd058507e&imgtype=0&src=http%3A%2F%2Fp2.so.qhimgs1.com%2Ft01dfcbc38578dac4c2.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -910,7 +910,7 @@ const imageLabelData = [
   },
   {
     dataId: '5',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2514691225,3720567992&fm=26&gp=0.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -918,7 +918,7 @@ const imageLabelData = [
   },
   {
     dataId: '6',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -926,7 +926,7 @@ const imageLabelData = [
   },
   {
     dataId: '7',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -934,7 +934,7 @@ const imageLabelData = [
   },
   {
     dataId: '8',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -942,7 +942,7 @@ const imageLabelData = [
   },
   {
     dataId: '9',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -950,7 +950,7 @@ const imageLabelData = [
   },
   {
     dataId: '10',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -1594,6 +1594,8 @@ function getNextTextQuestion(req, res, u, b) {
     textMockData = extensionLabelData;
   } else if (taskId.indexOf('reading') === 0) {
     textMockData = readingLabelData;
+  } else if (taskId.indexOf('image') === 0) {
+    textMockData = imageLabelData;
   } else {
     textMockData = labelMockData;
   }
@@ -1652,6 +1654,8 @@ function getPrevTextQuestion(req, res, u, b) {
     textMockData = extensionLabelData;
   } else if (taskId.indexOf('reading') === 0) {
     textMockData = readingLabelData;
+  } else if (taskId.indexOf('image') === 0) {
+    textMockData = imageLabelData;
   } else {
     textMockData = labelMockData;
   }

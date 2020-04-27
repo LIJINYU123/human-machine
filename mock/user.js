@@ -9,7 +9,7 @@ function getCurrentUser(req, res) {
       {
         name: 'SYECO',
         avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-        userid: 'SYECO',
+        userId: 'SYECO',
         unreadCount: 8,
         notifyCount: 9,
       });
@@ -18,7 +18,7 @@ function getCurrentUser(req, res) {
       {
         name: 'SYDEV',
         avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-        userid: 'SYDEV',
+        userId: 'SYDEV',
         unreadCount: 8,
         notifyCount: 9,
       });
@@ -27,7 +27,7 @@ function getCurrentUser(req, res) {
       {
         name: '李锦宇',
         avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
-        userid: 'SY0111',
+        userId: 'SY0111',
         unreadCount: 8,
         notifyCount: 9,
       });

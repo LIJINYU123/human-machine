@@ -302,6 +302,26 @@ const extensionMarkToolsMockData = [
   },
 ];
 
+const imageMarkToolsMockData = [
+  {
+    classifyName: '事物',
+    options: [
+      {
+        optionName: '家电',
+        color: '#52c41a',
+      },
+      {
+        optionName: '家具',
+        color: '#13c2c2',
+      },
+      {
+        optionName: '人物',
+        color: '#1890ff',
+      },
+    ],
+  },
+];
+
 function getProjects(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
@@ -516,6 +536,8 @@ function getMarkTools(req, res, u) {
     res.json(readingMarkToolsMockData[0]);
   } else if (params.projectId.indexOf('extension') === 0) {
     res.json(extensionMarkToolsMockData[0]);
+  } else if (params.projectId.indexOf('image') === 0) {
+    res.json(imageMarkToolsMockData[0]);
   } else {
     res.json(markToolsMockData[0]);
   }

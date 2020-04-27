@@ -250,7 +250,7 @@ class ClassifyAnswerView extends Component {
                 <Form.Item label="标注结果">
                   <Fragment>
                     {
-                      getFieldsValue().labelResult.map(item => <Tag color="blue">{item}</Tag>)
+                      typeof getFieldsValue().labelResult !== 'undefined' ? getFieldsValue().labelResult.map(item => <Tag color="blue">{item}</Tag>) : null
                     }
                   </Fragment>
                 </Form.Item>

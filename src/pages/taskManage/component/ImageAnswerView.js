@@ -34,7 +34,6 @@ class ImageAnswerView extends Component {
     basicInfo: undefined,
     markTool: undefined,
     roleId: '',
-    shapeId: '',
   };
 
   editorRef = React.createRef();
@@ -58,16 +57,29 @@ class ImageAnswerView extends Component {
         taskId: basicInfo.taskId,
       },
       callback: () => {
-        const { questionInfo } = this.props;
+        const { questionInfo, form: { setFieldsValue } } = this.props;
+        const { labelResult } = questionInfo;
         const editorInstance = this.editorRef.current.getInstance();
-        editorInstance.addShape('rect', {
-          fill: '',
-          stroke: 'blue',
-          strokeWidth: 3,
-          width: 100,
-          height: 50,
-          left: 100,
-          top: 50,
+        // console.log(questionInfo);
+
+        // setTimeout(() => editorInstance.loadImageFromURL(questionInfo.data.url, 'SampleImage'));
+        labelResult.forEach(item => setTimeout(() => {
+          editorInstance.addShape('rect', {
+            fill: '',
+            stroke: item.color,
+            strokeWidth: 3,
+            width: item.objProps.width,
+            height: item.objProps.height,
+            left: item.objProps.left,
+            top: item.objProps.top,
+          }).then(objectProps => {
+            // console.log(objectProps.id);
+            item.id = objectProps.id;
+          });
+        }));
+
+        setFieldsValue({
+          labelResult,
         });
       },
     });
@@ -78,8 +90,25 @@ class ImageAnswerView extends Component {
   };
 
   handleNextQuestion = () => {
+    // 清除当前题目的图片中标注的内容
+    const editorInstance = this.editorRef.current.getInstance();
+
     const { basicInfo, roleId } = this.state;
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
+    const { labelResult } = questionInfo;
+    labelResult.forEach(item => {
+      const location = {
+        left: editorInstance.getObjectPosition(item.id, 'left', 'top').x.toFixed(2),
+        top: editorInstance.getObjectPosition(item.id, 'left', 'top').y.toFixed(2),
+        right: editorInstance.getObjectPosition(item.id, 'right', 'bottom').x.toFixed(2),
+        bottom: editorInstance.getObjectPosition(item.id, 'right', 'bottom').y.toFixed(2),
+      };
+      item.location = location;
+      item.objProps = editorInstance.getObjectProperties(item.id, ['left', 'top', 'width', 'height'])
+    });
+
+    editorInstance.clearObjects();
+
     const values = getFieldsValue();
     dispatch({
       type: 'imageMark/fetchNext',
@@ -90,7 +119,9 @@ class ImageAnswerView extends Component {
         ...values,
       },
       callback: () => {
+        // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
+        const { labelResult } = questionInfo;
         if (roleId === 'labeler') {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
@@ -103,13 +134,38 @@ class ImageAnswerView extends Component {
             remark: questionInfo.remark,
           });
         }
+
+        editorInstance.loadImageFromURL(questionInfo.data.url, 'SampleImage');
+
+        // 根据新获取的标注结果渲染图片标注内容
+        labelResult.forEach(item => setTimeout(() => {
+          editorInstance.addShape('rect', {
+            fill: '',
+            stroke: item.color,
+            strokeWidth: 3,
+            width: item.objProps.width,
+            height: item.objProps.height,
+            left: item.objProps.left,
+            top: item.objProps.top,
+          }).then(objectProps => {
+            item.id = objectProps.id;
+          });
+        }));
+
+        editorInstance.stopDrawingMode();
+
+        setFieldsValue({
+          questionInfo,
+        });
       },
     });
   };
 
   getInfo = () => {
     const editorInstance = this.editorRef.current.getInstance();
-    console.log(editorInstance.getObjectPosition(null, 'left', 'top'));
+    const { form: { getFieldsValue } } = this.props;
+    const values = getFieldsValue();
+    console.log(editorInstance.getObjectPosition(values.labelResult[0].id, 'left', 'top'));
   };
 
   handleAddShape = () => {
@@ -130,6 +186,10 @@ class ImageAnswerView extends Component {
   };
 
   handlePrevQuestion = () => {
+    // 清除当前题目的图片中标注的内容
+    const editorInstance = this.editorRef.current.getInstance();
+    editorInstance.clearObjects();
+
     const { basicInfo, roleId } = this.state;
     const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
     dispatch({
@@ -140,7 +200,9 @@ class ImageAnswerView extends Component {
         dataId: questionInfo.dataId,
       },
       callback: () => {
+        // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
+        const { labelResult } = questionInfo;
         if (roleId === 'labeler') {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
@@ -153,12 +215,80 @@ class ImageAnswerView extends Component {
             remark: questionInfo.remark,
           });
         }
+
+        editorInstance.loadImageFromURL(questionInfo.data.url, 'SampleImage');
+
+        // 根据新获取的标注结果渲染图片标注内容
+        labelResult.forEach(item => setTimeout(() => {
+          editorInstance.addShape('rect', {
+            fill: '',
+            stroke: item.color,
+            strokeWidth: 3,
+            width: item.objProps.width,
+            height: item.objProps.height,
+            left: item.objProps.left,
+            top: item.objProps.top,
+          }).then(objectProps => {
+            // console.log(objectProps.id);
+            item.id = objectProps.id;
+          });
+        }));
+
+        setFieldsValue({
+          questionInfo,
+        });
       },
     });
   };
 
   handleMoved = () => {
-    console.log('fdfdfdf');
+    console.log('handleMoved');
+  };
+
+  handleMouseDown = () => {
+    console.log('handleMouseDown');
+  };
+
+  handleTagClick = (optionName, color) => {
+    const { form: { getFieldsValue, setFieldsValue } } = this.props;
+    const values = getFieldsValue();
+    const prevLabelResult = values.labelResult;
+    const editorInstance = this.editorRef.current.getInstance();
+    editorInstance.addShape('rect', {
+      fill: '',
+      stroke: color,
+      strokeWidth: 3,
+      width: 100,
+      height: 50,
+      left: 100,
+      top: 150,
+    }).then(objectProps => {
+      const location = {
+        left: editorInstance.getObjectPosition(objectProps.id, 'left', 'top').x,
+        top: editorInstance.getObjectPosition(objectProps.id, 'left', 'top').y,
+        right: editorInstance.getObjectPosition(objectProps.id, 'right', 'bottom').x,
+        bottom: editorInstance.getObjectPosition(objectProps.id, 'right', 'bottom').y,
+      };
+      prevLabelResult.push({ id: objectProps.id, location, color, optionName, objProps: editorInstance.getObjectProperties(objectProps.id, ['left', 'top', 'width', 'height']) });
+      setFieldsValue({
+        labelResult: prevLabelResult,
+      });
+    });
+  };
+
+  handleDelete = index => {
+    const editorInstance = this.editorRef.current.getInstance();
+
+    const { form: { getFieldsValue, setFieldsValue } } = this.props;
+    const values = getFieldsValue();
+
+    const prevLabelResult = values.labelResult;
+    editorInstance.removeObject(prevLabelResult[index].id);
+
+    prevLabelResult.splice(index, 1);
+    setFieldsValue({
+      labelResult: prevLabelResult,
+    });
   };
 
   render() {
@@ -197,6 +327,31 @@ class ImageAnswerView extends Component {
       },
     };
 
+    const columns = [
+      {
+        title: '结果',
+        dataIndex: 'location',
+        render: val => (typeof val !== 'undefined' ? `[${val.left}, ${val.top}] -> [${val.right}, ${val.bottom}]` : ''),
+      },
+      {
+        title: '选项',
+        dataIndex: 'optionName',
+      },
+      {
+        title: '颜色',
+        dataIndex: 'color',
+        render: val => <div className={styles.colorPicker}><div className={styles.color} style={{ background: `${val}` }}/></div>,
+        width: 60,
+      },
+      {
+        title: '操作',
+        width: 50,
+        render: (_, record, index) => (
+          <a onClick={() => this.handleDelete(index)}>删除</a>
+        ),
+      },
+    ];
+    console.log(questionInfo);
     return (
       <PageHeaderWrapper
         title={basicInfo.taskName}
@@ -214,7 +369,7 @@ class ImageAnswerView extends Component {
                       ref={this.editorRef}
                       includeUI={{
                         loadImage: {
-                          path: 'https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588315105&t=ed577b96f4f9a0b688d569c4b4789268',
+                          path: questionInfo.data ? questionInfo.data.url : 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg',
                           name: 'SampleImage',
                         },
                         menu: ['shape'],
@@ -223,15 +378,18 @@ class ImageAnswerView extends Component {
                       cssMaxWidth={700}
                       cssMaxHeight={500}
                       selectionStyle={{ cornerSize: 5, rotatingPointOffset: 20 }}
-                      onObjectMoved={this.handleMoved}
                     />
                   </Col>
                 </Row>
+              </Col>
+            </Row>
+            <Row>
+              <Col md={16} sm={24}>
                 <Row>
-                  <Form.Item label="物体">
+                  <Form.Item label={markTool.classifyName}>
                     <Fragment>
                       {
-                        ['家电', '家具', '人物'].map(item => <Tag color="blue" style={{ cursor: 'pointer' }}>{item}</Tag>)
+                        markTool.options.map(item => <Tag color={item.color} style={{ cursor: 'pointer' }} onClick={() => this.handleTagClick(item.optionName, item.color)}>{item.optionName}</Tag>)
                       }
                     </Fragment>
                   </Form.Item>
@@ -279,8 +437,6 @@ class ImageAnswerView extends Component {
                   >
                     <Button onClick={this.handlePrevQuestion}>上一题</Button>
                     <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
-                    <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.getInfo}>获取信息</Button>
-                    <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleAddShape}>增加形状</Button>
                     {
                       roleId === 'labeler' &&
                       getFieldDecorator('invalid', {
@@ -291,6 +447,23 @@ class ImageAnswerView extends Component {
                     }
                   </Form.Item>
                 </Row>
+              </Col>
+              <Col md={8} sm={24}>
+                <ConfigProvider renderEmpty={() => <Empty imageStyle={{ height: 10 }} />}>
+                  <Form.Item wrapperCol={{ span: 24 }}>
+                    {
+                      getFieldDecorator('labelResult', {
+                        initialValue: questionInfo.labelResult,
+                        valuePropName: 'dataSource',
+                      })(<Table
+                        size="small"
+                        columns={columns}
+                        pagination={false}
+                        bordered
+                      />)
+                    }
+                  </Form.Item>
+                </ConfigProvider>
               </Col>
             </Row>
           </Form>

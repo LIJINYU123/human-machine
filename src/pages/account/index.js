@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Popconfirm, Modal, Input, Icon, Badge, Tag, Dropdown, Menu } from 'antd';
+import { Button, Card, Divider, Modal, Input, Icon, Badge, Tag, Dropdown, Menu } from 'antd';
 import Highlighter from 'react-highlight-words';
 import styles from './style.less';
 import StandardTable from './components/StandardTable';
@@ -9,6 +9,7 @@ import UserDetailView from './components/UserDetailView';
 import BatchAddView from './components/BatchAddView';
 import ManualAddView from './components/ManualAddView';
 import GroupManage from './components/GroupManage';
+import md5 from 'md5';
 
 const { confirm } = Modal;
 
@@ -159,7 +160,7 @@ class UserManage extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'userList/resetPassword',
-      payload: { userId: user.userId },
+      payload: { userId: user.userId, name: user.name, password: md5('eco@1234'), confirm: md5('eco@1234') },
     });
   };
 

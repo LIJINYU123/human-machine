@@ -58,11 +58,9 @@ class ResetPassword extends Component {
     );
   };
 
-  checkJobNumber = (_, value, callback) => {
+  checkUserId = (_, value, callback) => {
     if (!value) {
-      callback('请输入工号');
-    } else if (value.indexOf('SY') !== 0 || value.length < 3) {
-      callback('必须以SY开头');
+      callback('请输入账户ID');
     } else {
       callback();
     }
@@ -152,13 +150,13 @@ class ResetPassword extends Component {
         <h3>重置密码</h3>
         <Form onSubmit={this.handleSubmit}>
           <Form.Item>
-            {getFieldDecorator('jobNumber', {
+            {getFieldDecorator('userId', {
               rules: [
                 {
-                  validator: this.checkJobNumber,
+                  validator: this.checkUserId,
                 },
               ],
-            })(<Input size="large" placeholder="工号" />)}
+            })(<Input size="large" placeholder="账户ID" />)}
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('name', {
