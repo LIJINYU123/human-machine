@@ -130,6 +130,19 @@ class DepCreateView extends Component {
               })(<Input/>)
             }
           </Form.Item>
+          <Form.Item label={FieldLabels.dataAddress}>
+            {
+              getFieldDecorator('dataAddress', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入数据存储地址',
+                  },
+                ],
+                initialValue: 'localhost',
+              })(<Input/>)
+            }
+          </Form.Item>
         </Form>
       </Modal>
     );

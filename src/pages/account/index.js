@@ -39,7 +39,7 @@ class UserManage extends Component {
   componentDidMount() {
     const { dispatch, location } = this.props;
     const params = {
-      sorter: 'updateTime_descend',
+      sorter: 'updatedTime_descend',
     };
 
     dispatch({
@@ -53,7 +53,7 @@ class UserManage extends Component {
 
     dispatch({
       type: 'groupList/fetchGroups',
-      payload: { sorter: 'updateTime_descend' },
+      payload: { sorter: 'updatedTime_descend' },
     });
 
     const privilegeStr = localStorage.getItem('Privileges');
@@ -79,7 +79,7 @@ class UserManage extends Component {
       callback: () => {
         dispatch({
           type: 'userList/fetchUsers',
-          payload: { sorter: 'updateTime_descend' },
+          payload: { sorter: 'updatedTime_descend' },
         });
         this.setState({
           selectedRows: [],
@@ -197,7 +197,7 @@ class UserManage extends Component {
       callback: () => {
         dispatch({
           type: 'userList/fetchUsers',
-          payload: { sorter: 'updateTime_descend' },
+          payload: { sorter: 'updatedTime_descend' },
         });
       },
     });
@@ -212,7 +212,7 @@ class UserManage extends Component {
       callback: () => {
         dispatch({
           type: 'userList/fetchUsers',
-          payload: { sorter: 'updateTime_descend' },
+          payload: { sorter: 'updatedTime_descend' },
         });
       },
     });

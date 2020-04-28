@@ -87,6 +87,13 @@ class DepDetailView extends Component {
               })(<Input />)
             }
           </Form.Item>
+          <Form.Item label={FieldLabels.dataAddress}>
+            {
+              getFieldDecorator('dataAddress', {
+                initialValue: departmentInfo.dataAddress,
+              })(<Input/>)
+            }
+          </Form.Item>
         </Form>
       </Modal>
     );

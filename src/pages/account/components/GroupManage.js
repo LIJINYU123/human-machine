@@ -27,7 +27,7 @@ class GroupManage extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'groupList/fetchGroups',
-      payload: { sorter: 'updateTime_descend' },
+      payload: { sorter: 'updatedTime_descend' },
     });
   }
 
@@ -72,7 +72,7 @@ class GroupManage extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'groupList/fetchGroups',
-      payload: { sorter: 'updateTime_descend' },
+      payload: { sorter: 'updatedTime_descend' },
     });
   };
 
@@ -102,7 +102,7 @@ class GroupManage extends Component {
       callback: () => {
         dispatch({
           type: 'groupList/fetchGroups',
-          payload: { sorter: 'updateTime_descend' },
+          payload: { sorter: 'updatedTime_descend' },
         });
       },
     });
@@ -117,7 +117,7 @@ class GroupManage extends Component {
       callback: () => {
         dispatch({
           type: 'groupList/fetchGroups',
-          payload: { sorter: 'updateTime_descend' },
+          payload: { sorter: 'updatedTime_descend' },
         });
         this.setState({
           selectedRows: [],
