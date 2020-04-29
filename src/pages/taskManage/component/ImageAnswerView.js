@@ -18,8 +18,6 @@ import {
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 // import 'tui-image-editor/dist/tui-image-editor.css'
 // import ImageEditor from '@toast-ui/react-image-editor'
-import Annotation from 'react-image-annotation';
-import { RectangleSelector } from 'react-image-annotation/lib/selectors';
 import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './style.less';
@@ -36,7 +34,6 @@ class ImageAnswerView extends Component {
     basicInfo: undefined,
     markTool: undefined,
     roleId: '',
-
   };
 
   componentWillMount() {
@@ -342,14 +339,7 @@ class ImageAnswerView extends Component {
               <Col md={16} sm={24}>
                 <Row gutter={[0, 32]}>
                   <Col md={{ span: formItemLayout.wrapperCol.sm.span, offset: formItemLayout.labelCol.sm.span }} sm={24}>
-                    {/*<Annotation*/}
-                    {/*  type={RectangleSelector.TYPE}*/}
-                    {/*  src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg"*/}
-                    {/*  alt="SampleImage"*/}
-                    {/*  value={[]}*/}
-                    {/*  annotations={[]}*/}
-                    {/*  onMouseMove={() => {}}*/}
-                    {/*/>*/}
+                    {/*<img src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg" alt="SampleImage" />*/}
                   </Col>
                 </Row>
               </Col>

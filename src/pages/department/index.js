@@ -126,26 +126,17 @@ class DepartmentList extends Component {
   };
 
   handleAdd = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'departmentList/fetchNoDepAccounts',
-    });
-
     this.setState({
       addModalVisible: true,
     });
   };
 
   handleModify = department => {
-    const { dispatch, departmentList: { data } } = this.props;
+    const { departmentList: { data } } = this.props;
 
     const result = data.filter(item => item.departmentId === department.departmentId);
     this.setState({
       departmentInfo: result[0],
-    });
-
-    dispatch({
-      type: 'departmentList/fetchNoDepAccounts',
     });
 
     this.setState({

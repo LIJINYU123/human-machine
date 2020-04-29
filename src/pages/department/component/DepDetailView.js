@@ -19,7 +19,7 @@ class DepDetailView extends Component {
 
         dispatch({
           type: 'departmentList/updateDepartment',
-          payload: { departmentId: departmentInfo.departmentId, ...values },
+          payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
           callback: onCancel,
         });
       }
