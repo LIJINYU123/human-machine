@@ -71,7 +71,7 @@ class ImageAnswerView extends Component {
   };
 
   handleNextQuestion = () => {
-    const { basicInfo, roleId } = this.state;
+    const { basicInfo, roleId, markTool } = this.state;
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
     const { labelResult } = questionInfo;
 
@@ -92,12 +92,14 @@ class ImageAnswerView extends Component {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             invalid: questionInfo.invalid,
+            optionName: markTool.options.length ? markTool.options[0].optionName : '',
           });
         } else if (roleId === 'inspector') {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             reviewResult: questionInfo.reviewResult,
             remark: questionInfo.remark,
+            optionName: markTool.options.length ? markTool.options[0].optionName : '',
           });
         }
         this.setState({
@@ -108,7 +110,7 @@ class ImageAnswerView extends Component {
   };
 
   handlePrevQuestion = () => {
-    const { basicInfo, roleId } = this.state;
+    const { basicInfo, roleId, markTool } = this.state;
     const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
     dispatch({
       type: 'imageMark/fetchPrev',
@@ -125,12 +127,14 @@ class ImageAnswerView extends Component {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             invalid: questionInfo.invalid,
+            optionName: markTool.options.length ? markTool.options[0].optionName : '',
           });
         } else if (roleId === 'inspector') {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             reviewResult: questionInfo.reviewResult,
             remark: questionInfo.remark,
+            optionName: markTool.options.length ? markTool.options[0].optionName : '',
           });
         }
         this.setState({

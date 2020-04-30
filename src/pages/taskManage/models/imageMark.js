@@ -18,9 +18,6 @@ const ImageMark = {
   effects: {
     * fetchLabelData({ payload }, { call, put }) {
       const response = yield call(queryLabelData, payload);
-      response.list.forEach(item => {
-        item.sentence = item.data.sentence;
-      });
       yield put({
         type: 'labelData',
         payload: response,

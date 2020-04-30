@@ -234,8 +234,8 @@ class ImageMarkView extends Component {
     const columns = [
       {
         title: '图片名称',
-        dataIndex: 'sentence',
-        render: val => <Popover content={<Card style={{ width: 240 }} cover={<img alt="example" src="https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588315105&t=ed577b96f4f9a0b688d569c4b4789268" />} hoverable><Meta description="http://10.89.100.14/img/0002fdafdf.png"/></Card>}><a>{val}</a></Popover>,
+        dataIndex: 'data',
+        render: val => <Popover content={<Card style={{ width: 240 }} cover={<img alt="example" src={val.url} />} hoverable><Meta description="http://10.89.100.14/img/0002fdafdf.png"/></Card>} placement="top"><a>{val.sentence}</a></Popover>,
       },
       {
         title: '标注结果',

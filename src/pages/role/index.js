@@ -41,6 +41,20 @@ class RoleList extends Component {
     });
   }
 
+  handleStandardTableChange = (pagination, filterArg, sorter) => {
+    const { dispatch } = this.props;
+    const params = {};
+
+    if (sorter.field) {
+      params.sorter = `${sorter.field}_${sorter.order}`;
+    }
+
+    dispatch({
+      type: 'roleList/fetchRole',
+      payload: params,
+    });
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleModify = role => {
     const { roleList: { data } } = this.props;
@@ -139,6 +153,7 @@ class RoleList extends Component {
             loading={loading}
             data={data}
             columns={columns}
+            onChange={this.handleStandardTableChange}
           />
         </Card>
         {/* eslint-disable-next-line max-len */}
