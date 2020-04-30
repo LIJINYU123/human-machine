@@ -16,7 +16,6 @@ import {
 } from 'antd'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import 'tui-image-editor/dist/tui-image-editor.css';
-import ImageEditor from '@toast-ui/react-image-editor';
 import MultiCrops from '@/components/ImageEditor';
 import TagSelect from '@/components/TagSelect';
 import router from 'umi/router';
@@ -73,7 +72,6 @@ class ImageAnswerView extends Component {
   handleNextQuestion = () => {
     const { basicInfo, roleId, markTool } = this.state;
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
-    const { labelResult } = questionInfo;
 
     const values = getFieldsValue();
     dispatch({
