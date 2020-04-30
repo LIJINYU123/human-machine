@@ -87,13 +87,6 @@ class UserDetailView extends Component {
               })(<Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} mode="multiple">{groupSelects}</Select>)
             }
           </Form.Item>
-          <Form.Item label={FieldLabels.registerTime}>
-            {
-              getFieldDecorator('registerTime', {
-                initialValue: userInfo.registerTime,
-              })(<Input disabled/>)
-            }
-          </Form.Item>
         </Form>
       </Modal>
     );

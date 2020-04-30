@@ -7,6 +7,7 @@ import ItemData from './map';
 const { FieldLabels } = ItemData;
 
 @connect(({ groupList, loading }) => ({
+  ungroupedUsers: groupList.ungroupedUsers,
   targetKeys: groupList.targetKeys,
   submitting: loading.effects['groupList/modifyGroup'],
 }))

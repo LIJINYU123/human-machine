@@ -242,188 +242,24 @@ let groupData = [
   },
 ];
 
-const groupIncludeUngrouped = [
+const ungroupedUsers = [
   {
-    groupId: '1',
-    groupName: '标注组A',
-    userInfo: [
-      {
-        userId: 'SY0123',
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: 'SY0124',
-        name: Mock.Random.cname(),
-        roleId: 'labeler',
-        roleName: '标注员',
-      },
-      {
-        userId: 'SY0125',
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-    ],
-    createdTime: '2020-03-10 10:00:00',
-    updatedTime: '2020-03-10 10:00:00',
+    userId: 'SY0123',
+    name: Mock.Random.cname(),
+    roleId: 'inspector',
+    roleName: '质检员',
   },
   {
-    groupId: '2',
-    groupName: '标注组B',
-    userInfo: [
-      {
-        userId: 'SY0126',
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: 'SY0127',
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: 'SY0128',
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-    ],
-    createdTime: '2020-03-11 10:00:00',
-    updatedTime: '2020-03-11 10:00:00',
+    userId: 'SY0124',
+    name: Mock.Random.cname(),
+    roleId: 'labeler',
+    roleName: '标注员',
   },
   {
-    groupId: '3',
-    groupName: '标注组C',
-    userInfo: [
-      {
-        userId: 'SY0129',
-        name: Mock.Random.cname(),
-        roleId: 'labeler',
-        roleName: '标注员',
-      },
-      {
-        userId: 'SY0130',
-        name: Mock.Random.cname(),
-        roleId: 'labeler',
-        roleName: '标注员',
-      },
-      {
-        userId: 'SY0131',
-        name: Mock.Random.cname(),
-        roleId: 'labeler',
-        roleName: '标注员',
-      },
-    ],
-    createdTime: '2020-03-12 10:00:00',
-    updatedTime: '2020-03-12 10:00:00',
-  },
-  {
-    groupId: '4',
-    groupName: '质检组A',
-    userInfo: [
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-    ],
-    createdTime: '2020-03-13 10:00:00',
-    updatedTime: '2020-03-13 10:00:00',
-  },
-  {
-    groupId: '5',
-    groupName: '质检组B',
-    userInfo: [
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-    ],
-    createdTime: '2020-03-14 10:00:00',
-    updatedTime: '2020-03-14 10:00:00',
-  },
-  {
-    groupId: '6',
-    groupName: '质检组C',
-    userInfo: [
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-    ],
-    createdTime: '2020-03-15 10:00:00',
-    updatedTime: '2020-03-15 10:00:00',
-  },
-  {
-    groupId: '7',
-    groupName: '未分组',
-    userInfo: [
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-      {
-        userId: Mock.Random.string(5),
-        name: Mock.Random.cname(),
-        roleId: 'inspector',
-        roleName: '质检员',
-      },
-    ],
-    createdTime: '',
-    updatedTime: '',
+    userId: 'SY0125',
+    name: Mock.Random.cname(),
+    roleId: 'inspector',
+    roleName: '质检员',
   },
 ];
 
@@ -627,8 +463,8 @@ function getGroups(req, res, u) {
   return res.json(dataSource);
 }
 
-function getGroupsIncludeUngrouped(req, res) {
-  return res.json(groupIncludeUngrouped);
+function getUngroupedUsers(req, res) {
+  return res.json(ungroupedUsers);
 }
 
 function addGroup(req, res, u, b) {
@@ -713,7 +549,7 @@ export default {
   'PUT /api/user/manual-add': manualAddUsers,
   'PUT /api/user/batch-add': batchAddUsers,
   'GET /api/groups': getGroups,
-  'GET /api/groups-include-ungrouped': getGroupsIncludeUngrouped,
+  'GET /api/ungrouped-users': getUngroupedUsers,
   'PUT /api/groups': addGroup,
   'DELETE /api/groups': deleteGroup,
   'POST /api/groups': modifyGroup,

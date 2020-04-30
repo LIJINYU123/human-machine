@@ -1,11 +1,11 @@
 import { message } from 'antd';
-import { queryGroupList, queryGroupIncludeUngroup, addGroup, deleteGroup, modifyGroup, queryUserInfo, deleteUserInfo } from '../service';
+import { queryGroupList, queryUngroupedUserList, addGroup, deleteGroup, modifyGroup, queryUserInfo, deleteUserInfo } from '../service';
 
 const Group = {
   namespace: 'groupList',
   state: {
     groups: [],
-    groupIncludeUngroup: [],
+    ungroupedUsers: [],
     targetKeys: [],
     userInfos: [],
     roleInfos: [],
@@ -19,12 +19,15 @@ const Group = {
       });
     },
 
-    * fetchGroupIncludeUnGrouped(_, { call, put }) {
-      const response = yield call(queryGroupIncludeUngroup);
+    * fetchUngroupedUsers({ callback }, { call, put }) {
+      const response = yield call(queryUngroupedUserList);
       yield put({
-        type: 'groupIncludeUngroup',
+        type: 'ungroupedUser',
         payload: response,
       });
+      if (callback) {
+        callback();
+      }
     },
 
     * addGroup({ payload, callback }, { call }) {
@@ -98,8 +101,8 @@ const Group = {
     group(state, action) {
       return { ...state, groups: action.payload };
     },
-    groupIncludeUngroup(state, action) {
-      return { ...state, groupIncludeUngroup: action.payload };
+    ungroupedUser(state, action) {
+      return { ...state, ungroupedUsers: action.payload };
     },
     saveKeys(state, action) {
       return { ...state, targetKeys: action.payload };
