@@ -170,19 +170,19 @@ class ImageAnswerView extends Component {
     if (prevLabelResult.length < coordinates.length) {
       prevLabelResult.push({
         ...coordinate,
-        right: coordinate.left + coordinate.width,
-        bottom: coordinate.top + coordinate.height,
+        right: coordinate.x + coordinate.width,
+        bottom: coordinate.y + coordinate.height,
         optionName: values.optionName,
         color: markTool.options.filter(item => item.optionName === values.optionName[0])[0].color });
     } else {
       prevLabelResult.forEach(item => {
         if (coordinate.id === item.id) {
-          item.left = coordinate.left;
-          item.top = coordinate.top;
+          item.x = coordinate.x;
+          item.y = coordinate.y;
           item.width = coordinate.width;
           item.height = coordinate.height;
-          item.right = coordinate.left + coordinate.width;
-          item.bottom = coordinate.top + coordinate.height;
+          item.right = coordinate.x + coordinate.width;
+          item.bottom = coordinate.y + coordinate.height;
         }
       });
     }
