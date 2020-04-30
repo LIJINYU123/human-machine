@@ -15,7 +15,6 @@ import {
   Tag,
 } from 'antd'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import 'tui-image-editor/dist/tui-image-editor.css';
 import MultiCrops from '@/components/ImageEditor';
 import TagSelect from '@/components/TagSelect';
 import router from 'umi/router';
