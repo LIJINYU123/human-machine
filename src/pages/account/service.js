@@ -65,6 +65,11 @@ export async function queryGroupList(params) {
   });
 }
 
+// 获取组别，包括为分组的用户
+export async function queryGroupIncludeUngroup() {
+  return request('/api/groups-include-ungrouped');
+}
+
 export async function addGroup(params) {
   return request('/api/groups', {
     method: 'PUT',

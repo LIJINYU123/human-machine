@@ -29,6 +29,9 @@ class GroupManage extends Component {
       type: 'groupList/fetchGroups',
       payload: { sorter: 'updatedTime_descend' },
     });
+    dispatch({
+      type: 'groupList/fetchGroupIncludeUnGrouped',
+    });
   }
 
   handleSelectRows = rows => {
@@ -197,7 +200,7 @@ class GroupManage extends Component {
   };
 
   render() {
-    const { groupList: { groups }, loading } = this.props;
+    const { groupList: { groups, groupIncludeUngroup }, loading } = this.props;
     const { selectedRows, addModalVisible, modalVisible, currentGroup } = this.state;
 
     const columns = [
@@ -246,8 +249,8 @@ class GroupManage extends Component {
             onChange={this.handleStandardTableChange}
           />
         </Card>
-        <GroupAddView visible={addModalVisible} onCancel={this.handleCancelAddModal} groups={groups} />
-        <GroupDetailView visible={modalVisible} inputDisabled={false} onCancel={this.handleCancelModifyModal} onRefresh={this.handleRefresh} groups={groups} currentGroup={currentGroup} />
+        <GroupAddView visible={addModalVisible} onCancel={this.handleCancelAddModal} groups={groupIncludeUngroup} />
+        <GroupDetailView visible={modalVisible} inputDisabled={false} onCancel={this.handleCancelModifyModal} onRefresh={this.handleRefresh} groups={groupIncludeUngroup} currentGroup={currentGroup} />
       </Fragment>
     );
   }
