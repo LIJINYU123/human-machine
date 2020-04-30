@@ -18,6 +18,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import 'tui-image-editor/dist/tui-image-editor.css';
 import ImageEditor from '@toast-ui/react-image-editor';
 import MultiCrops from '@/components/ImageEditor';
+import TagSelect from '@/components/TagSelect';
 import router from 'umi/router';
 import { connect } from 'dva';
 import styles from './style.less';
@@ -34,10 +35,9 @@ class ImageAnswerView extends Component {
     basicInfo: undefined,
     markTool: undefined,
     roleId: '',
-    coordinates: [{ id: '3', x: 100, y: 100, width: 100, height: 100 }],
+    coordinates: [],
   };
 
-  // editorRef = React.createRef();
 
   componentWillMount() {
     const { location } = this.props;
@@ -58,27 +58,10 @@ class ImageAnswerView extends Component {
         taskId: basicInfo.taskId,
       },
       callback: () => {
-        const { questionInfo, form: { setFieldsValue } } = this.props;
-        const { labelResult } = questionInfo;
-        // const editorInstance = this.editorRef.current.getInstance();
-
-        // labelResult.forEach(item => setTimeout(() => {
-        //   editorInstance.addShape('rect', {
-        //     fill: '',
-        //     stroke: item.color,
-        //     strokeWidth: 3,
-        //     width: item.objProps.width,
-        //     height: item.objProps.height,
-        //     left: item.objProps.left,
-        //     top: item.objProps.top,
-        //   }).then(objectProps => {
-        //     item.id = objectProps.id;
-        //   });
-        // }));
-        //
-        // setFieldsValue({
-        //   labelResult,
-        // });
+        const { questionInfo } = this.props;
+        this.setState({
+          coordinates: questionInfo.labelResult,
+        });
       },
     });
   }
@@ -88,24 +71,9 @@ class ImageAnswerView extends Component {
   };
 
   handleNextQuestion = () => {
-    // 清除当前题目的图片中标注的内容
-    // const editorInstance = this.editorRef.current.getInstance();
-
     const { basicInfo, roleId } = this.state;
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
     const { labelResult } = questionInfo;
-    // labelResult.forEach(item => {
-    //   const location = {
-    //     left: editorInstance.getObjectPosition(item.id, 'left', 'top').x.toFixed(2),
-    //     top: editorInstance.getObjectPosition(item.id, 'left', 'top').y.toFixed(2),
-    //     right: editorInstance.getObjectPosition(item.id, 'right', 'bottom').x.toFixed(2),
-    //     bottom: editorInstance.getObjectPosition(item.id, 'right', 'bottom').y.toFixed(2),
-    //   };
-    //   item.location = location;
-    //   item.objProps = editorInstance.getObjectProperties(item.id, ['left', 'top', 'width', 'height'])
-    // });
-    //
-    // editorInstance.clearObjects();
 
     const values = getFieldsValue();
     dispatch({
@@ -132,55 +100,14 @@ class ImageAnswerView extends Component {
             remark: questionInfo.remark,
           });
         }
-
-        // editorInstance.loadImageFromURL(questionInfo.data.url, 'SampleImage');
-
-        // 根据新获取的标注结果渲染图片标注内容
-        // labelResult.forEach(item => setTimeout(() => {
-        //   editorInstance.addShape('rect', {
-        //     fill: '',
-        //     stroke: item.color,
-        //     strokeWidth: 3,
-        //     width: item.objProps.width,
-        //     height: item.objProps.height,
-        //     left: item.objProps.left,
-        //     top: item.objProps.top,
-        //   }).then(objectProps => {
-        //     item.id = objectProps.id;
-        //   });
-        // }));
-        //
-        // editorInstance.stopDrawingMode();
-        //
-        // setFieldsValue({
-        //   questionInfo,
-        // });
+        this.setState({
+          coordinates: labelResult,
+        });
       },
     });
   };
 
-  // handleAddShape = () => {
-  //   const editorInstance = this.editorRef.current.getInstance();
-  //   editorInstance.addShape('rect', {
-  //     fill: '',
-  //     stroke: 'blue',
-  //     strokeWidth: 3,
-  //     width: 100,
-  //     height: 50,
-  //     left: 100,
-  //     top: 150,
-  //   }).then(objectProps => {
-  //     console.log(objectProps.id);
-  //     console.log(editorInstance.getObjectPosition(objectProps.id, 'left', 'top'));
-  //     console.log(editorInstance.getObjectPosition(objectProps.id, 'right', 'bottom'));
-  //   });
-  // };
-
   handlePrevQuestion = () => {
-    // 清除当前题目的图片中标注的内容
-    // const editorInstance = this.editorRef.current.getInstance();
-    // editorInstance.clearObjects();
-
     const { basicInfo, roleId } = this.state;
     const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
     dispatch({
@@ -206,80 +133,77 @@ class ImageAnswerView extends Component {
             remark: questionInfo.remark,
           });
         }
-
-        // editorInstance.loadImageFromURL(questionInfo.data.url, 'SampleImage');
-
-        // 根据新获取的标注结果渲染图片标注内容
-        // labelResult.forEach(item => setTimeout(() => {
-        //   editorInstance.addShape('rect', {
-        //     fill: '',
-        //     stroke: item.color,
-        //     strokeWidth: 3,
-        //     width: item.objProps.width,
-        //     height: item.objProps.height,
-        //     left: item.objProps.left,
-        //     top: item.objProps.top,
-        //   }).then(objectProps => {
-        //     item.id = objectProps.id;
-        //   });
-        // }));
-        //
-        // setFieldsValue({
-        //   questionInfo,
-        // });
+        this.setState({
+          coordinates: labelResult,
+        });
       },
     });
   };
 
-  handleTagClick = (optionName, color) => {
-    const { form: { getFieldsValue, setFieldsValue } } = this.props;
-    const values = getFieldsValue();
-    const prevLabelResult = values.labelResult;
-    // const editorInstance = this.editorRef.current.getInstance();
-    // editorInstance.addShape('rect', {
-    //   fill: '',
-    //   stroke: color,
-    //   strokeWidth: 3,
-    //   width: 100,
-    //   height: 50,
-    //   left: 100,
-    //   top: 150,
-    // }).then(objectProps => {
-    //   const location = {
-    //     left: editorInstance.getObjectPosition(objectProps.id, 'left', 'top').x,
-    //     top: editorInstance.getObjectPosition(objectProps.id, 'left', 'top').y,
-    //     right: editorInstance.getObjectPosition(objectProps.id, 'right', 'bottom').x,
-    //     bottom: editorInstance.getObjectPosition(objectProps.id, 'right', 'bottom').y,
-    //   };
-    //   prevLabelResult.push({ id: objectProps.id, location, color, optionName, objProps: editorInstance.getObjectProperties(objectProps.id, ['left', 'top', 'width', 'height']) });
-    //   setFieldsValue({
-    //     labelResult: prevLabelResult,
-    //   });
-    // });
+  handleTagChange = value => {
+    const { form: { setFieldsValue } } = this.props;
+    setFieldsValue({
+      classifyName: value,
+    });
   };
 
   handleDelete = index => {
-    const editorInstance = this.editorRef.current.getInstance();
-
     const { form: { getFieldsValue, setFieldsValue } } = this.props;
     const values = getFieldsValue();
 
     const prevLabelResult = values.labelResult;
-    editorInstance.removeObject(prevLabelResult[index].id);
 
     prevLabelResult.splice(index, 1);
     setFieldsValue({
       labelResult: prevLabelResult,
     });
+    this.setState({
+      coordinates: prevLabelResult,
+    });
   };
 
   changeCoordinate = (coordinate, index, coordinates) => {
+    const { form: { setFieldsValue, getFieldsValue } } = this.props;
+    const { markTool } = this.state;
+    const values = getFieldsValue();
+    const prevLabelResult = values.labelResult;
+    if (prevLabelResult.length < coordinates.length) {
+      prevLabelResult.push({
+        ...coordinate,
+        right: coordinate.left + coordinate.width,
+        bottom: coordinate.top + coordinate.height,
+        optionName: values.optionName,
+        color: markTool.options.filter(item => item.optionName === values.optionName[0])[0].color });
+    } else {
+      prevLabelResult.forEach(item => {
+        if (coordinate.id === item.id) {
+          item.left = coordinate.left;
+          item.top = coordinate.top;
+          item.width = coordinate.width;
+          item.height = coordinate.height;
+          item.right = coordinate.left + coordinate.width;
+          item.bottom = coordinate.top + coordinate.height;
+        }
+      });
+    }
+    setFieldsValue({
+      labelResult: prevLabelResult,
+    });
     this.setState({
       coordinates,
     })
   };
 
   deleteCoordinate = (coordinate, index, coordinates) => {
+    const { form: { setFieldsValue, getFieldsValue } } = this.props;
+    const values = getFieldsValue();
+    const prevLabelResult = values.labelResult;
+
+    prevLabelResult.splice(index, 1);
+    setFieldsValue({
+      labelResult: prevLabelResult,
+    });
+
     this.setState({
       coordinates,
     })
@@ -323,9 +247,8 @@ class ImageAnswerView extends Component {
 
     const columns = [
       {
-        title: '结果',
-        dataIndex: 'location',
-        render: val => (typeof val !== 'undefined' ? `[${val.left}, ${val.top}] -> [${val.right}, ${val.bottom}]` : ''),
+        title: '序号',
+        render: (_, record, index) => index + 1,
       },
       {
         title: '选项',
@@ -346,6 +269,8 @@ class ImageAnswerView extends Component {
       },
     ];
 
+    // console.log(this.state.coordinates);
+
     return (
       <PageHeaderWrapper
         title={basicInfo.taskName}
@@ -355,9 +280,18 @@ class ImageAnswerView extends Component {
       >
         <Card bordered={false}>
           <Form {...formItemLayout}>
-            <Row>
+            <Row gutter={[0, 32]}>
               <Col md={16} sm={24}>
-                <Row gutter={[0, 32]}>
+                <Row>
+                  <Form.Item label={markTool.classifyName}>
+                    <Fragment>
+                      {
+                        markTool.options.map(item => <Tag color={item.color}>{item.optionName}</Tag>)
+                      }
+                    </Fragment>
+                  </Form.Item>
+                </Row>
+                <Row>
                   <Col md={{ span: formItemLayout.wrapperCol.sm.span, offset: formItemLayout.labelCol.sm.span }} sm={24}>
                     <MultiCrops
                       src={questionInfo.data ? questionInfo.data.url : ''}
@@ -373,11 +307,14 @@ class ImageAnswerView extends Component {
               <Col md={16} sm={24}>
                 <Row>
                   <Form.Item label={markTool.classifyName}>
-                    <Fragment>
-                      {
-                        markTool.options.map(item => <Tag color={item.color} style={{ cursor: 'pointer' }} onClick={() => this.handleTagClick(item.optionName, item.color)}>{item.optionName}</Tag>)
-                      }
-                    </Fragment>
+                    {
+                      getFieldDecorator('optionName', {
+                        initialValue: [markTool.options[0].optionName],
+                      })(
+                        <TagSelect expandable multiple={false} onChange={this.handleTagChange}>
+                          {markTool.options.map(option => <TagSelect.Option value={option.optionName}>{option.optionName}</TagSelect.Option>)}
+                        </TagSelect>)
+                    }
                   </Form.Item>
                 </Row>
                 <Row>

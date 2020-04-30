@@ -879,7 +879,7 @@ const imageLabelData = [
   {
     dataId: '1',
     data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588315105&t=ed577b96f4f9a0b688d569c4b4789268' },
-    labelResult: [{ id: 10, location: { left: 100, top: 50, right: 100, bottom: 50 }, color: '#52c41a', optionName: '家电', objProps: { left: 100, top: 150, width: 100, height: 50 } }, { id: 11, location: { left: 100, top: 50, right: 100, bottom: 50 }, color: '#13c2c2', optionName: '家具', objProps: { left: 150, top: 200, width: 100, height: 50 } }],
+    labelResult: [],
     reviewResult: 'unreview',
     remark: '',
     invalid: false,

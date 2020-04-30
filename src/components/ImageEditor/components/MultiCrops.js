@@ -33,15 +33,15 @@ class MultiCrops extends Component {
       />))(props.coordinates)
   };
 
-  getCursorPosition = (e) => {
-    const { left, top } = this.container.getBoundingClientRect()
+  getCursorPosition = e => {
+    const { left, top } = this.container.getBoundingClientRect();
     return {
       x: e.clientX - left,
       y: e.clientY - top,
     }
   };
 
-  handleMouseDown = (e) => {
+  handleMouseDown = e => {
     const { coordinates } = this.props;
     if (e.target === this.img || e.target === this.container) {
       const { x, y } = this.getCursorPosition(e);
@@ -56,9 +56,9 @@ class MultiCrops extends Component {
   };
 
 
-  handleMouseMove = (e) => {
+  handleMouseMove = e => {
     const { onDraw, onChange, coordinates } = this.props;
-    const { pointA } = this
+    const { pointA } = this;
     if (isValidPoint(pointA)) {
       const pointB = this.getCursorPosition(e);
 

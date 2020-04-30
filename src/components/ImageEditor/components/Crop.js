@@ -21,11 +21,12 @@ class Crop extends Component {
       left: x,
 
 
-      boxShadow: '0 0 6px #000',
-      background: '#8c8c8c',
-      opacity: 0.6,
+      // boxShadow: '0 0 6px #000',
+      border: '3px solid #52c41a',
+      // background: '#8c8c8c',
+      // opacity: 0.6,
     }
-  }
+  };
 
   componentDidMount() {
     interact(this.crop)
@@ -45,6 +46,11 @@ class Crop extends Component {
       || (nextProps.index !== this.props.index)
   }
 
+  componentWillUnmount() {
+    interact(this.crop)
+      .unset()
+  }
+
   handleResizeMove = e => {
     const {
       index,
@@ -53,22 +59,23 @@ class Crop extends Component {
       coordinates,
       onResize,
       onChange,
-    } = this.props
-    const { width, height } = e.rect
-    const { left, top } = e.deltaRect
+    } = this.props;
+    const { width, height } = e.rect;
+    const { left, top } = e.deltaRect;
 
     const nextCoordinate = {
       ...coordinate, x: x + left, y: y + top, width, height,
-    }
-    const nextCoordinates = update(index, nextCoordinate)(coordinates)
+    };
+    const nextCoordinates = update(index, nextCoordinate)(coordinates);
     if (is(Function, onResize)) {
       onResize(nextCoordinate, index, nextCoordinates)
     }
     if (is(Function, onChange)) {
       onChange(nextCoordinate, index, nextCoordinates)
     }
-  }
-  handleDragMove = (e) => {
+  };
+
+  handleDragMove = e => {
     const {
       index,
       coordinate,
@@ -76,10 +83,10 @@ class Crop extends Component {
       coordinates,
       onDrag,
       onChange,
-    } = this.props
-    const { dx, dy } = e
-    const nextCoordinate = { ...coordinate, x: x + dx, y: y + dy }
-    const nextCoordinates = update(index, nextCoordinate)(coordinates)
+    } = this.props;
+    const { dx, dy } = e;
+    const nextCoordinate = { ...coordinate, x: x + dx, y: y + dy };
+    const nextCoordinates = update(index, nextCoordinate)(coordinates);
     if (is(Function, onDrag)) {
       onDrag(nextCoordinate, index, nextCoordinates)
     }
@@ -87,7 +94,7 @@ class Crop extends Component {
     if (is(Function, onChange)) {
       onChange(nextCoordinate, index, nextCoordinates)
     }
-  }
+  };
 
   handleDelete = () => {
     const {
@@ -95,25 +102,20 @@ class Crop extends Component {
       coordinate,
       onDelete,
       coordinates,
-    } = this.props
-    const nextCoordinates = remove(index, 1)(coordinates)
+    } = this.props;
+    const nextCoordinates = remove(index, 1)(coordinates);
     if (is(Function, onDelete)) {
       onDelete(coordinate, index, nextCoordinates)
     }
-  }
-
-  componentWillUnmount() {
-    interact(this.crop)
-      .unset()
-  }
+  };
 
 
   render() {
-    const { coordinate, index } = this.props
+    const { coordinate, index } = this.props;
     return (
       <div
         style={Crop.cropStyle(coordinate)}
-        ref={crop => this.crop = crop}
+        ref={crop => { this.crop = crop }}
       >
         <NumberIcon number={index + 1} />
         <DeleteIcon
