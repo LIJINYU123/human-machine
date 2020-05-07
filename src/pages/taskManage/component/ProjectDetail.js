@@ -195,24 +195,15 @@ class ProjectDetail extends Component {
         className={styles.pageHeader}
         content={description}
       >
-        <div className={styles.standardList}>
-          <Card className={styles.card} bordered={false}>
-            <Row>
-              <Col sm={24} xs={24}>
-                <Info title="我的待办" value={`${inProgressNum}个任务`} onClick={this.handleJumptoInProgress} bordered />
-              </Col>
-            </Row>
-          </Card>
-          <Card title="任务列表" bordered={false} extra={extraContent}>
-            <StandardTable
-              rowKey="taskId"
-              loading={loading}
-              data={data}
-              columns={columns}
-              onChange={this.handleStandardTableChange}
-            />
-          </Card>
-        </div>
+        <Card title="任务列表" bordered={false} extra={extraContent}>
+          <StandardTable
+            rowKey="taskId"
+            loading={loading}
+            data={data}
+            columns={columns}
+            onChange={this.handleStandardTableChange}
+          />
+        </Card>
       </PageHeaderWrapper>
     );
   }

@@ -186,6 +186,11 @@ class DepartmentList extends Component {
 
     const columns = [
       {
+        title: '序号',
+        render: (_, record, index) => index + 1,
+        width: 60,
+      },
+      {
         title: '机构名称',
         dataIndex: 'departmentName',
         ...this.getColumnSearchProps('departmentName'),
@@ -219,9 +224,6 @@ class DepartmentList extends Component {
       {
         title: '用户数目',
         dataIndex: 'userAmount',
-        render: (_, department) => (
-          <a>{department.userAmount}</a>
-        ),
       },
       {
         title: '更新时间',

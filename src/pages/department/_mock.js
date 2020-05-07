@@ -17,7 +17,7 @@ let mockData = [
   {
     departmentId: 'operation',
     departmentName: '运营部门',
-    departmentType: 'company',
+    departmentType: 'customer',
     privilege: ['textClassify'],
     administrator: 'SYOPE',
     adminName: '运营部管理员',

@@ -6,7 +6,7 @@ export default {
     administrator: '管理员',
     createdTime: '创建时间',
     privilege: '机构权限',
-    dataAddress: '存储地址',
+    dataAddress: '数据存储地址',
   },
 
   Privileges: [
@@ -62,8 +62,8 @@ export default {
       name: '运营中心',
     },
     {
-      id: 'company',
-      name: '公司',
+      id: 'customer',
+      name: '客户',
     },
   ],
 

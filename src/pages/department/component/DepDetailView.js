@@ -35,11 +35,11 @@ class DepDetailView extends Component {
     const formItemLayout = {
       labelCol: {
         xs: { span: 24 },
-        sm: { span: 4 },
+        sm: { span: 6 },
       },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 20 },
+        sm: { span: 18 },
       },
     };
 
@@ -64,7 +64,7 @@ class DepDetailView extends Component {
           <Form.Item label={FieldLabels.departmentType}>
             {
               getFieldDecorator('departmentType', {
-                initialValue: 'operationCenter',
+                initialValue: departmentInfo.departmentType,
               })(
                 <Select
                   dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}
