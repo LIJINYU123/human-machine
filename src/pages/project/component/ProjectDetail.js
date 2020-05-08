@@ -197,7 +197,7 @@ class ProjectDetail extends Component {
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={statusName[basicInfo.status]} />
         <Statistic title="标注进度" value={basicInfo.schedule} suffix="%" />
-        <Statistic title="项目进度" value={basicInfo.schedule} suffix="%" />
+        <Statistic title="质检进度" value={basicInfo.schedule} suffix="%" />
       </div>
     );
 
@@ -213,10 +213,10 @@ class ProjectDetail extends Component {
 
     const action = (
       <Fragment>
-        <Radio.Group>
-          <Radio.Button value="complete"><Icon type="check"/>项目完成</Radio.Button>
-          <Radio.Button value="export"><Icon type="download"/>导出结果</Radio.Button>
-        </Radio.Group>
+        <Button.Group>
+          <Button icon="check">项目完成</Button>
+          <Button icon="download">导出结果</Button>
+        </Button.Group>
         <Button onClick={this.handleEdit}>编辑</Button>
         <Button type="primary" onClick={this.handleGoBack}>返回</Button>
       </Fragment>

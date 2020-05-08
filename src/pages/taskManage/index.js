@@ -63,7 +63,10 @@ class TaskCenter extends Component {
 
     const filters = Object.keys(filterArg).reduce((obj, key) => {
       const newObj = { ...obj };
-      newObj[key] = getValue(filterArg[key]);
+      if (getValue(filterArg[key])) {
+        newObj[key] = getValue(filterArg[key]);
+      }
+
       return newObj;
     }, {});
     const params = {

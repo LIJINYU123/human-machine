@@ -24,8 +24,8 @@ class BasicView extends Component {
           <Descriptions.Item label="单个任务包题目数">{basicInfo.questionNum}</Descriptions.Item>
           <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
           <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>
-          <Descriptions.Item label="标注员"><Tooltip title={basicInfo.labelers.map(labeler => labeler.name).join('，')}><a>查看列表</a></Tooltip></Descriptions.Item>
-          <Descriptions.Item label="质检员"><Tooltip title={basicInfo.inspectors.map(inspector => inspector.name).join('，')}><a>查看列表</a></Tooltip></Descriptions.Item>
+          <Descriptions.Item label="标注员"><Tooltip title={basicInfo.labelers.map(labeler => labeler.userName).join('，')}><a>查看列表</a></Tooltip></Descriptions.Item>
+          <Descriptions.Item label="质检员"><Tooltip title={basicInfo.inspectors.map(inspector => inspector.userName).join('，')}><a>查看列表</a></Tooltip></Descriptions.Item>
           <Descriptions.Item label="项目描述">{basicInfo.description}</Descriptions.Item>
         </Descriptions>
         <Descriptions title="项目数据集" style={{ marginTop: '32px' }} bordered>

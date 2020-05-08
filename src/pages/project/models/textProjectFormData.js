@@ -361,7 +361,7 @@ const TextProjectFormData = {
       return {
         ...state,
         projectId,
-        stepOne: { projectName, projectType, passRate, checkRate, labeler: labelers.map(item => item.id), inspector: inspectors.map(item => item.id), questionNum, projectPeriod, description },
+        stepOne: { projectName, projectType, passRate, checkRate, labeler: labelers, inspector: inspectors, questionNum, projectPeriod, description },
         stepTwo: { templateName, classifyName, multiple, saveType },
         forever,
         labelType: labelTypeToValue[labelType],

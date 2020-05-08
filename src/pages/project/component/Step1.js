@@ -36,6 +36,9 @@ class Step1 extends Component {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
+        const { labeler, inspector } = values;
+        values.labeler = labeler.map(item => ({ userId: item.key, userName: item.label }));
+        values.inspector = inspector.map(item => ({ userId: item.key, userName: item.label }));
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
           payload: values,
@@ -162,8 +165,9 @@ class Step1 extends Component {
                       message: '请选择标注员',
                     },
                   ],
-                  initialValue: labeler,
+                  initialValue: labeler.map(item => ({ key: item.userId, label: item.userName })),
                 })(<Select
+                  labelInValue
                   dropdownMenuStyle={{
                     maxHeight: 400,
                     overflow: 'auto',
@@ -185,8 +189,9 @@ class Step1 extends Component {
                       message: '请选择质检员',
                     },
                   ],
-                  initialValue: inspector,
+                  initialValue: inspector.map(item => ({ key: item.userId, label: item.userName })),
                 })(<Select
+                  labelInValue
                   dropdownMenuStyle={{
                     maxHeight: 400,
                     overflow: 'auto',

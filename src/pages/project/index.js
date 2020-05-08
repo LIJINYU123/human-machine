@@ -307,6 +307,11 @@ class TextProjectList extends Component {
         ...this.getColumnSearchProps('projectName'),
       },
       {
+        title: '负责人',
+        dataIndex: 'owner',
+        render: val => val.name,
+      },
+      {
         title: '工具类型',
         dataIndex: 'labelType',
         render: val => labelTypeName[val],

@@ -144,14 +144,14 @@ class TaskList extends Component {
     filteredInfo = filteredInfo || {};
 
     const labelerFilters = Object.keys(basicInfo).length ? basicInfo.labelers.map(labeler => ({
-      text: labeler.name,
-      value: labeler.id,
+      text: labeler.userName,
+      value: labeler.userId,
     })) : [];
 
     // eslint-disable-next-line max-len
     const inspectorFilters = Object.keys(basicInfo).length ? basicInfo.inspectors.map(inspector => ({
-      text: inspector.name,
-      value: inspector.id,
+      text: inspector.userName,
+      value: inspector.userId,
     })) : [];
 
     const columns = [
