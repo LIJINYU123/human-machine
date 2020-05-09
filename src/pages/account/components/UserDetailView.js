@@ -13,18 +13,18 @@ const { FieldLabels } = ItemData;
 class UserDetailView extends Component {
   handleConfirm = () => {
     // eslint-disable-next-line max-len
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel, userInfo } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
         const { registerTime, ...rest } = values;
         dispatch({
           type: 'userList/updateDetail',
-          payload: rest,
+          payload: { ...rest, oldUserId: userInfo.userId },
           callback: () => {
             dispatch({
               type: 'userList/fetchUsers',
-              payload: { sorter: 'registerTime_descend' },
+              payload: { sorter: 'updatedTime_descend' },
             });
             onCancel();
           },

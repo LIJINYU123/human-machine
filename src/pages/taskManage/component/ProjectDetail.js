@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Card, Button, Descriptions, Row, Col, Progress, Badge } from 'antd/lib/index';
+import { Card, Button, Descriptions, Progress, Badge } from 'antd/lib/index';
 import StandardTable from './StandardTable';
 import styles from './style.less';
 import { connect } from 'dva/index';
@@ -126,7 +126,7 @@ class ProjectDetail extends Component {
   };
 
   render() {
-    const { data, basicInfo, inProgressNum, loading } = this.props;
+    const { data, basicInfo, loading } = this.props;
     const { roleId } = this.state;
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
@@ -150,16 +150,11 @@ class ProjectDetail extends Component {
         dataIndex: 'taskName',
       },
       {
-        title: '标注工具',
-        dataIndex: 'labelType',
-        render: val => labelTypeName[val],
-      },
-      {
         title: '题数',
         dataIndex: 'questionNum',
       },
       {
-        title: '标注进度',
+        title: roleId === 'labeler' ? '标注进度' : '质检进度',
         dataIndex: 'schedule',
         render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
       },

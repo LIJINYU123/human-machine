@@ -266,6 +266,8 @@ const ungroupedUsers = [
 const roleMap = {
   administrator: '管理员',
   user: '普通用户',
+  labeler: '标注员',
+  inspector: '质检员',
 };
 
 function getUsers(req, res, u) {
@@ -352,9 +354,11 @@ function updateUser(req, res, u, b) {
   const body = (b && b.body) || req.body;
   const accounts = [];
   mockData.forEach(item => {
-    if (body.userId === item.userId) {
-      item.roleName = roleMap[body.roleId];
+    if (body.oldUserId === item.userId) {
+      item.userId = body.userId;
+      item.roleName = roleMap.hasOwnProperty(body.roleId) ? roleMap[body.roleId] : '';
       item.groupId = body.groupId;
+      item.updatedTime = moment().locale('zh-cn').format('YYYY-MM-DD HH:mm:ss');
     }
     accounts.push(item.userId);
   });
