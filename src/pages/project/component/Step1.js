@@ -39,6 +39,8 @@ class Step1 extends Component {
         const { labeler, inspector } = values;
         values.labelers = labeler.map(item => ({ userId: item.key, userName: item.label }));
         values.inspectors = inspector.map(item => ({ userId: item.key, userName: item.label }));
+        delete values.labeler;
+        delete values.inspector;
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
           payload: values,
