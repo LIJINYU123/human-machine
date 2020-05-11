@@ -1,5 +1,5 @@
 import { message } from 'antd/lib/index';
-import { queryLabelData, queryMarkTools, saveTextMarkResult, deleteTextMarkResult, saveReviewResult, queryOneTextQuestion, queryNextTextQuestion, queryPrevTextQuestion } from '../service';
+import { queryLabelData, queryMarkTool, saveTextMarkResult, deleteTextMarkResult, saveReviewResult, queryOneTextQuestion, queryNextTextQuestion, queryPrevTextQuestion } from '../service';
 
 const TextMark = {
   namespace: 'textMark',
@@ -32,7 +32,7 @@ const TextMark = {
     },
 
     * fetchMarkTool({ payload }, { call, put }) {
-      const response = yield call(queryMarkTools, payload);
+      const response = yield call(queryMarkTool, payload);
       yield put({
         type: 'saveTool',
         payload: response,

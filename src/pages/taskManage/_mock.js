@@ -505,7 +505,7 @@ function getMyTaskNumber(req, res) {
   res.json({ inProgressNum, completeNum });
 }
 
-function getMarkTools(req, res, u) {
+function getMarkTool(req, res, u) {
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     // eslint-disable-next-line prefer-destructuring
@@ -537,5 +537,5 @@ export default {
   'GET /api/task-manage/my-task': getMyTask,
   'GET /api/task-manage/task-number': getMyTaskNumber,
   'GET /api/task-manage/receive-task/:taskId': receiveTask,
-  'GET /api/task-manage/mark-tools': getMarkTools,
+  'GET /api/task-manage/mark-tool': getMarkTool,
 };

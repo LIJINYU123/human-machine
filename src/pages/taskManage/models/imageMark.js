@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryLabelData, queryMarkTools, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult } from '../service';
+import { queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult } from '../service';
 
 
 const ImageMark = {
@@ -25,7 +25,7 @@ const ImageMark = {
     },
 
     * fetchMarkTool({ payload }, { call, put }) {
-      const response = yield call(queryMarkTools, payload);
+      const response = yield call(queryMarkTool, payload);
       yield put({
         type: 'saveTool',
         payload: response,

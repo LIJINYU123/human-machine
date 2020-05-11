@@ -37,8 +37,8 @@ class Step1 extends Component {
       if (!error) {
         const values = getFieldsValue();
         const { labeler, inspector } = values;
-        values.labeler = labeler.map(item => ({ userId: item.key, userName: item.label }));
-        values.inspector = inspector.map(item => ({ userId: item.key, userName: item.label }));
+        values.labelers = labeler.map(item => ({ userId: item.key, userName: item.label }));
+        values.inspectors = inspector.map(item => ({ userId: item.key, userName: item.label }));
         dispatch({
           type: 'textProjectFormData/saveStepOneData',
           payload: values,
