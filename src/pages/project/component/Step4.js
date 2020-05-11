@@ -40,13 +40,13 @@ class Step4 extends Component {
   };
 
   handleSaveRule = () => {
-    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
+    const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel, projectId } = this.props;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
           type: 'textProjectFormData/sveStepFourData',
-          payload: { explain: values.content.toHTML() },
+          payload: { explain: values.content.toHTML(), projectId },
           callback: () => {
             onCancel();
           },

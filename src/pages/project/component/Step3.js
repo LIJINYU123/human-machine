@@ -12,6 +12,7 @@ const { Dragger } = Upload;
   saveTemplate: textProjectFormData.saveTemplate,
   optionData: textProjectFormData.optionData,
   markTools: textProjectFormData.markTools,
+  projectId: textProjectFormData.projectId,
 }))
 class Step3 extends Component {
   state = {
@@ -44,11 +45,12 @@ class Step3 extends Component {
 
   handleUpload = () => {
     const { fileList } = this.state;
-    const { dispatch } = this.props;
+    const { dispatch, projectId } = this.props;
 
     const formData = new FormData();
     if (fileList.length) {
       formData.append('file', fileList[0]);
+      formData.append('projectId', projectId);
 
       this.setState({
         uploading: true,

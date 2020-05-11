@@ -1469,7 +1469,7 @@ function createProject(req, res) {
 
 function saveStepOneData(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  return res.json({ status: 'ok', message: body });
+  return res.json({ status: 'ok', message: body, projectId: Mock.Random.string(5) });
 }
 
 function saveStepTwoData(req, res, u, b) {
@@ -1587,7 +1587,7 @@ function getOneTextQuestion(req, res, u) {
 function getNextTextQuestion(req, res, u, b) {
   const roleId = req.get('RoleID');
   const body = (b && b.body) || req.body;
-  const { taskId, dataId } = body;
+  const { taskId, dataId, nextDataId } = body;
   let response = {};
   let textMockData = [];
   if (taskId.indexOf('match') === 0) {
@@ -1607,46 +1607,60 @@ function getNextTextQuestion(req, res, u, b) {
   }
   if (roleId === 'labeler') {
     const { labelResult, invalid } = body;
+    let currentIndex = -1;
     textMockData.forEach((item, index) => {
       if (item.dataId === dataId) {
         // 更新当前题目
         item.labelResult = labelResult;
         item.invalid = invalid;
+        currentIndex = index;
+      }
 
-        // 获取下一道题目
-        if (index === textMockData.length - 1) {
-          response = textMockData[index];
-        } else {
-          response = textMockData[index + 1];
-        }
+      if (item.dataId === nextDataId) {
+        response = textMockData[index];
         response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
       }
     });
+
+    if (nextDataId === '') {
+      if (currentIndex !== -1 && currentIndex < textMockData.length - 1) {
+        response = textMockData[currentIndex + 1];
+      } else if (currentIndex !== -1 && currentIndex === textMockData.length - 1) {
+        response = textMockData[currentIndex];
+      }
+    }
   } else if (roleId === 'inspector') {
     const { labelResult, reviewResult, remark } = body;
+    let currentIndex = -1;
     textMockData.forEach((item, index) => {
       if (item.dataId === dataId) {
         // 更新当前题目
         item.labelResult = labelResult;
         item.reviewResult = reviewResult;
         item.remark = remark;
+        currentIndex = index;
+      }
 
-        // 获取下一道题目
-        if (index === textMockData.length - 1) {
-          response = textMockData[index];
-        } else {
-          response = textMockData[index + 1];
-        }
+      if (item.dataId === nextDataId) {
+        response = textMockData[index];
         response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
       }
     });
+
+    if (nextDataId === '') {
+      if (currentIndex !== -1 && currentIndex < textMockData.length - 1) {
+        response = textMockData[currentIndex + 1];
+      } else if (currentIndex !== -1 && currentIndex === textMockData.length - 1) {
+        response = textMockData[currentIndex];
+      }
+    }
   }
   return res.json(response);
 }
 
 function getPrevTextQuestion(req, res, u, b) {
   const body = (b && b.body) || req.body;
-  const { taskId, dataId } = body;
+  const { taskId, prevDataId } = body;
   let response = {};
 
   let textMockData = [];
@@ -1666,17 +1680,17 @@ function getPrevTextQuestion(req, res, u, b) {
     textMockData = labelMockData;
   }
   textMockData.forEach((item, index) => {
-    if (item.dataId === dataId) {
+    if (item.dataId === prevDataId) {
       // 获取上一道题目
-      if (index === 0) {
-        [response] = textMockData;
-      } else {
-        response = textMockData[index - 1];
-      }
+      response = textMockData[index];
 
       response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
     }
   });
+  if (prevDataId === '') {
+    [response] = textMockData;
+  }
+
   return res.json(response);
 }
 

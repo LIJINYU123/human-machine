@@ -101,7 +101,7 @@ const TextProjectFormData = {
       if (response.status === 'ok') {
         yield put({
           type: 'saveStepOne',
-          payload: { ...payload, projectId: response.message },
+          payload: { ...payload, projectId: response.projectId },
         });
       } else {
         message.error(response.message);
@@ -137,7 +137,7 @@ const TextProjectFormData = {
 
       const templateName = payload.hasOwnProperty('templateName') ? payload.templateName : '';
 
-      const response = yield call(saveStepTwoData, { labelType: labelType.slice(-1)[0], saveTemplate, templateName, setting });
+      const response = yield call(saveStepTwoData, { labelType: labelType.slice(-1)[0], saveTemplate, templateName, setting, projectId: payload.projectId });
       if (response.status === 'ok') {
         yield put({
           type: 'saveStepTwo',
