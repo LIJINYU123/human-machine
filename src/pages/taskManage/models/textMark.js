@@ -66,12 +66,15 @@ const TextMark = {
     },
 
     // 答题模式，获取一道题目
-    * fetchQuestion({ payload }, { call, put }) {
+    * fetchQuestion({ payload, callback }, { call, put }) {
       const response = yield call(queryOneTextQuestion, payload);
       yield put({
         type: 'saveQuestion',
         payload: response,
       });
+      if (callback) {
+        callback();
+      }
     },
 
     // 答题模式，获取下一道题目

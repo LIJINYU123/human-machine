@@ -42,7 +42,7 @@ export default {
     text: '文本',
     picture: '图片',
     voice: '音频',
-    other: '其他',
+    vedio: '视频',
   },
 
   reviewLabel: {

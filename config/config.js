@@ -251,16 +251,6 @@ export default {
               name: '个人中心',
               icon: 'profile',
               path: '/person',
-              routes: [
-                {
-                  name: '个人资料',
-                  icon: 'book',
-                },
-                {
-                  name: '数据统计',
-                  icon: 'dashboard',
-                },
-              ],
             },
             {
               component: '404',

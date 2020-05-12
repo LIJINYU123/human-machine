@@ -55,8 +55,8 @@ export default {
       label: '音频',
     },
     {
-      value: 'other',
-      label: '其他',
+      value: 'vedio',
+      label: '视频',
     },
   ],
 

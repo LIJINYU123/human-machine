@@ -126,7 +126,7 @@ class Step3 extends Component {
   handleDownload = () => {
     const { stepOne } = this.props;
     const { labelType } = stepOne;
-    fetch('/api/text-project/download-template', {
+    fetch('/api/project/download-template', {
       method: 'POST',
       body: JSON.stringify({ labelType }),
       headers: {

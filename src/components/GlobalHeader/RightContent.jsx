@@ -30,13 +30,18 @@ const GlobalHeaderRight = props => {
     </Menu>
   );
 
+  const roleId = localStorage.getItem('RoleID');
+
   return (
     <div className={className}>
-      <HeaderDropdown overlay={menu}>
+      {
+        roleId === 'superAdmin' &&
+        <HeaderDropdown overlay={menu}>
         <span className={styles.action}>
           <span>{currentAgency} <Icon type="down"/></span>
         </span>
-      </HeaderDropdown>
+        </HeaderDropdown>
+      }
       <Avatar />
     </div>
   );

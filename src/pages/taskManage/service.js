@@ -34,7 +34,7 @@ export async function queryTaskNumber() {
 
 // 文本标注页面api
 export async function queryLabelData(params) {
-  return request('/api/text-project/label-data', {
+  return request('/api/project/label-data', {
     params,
   });
 }
@@ -46,7 +46,7 @@ export async function queryMarkTool(params) {
 }
 
 export async function saveTextMarkResult(params) {
-  return request('/api/text-project/label-result', {
+  return request('/api/project/label-result', {
     method: 'POST',
     data: params,
   });
@@ -60,27 +60,27 @@ export async function saveReviewResult(params) {
 }
 
 export async function deleteTextMarkResult(params) {
-  return request('/api/text-project/label-result', {
+  return request('/api/project/label-result', {
     method: 'DELETE',
     data: params,
   });
 }
 
 export async function queryOneTextQuestion(params) {
-  return request('/api/text-project/one-question', {
+  return request('/api/task-manage/one-question', {
     params,
   });
 }
 
 export async function queryNextTextQuestion(params) {
-  return request('/api/text-project/next-question', {
+  return request('/api/task-manage/next-question', {
     method: 'POST',
     data: params,
   });
 }
 
 export async function queryPrevTextQuestion(params) {
-  return request('/api/text-project/prev-question', {
+  return request('/api/task-manage/prev-question', {
     method: 'POST',
     data: params,
   })

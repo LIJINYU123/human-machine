@@ -17,6 +17,7 @@ class ExtensionAnswerView extends Component {
     basicInfo: undefined,
     markTool: undefined,
     roleId: '',
+    dataIdQueue: [],
   };
 
   componentWillMount() {
@@ -30,23 +31,36 @@ class ExtensionAnswerView extends Component {
 
   componentDidMount() {
     const { dispatch } = this.props;
-    const { basicInfo } = this.state;
+    const { basicInfo, dataIdQueue } = this.state;
     dispatch({
       type: 'extensionMark/fetchQuestion',
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
       },
+      callback: () => {
+        const { questionInfo } = this.props;
+        dataIdQueue.push(questionInfo.dataId);
+      },
     });
   }
 
   handleGoBack = () => {
+    this.setState({
+      dataIdQueue: [],
+    });
     router.goBack();
   };
 
   handleNextQuestion = () => {
-    const { basicInfo, roleId } = this.state;
+    const { basicInfo, roleId, dataIdQueue } = this.state;
     const { dispatch, questionInfo, form: { getFieldsValue, setFieldsValue } } = this.props;
+    let nextDataId = '';
+    const currentIndex = dataIdQueue.indexOf(questionInfo.dataId);
+    if (currentIndex !== -1 && currentIndex < dataIdQueue.length - 1) {
+      nextDataId = dataIdQueue[currentIndex + 1]
+    }
+
     const values = getFieldsValue();
     dispatch({
       type: 'extensionMark/fetchNext',
@@ -54,9 +68,11 @@ class ExtensionAnswerView extends Component {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
         dataId: questionInfo.dataId,
+        nextDataId,
         ...values,
       },
       callback: () => {
+        // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
         if (roleId === 'labeler') {
           setFieldsValue({
@@ -70,21 +86,31 @@ class ExtensionAnswerView extends Component {
             remark: questionInfo.remark,
           });
         }
+        if (!dataIdQueue.includes(questionInfo.dataId)) {
+          dataIdQueue.push(questionInfo.dataId);
+        }
       },
     });
   };
 
   handlePrevQuestion = () => {
-    const { basicInfo, roleId } = this.state;
+    const { basicInfo, roleId, dataIdQueue } = this.state;
     const { dispatch, questionInfo, form: { setFieldsValue } } = this.props;
+    let prevDataId = '';
+    const currentIndex = dataIdQueue.indexOf(questionInfo.dataId);
+    if (currentIndex !== -1 && currentIndex !== 0) {
+      prevDataId = dataIdQueue[currentIndex - 1];
+    }
+
     dispatch({
       type: 'extensionMark/fetchPrev',
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
-        dataId: questionInfo.dataId,
+        prevDataId,
       },
       callback: () => {
+        // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
         if (roleId === 'labeler') {
           setFieldsValue({
@@ -127,7 +153,7 @@ class ExtensionAnswerView extends Component {
 
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
-    const { basicInfo, markTool, roleId } = this.state;
+    const { basicInfo, markTool, roleId, dataIdQueue } = this.state;
     const action = (
       <Fragment>
         { roleId === 'labeler' && <Button icon="check">提交质检</Button> }
@@ -248,7 +274,7 @@ class ExtensionAnswerView extends Component {
                       },
                     }}
                   >
-                    <Button onClick={this.handlePrevQuestion}>上一题</Button>
+                    <Button onClick={this.handlePrevQuestion} disabled={dataIdQueue.length === 0 || dataIdQueue.indexOf(questionInfo.dataId) === 0}>上一题</Button>
                     <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
                     {
                       roleId === 'labeler' &&

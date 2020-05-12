@@ -84,17 +84,17 @@ export async function deleteTaskData(params) {
 
 // 任务详情页api
 export async function queryTaskDetail(taskId) {
-  return request(`/api/text-project/task-detail/${taskId}`);
+  return request(`/api/project/task-detail/${taskId}`);
 }
 
 export async function queryLabelData(params) {
-  return request('/api/text-project/label-data', {
+  return request('/api/project/label-data', {
     params,
   });
 }
 
 export async function deleteLabelData(params) {
-  return request('/api/text-project/label-data', {
+  return request('/api/project/label-data', {
     method: 'DELETE',
     data: params,
   });

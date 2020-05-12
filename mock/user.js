@@ -194,16 +194,6 @@ export default {
           name: '个人中心',
           icon: 'profile',
           path: '/person',
-          children: [
-            {
-              name: '个人资料',
-              icon: 'book',
-            },
-            {
-              name: '数据统计',
-              icon: 'dashboard',
-            },
-          ],
         },
       ],
       SYDEV: [

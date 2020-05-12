@@ -19,7 +19,7 @@ const statusFilters = Object.keys(statusName).map(key => ({
 
 const projectTypeFilters = Object.keys(projectTypeName).map(key => ({
   text: projectTypeName[key],
-  value: key,
+  value: projectTypeName[key],
 }));
 
 @connect(({ taskCenter, detail, loading }) => ({
@@ -40,7 +40,7 @@ class TaskCenter extends Component {
     const { dispatch } = this.props;
     const roleId = localStorage.getItem('RoleID');
     const params = {
-      sorter: 'updatedTime_descend',
+      sorter: 'createdTime_descend',
     };
     dispatch({
       type: 'taskCenter/fetchProject',
@@ -176,12 +176,10 @@ class TaskCenter extends Component {
   handleRadioChange = event => {
     const { dispatch } = this.props;
     const params = {
-      sorter: 'updatedTime_descend',
+      sorter: 'createdTime_descend',
     };
-    if (event.target.value === 'text') {
-      params.labelType = 'textClassify,textMatch,ner';
-    } else if (event.target.value !== 'all') {
-      params.labelType = event.target.value;
+    if (event.target.value !== '全部') {
+      params.projectType = event.target.value;
     }
 
     dispatch({
@@ -204,9 +202,8 @@ class TaskCenter extends Component {
       {
         title: '项目类型',
         dataIndex: 'projectType',
-        render: val => projectTypeName[val],
         filters: projectTypeFilters,
-        filteredValue: filteredInfo.labelType || null,
+        filteredValue: filteredInfo.projectType || null,
       },
       {
         title: '项目状态',
@@ -242,12 +239,12 @@ class TaskCenter extends Component {
 
     const extraContent = (
       <div>
-        <Radio.Group defaultValue="all" onChange={this.handleRadioChange}>
-          <Radio.Button value="all">全部</Radio.Button>
-          <Radio.Button value="text">文本</Radio.Button>
-          <Radio.Button value="pictureMark">图片</Radio.Button>
-          <Radio.Button value="voiceMark">音频</Radio.Button>
-          <Radio.Button value="videoDialogMark">其他</Radio.Button>
+        <Radio.Group defaultValue="全部" onChange={this.handleRadioChange}>
+          <Radio.Button value="全部">全部</Radio.Button>
+          <Radio.Button value="文本">文本</Radio.Button>
+          <Radio.Button value="图片">图片</Radio.Button>
+          <Radio.Button value="音频">音频</Radio.Button>
+          <Radio.Button value="视频">视频</Radio.Button>
         </Radio.Group>
       </div>
     );

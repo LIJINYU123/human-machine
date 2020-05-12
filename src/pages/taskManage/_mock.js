@@ -5,7 +5,7 @@ const projectMockData = [
   {
     projectId: '1',
     projectName: '文本分类_0123',
-    projectType: 'text',
+    projectType: '文本',
     status: 'initial',
     availableNum: 4,
     createdTime: '2020-01-13 10:00:00',
@@ -13,7 +13,7 @@ const projectMockData = [
   {
     projectId: '2',
     projectName: '文本匹配_0124',
-    projectType: 'text',
+    projectType: '文本',
     status: 'initial',
     availableNum: 3,
     createdTime: '2020-01-14 10:00:00',
@@ -21,7 +21,7 @@ const projectMockData = [
   {
     projectId: '3',
     projectName: '实体识别_0125',
-    projectType: 'text',
+    projectType: '文本',
     status: 'inProgress',
     availableNum: 0,
     createdTime: '2020-01-15 10:00:00',
@@ -29,7 +29,7 @@ const projectMockData = [
   {
     projectId: '4',
     projectName: '文本匹配_0127',
-    projectType: 'text',
+    projectType: '文本',
     status: 'complete',
     availableNum: 0,
     createdTime: '2020-01-16 10:00:00',
@@ -37,7 +37,7 @@ const projectMockData = [
   {
     projectId: '5',
     projectName: '文本匹配_0128',
-    projectType: 'text',
+    projectType: '文本',
     status: 'suspend',
     availableNum: 8,
     createdTime: '2020-01-16 10:00:00',
@@ -339,12 +339,12 @@ function getProjects(req, res, u) {
     dataSource = filterDataSource;
   }
 
-  if (params.labelType) {
-    const types = params.labelType.split(',');
+  if (params.projectType) {
+    const types = params.projectType.split(',');
     let filterDataSource = [];
     types.forEach(type => {
       // eslint-disable-next-line max-len
-      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.labelType === type));
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.projectType === type));
     });
 
     dataSource = filterDataSource;
