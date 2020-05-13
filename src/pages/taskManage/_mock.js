@@ -373,18 +373,19 @@ function getProjects(req, res, u) {
 }
 
 function receiveTask(req, res) {
-  const { taskId } = req.params;
-  taskMockData.forEach(item => {
-    if (item.taskId === taskId) {
-      item.status = 'labeling';
-      item.receiveTime = moment().local('zh-cn').format('YYYY-MM-DD HH:mm:ss')
-    }
-  });
+  const { projectId } = req.params;
+  // taskMockData.forEach(item => {
+  //   if (item.taskId === taskId) {
+  //     item.status = 'labeling';
+  //     item.receiveTime = moment().local('zh-cn').format('YYYY-MM-DD HH:mm:ss');
+  //   }
+  // });
   return res.json({ message: '领取成功', status: 'ok' })
 }
 
 function getTaskData(req, res, u) {
   const userId = req.header('UserID');
+  const roleId = req.header('RoleID');
   let url = u;
   if (!url || Object.prototype.toString.call(url) !== '[object String]') {
     // eslint-disable-next-line prefer-destructuring
@@ -401,18 +402,7 @@ function getTaskData(req, res, u) {
   dataSource = dataSource.filter(item => item.owner === userId);
 
   const result = {
-    list: [{
-      projectId: 'ner_project1',
-      projectName: '实体识别456',
-      taskId: 'ner6',
-      taskName: '任务6',
-      labelType: 'sequenceLabeling',
-      questionNum: 100,
-      schedule: 30,
-      status: 'labeling',
-      receiveTime: '2020-02-26 10:00:00',
-      owner: 'SYECO',
-    }],
+    list: [],
   };
 
   res.json(result);
@@ -536,6 +526,6 @@ export default {
   'GET /api/task-manage/task-data': getTaskData,
   'GET /api/task-manage/my-task': getMyTask,
   'GET /api/task-manage/task-number': getMyTaskNumber,
-  'GET /api/task-manage/receive-task/:taskId': receiveTask,
+  'GET /api/task-manage/receive-task/:projectId': receiveTask,
   'GET /api/task-manage/mark-tool': getMarkTool,
 };

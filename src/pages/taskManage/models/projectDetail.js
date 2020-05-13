@@ -50,15 +50,10 @@ const ProjectDetail = {
       });
     },
 
-    * receiveTask({ payload, callback }, { call, put }) {
+    * receiveTask({ payload, callback }, { call }) {
       const response = yield call(receiveTask, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryTaskData);
-        yield put({
-          type: 'taskData',
-          payload: result,
-        });
       } else {
         message.error(response.message);
       }

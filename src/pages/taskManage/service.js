@@ -18,8 +18,8 @@ export async function queryTaskData(params) {
 }
 
 // 任务中心api
-export async function receiveTask(taskId) {
-  return request(`/api/task-manage/receive-task/${taskId}`);
+export async function receiveTask(projectId) {
+  return request(`/api/task-manage/receive-task/${projectId}`);
 }
 
 export async function queryMyTask(params) {

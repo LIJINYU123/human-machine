@@ -65,14 +65,15 @@ class ProjectDetail extends Component {
     });
   };
 
-  handleReceiveTask = task => {
+  handleReceiveTask = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'detail/receiveTask',
-      payload: task.taskId,
+      payload: this.state.projectId,
       callback: () => {
         dispatch({
-          type: 'detail/fetchTaskNumber',
+          type: 'detail/fetchTaskData',
+          payload: { projectId: this.state.projectId },
         });
       },
     });
@@ -181,7 +182,7 @@ class ProjectDetail extends Component {
       </div>
     );
 
-    const extraContent = <Button type="primary" disabled={data.list.length}>领取新任务</Button>;
+    const extraContent = <Button type="primary" disabled={data.list.length} onClick={this.handleReceiveTask}>领取新任务</Button>;
 
     return (
       <PageHeaderWrapper
