@@ -252,6 +252,7 @@ class TextMarkView extends Component {
 
   render() {
     const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue, roleId } = this.state;
+    console.log(basicInfo);
     const { data, checkRate, passRate, markTool, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -259,7 +260,7 @@ class TextMarkView extends Component {
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]} />
-        <Statistic title="标注进度" value={basicInfo.schedule} suffix="%" />
+        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={basicInfo.schedule} suffix="%" />
       </div>
     );
 

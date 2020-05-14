@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Checkbox, Descriptions, Form, Input, Radio, Tag, Row, Col, Table, Popover, ConfigProvider, Empty } from 'antd';
+import { Button, Card, Checkbox, Descriptions, Form, Input, Radio, Tag, Row, Col, Table, Popover, ConfigProvider, Empty, Progress } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import WordEntryModalView from './WordEntryModalView';
 import router from 'umi/router';
@@ -238,6 +238,12 @@ class SequenceAnswerView extends Component {
       </Fragment>
     );
 
+    const extra = (
+      <div className={styles.moreInfo}>
+        <Progress type="circle" percent={questionInfo.schedule ? questionInfo.schedule.completeRate : 0} width={60} />
+      </div>
+    );
+
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
@@ -321,6 +327,7 @@ class SequenceAnswerView extends Component {
         extra={action}
         className={styles.pageHeader}
         content={description}
+        extraContent={extra}
       >
         <Card bordered={false}>
           <Form {...formItemLayout}>

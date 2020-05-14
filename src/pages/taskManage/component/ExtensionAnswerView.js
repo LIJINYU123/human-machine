@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Descriptions, Form, Input, Row, Col, Table, Radio, Checkbox, Icon, ConfigProvider, Empty } from 'antd';
+import { Button, Card, Descriptions, Form, Input, Row, Col, Table, Radio, Checkbox, Icon, ConfigProvider, Empty, Progress } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import router from 'umi/router';
 import { connect } from 'dva';
@@ -167,6 +167,12 @@ class ExtensionAnswerView extends Component {
       </Fragment>
     );
 
+    const extra = (
+      <div className={styles.moreInfo}>
+        <Progress type="circle" percent={questionInfo.schedule ? questionInfo.schedule.completeRate : 0} width={60} />
+      </div>
+    );
+
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
@@ -206,6 +212,7 @@ class ExtensionAnswerView extends Component {
         extra={action}
         className={styles.pageHeader}
         content={description}
+        extraContent={extra}
       >
         <Card bordered={false}>
           <Form {...formItemLayout}>

@@ -207,7 +207,7 @@ class MyTaskView extends Component {
         dataIndex: 'questionNum',
       },
       {
-        title: '标注进度',
+        title: roleId === 'labeler' ? '标注进度' : '质检进度',
         dataIndex: 'schedule',
         render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
       },

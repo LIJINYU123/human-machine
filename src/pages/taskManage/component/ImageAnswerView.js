@@ -13,6 +13,7 @@ import {
   ConfigProvider,
   Empty,
   Tag,
+  Progress,
 } from 'antd'
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import MultiCrops from '@/components/ImageEditor';
@@ -247,6 +248,12 @@ class ImageAnswerView extends Component {
       </Fragment>
     );
 
+    const extra = (
+      <div className={styles.moreInfo}>
+        <Progress type="circle" percent={questionInfo.schedule ? questionInfo.schedule.completeRate : 0} width={60} />
+      </div>
+    );
+
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
@@ -298,6 +305,7 @@ class ImageAnswerView extends Component {
         extra={action}
         className={styles.pageHeader}
         content={description}
+        extraContent={extra}
       >
         <Card bordered={false}>
           <Form {...formItemLayout}>

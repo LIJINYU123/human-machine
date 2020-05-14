@@ -1370,7 +1370,7 @@ function getOneTextQuestion(req, res, u) {
   } else {
     [response] = labelMockData;
   }
-  response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
+  response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20, completeRate: 40 };
 
   return res.json(response);
 }
@@ -1409,7 +1409,6 @@ function getNextTextQuestion(req, res, u, b) {
 
       if (item.dataId === nextDataId) {
         response = textMockData[index];
-        response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
       }
     });
 
@@ -1434,7 +1433,6 @@ function getNextTextQuestion(req, res, u, b) {
 
       if (item.dataId === nextDataId) {
         response = textMockData[index];
-        response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
       }
     });
 
@@ -1446,6 +1444,7 @@ function getNextTextQuestion(req, res, u, b) {
       }
     }
   }
+  response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20, completeRate: 40 };
   return res.json(response);
 }
 
@@ -1475,7 +1474,7 @@ function getPrevTextQuestion(req, res, u, b) {
       // 获取上一道题目
       response = textMockData[index];
 
-      response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20 };
+      response.schedule = { completeNum: 100, restNum: 50, invalidNum: 20, completeRate: 40 };
     }
   });
   if (prevDataId === '') {

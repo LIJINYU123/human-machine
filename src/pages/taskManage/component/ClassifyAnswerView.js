@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Statistic, Form, Row, Col, Descriptions, Input, Checkbox, Radio, Tag, Icon } from 'antd';
+import { Button, Card, Statistic, Progress, Form, Row, Col, Descriptions, Input, Checkbox, Radio, Tag, Icon } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import TagSelect from '@/components/TagSelect';
 import router from 'umi/router';
@@ -152,6 +152,12 @@ class ClassifyAnswerView extends Component {
       </Fragment>
     );
 
+    const extra = (
+      <div className={styles.moreInfo}>
+        <Progress type="circle" percent={questionInfo.schedule ? questionInfo.schedule.completeRate : 0} width={60} />
+      </div>
+    );
+
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
@@ -177,6 +183,7 @@ class ClassifyAnswerView extends Component {
         extra={action}
         className={styles.pageHeader}
         content={description}
+        extraContent={extra}
       >
         <Card bordered={false}>
           <Form {...formItemLayout}>
