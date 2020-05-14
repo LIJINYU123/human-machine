@@ -79,6 +79,7 @@ class SequenceAnswerView extends Component {
         ...values,
       },
       callback: () => {
+        // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
         if (roleId === 'labeler') {
           setFieldsValue({
@@ -92,7 +93,7 @@ class SequenceAnswerView extends Component {
             remark: questionInfo.remark,
           });
         }
-        if (!dataIdQueue.includes(questionInfo.dataId)) {
+        if (!dataIdQueue.includes(questionInfo.dataId) && questionInfo.dataId !== '') {
           dataIdQueue.push(questionInfo.dataId);
         }
         this.setState({

@@ -139,7 +139,6 @@ class MyTaskView extends Component {
   });
 
   handleJumpToMarkView = task => {
-    console.log(task);
     if (task.labelType === 'textClassify') {
       router.push({
         pathname: '/task-manage/my-task/text-mark',

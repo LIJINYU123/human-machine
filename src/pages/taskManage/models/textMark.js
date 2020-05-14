@@ -1,5 +1,5 @@
 import { message } from 'antd/lib/index';
-import { queryLabelData, queryMarkTool, saveTextMarkResult, deleteTextMarkResult, saveReviewResult, queryOneTextQuestion, queryNextTextQuestion, queryPrevTextQuestion } from '../service';
+import { queryLabelData, queryMarkTool, saveTextMarkResult, saveReviewResult, queryOneTextQuestion, queryNextTextQuestion, queryPrevTextQuestion } from '../service';
 
 const TextMark = {
   namespace: 'textMark',

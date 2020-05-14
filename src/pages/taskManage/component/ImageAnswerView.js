@@ -110,7 +110,7 @@ class ImageAnswerView extends Component {
             optionName: markTool.options.length ? markTool.options[0].optionName : '',
           });
         }
-        if (!dataIdQueue.includes(questionInfo.dataId)) {
+        if (!dataIdQueue.includes(questionInfo.dataId) && questionInfo.dataId !== '') {
           dataIdQueue.push(questionInfo.dataId);
         }
         this.setState({

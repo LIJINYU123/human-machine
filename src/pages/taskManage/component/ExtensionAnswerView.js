@@ -86,7 +86,7 @@ class ExtensionAnswerView extends Component {
             remark: questionInfo.remark,
           });
         }
-        if (!dataIdQueue.includes(questionInfo.dataId)) {
+        if (!dataIdQueue.includes(questionInfo.dataId) && questionInfo.dataId !== '') {
           dataIdQueue.push(questionInfo.dataId);
         }
       },
