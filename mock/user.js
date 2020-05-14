@@ -79,8 +79,8 @@ export default {
         {
           name: '任务详情页',
           icon: 'container',
-          path: '/project/text/task-detail',
-          component: './project/component/TextTaskDetail',
+          path: '/project/task-detail',
+          component: './project/component/TaskDetail',
           hideInMenu: true,
         },
         {

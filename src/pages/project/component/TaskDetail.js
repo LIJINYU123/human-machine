@@ -24,10 +24,9 @@ const reviewFilters = Object.keys(reviewLabel).map(key => ({
   basicInfo: textTaskDetail.basicInfo,
   loading: loading.effects['textTaskDetail/fetchDetail'],
 }))
-class TextTaskDetail extends Component {
+class TaskDetail extends Component {
   state = {
     taskId: undefined,
-    projectId: undefined,
     selectedRows: [],
     filteredInfo: {},
     searchText: '',
@@ -48,7 +47,6 @@ class TextTaskDetail extends Component {
 
     this.setState({
       taskId: location.state.taskId,
-      projectId: location.state.projectId,
     });
   }
 
@@ -176,13 +174,7 @@ class TextTaskDetail extends Component {
   };
 
   handleGoBack = () => {
-    const { projectId } = this.state;
-    router.push({
-      pathname: '/project/detail',
-      state: {
-        projectId,
-      },
-    });
+    router.goBack();
   };
 
   render() {
@@ -237,77 +229,52 @@ class TextTaskDetail extends Component {
       <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoBack}>返回</Button>
     );
 
-    let columns = [];
-    if (basicInfo.labelType !== 'textMatch') {
-      columns = [
-        {
-          title: 'sentence',
-          dataIndex: 'sentence',
-          ...this.getColumnSearchProps('sentence'),
+    const columns = [
+      {
+        title: '标注结果',
+        dataIndex: 'labelResult',
+        render: val => {
+          if (val.length) {
+            return val.map(value => (<Tag color="blue">{value}</Tag>));
+          }
+          return '';
         },
-        {
-          title: '标注结果',
-          dataIndex: 'labelResult',
-          render: val => {
-            if (val.length) {
-              return val.map(value => (<Tag color="blue">{value}</Tag>));
-            }
-            return '';
-          },
-        },
-        {
-          title: '质检结果',
-          dataIndex: 'reviewResult',
-          render: val => reviewLabel[val],
-          filters: reviewFilters,
-          filteredValue: filteredInfo.reviewResult || null,
-        },
-        {
-          title: '备注',
-          dataIndex: 'remark',
-        },
-        {
-          title: '操作',
-          render: (_, sentenceInfo) => (
-            <a onClick={() => this.handleDelete(sentenceInfo)}>删除</a>
-          ),
-        },
-      ];
+      },
+      {
+        title: '质检结果',
+        dataIndex: 'reviewResult',
+        render: val => reviewLabel[val],
+        filters: reviewFilters,
+        filteredValue: filteredInfo.reviewResult || null,
+      },
+      {
+        title: '备注',
+        dataIndex: 'remark',
+      },
+      {
+        title: '操作',
+        render: (_, sentenceInfo) => (
+          <a onClick={() => this.handleDelete(sentenceInfo)}>删除</a>
+        ),
+      },
+    ];
+    if (data.list.length && data.list[0].data.hasOwnProperty('sentence')) {
+      columns.splice(0, 0, {
+        title: '文本',
+        dataIndex: 'sentence',
+        ...this.getColumnSearchProps('sentence'),
+      });
     } else {
-      columns = [
-        {
-          title: 'sentence1',
-          dataIndex: 'sentence1',
-          ...this.getColumnSearchProps('sentence1'),
-        },
-        {
-          title: 'sentence2',
-          dataIndex: 'sentence2',
-          ...this.getColumnSearchProps('sentence2'),
-        },
-        {
-          title: '标注结果',
-          dataIndex: 'labelResult',
-          render: val => {
-            if (val.length) {
-              return val.map(value => (<Tag color="blue">{value}</Tag>));
-            }
-            return '';
-          },
-        },
-        {
-          title: '质检结果',
-          dataIndex: 'reviewResult',
-          filters: reviewFilters,
-          filteredValue: filteredInfo.reviewResult || null,
-        },
-        {
-          title: '操作',
-          render: (_, sentenceInfo) => (
-            <a onClick={() => this.handleDelete(sentenceInfo)}>删除</a>
-          ),
-        },
-      ];
+      columns.splice(0, 0, {
+        title: '文本1',
+        dataIndex: 'sentence1',
+        ...this.getColumnSearchProps('sentence1'),
+      });
+      columns.splice(1, 0, {
+        title: '文本2',
+        dataIndex: 'sentence2',
+        ...this.getColumnSearchProps('sentence2'),
+      });
     }
 
     return (
@@ -347,4 +314,4 @@ class TextTaskDetail extends Component {
   }
 }
 
-export default TextTaskDetail;
+export default TaskDetail;

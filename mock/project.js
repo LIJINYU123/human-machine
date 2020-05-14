@@ -17,7 +17,7 @@ let mockData = [
     projectId: '2',
     projectName: '文本匹配_0124',
     owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
-    labelType: 'textMatch',
+    labelType: 'textClassify',
     schedule: 0,
     status: 'initial',
     createdTime: '2020-01-14 10:00:00',
@@ -27,7 +27,7 @@ let mockData = [
     projectId: '3',
     projectName: '实体识别_0125',
     owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
-    labelType: 'ner',
+    labelType: 'sequenceLabeling',
     schedule: 80,
     status: 'inProgress',
     createdTime: '2020-01-15 10:00:00',
@@ -37,7 +37,7 @@ let mockData = [
     projectId: '4',
     projectName: '文本匹配_0127',
     owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
-    labelType: 'textMatch',
+    labelType: 'textClassify',
     schedule: 100,
     status: 'complete',
     createdTime: '2020-01-17 10:00:00',
@@ -47,7 +47,7 @@ let mockData = [
     projectId: '5',
     projectName: '文本匹配_0128',
     owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
-    labelType: 'textMatch',
+    labelType: 'textClassify',
     schedule: 60,
     status: 'suspend',
     createdTime: '2020-01-18 10:00:00',
@@ -57,7 +57,7 @@ let mockData = [
     projectId: '6',
     projectName: '文本匹配_0129',
     owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
-    labelType: 'textMatch',
+    labelType: 'textClassify',
     schedule: 70,
     status: 'expired',
     createdTime: '2020-01-18 10:00:00',
@@ -1154,7 +1154,7 @@ function deleteTaskData(req, res, u, b) {
 
 function getTaskDetail(req, res) {
   const { taskId } = req.params;
-  const dataSource = taskDetailMockData.filter(item => item.taskId === taskId);
+  const dataSource = taskMockData.filter(item => item.taskId === taskId);
 
   const basicInfo = dataSource[0];
   return res.json(basicInfo);
