@@ -139,6 +139,7 @@ class MyTaskView extends Component {
   });
 
   handleJumpToMarkView = task => {
+    console.log(task);
     if (task.labelType === 'textClassify') {
       router.push({
         pathname: '/task-manage/my-task/text-mark',
@@ -226,9 +227,7 @@ class MyTaskView extends Component {
       },
       {
         title: '操作',
-        render: (_, task) => (
-          <a onClick={() => this.handleJumpToMarkView(task)}>{ roleId === 'labeler' ? '标注' : '质检' }</a>
-        ),
+        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{ roleId === 'labeler' ? '标注' : '质检' }</a>,
       },
     ];
     return (
