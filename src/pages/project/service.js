@@ -70,7 +70,7 @@ export async function saveStepFourData(params) {
 }
 
 export async function queryDefaultTemplate(params) {
-  return request('/api/project/default-templates', {
+  return request('/api/templates', {
     params,
   });
 }

@@ -41,10 +41,6 @@ class ProjectDetail extends Component {
       payload: { projectId: location.state.projectId },
     });
 
-    dispatch({
-      type: 'detail/fetchTaskNumber',
-    });
-
     this.setState({
       projectId: location.state.projectId,
     });

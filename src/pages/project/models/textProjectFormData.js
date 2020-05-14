@@ -90,14 +90,14 @@ const TextProjectFormData = {
 
     * saveStepOneData({ payload }, { call, put, select }) {
       const forever = yield select(state => state.textProjectFormData.forever);
-      const { projectPeriod, ...rest } = payload;
+      const { projectPeriod, labeler, inspector, ...rest } = payload;
       let startTime = '';
       let endTime = '';
       if (!forever) {
         startTime = projectPeriod[0].format('YYYY-MM-DD HH:mm:ss');
         endTime = projectPeriod[1].format('YYYY-MM-DD HH:mm:ss');
       }
-      const response = yield call(saveStepOneData, { startTime, endTime, ...rest });
+      const response = yield call(saveStepOneData, { startTime, endTime, labelers: labeler, inspectors: inspector, ...rest });
       if (response.status === 'ok') {
         yield put({
           type: 'saveStepOne',

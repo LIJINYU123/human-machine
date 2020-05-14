@@ -12,7 +12,7 @@ export default {
     text: '文本',
     picture: '图片',
     voice: '音频',
-    other: '其它',
+    vedio: '视频',
   },
 
   FieldLabels: {
@@ -28,7 +28,7 @@ export default {
 
   labelTypes: [
     {
-      value: 'text',
+      value: '文本',
       label: '文本',
       children: [
         {
@@ -46,7 +46,7 @@ export default {
       ],
     },
     {
-      value: 'picture',
+      value: '图片',
       label: '图片',
       children: [
         {
@@ -56,7 +56,7 @@ export default {
       ],
     },
     {
-      value: 'voice',
+      value: '音频',
       label: '音频',
       children: [
         {
@@ -66,8 +66,8 @@ export default {
       ],
     },
     {
-      value: 'other',
-      label: '其他',
+      value: '视频',
+      label: '视频',
       children: [
         {
           value: 'videoDialogMark',

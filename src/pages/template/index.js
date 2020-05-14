@@ -20,7 +20,7 @@ const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
 
 const typeFilters = Object.keys(typeName).map(key => ({
   text: typeName[key],
-  value: key,
+  value: typeName[key],
 }));
 
 @connect(({ templateManage, loading }) => ({
@@ -230,7 +230,6 @@ class TemplateManage extends Component {
       {
         title: '类型',
         dataIndex: 'type',
-        render: val => typeName[val],
         filters: typeFilters,
         filteredValue: filteredInfo.type || null,
       },
@@ -243,8 +242,8 @@ class TemplateManage extends Component {
       },
       {
         title: '创建人',
-        dataIndex: 'creatorId',
-        ...this.getColumnSearchProps('creatorId'),
+        dataIndex: 'creatorName',
+        ...this.getColumnSearchProps('creatorName'),
       },
       {
         title: '描述',
