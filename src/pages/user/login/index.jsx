@@ -107,11 +107,6 @@ class Login extends Component {
             </Link>
           </div>
           <Submit loading={submitting}>登录</Submit>
-          <div className={styles.other}>
-            <Link className={styles.register} to="/user/register">
-              <FormattedMessage id="userandlogin.login.signup" />
-            </Link>
-          </div>
         </LoginComponents>
       </div>
     );

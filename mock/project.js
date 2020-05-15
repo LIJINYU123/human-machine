@@ -6,27 +6,30 @@ let mockData = [
   {
     projectId: '1',
     projectName: '文本分类_0123',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
+    projectType: '文本',
     labelType: 'textClassify',
     schedule: 0,
-    status: 'initial',
+    status: 'unPublish',
     createdTime: '2020-01-13 10:00:00',
     departmentId: 'operation',
   },
   {
     projectId: '2',
     projectName: '文本匹配_0124',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
+    projectType: '文本',
     labelType: 'textClassify',
     schedule: 0,
-    status: 'initial',
+    status: 'unPublish',
     createdTime: '2020-01-14 10:00:00',
     departmentId: 'operation',
   },
   {
     projectId: '3',
     projectName: '实体识别_0125',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
+    projectType: '文本',
     labelType: 'sequenceLabeling',
     schedule: 80,
     status: 'inProgress',
@@ -36,7 +39,8 @@ let mockData = [
   {
     projectId: '4',
     projectName: '文本匹配_0127',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
+    projectType: '文本',
     labelType: 'textClassify',
     schedule: 100,
     status: 'complete',
@@ -46,20 +50,22 @@ let mockData = [
   {
     projectId: '5',
     projectName: '文本匹配_0128',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
+    projectType: '文本',
     labelType: 'textClassify',
     schedule: 60,
-    status: 'suspend',
+    status: 'inProgress',
     createdTime: '2020-01-18 10:00:00',
     departmentId: 'operation',
   },
   {
     projectId: '6',
     projectName: '文本匹配_0129',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
+    projectType: '文本',
     labelType: 'textClassify',
     schedule: 70,
-    status: 'expired',
+    status: 'inProgress',
     createdTime: '2020-01-18 10:00:00',
     departmentId: 'operation',
   },
@@ -70,7 +76,7 @@ const projectDetailMockData = [
     projectId: '1',
     projectName: '文本分类_0123',
     projectType: '文本',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
     passRate: 90,
     checkRate: 10,
     labelers: [{ userName: '张三', userId: 'SY0111' }, { userName: '王五', userId: 'SY0112' }],
@@ -84,9 +90,9 @@ const projectDetailMockData = [
     saveTemplate: false,
     templateName: '',
     setting: { classifyName: '句式', multiple: false, options: [{ optionName: '陈述句', color: '' }, { optionName: '反问句', color: '' }, { optionName: '疑问句', color: '' }] },
-    explain: '这是标注规则',
+    explain: '<strong><em><u>范德萨范德萨</u></em></strong>',
     schedule: 0,
-    status: 'initial',
+    status: 'inProgress',
     completeLabelNum: 0,
     allLabelNum: 200,
     reviewNum: 0,
@@ -96,7 +102,7 @@ const projectDetailMockData = [
     projectId: '2',
     projectName: '文本分类_0124',
     projectType: '文本',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
     passRate: 95,
     checkRate: 15,
     labelers: [{ userName: '张三', userId: 'SY0111' }, { userName: '王五', userId: 'SY0112' }],
@@ -112,7 +118,7 @@ const projectDetailMockData = [
     setting: { classifyName: '情感', multiple: false, options: [{ optionName: '高兴', color: '' }, { optionName: '愤怒', color: '' }, { optionName: '悲伤', color: '' }, { optionName: '惊喜', color: '' }, { optionName: '中性', color: '' }] },
     explain: '',
     schedule: 0,
-    status: 'initial',
+    status: 'inProgress',
     completeLabelNum: 0,
     allLabelNum: 500,
     reviewNum: 0,
@@ -122,7 +128,7 @@ const projectDetailMockData = [
     projectId: '3',
     projectName: '实体识别_0125',
     projectType: '文本',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
     passRate: 98,
     checkRate: 10,
     labelers: [{ userName: '张三', userId: 'SY0111' }, { userName: '王五', userId: 'SY0112' }],
@@ -148,7 +154,7 @@ const projectDetailMockData = [
     projectId: '4',
     projectName: '文本分类_0127',
     projectType: '文本',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
     passRate: 90,
     checkRate: 10,
     labelers: [{ userName: '张三', userId: 'SY0111' }, { userName: '王五', userId: 'SY0112' }],
@@ -174,7 +180,7 @@ const projectDetailMockData = [
     projectId: '5',
     projectName: '文本分类_0128',
     projectType: '文本',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
     passRate: 95,
     checkRate: 10,
     labelers: [{ userName: '张三', userId: 'SY0111' }, { userName: '王五', userId: 'SY0112' }],
@@ -200,7 +206,7 @@ const projectDetailMockData = [
     projectId: '6',
     projectName: '序列标注_0129',
     projectType: '文本',
-    owner: { name: Mock.Random.cname(), id: Mock.Random.string(5) },
+    owner: { userName: Mock.Random.cname(), userId: Mock.Random.string(5) },
     passRate: 90,
     checkRate: 15,
     labelers: [{ userName: '张三', userId: 'SY0111' }, { userName: '王五', userId: 'SY0112' }],
@@ -1034,12 +1040,12 @@ function getProjects(req, res, u) {
     dataSource = filterDataSource;
   }
 
-  if (params.labelType) {
-    const types = params.labelType.split(',');
+  if (params.projectType) {
+    const types = params.projectType.split(',');
     let filterDataSource = [];
     types.forEach(type => {
       // eslint-disable-next-line max-len
-      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.labelType === type));
+      filterDataSource = filterDataSource.concat(dataSource.filter(item => item.projectType === type));
     });
 
     dataSource = filterDataSource;
@@ -1071,6 +1077,16 @@ function deleteProjects(req, res, u, b) {
   const body = (b && b.body) || req.body;
   mockData = mockData.filter(item => !body.projectIds.includes(item.projectId));
   return res.json({ message: '删除成功', status: 'ok' });
+}
+
+function updateProjectStatus(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  mockData.forEach(item => {
+    if (item.projectId === body.projectId) {
+      item.status = body.status;
+    }
+  });
+  return res.json({ message: '操作成功', status: 'ok' });
 }
 
 function getProjectDetail(req, res) {
@@ -1511,6 +1527,7 @@ function saveReviewResult(req, res, u, b) {
 export default {
   'GET /api/projects': getProjects,
   'DELETE /api/projects': deleteProjects,
+  'POST /api/project/status': updateProjectStatus,
   'GET /api/project/detail/:projectId': getProjectDetail,
   'GET /api/project/task-data': getTaskData,
   'GET /api/project/member-data': getMemberData,

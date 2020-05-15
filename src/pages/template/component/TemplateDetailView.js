@@ -122,11 +122,11 @@ class TemplateDetailView extends Component {
         } else if (templateInfo.labelType === 'sequenceLabeling') {
           const { saveType } = values;
           setting.saveType = saveType;
-          setting.optionData = optionData;
+          setting.options = optionData;
         } else {
           const { multiple } = values;
           setting.multiple = multiple;
-          setting.optionData = optionData;
+          setting.options = optionData;
         }
 
         setting.classifyName = classifyName;

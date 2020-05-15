@@ -38,10 +38,14 @@ const CreateTemplate = {
       });
     },
 
-    * addTemplate({ payload, callback }, { call }) {
+    * addTemplate({ payload, callback }, { call, put }) {
       const response = yield call(createTemplate, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        yield put({
+          type: 'resetOptionData',
+          payload,
+        });
       } else {
         message.error(response.message);
       }
@@ -78,6 +82,9 @@ const CreateTemplate = {
         }
       });
       return { ...state, optionData };
+    },
+    resetOptionData(state, action) {
+      return { ...state, optionData: [] };
     },
   },
 };

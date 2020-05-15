@@ -59,6 +59,13 @@ export async function saveReviewResult(params) {
   });
 }
 
+export async function updateStatus(params) {
+  return request('/api/task-manage/task-status', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export async function deleteTextMarkResult(params) {
   return request('/api/project/label-result', {
     method: 'DELETE',

@@ -178,6 +178,15 @@ class ProjectDetail extends Component {
     router.goBack();
   };
 
+  handleCompleteProject = () => {
+    const { dispatch } = this.props;
+    const { projectId } = this.state;
+    dispatch({
+      type: 'project/updateProjectStatus',
+      payload: { projectId, status: 'complete' },
+    });
+  };
+
   render() {
     const { memberDetail: { members }, basicInfo, loading } = this.props;
     const { projectId, activeTabKey, labelerId, inspectorId, modalVisible } = this.state;
@@ -203,7 +212,7 @@ class ProjectDetail extends Component {
 
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
-        <Descriptions.Item label="负责人">{basicInfo.owner ? basicInfo.owner.name : ''}</Descriptions.Item>
+        <Descriptions.Item label="负责人">{basicInfo.owner ? basicInfo.owner.userName : ''}</Descriptions.Item>
         <Descriptions.Item label="项目周期" span={2}>{`${basicInfo.startTime} - ${basicInfo.endTime}`}</Descriptions.Item>
         <Descriptions.Item label="项目类型">{basicInfo.projectType}</Descriptions.Item>
         <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
@@ -214,7 +223,7 @@ class ProjectDetail extends Component {
     const action = (
       <Fragment>
         <Button.Group>
-          <Button icon="check">项目完成</Button>
+          <Button icon="check" onClick={this.handleCompleteProject}>项目完成</Button>
           <Button icon="download">导出结果</Button>
         </Button.Group>
         <Button onClick={this.handleEdit}>编辑</Button>

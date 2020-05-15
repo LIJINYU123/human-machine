@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { deleteTextMarkResult, queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult } from '../service';
+import { deleteTextMarkResult, queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult, updateStatus } from '../service';
 
 const SequenceMark = {
   namespace: 'sequenceMark',
@@ -67,6 +67,19 @@ const SequenceMark = {
 
     * deleteTextMarkResult({ payload, callback }, { call }) {
       const response = yield call(deleteTextMarkResult, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
+    },
+
+    * updateStatus({ payload, callback }, { call }) {
+      const response = yield call(updateStatus, payload);
       if (response.status === 'ok') {
         message.success(response.message);
       } else {

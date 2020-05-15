@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult } from '../service';
+import { queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult, updateStatus } from '../service';
 
 
 const ImageMark = {
@@ -51,6 +51,19 @@ const ImageMark = {
       } else {
         message.error(response.message);
       }
+      if (callback) {
+        callback();
+      }
+    },
+
+    * updateStatus({ payload, callback }, { call }) {
+      const response = yield call(updateStatus, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
       if (callback) {
         callback();
       }

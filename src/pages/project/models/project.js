@@ -1,4 +1,4 @@
-import { queryProjectList, deleteProjectList } from '../service';
+import { queryProjectList, updateProjectStatus, deleteProjectList } from '../service';
 import { message } from 'antd/lib/index';
 
 const Project = {
@@ -16,6 +16,19 @@ const Project = {
         type: 'project',
         payload: response,
       });
+    },
+
+    * updateProjectStatus({ payload, callback }, { call }) {
+      const response = yield call(updateProjectStatus, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+      } else {
+        message.error(response.message);
+      }
+
+      if (callback) {
+        callback();
+      }
     },
 
     * deleteProject({ payload, callback }, { call, put }) {

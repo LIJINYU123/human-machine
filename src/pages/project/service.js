@@ -12,7 +12,15 @@ export async function deleteProjectList(params) {
   return request('/api/projects', {
     method: 'DELETE',
     data: params,
-  })
+  });
+}
+
+// 更新项目项目
+export async function updateProjectStatus(params) {
+  return request('/api/project/status', {
+    method: 'POST',
+    data: params,
+  });
 }
 
 // 项目详情页api

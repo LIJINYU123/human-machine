@@ -284,6 +284,42 @@ class SequenceMarkView extends Component {
     });
   };
 
+  submitReview = () => {
+    const { dispatch } = this.props;
+    const { basicInfo } = this.state;
+    dispatch({
+      type: 'sequenceMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'review' },
+      callback: () => {
+        router.goBack();
+      },
+    });
+  };
+
+  submitComplete = () => {
+    const { dispatch } = this.props;
+    const { basicInfo } = this.state;
+    dispatch({
+      type: 'sequenceMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'complete' },
+      callback: () => {
+        router.goBack();
+      },
+    });
+  };
+
+  submitReject = () => {
+    const { dispatch } = this.props;
+    const { basicInfo } = this.state;
+    dispatch({
+      type: 'sequenceMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'reject' },
+      callback: () => {
+        router.goBack();
+      },
+    });
+  };
+
   render() {
     const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate, loading } = this.props;
@@ -324,13 +360,13 @@ class SequenceMarkView extends Component {
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
         {
-          roleId === 'labeler' && <Button type="primary" icon="check">提交质检</Button>
+          roleId === 'labeler' && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
         }
         {
           roleId === 'inspector' &&
           <Button.Group>
-            <Button icon="close">驳回</Button>
-            <Button icon="check">通过</Button>
+            <Button icon="close" onClick={this.submitReject}>驳回</Button>
+            <Button icon="check" onClick={this.submitComplete}>通过</Button>
           </Button.Group>
         }
       </Fragment>

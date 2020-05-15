@@ -151,16 +151,67 @@ class ExtensionAnswerView extends Component {
     });
   };
 
+  submitReview = () => {
+    const { dispatch } = this.props;
+    const { basicInfo, roleId } = this.state;
+    dispatch({
+      type: 'extensionMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'review' },
+      callback: () => {
+        router.push({
+          pathname: '/task-manage/my-task',
+          state: {
+            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+          },
+        });
+      },
+    });
+  };
+
+  submitComplete = () => {
+    const { dispatch } = this.props;
+    const { basicInfo, roleId } = this.state;
+    dispatch({
+      type: 'extensionMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'complete' },
+      callback: () => {
+        router.push({
+          pathname: '/task-manage/my-task',
+          state: {
+            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+          },
+        });
+      },
+    });
+  };
+
+  submitReject = () => {
+    const { dispatch } = this.props;
+    const { basicInfo, roleId } = this.state;
+    dispatch({
+      type: 'extensionMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'reject' },
+      callback: () => {
+        router.push({
+          pathname: '/task-manage/my-task',
+          state: {
+            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+          },
+        });
+      },
+    });
+  };
+
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
     const { basicInfo, markTool, roleId, dataIdQueue } = this.state;
     const action = (
       <Fragment>
-        { roleId === 'labeler' && <Button icon="check">提交质检</Button> }
+        { roleId === 'labeler' && <Button icon="check" onClick={this.submitReview}>提交质检</Button> }
         { roleId === 'inspector' &&
           <Button.Group>
-            <Button icon="close">驳回</Button>
-            <Button icon="check">通过</Button>
+            <Button icon="close" onClick={this.submitReject}>驳回</Button>
+            <Button icon="check" onClick={this.submitComplete}>通过</Button>
           </Button.Group>
         }
         <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>

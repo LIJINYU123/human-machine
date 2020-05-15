@@ -132,11 +132,11 @@ class TemplateCreateView extends Component {
         } else if (labelType.slice(-1)[0] === 'sequenceLabeling') {
           const { saveType } = values;
           setting.saveType = saveType;
-          setting.optionData = optionData;
+          setting.options = optionData;
         } else {
           const { multiple } = values;
           setting.multiple = multiple;
-          setting.optionData = optionData;
+          setting.options = optionData;
         }
 
         setting.classifyName = classifyName;

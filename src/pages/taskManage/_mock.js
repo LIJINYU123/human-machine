@@ -45,6 +45,7 @@ const projectMockData = [
 ];
 
 const taskMockData = [
+  
   {
     projectId: '1',
     projectName: '文本分类123',
@@ -521,6 +522,18 @@ function getMarkTool(req, res, u) {
   }
 }
 
+
+function updateTaskStatus(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  const { taskId, status } = body;
+  taskMockData.forEach(item => {
+    if (item.taskId === taskId) {
+      item.status = status;
+    }
+  });
+  res.json({ status: 'ok', message: '操作成功' })
+}
+
 export default {
   'GET /api/task-manage/projects': getProjects,
   'GET /api/task-manage/task-data': getTaskData,
@@ -528,4 +541,5 @@ export default {
   'GET /api/task-manage/task-number': getMyTaskNumber,
   'GET /api/task-manage/receive-task/:projectId': receiveTask,
   'GET /api/task-manage/mark-tool': getMarkTool,
+  'POST /api/task-manage/task-status': updateTaskStatus,
 };

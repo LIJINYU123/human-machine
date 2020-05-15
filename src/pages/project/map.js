@@ -1,17 +1,15 @@
 export default {
   statusMap: {
-    initial: 'default',
+    unPublish: 'default',
     inProgress: 'processing',
     suspend: 'warning',
-    expired: 'error',
     complete: 'success',
   },
 
   statusName: {
-    initial: '未开始',
+    unPublish: '未发布',
     inProgress: '进行中',
     suspend: '暂停中',
-    expired: '逾期中',
     complete: '完成',
   },
 
@@ -32,13 +30,12 @@ export default {
   },
 
   labelTypeName: {
-    textClassify: '文本分类',
-    textMatch: '文本匹配',
-    ner: '实体识别',
-    textMark: '文本标注',
-    pictureMark: '图片标注',
-    voiceMark: '音频标注',
-    videoDialogMark: '其他标注-视频对话标注',
+    textClassify: '标准分类工具',
+    sequenceLabeling: '标准序列工具',
+    textExtension: '标准扩充工具',
+    pictureMark: '标准矩形框工具',
+    voiceMark: '标准音频标注工具',
+    videoDialogMark: '定制视频标注工具',
   },
 
   projectTypes: [

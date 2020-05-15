@@ -15,7 +15,7 @@ import {
   Badge,
   Input,
   Icon,
-  Popconfirm,
+  Popconfirm, Dropdown, Menu,
 } from 'antd';
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
@@ -25,7 +25,7 @@ import ItemData from './map';
 
 const { RangePicker } = DatePicker;
 
-const { statusMap, statusName, labelTypeName } = ItemData;
+const { statusMap, statusName, labelTypeName, projectTypes } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -37,6 +37,11 @@ const statusFilters = Object.keys(statusName).map(key => ({
 const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
   text: labelTypeName[key],
   value: key,
+}));
+
+const projectTypeFilters = projectTypes.map(item => ({
+  text: item.label,
+  value: item.label,
 }));
 
 @connect(({ project, loading }) => ({
@@ -218,12 +223,12 @@ class TextProjectList extends Component {
     });
   };
 
-  handleDelete = project => {
+  handleDelete = projectId => {
     const { dispatch } = this.props;
     dispatch({
       type: 'project/deleteProject',
       payload: {
-        projectIds: [project.projectId],
+        projectIds: [projectId],
       },
       callback: () => {
         this.setState({
@@ -293,12 +298,61 @@ class TextProjectList extends Component {
     );
   }
 
+  handleSuspend = projectId => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'project/updateProjectStatus',
+      payload: { projectId, status: 'suspend' },
+      callback: () => {
+        dispatch({
+          type: 'project/fetchProject',
+          payload: { sorter: 'createdTime_descend' },
+        });
+      },
+    });
+  };
+
+  handleRecover = projectId => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'project/updateProjectStatus',
+      payload: { projectId, status: 'inProgress' },
+      callback: () => {
+        dispatch({
+          type: 'project/fetchProject',
+          payload: { sorter: 'createdTime_descend' },
+        });
+      },
+    });
+  };
+
   render() {
     const { data, loading } = this.props;
     const { selectedRows, addModalVisible, modalVisible, projectId } = this.state;
 
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
+
+    // eslint-disable-next-line no-shadow
+    const MoreBtn = ({ status, projectId }) => (
+      <Dropdown
+        overlay={
+          <Menu>
+            {
+              status === 'suspend' &&
+              <Menu.Item key="recover" onClick={() => this.handleRecover(projectId)}>恢复</Menu.Item>
+            }
+            {
+              status === 'inProgress' &&
+              <Menu.Item key="suspend" onClick={() => this.handleSuspend(projectId)}>暂停</Menu.Item>
+            }
+            <Menu.Item key="delete" onClick={() => this.handleDelete(projectId)}>删除</Menu.Item>
+          </Menu>
+        }
+      >
+        <a>更多<Icon type="down"/></a>
+      </Dropdown>
+    );
 
     const columns = [
       {
@@ -309,14 +363,13 @@ class TextProjectList extends Component {
       {
         title: '负责人',
         dataIndex: 'owner',
-        render: val => val.name,
+        render: val => val.userName,
       },
       {
-        title: '工具类型',
-        dataIndex: 'labelType',
-        render: val => labelTypeName[val],
-        filters: labelTypeFilters,
-        filteredValue: filteredInfo.labelType || null,
+        title: '项目类型',
+        dataIndex: 'projectType',
+        filters: projectTypeFilters,
+        filteredValue: filteredInfo.projectType || null,
       },
       {
         title: '项目进度',
@@ -343,9 +396,7 @@ class TextProjectList extends Component {
             <Divider type="vertical"/>
             <a onClick={() => this.handleReviewDetails(project)}>详情</a>
             <Divider type="vertical"/>
-            <Popconfirm title="确定删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(project)}>
-              <a>删除</a>
-            </Popconfirm>
+            <MoreBtn key="more" status={project.status} projectId={project.projectId}/>
           </Fragment>
         ),
       },

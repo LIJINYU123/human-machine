@@ -43,12 +43,12 @@ class UserManage extends Component {
     };
 
     dispatch({
-      type: 'userList/fetchUsers',
-      payload: params,
+      type: 'userList/fetchRoles',
     });
 
     dispatch({
-      type: 'userList/fetchRoles',
+      type: 'userList/fetchUsers',
+      payload: params,
     });
 
     dispatch({
