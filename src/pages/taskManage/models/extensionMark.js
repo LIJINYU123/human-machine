@@ -62,12 +62,11 @@ const ExtensionMark = {
       const response = yield call(updateStatus, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
 
