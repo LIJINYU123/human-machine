@@ -2,16 +2,15 @@
 REPO=docker-reg.ecovacs.com/library
 CONTAINER=human-machine
 DATE=`date +%Y%m%d`
-TAG=''
+VERSION='0.1.1'
 
 GIT_HASH=$(git rev-parse --short HEAD)
 if [ "$GIT_HASH" == "" ]; then
     GIT_HASH="001"
 fi
 
-if [ "$TAG" == "" ]; then
-    TAG="$DATE-$GIT_HASH"
-fi
+TAG="$VERSION-$DATE-$GIT_HASH"
+
 DOCKER_IMAGE=$REPO/$CONTAINER:$TAG
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
