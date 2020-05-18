@@ -71,5 +71,6 @@ export default {
     question: '问题',
     reviewResult: '质检结果',
     remark: '备注',
+    valid: '数据有效性',
   },
 }

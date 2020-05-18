@@ -1,5 +1,21 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Descriptions, Form, Input, Row, Col, Table, Radio, Checkbox, Icon, ConfigProvider, Empty, Progress } from 'antd';
+import {
+  Button,
+  Card,
+  Descriptions,
+  Form,
+  Input,
+  Row,
+  Col,
+  Table,
+  Radio,
+  Checkbox,
+  Icon,
+  ConfigProvider,
+  Empty,
+  Progress,
+  Tag
+} from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import router from 'umi/router';
 import { connect } from 'dva';
@@ -315,6 +331,16 @@ class ExtensionAnswerView extends Component {
                         getFieldDecorator('remark', {
                           initialValue: questionInfo.remark,
                         })(<TextArea style={{ width: '80%' }} autoSize/>)
+                      }
+                    </Form.Item>
+                  }
+                </Row>
+                <Row>
+                  {
+                    roleId === 'inspector' &&
+                    <Form.Item label={AnswerModeLabels.valid}>
+                      {
+                        questionInfo.invalid === true ? <Tag color="#f5222d">无效</Tag> : <Tag color="#52c41a">有效</Tag>
                       }
                     </Form.Item>
                   }

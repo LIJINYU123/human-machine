@@ -426,6 +426,16 @@ class ImageAnswerView extends Component {
                   }
                 </Row>
                 <Row>
+                  {
+                    roleId === 'inspector' &&
+                    <Form.Item label={AnswerModeLabels.valid}>
+                      {
+                        questionInfo.invalid === true ? <Tag color="#f5222d">无效</Tag> : <Tag color="#52c41a">有效</Tag>
+                      }
+                    </Form.Item>
+                  }
+                </Row>
+                <Row>
                   <Form.Item
                     wrapperCol={{
                       xs: {
