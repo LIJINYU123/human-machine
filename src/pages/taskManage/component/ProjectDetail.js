@@ -7,7 +7,7 @@ import { connect } from 'dva/index';
 import router from 'umi/router';
 import ItemData from '../map';
 
-const { taskStatusMap, taskStatusName, labelTypeName } = ItemData;
+const { taskStatusMap, taskStatusName, labelTypeName, LabelerId, InspectorId } = ItemData;
 
 @connect(({ detail, loading }) => ({
   data: detail.data,
@@ -122,6 +122,18 @@ class ProjectDetail extends Component {
     router.goBack()
   };
 
+  canReceiveTask = () => {
+    const { data } = this.props;
+    const { roleId } = this.state;
+    if (roleId === LabelerId && data.list.filter(item => item.status === 'labeling').length > 0) {
+      return true;
+    }
+    if (roleId === InspectorId && data.list.filter(item => item.status === 'review').length > 0) {
+      return true;
+    }
+    return false;
+  };
+
   render() {
     const { data, basicInfo, loading } = this.props;
     const { roleId } = this.state;
@@ -141,6 +153,8 @@ class ProjectDetail extends Component {
       <Button type="primary" style={{ marginLeft: '8px' }} onClick={this.handleGoback}>返回</Button>
     );
 
+    const isReceiveTask = this.canReceiveTask();
+
     const columns = [
       {
         title: '任务名称',
@@ -151,7 +165,7 @@ class ProjectDetail extends Component {
         dataIndex: 'questionNum',
       },
       {
-        title: roleId === 'labeler' ? '标注进度' : '质检进度',
+        title: roleId === LabelerId ? '标注进度' : '质检进度',
         dataIndex: 'schedule',
         render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
       },
@@ -166,7 +180,7 @@ class ProjectDetail extends Component {
       },
       {
         title: '操作',
-        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{roleId === 'labeler' ? '标注' : '质检'}</a>,
+        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{roleId === LabelerId ? '标注' : '质检'}</a>,
       },
     ];
 
@@ -178,7 +192,7 @@ class ProjectDetail extends Component {
       </div>
     );
 
-    const extraContent = <Button type="primary" disabled={data.list.length} onClick={this.handleReceiveTask}>领取新任务</Button>;
+    const extraContent = <Button type="primary" disabled={isReceiveTask} onClick={this.handleReceiveTask}>领取新任务</Button>;
 
     return (
       <PageHeaderWrapper

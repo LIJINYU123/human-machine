@@ -186,7 +186,8 @@ class TaskDetail extends Component {
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]}/>
-        <Statistic title="标注进度" value={basicInfo.schedule} suffix="%"/>
+        <Statistic title="标注进度" value={basicInfo.labelSchedule} suffix="%"/>
+        <Statistic title="质检进度" value={basicInfo.reviewSchedule} suffix="%" />
       </div>
     );
 

@@ -187,6 +187,26 @@ class ProjectDetail extends Component {
     });
   };
 
+  exportResult = () => {
+    const { dispatch } = this.props;
+    const { projectId } = this.state;
+    dispatch({
+      type: 'project/exportResult',
+      payload: { projectId },
+      callback: blob => {
+        const link = document.createElement('a');
+        link.download = `labelResult_${projectId}.xlsx`;
+        link.style.display = 'none';
+        link.href = URL.createObjectURL(blob);
+        document.body.appendChild(link);
+        link.click();
+        // 释放的 URL 对象以及移除 a 标签
+        URL.revokeObjectURL(link.href);
+        document.body.removeChild(link);
+      },
+    });
+  };
+
   render() {
     const { memberDetail: { members }, basicInfo, loading } = this.props;
     const { projectId, activeTabKey, labelerId, inspectorId, modalVisible } = this.state;
@@ -205,15 +225,15 @@ class ProjectDetail extends Component {
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={statusName[basicInfo.status]} />
-        <Statistic title="标注进度" value={basicInfo.schedule} suffix="%" />
-        <Statistic title="质检进度" value={basicInfo.schedule} suffix="%" />
+        <Statistic title="标注进度" value={basicInfo.labelSchedule} suffix="%" />
+        <Statistic title="质检进度" value={basicInfo.reviewSchedule} suffix="%" />
       </div>
     );
 
     const description = (
       <Descriptions className={styles.headerList} size="small" column={3}>
         <Descriptions.Item label="负责人">{basicInfo.owner ? basicInfo.owner.userName : ''}</Descriptions.Item>
-        <Descriptions.Item label="项目周期" span={2}>{`${basicInfo.startTime} - ${basicInfo.endTime}`}</Descriptions.Item>
+        <Descriptions.Item label="项目周期" span={2}>{basicInfo.startTime === '' && basicInfo.endTime === '' ? '永久' : `${basicInfo.startTime} - ${basicInfo.endTime}`}</Descriptions.Item>
         <Descriptions.Item label="项目类型">{basicInfo.projectType}</Descriptions.Item>
         <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
         <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>
@@ -224,7 +244,7 @@ class ProjectDetail extends Component {
       <Fragment>
         <Button.Group>
           <Button icon="check" onClick={this.handleCompleteProject}>项目完成</Button>
-          <Button icon="download">导出结果</Button>
+          <Button icon="download" onClick={this.exportResult}>导出结果</Button>
         </Button.Group>
         <Button onClick={this.handleEdit}>编辑</Button>
         <Button type="primary" onClick={this.handleGoBack}>返回</Button>

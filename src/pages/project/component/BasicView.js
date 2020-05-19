@@ -20,7 +20,7 @@ class BasicView extends Component {
           <Descriptions.Item label="项目类型">{basicInfo.projectType}</Descriptions.Item>
           <Descriptions.Item label="项目负责人">{basicInfo.owner.userName}</Descriptions.Item>
           <Descriptions.Item label="发布时间">{basicInfo.createdTime}</Descriptions.Item>
-          <Descriptions.Item label="项目周期" span={2}>{`${basicInfo.startTime} - ${basicInfo.endTime}`}</Descriptions.Item>
+          <Descriptions.Item label="项目周期" span={2}>{basicInfo.startTime === '' && basicInfo.endTime === '' ? '永久' : `${basicInfo.startTime} - ${basicInfo.endTime}`}</Descriptions.Item>
           <Descriptions.Item label="单个任务包题目数">{basicInfo.questionNum}</Descriptions.Item>
           <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
           <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>

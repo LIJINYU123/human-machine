@@ -11,7 +11,6 @@ export default {
     initial: '未开始',
     inProgress: '进行中',
     suspend: '暂停中',
-    expired: '逾期中',
     complete: '完成',
   },
 
@@ -73,4 +72,7 @@ export default {
     remark: '备注',
     valid: '数据有效性',
   },
+
+  LabelerId: 'labeler',
+  InspectorId: 'inspector',
 }

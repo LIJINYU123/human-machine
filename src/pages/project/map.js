@@ -109,12 +109,12 @@ export default {
   ],
 
   labelTypeToValue: {
-    textClassify: ['textMark', 'textClassify'],
-    sequenceLabeling: ['textMark', 'sequenceLabeling'],
-    textExtension: ['textMark', 'textExtension'],
-    pictureMark: ['pictureMark'],
-    voiceMark: ['voiceMark'],
-    videoDialogMark: ['otherMark', 'videoDialogMark'],
+    textClassify: ['text', 'textClassify'],
+    sequenceLabeling: ['text', 'sequenceLabeling'],
+    textExtension: ['text', 'textExtension'],
+    pictureMark: ['picture', 'pictureMark'],
+    voiceMark: ['voice', 'voiceMark'],
+    videoDialogMark: ['other', 'videoDialogMark'],
   },
 
   reviewLabel: {

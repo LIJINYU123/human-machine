@@ -42,6 +42,14 @@ export async function queryMemberData(params) {
   });
 }
 
+export async function exportResult(params) {
+  return request('/api/project/export-result', {
+    method: 'POST',
+    data: params,
+    responseType: 'blob',
+  });
+}
+
 // 创建项目第一步获取标注员和质检员名单
 export async function queryMembers() {
   return request('/api/project/members');
