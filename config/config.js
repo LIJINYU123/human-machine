@@ -244,19 +244,19 @@ export default {
               component: './taskManage/component/ImageAnswerView',
               hideInMenu: true,
             },
-            {
-              name: '个人中心',
-              icon: 'profile',
-              path: '/person',
-              routes: [
-                {
-                  name: '个人资料',
-                  icon: 'book',
-                  path: '/person/profile',
-                  component: './personCenter/profile',
-                },
-              ],
-            },
+            // {
+            //   name: '个人中心',
+            //   icon: 'profile',
+            //   path: '/person',
+            //   routes: [
+            //     {
+            //       name: '个人资料',
+            //       icon: 'book',
+            //       path: '/person/profile',
+            //       component: './personCenter/profile',
+            //     },
+            //   ],
+            // },
             {
               component: '404',
             },
