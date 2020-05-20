@@ -189,6 +189,13 @@ export default {
               hideInMenu: true,
             },
             {
+              name: '我的任务',
+              icon: 'container',
+              path: '/task-manage/my-task',
+              component: './taskManage/component/MyTaskView',
+              hideInMenu: true,
+            },
+            {
               name: '文本标注',
               icon: 'container',
               path: '/task-manage/my-task/text-mark',
