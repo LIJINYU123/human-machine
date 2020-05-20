@@ -7,7 +7,7 @@ import { connect } from 'dva/index';
 import router from 'umi/router';
 import ItemData from '../map';
 
-const { taskStatusMap, taskStatusName, labelTypeName, LabelerId, InspectorId } = ItemData;
+const { taskStatusMap, taskStatusName, labelTypeName, Labeler, Inspector } = ItemData;
 
 @connect(({ detail, loading }) => ({
   data: detail.data,
@@ -125,10 +125,10 @@ class ProjectDetail extends Component {
   canReceiveTask = () => {
     const { data } = this.props;
     const { roleId } = this.state;
-    if (roleId === LabelerId && data.list.filter(item => item.status === 'labeling').length > 0) {
+    if (roleId === Labeler && data.list.filter(item => item.status === 'labeling').length > 0) {
       return true;
     }
-    if (roleId === InspectorId && data.list.filter(item => item.status === 'review').length > 0) {
+    if (roleId === Inspector && data.list.filter(item => item.status === 'review').length > 0) {
       return true;
     }
     return false;
@@ -165,7 +165,7 @@ class ProjectDetail extends Component {
         dataIndex: 'questionNum',
       },
       {
-        title: roleId === LabelerId ? '标注进度' : '质检进度',
+        title: roleId === Labeler ? '标注进度' : '质检进度',
         dataIndex: 'schedule',
         render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
       },
@@ -180,7 +180,7 @@ class ProjectDetail extends Component {
       },
       {
         title: '操作',
-        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{roleId === LabelerId ? '标注' : '质检'}</a>,
+        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{roleId === Labeler ? '标注' : '质检'}</a>,
       },
     ];
 

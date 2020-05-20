@@ -251,19 +251,38 @@ export default {
               component: './taskManage/component/ImageAnswerView',
               hideInMenu: true,
             },
-            // {
-            //   name: '个人中心',
-            //   icon: 'profile',
-            //   path: '/person',
-            //   routes: [
-            //     {
-            //       name: '个人资料',
-            //       icon: 'book',
-            //       path: '/person/profile',
-            //       component: './personCenter/profile',
-            //     },
-            //   ],
-            // },
+            {
+              name: '个人中心',
+              icon: 'profile',
+              path: '/person',
+              routes: [
+                {
+                  name: '个人资料',
+                  icon: 'book',
+                  path: '/person/profile',
+                  component: './personCenter/profile',
+                },
+                {
+                  name: '机构信息',
+                  icon: 'book',
+                  path: '/person/agency',
+                  component: './personCenter/agency',
+                },
+                {
+                  name: '团队信息',
+                  icon: 'book',
+                  path: '/person/team',
+                  component: './personCenter/team',
+                },
+                {
+                  name: '个人资料',
+                  icon: 'book',
+                  path: '/person/team/member',
+                  component: './personCenter/team/components/MemberProfile',
+                  hideInMenu: true,
+                },
+              ],
+            },
             {
               component: '404',
             },

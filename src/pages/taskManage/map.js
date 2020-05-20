@@ -73,6 +73,6 @@ export default {
     valid: '数据有效性',
   },
 
-  LabelerId: 'labeler',
-  InspectorId: 'inspector',
+  Labeler: 'labeler',
+  Inspector: 'inspector',
 }
