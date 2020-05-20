@@ -151,12 +151,14 @@ export default {
               icon: 'audit',
               path: '/agency/department',
               component: './department',
+              authority: ['superAdmin'],
             },
             {
               name: 'user-manage',
               icon: 'user',
               path: '/agency/account',
               component: './account',
+              authority: ['superAdmin', 'depAdmin'],
             },
             {
               name: '组别详情',
@@ -164,12 +166,14 @@ export default {
               path: '/agency/account/group-detail',
               component: './account/components/GroupDetail',
               hideInMenu: true,
+              authority: ['superAdmin', 'depAdmin'],
             },
             {
               name: 'role',
               icon: 'team',
               path: '/agency/role',
               component: './role',
+              authority: ['superAdmin', 'depAdmin'],
             },
             {
               name: '任务管理',
@@ -182,13 +186,6 @@ export default {
               icon: 'container',
               path: '/task-manage/project-detail',
               component: './taskManage/component/ProjectDetail',
-              hideInMenu: true,
-            },
-            {
-              name: '我的任务',
-              icon: 'container',
-              path: '/task-manage/my-task',
-              component: './taskManage/component/MyTaskView',
               hideInMenu: true,
             },
             {
@@ -251,6 +248,14 @@ export default {
               name: '个人中心',
               icon: 'profile',
               path: '/person',
+              routes: [
+                {
+                  name: '个人资料',
+                  icon: 'book',
+                  path: '/person/profile',
+                  component: './personCenter/profile',
+                },
+              ],
             },
             {
               component: '404',

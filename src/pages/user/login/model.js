@@ -1,7 +1,10 @@
 import { routerRedux } from 'dva/router';
+import router from 'umi/router'
 import { message } from 'antd';
 import { fakeAccountLogin, getFakeCaptcha } from './service';
 import { getPageQuery } from './utils/utils';
+import { setAuthority } from '@/utils/authority';
+import { stringify } from "querystring";
 
 const Model = {
   namespace: 'userAndlogin',
@@ -43,12 +46,29 @@ const Model = {
       }
     },
 
+    *logout(_, { put }) {
+      const { redirect } = getPageQuery(); // redirect
+
+      if (window.location.pathname !== '/user/login' && !redirect) {
+        const urlParams = new URL(window.location.href);
+        yield put(
+          routerRedux.replace({
+            pathname: '/user/login',
+            search: stringify({
+              redirect: `${urlParams.origin}/`,
+            }),
+          }),
+        );
+      }
+    },
+
     *getCaptcha({ payload }, { call }) {
       yield call(getFakeCaptcha, payload);
     },
   },
   reducers: {
     changeLoginStatus(state, { payload }) {
+      setAuthority(payload.currentAuthority);
       return { ...state, status: payload.status };
     },
   },

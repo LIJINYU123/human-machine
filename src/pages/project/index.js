@@ -215,6 +215,8 @@ class TextProjectList extends Component {
     this.setState({
       filteredInfo: null,
       formValues: {},
+      searchText: '',
+      searchedColumn: '',
     });
 
     dispatch({
@@ -380,6 +382,7 @@ class TextProjectList extends Component {
         title: '项目状态',
         dataIndex: 'status',
         filters: statusFilters,
+        filteredValue: filteredInfo.status || null,
         render: val => <Badge status={statusMap[val]} text={statusName[val]}/>,
       },
       {

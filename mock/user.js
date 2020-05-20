@@ -194,20 +194,42 @@ export default {
           name: '个人中心',
           icon: 'profile',
           path: '/person',
+          children: [
+            {
+              name: '个人资料',
+              icon: 'book',
+              path: '/person/profile',
+              component: './personCenter/profile',
+            },
+          ],
         },
       ],
       SYDEV: [
         {
-          path: '/corpus',
-          name: '对话录入',
-          icon: 'form',
-          component: './corpus',
+          path: '/project',
+          name: '项目管理',
+          icon: 'project',
+          component: './project',
         },
         {
-          path: '/history',
-          name: '历史记录',
-          icon: 'history',
-          component: './history',
+          name: '项目详情页',
+          icon: 'container',
+          path: '/project/detail',
+          component: './project/component/ProjectDetail',
+          hideInMenu: true,
+        },
+        {
+          name: '任务详情页',
+          icon: 'container',
+          path: '/project/task-detail',
+          component: './project/component/TaskDetail',
+          hideInMenu: true,
+        },
+        {
+          path: '/template',
+          name: '标注模板管理',
+          icon: 'tool',
+          component: './template',
         },
       ],
     };
@@ -255,7 +277,7 @@ export default {
       res.send({
         status: 'ok',
         message: 'success',
-        currentAuthority: 'superAdmin',
+        currentAuthority: 'labeler',
       });
       return;
     }

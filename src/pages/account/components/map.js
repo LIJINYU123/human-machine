@@ -1,7 +1,7 @@
 export default {
   FieldLabels: {
     amount: '数量',
-    userId: '账户名',
+    userId: '用户名',
     role: '角色',
     group: '组别',
     name: '用户名',

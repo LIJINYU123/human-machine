@@ -351,12 +351,12 @@ class UserManage extends Component {
 
     const columns = [
       {
-        title: '账户名',
+        title: '用户名',
         dataIndex: 'userId',
         ...this.getColumnSearchProps('userId'),
       },
       {
-        title: '用户名',
+        title: '昵称',
         dataIndex: 'name',
         ...this.getColumnSearchProps('name'),
         render: val => <a>{val}</a>,
@@ -364,9 +364,9 @@ class UserManage extends Component {
       {
         title: '角色名称',
         dataIndex: 'roleId',
-        render: val => (roleInfos.length ? roleInfos.filter(item => item.roleId === val)[0].roleName : val),
         filters: roleFilters,
         filteredValue: filteredInfo.roleId || null,
+        render: val => (roleInfos.length && roleInfos.filter(item => item.roleId === val).length > 0 ? roleInfos.filter(item => item.roleId === val)[0].roleName : val),
       },
       {
         title: '组别',
