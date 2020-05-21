@@ -86,6 +86,17 @@ function queryUserBasicInfo(req, res) {
   return res.json(mockData[0]);
 }
 
+function modifyUserBasicInfo(req, res) {
+  const { body } = req;
+  mockData.forEach(item => {
+    if (item.userId === body.userId) {
+      item.userName = body.userName;
+    }
+  });
+  return res.json({ status: 'ok', message: '修改成功' });
+}
+
+
 function queryUserStatistics(req, res) {
   // const userId = req.get('UserID');
   const roleId = req.get('RoleID');
@@ -107,4 +118,5 @@ function queryUserStatistics(req, res) {
 export default {
   'GET /api/person-center/profile/basic-info': queryUserBasicInfo,
   'GET /api/person-center/profile/statistics': queryUserStatistics,
+  'POST /api/person-center/profile/basic-info': modifyUserBasicInfo,
 }

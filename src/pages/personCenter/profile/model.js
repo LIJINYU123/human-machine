@@ -1,4 +1,5 @@
-import { queryUserInfo, queryUserStatistics } from './service';
+import { queryUserInfo, queryUserStatistics, modifyUserInfo } from './service';
+import { message } from 'antd';
 
 
 const Profile = {
@@ -23,6 +24,18 @@ const Profile = {
         type: 'statistics',
         payload: response,
       })
+    },
+
+    * modifyUserInfo({ payload, callback }, { call }) {
+      const response = yield call(modifyUserInfo, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+        if (callback) {
+          callback();
+        }
+      } else {
+        message.error(response.message);
+      }
     },
   },
 

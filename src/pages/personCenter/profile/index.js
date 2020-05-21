@@ -3,6 +3,7 @@ import { Descriptions, Card, Badge, Button } from 'antd';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import ItemData from './map'
+import UserModifyView from './components/UserModifyView';
 import ProjectManagerProfile from './components/ProjectManagerProfile';
 import LabelerProfile from './components/LabelerProfile';
 import InspectorProfile from './components/InspectorProfile';
@@ -16,6 +17,7 @@ const { SuperAdmin, ProjectManage, Labeler, Inspector } = ItemData;
 class Profile extends Component {
   state = {
     roleId: '',
+    visible: false,
   };
 
   componentWillMount() {
@@ -59,13 +61,26 @@ class Profile extends Component {
     return null;
   };
 
+  handleModify = () => {
+    this.setState({
+      visible: true,
+    });
+  };
+
+  handleCancel = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
   render() {
     const { userInfo } = this.props;
+    const { visible } = this.state;
 
     const titleComponent = (
       <Fragment>
         <span>基本信息</span>
-        <Button type="primary" style={{ float: 'right' }}>编辑</Button>
+        <Button type="primary" style={{ float: 'right' }} onClick={this.handleModify}>编辑</Button>
       </Fragment>
     );
 
@@ -81,6 +96,7 @@ class Profile extends Component {
           {
             this.renderStatistics()
           }
+          <UserModifyView userInfo={userInfo} visible={visible} onCancel={this.handleCancel}/>
         </Card>
       </PageHeaderWrapper>
     );

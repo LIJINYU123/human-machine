@@ -9,3 +9,11 @@ export async function queryUserInfo(params) {
 export async function queryUserStatistics(params) {
   return request('/api/person-center/profile/statistics', { params });
 }
+
+// 修改个人基本信息
+export async function modifyUserInfo(params) {
+  return request('/api/person-center/profile/basic-info', {
+    method: 'POST',
+    data: params,
+  });
+}
