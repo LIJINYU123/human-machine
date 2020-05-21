@@ -364,7 +364,7 @@ const TextProjectFormData = {
         stepOne: { projectName, projectType, passRate, checkRate, labeler: labelers, inspector: inspectors, questionNum, projectPeriod, description },
         stepTwo: { templateName, classifyName, multiple, saveType },
         forever,
-        labelType: labelTypeToValue[labelType],
+        labelType: labelTypeToValue.hasOwnProperty(labelType) ? labelTypeToValue[labelType] : [],
         optionData: options,
         minValue,
         maxValue,

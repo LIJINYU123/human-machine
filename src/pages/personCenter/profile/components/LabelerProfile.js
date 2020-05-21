@@ -12,7 +12,7 @@ class LabelerProfile extends Component {
       },
       {
         title: '退回任务数',
-        dataIndex: 'rejectTaskNUm',
+        dataIndex: 'rejectTaskNum',
       },
       {
         title: '退回比例',

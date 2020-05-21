@@ -284,7 +284,7 @@ class Step2 extends Component {
           </Fragment>
         }
         {
-          labelType.length > 0 && !['textExtension', 'sequenceLabeling'].includes(labelType.slice(-1)[0]) &&
+          labelType.length > 0 && !['textExtension', 'sequenceLabeling', 'pictureMark', 'videoDialogMark'].includes(labelType.slice(-1)[0]) &&
           <Form.Item label={FieldLabels.multiple} {...formItemLayout}>
             {
               getFieldDecorator('multiple', {
