@@ -60,7 +60,7 @@ class ResetPassword extends Component {
 
   checkUserId = (_, value, callback) => {
     if (!value) {
-      callback('请输入账户ID');
+      callback('请输入用户名');
     } else {
       callback();
     }
@@ -153,20 +153,21 @@ class ResetPassword extends Component {
             {getFieldDecorator('userId', {
               rules: [
                 {
-                  validator: this.checkUserId,
+                  required: true,
+                  message: '请输入用户名',
                 },
               ],
-            })(<Input size="large" placeholder="账户ID" />)}
+            })(<Input size="large" placeholder="用户名" />)}
           </Form.Item>
           <Form.Item>
             {getFieldDecorator('name', {
               rules: [
                 {
                   required: true,
-                  message: '请输入真实姓名',
+                  message: '请输入昵称',
                 },
               ],
-            })(<Input size="large" placeholder="真实姓名" />)}
+            })(<Input size="large" placeholder="昵称" />)}
           </Form.Item>
           <Form.Item help={help}>
             <Popover

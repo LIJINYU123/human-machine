@@ -90,6 +90,7 @@ const TextProjectFormData = {
 
     * saveStepOneData({ payload }, { call, put, select }) {
       const forever = yield select(state => state.textProjectFormData.forever);
+      const projectId = yield select(state => state.textProjectFormData.projectId);
       const { projectPeriod, labeler, inspector, ...rest } = payload;
       let startTime = '';
       let endTime = '';
@@ -97,7 +98,15 @@ const TextProjectFormData = {
         startTime = projectPeriod[0].format('YYYY-MM-DD HH:mm:ss');
         endTime = projectPeriod[1].format('YYYY-MM-DD HH:mm:ss');
       }
-      const response = yield call(saveStepOneData, { startTime, endTime, labelers: labeler, inspectors: inspector, ...rest });
+
+      let response;
+      if (projectId !== '') {
+        // eslint-disable-next-line max-len
+        response = yield call(saveStepOneData, { startTime, endTime, labelers: labeler, inspectors: inspector, projectId, ...rest });
+      } else {
+        // eslint-disable-next-line max-len
+        response = yield call(saveStepOneData, { startTime, endTime, labelers: labeler, inspectors: inspector, ...rest });
+      }
       if (response.status === 'ok') {
         yield put({
           type: 'saveStepOne',
