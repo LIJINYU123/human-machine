@@ -34,12 +34,12 @@ class TaskList extends Component {
 
     const params = { projectId };
     if (labelerId !== '') {
-      params.labelerId = [labelerId];
+      params.labelerId = labelerId;
       this.setState({
         filteredInfo: { labelerId: [labelerId] },
       });
     } else if (inspectorId !== '') {
-      params.inspectorId = [inspectorId];
+      params.inspectorId = inspectorId;
       this.setState({
         filteredInfo: { inspectorId: [inspectorId] },
       });
@@ -58,7 +58,7 @@ class TaskList extends Component {
   };
 
   handleStandardTableChange = (pagination, filterArg, _) => {
-    const { dispatch } = this.props;
+    const { dispatch, projectId } = this.props;
     this.setState({
       filteredInfo: filterArg,
     });
@@ -70,7 +70,7 @@ class TaskList extends Component {
     }, {});
 
     const params = {
-      projectId: this.state.projectId,
+      projectId,
       currentPage: pagination.current,
       pageSize: pagination.pageSize,
       ...filters,
