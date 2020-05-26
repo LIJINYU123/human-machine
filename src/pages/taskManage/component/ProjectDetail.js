@@ -94,27 +94,47 @@ class ProjectDetail extends Component {
   };
 
   handleJumpToMarkView = task => {
-    if (task.labelType === 'textClassify') {
-      router.push({
-        pathname: '/task-manage/my-task/text-mark',
-        state: {
-          taskInfo: task,
-        },
-      });
-    } else if (task.labelType === 'sequenceLabeling') {
-      router.push({
-        pathname: '/task-manage/my-task/sequence-mark',
-        state: {
-          taskInfo: task,
-        },
-      });
-    } else if (task.labelType === 'textExtension') {
-      router.push({
-        pathname: '/task-manage/my-task/extension-mark',
-        state: {
-          taskInfo: task,
-        },
-      });
+    const { roleId } = this.state;
+
+    switch (task.labelType) {
+      case 'textClassify':
+        router.push({
+          pathname: '/task-manage/my-task/text-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      case 'sequenceLabeling':
+        router.push({
+          pathname: '/task-manage/my-task/sequence-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      case 'textExtension':
+        router.push({
+          pathname: '/task-manage/my-task/extension-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      case 'pictureMark':
+        router.push({
+          pathname: '/task-manage/my-task/image-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      default:
+        break;
     }
   };
 

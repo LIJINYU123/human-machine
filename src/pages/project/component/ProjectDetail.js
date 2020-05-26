@@ -53,7 +53,7 @@ class ProjectDetail extends Component {
   }
 
   handleTableChange = (pagination, filterArg, _) => {
-    const { dispatch, projectId } = this.props;
+    const { dispatch } = this.props;
     this.setState({
       filteredInfo: filterArg,
     });
@@ -65,7 +65,7 @@ class ProjectDetail extends Component {
     }, {});
 
     const params = {
-      projectId,
+      projectId: this.state.projectId,
       ...filters,
     };
 
