@@ -113,9 +113,10 @@ class SequenceMarkView extends Component {
   // 处理质检通过或者拒绝的处理函数
   handleApproveOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
+    const { basicInfo } = this.state;
     dispatch({
       type: 'sequenceMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult: 'approve', remark } },
+      payload: { dataId, taskId, result: { reviewResult: 'approve', remark }, reviewRounds: basicInfo.rejectTime + 1 },
       callback: () => {
         this.handleRefreshView();
       },
@@ -124,9 +125,10 @@ class SequenceMarkView extends Component {
 
   handleRejectOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
+    const { basicInfo } = this.state;
     dispatch({
       type: 'sequenceMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult: 'reject', remark } },
+      payload: { dataId, taskId, result: { reviewResult: 'reject', remark }, reviewRounds: basicInfo.rejectTime + 1 },
       callback: () => {
         this.handleRefreshView();
       },

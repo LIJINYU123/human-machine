@@ -12,6 +12,7 @@ const TextMark = {
     passRate: 0,
     markTool: {},
     questionInfo: {},
+    schedule: 0,
   },
 
   effects: {
@@ -39,16 +40,15 @@ const TextMark = {
       });
     },
 
-    * saveTextMarkResult({ payload, callback }, { call }) {
+    * saveTextMarkResult({ payload, callback }, { call, put }) {
       const response = yield call(saveTextMarkResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
 
@@ -75,6 +75,13 @@ const TextMark = {
       } else {
         message.error(response.message);
       }
+    },
+
+    * updateSchedule({ payload }, { put }) {
+      yield put({
+        type: 'saveSchedule',
+        payload: payload.schedule,
+      });
     },
 
     // 答题模式，获取一道题目
@@ -130,6 +137,9 @@ const TextMark = {
     },
     saveQuestion(state, action) {
       return { ...state, questionInfo: action.payload };
+    },
+    saveSchedule(state, action) {
+      return { ...state, schedule: action.payload };
     },
   },
 };

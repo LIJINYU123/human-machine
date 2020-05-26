@@ -45,7 +45,7 @@ const projectMockData = [
 ];
 
 const taskMockData = [
-  
+
   {
     projectId: '1',
     projectName: '文本分类123',
@@ -57,6 +57,7 @@ const taskMockData = [
     status: 'review',
     receiveTime: '2020-02-22 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
   {
     projectId: '1',
@@ -69,6 +70,7 @@ const taskMockData = [
     status: 'review',
     receiveTime: '2020-02-23 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
   {
     projectId: 'match_project1',
@@ -81,6 +83,7 @@ const taskMockData = [
     status: 'reject',
     receiveTime: '2020-02-24 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
   {
     projectId: '1',
@@ -93,6 +96,7 @@ const taskMockData = [
     status: 'complete',
     receiveTime: '2020-02-25 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
   {
     projectId: 'ner_project1',
@@ -105,6 +109,7 @@ const taskMockData = [
     status: 'review',
     receiveTime: '2020-02-26 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
   {
     projectId: 'split_project1',
@@ -117,6 +122,7 @@ const taskMockData = [
     status: 'review',
     receiveTime: '2020-04-21 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
   {
     projectId: 'extension_project1',
@@ -129,6 +135,7 @@ const taskMockData = [
     status: 'review',
     receiveTime: '2020-04-22 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
   {
     projectId: 'reading_project1',
@@ -141,6 +148,7 @@ const taskMockData = [
     status: 'review',
     receiveTime: '2020-04-20 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
   {
     projectId: 'image_project1',
@@ -153,6 +161,7 @@ const taskMockData = [
     status: 'review',
     receiveTime: '2020-04-24 10:00:00',
     owner: 'SYECO',
+    rejectTime: 0,
   },
 ];
 

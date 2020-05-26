@@ -39,6 +39,7 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   checkRate: textMark.checkRate,
   passRate: textMark.passRate,
   markTool: textMark.markTool,
+  schedule: textMark.schedule,
   loading: loading.effects['textMark/fetchLabelData'],
 }))
 class TextMarkView extends Component {
@@ -55,11 +56,16 @@ class TextMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location } = this.props;
+    const { location, dispatch } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
+    });
+
+    dispatch({
+      type: 'textMark/updateSchedule',
+      payload: { schedule: location.state.taskInfo.schedule },
     });
   }
 
@@ -194,9 +200,10 @@ class TextMarkView extends Component {
   // 处理质检通过或者拒绝的处理函数
   handleApproveOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
+    const { basicInfo } = this.state;
     dispatch({
       type: 'textMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult: 'approve', remark } },
+      payload: { dataId, taskId, result: { reviewResult: 'approve', remark }, reviewRounds: basicInfo.rejectTime + 1 },
       callback: () => {
         this.handleRefreshView();
       },
@@ -205,9 +212,10 @@ class TextMarkView extends Component {
 
   handleRejectOperate = (dataId, taskId, remark) => {
     const { dispatch } = this.props;
+    const { basicInfo } = this.state;
     dispatch({
       type: 'textMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult: 'reject', remark } },
+      payload: { dataId, taskId, result: { reviewResult: 'reject', remark }, reviewRounds: basicInfo.rejectTime + 1 },
       callback: () => {
         this.handleRefreshView();
       },
@@ -288,14 +296,14 @@ class TextMarkView extends Component {
 
   render() {
     const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue, roleId } = this.state;
-    const { data, checkRate, passRate, markTool, loading } = this.props;
+    const { data, checkRate, passRate, markTool, schedule, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]} />
-        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={basicInfo.schedule} suffix="%" />
+        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
       </div>
     );
 
@@ -351,6 +359,13 @@ class TextMarkView extends Component {
         filters: labelResultFilters,
         filteredValue: filteredInfo.labelResult || null,
       },
+      // {
+      //   title: '数据有效性',
+      //   dataIndex: 'invalid',
+      //   render: val => (val === false ? '有效' : '无效'),
+      //   filters: validFilters,
+      //   filteredValue: filteredInfo.invalid || null,
+      // },
       {
         title: '质检结果',
         dataIndex: 'reviewResult',

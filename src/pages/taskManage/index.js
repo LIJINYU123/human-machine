@@ -164,15 +164,6 @@ class TaskCenter extends Component {
     });
   };
 
-  handleJumptoComplete = () => {
-    router.push({
-      pathname: '/person/my-task',
-      state: {
-        status: 'complete',
-      },
-    });
-  };
-
   handleRadioChange = event => {
     const { dispatch } = this.props;
     const params = {

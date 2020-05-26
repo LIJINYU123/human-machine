@@ -94,8 +94,6 @@ class ProjectDetail extends Component {
   };
 
   handleJumpToMarkView = task => {
-    const { roleId } = this.state;
-
     switch (task.labelType) {
       case 'textClassify':
         router.push({

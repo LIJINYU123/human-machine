@@ -84,6 +84,7 @@ class ExtensionAnswerView extends Component {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
         dataId: questionInfo.dataId,
+        reviewRounds: basicInfo.rejectTime + 1,
         nextDataId,
         ...values,
       },
