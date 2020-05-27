@@ -118,7 +118,7 @@ export default {
           routes: [
             {
               path: '/',
-              redirect: '/task-manage',
+              redirect: '/person/profile',
             },
             {
               path: '/project',
