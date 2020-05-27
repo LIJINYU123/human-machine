@@ -20,10 +20,14 @@ const Profile = {
 
     * fetchStatistics({ payload }, { call, put }) {
       const response = yield call(queryUserStatistics, payload);
-      yield put({
-        type: 'statistics',
-        payload: response,
-      })
+      if (response.status === 'ok') {
+        yield put({
+          type: 'statistics',
+          payload: response.response,
+        });
+      } else {
+       message.error(response.message);
+      }
     },
 
     * modifyUserInfo({ payload, callback }, { call }) {

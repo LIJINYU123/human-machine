@@ -1,4 +1,5 @@
-import ItemData from './map'
+import ItemData from './map';
+import { parse } from 'url';
 
 const { ProjectManage, Labeler, Inspector } = ItemData;
 
@@ -97,21 +98,28 @@ function modifyUserBasicInfo(req, res) {
 }
 
 
-function queryUserStatistics(req, res) {
+function queryUserStatistics(req, res, u) {
   // const userId = req.get('UserID');
-  const roleId = req.get('RoleID');
-  if (roleId === ProjectManage) {
-    return res.json(projectManageData);
+  let url = u;
+  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
+    // eslint-disable-next-line prefer-destructuring
+    url = req.url
   }
 
-  if (roleId === Labeler) {
-    return res.json(labelerData);
+  const params = parse(url, true).query;
+
+  if (params.roleId === ProjectManage) {
+    return res.json({ status: 'ok', message: 'success', response: projectManageData });
   }
 
-  if (roleId === Inspector) {
-    return res.json(inspectorData);
+  if (params.roleId === Labeler) {
+    return res.json({ status: 'ok', message: 'success', response: labelerData });
   }
-  return res.json(projectManageData);
+
+  if (params.roleId === Inspector) {
+    return res.json({ status: 'ok', message: 'success', response: inspectorData });
+  }
+  return res.json({ status: 'ok', message: 'success', response: projectManageData });
 }
 
 

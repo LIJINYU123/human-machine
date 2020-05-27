@@ -93,7 +93,7 @@ const mockData = {
 
 
 function queryTeamMemberInfo(req, res) {
-  return res.json(mockData);
+  return res.json({ status: 'ok', message: 'success', response: mockData });
 }
 
 export default {

@@ -38,7 +38,7 @@ class Profile extends Component {
     if (this.state.roleId !== SuperAdmin) {
       dispatch({
         type: 'team/fetchStatistics',
-        payload: { userId: this.state.userId },
+        payload: { userId: this.state.userId, roleId: this.state.roleId },
       });
     }
   }

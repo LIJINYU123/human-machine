@@ -61,6 +61,12 @@ const UserModifyView = props => {
         <Form.Item label="昵称">
           {
             getFieldDecorator('userName', {
+              rules: [
+                {
+                  required: true,
+                  message: '请输入昵称',
+                },
+              ],
               initialValue: userInfo.userName,
             })(<Input/>)
           }

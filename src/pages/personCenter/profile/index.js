@@ -29,6 +29,7 @@ class Profile extends Component {
 
   componentDidMount() {
     const userId = localStorage.getItem('UserID');
+    const roleId = localStorage.getItem('RoleID');
     const { dispatch } = this.props;
     dispatch({
       type: 'profile/fetchUserInfo',
@@ -38,7 +39,7 @@ class Profile extends Component {
     if (this.state.roleId !== SuperAdmin) {
       dispatch({
         type: 'profile/fetchStatistics',
-        payload: { userId },
+        payload: { userId, roleId },
       });
     }
   }

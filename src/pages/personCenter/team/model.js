@@ -1,5 +1,6 @@
 import { queryTeamInfo } from './service';
 import { queryUserInfo, queryUserStatistics } from '../profile/service';
+import { message } from 'antd';
 
 
 const Team = {
@@ -15,10 +16,14 @@ const Team = {
   effects: {
     * fetchTeamInfo(_, { call, put }) {
       const response = yield call(queryTeamInfo);
-      yield put({
-        type: 'teamInfo',
-        payload: response,
-      });
+      if (response.status === 'ok') {
+        yield put({
+          type: 'teamInfo',
+          payload: response.response,
+        });
+      } else {
+        message.error(response.message);
+      }
     },
 
     * fetchUserInfo({ payload }, { call, put }) {
@@ -31,10 +36,14 @@ const Team = {
 
     * fetchStatistics({ payload }, { call, put }) {
       const response = yield call(queryUserStatistics, payload);
-      yield put({
-        type: 'statistics',
-        payload: response,
-      })
+      if (response.status === 'ok') {
+        yield put({
+          type: 'statistics',
+          payload: response.response,
+        })
+      } else {
+        message.error(response.message);
+      }
     },
   },
 
