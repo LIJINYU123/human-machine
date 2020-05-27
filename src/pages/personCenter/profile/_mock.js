@@ -79,8 +79,11 @@ const inspectorData = {
 
 
 function queryUserBasicInfo(req, res) {
-  const userId = req.get('UserID');
-  const filterData = mockData.filter(item => item.userId === userId);
+  const { url } = req;
+  console.log(url);
+  const params = parse(url, true).query;
+
+  const filterData = mockData.filter(item => item.userId === params.userId);
   if (filterData.length > 0) {
     return res.json(filterData[0]);
   }

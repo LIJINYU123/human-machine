@@ -27,6 +27,7 @@ const UserModifyView = props => {
           callback: () => {
             dispatch({
               type: 'profile/fetchUserInfo',
+              payload: { userId: values.userId },
             });
             onCancel();
           },
