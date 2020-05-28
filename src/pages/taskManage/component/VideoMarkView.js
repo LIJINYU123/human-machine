@@ -2,24 +2,23 @@ import React, { Component, Fragment } from 'react';
 import {
   Button,
   Card,
-  Col,
   Descriptions,
-  Divider,
-  Icon, Input, List,
-  Popover,
-  Radio,
-  Row,
+  Input,
   Statistic,
+  Popover,
+  Row,
+  Col,
+  Divider,
+  Radio,
 } from 'antd';
-import { connect } from 'dva';
-import Highlighter from 'react-highlight-words';
+import { connect } from 'dva/index';
 import router from 'umi/router';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import StandardTable from './StandardTable';
 import ItemData from '../map';
 import styles from './style.less';
 
-const { labelTypeName, taskStatusName, reviewLabel, labelResult } = ItemData;
+const { reviewLabel, taskStatusName, labelTypeName, labelResult } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -33,20 +32,18 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   value: key,
 }));
 
-@connect(({ extensionMark, loading }) => ({
-  data: extensionMark.data,
-  checkRate: extensionMark.checkRate,
-  passRate: extensionMark.passRate,
-  markTool: extensionMark.markTool,
-  loading: loading.effects['extensionMark/fetchLabelData'],
+
+@connect(({ videoMark, loading }) => ({
+  data: videoMark.data,
+  checkRate: videoMark.checkRate,
+  passRate: videoMark.passRate,
+  loading: loading.effects['videoMark/fetchLabelData'],
 }))
-class ExtensionMarkView extends Component {
+class VideoMarkView extends Component {
   state = {
     basicInfo: undefined,
     filteredInfo: {},
     pagination: {},
-    searchText: '',
-    searchedColumn: '',
     remarkPopoverVisible: {},
     inputValue: '',
     roleId: '',
@@ -65,12 +62,8 @@ class ExtensionMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'extensionMark/fetchLabelData',
+      type: 'videoMark/fetchLabelData',
       payload: { taskId: basicInfo.taskId },
-    });
-    dispatch({
-      type: 'extensionMark/fetchMarkTool',
-      payload: { projectId: basicInfo.projectId },
     });
   }
 
@@ -99,66 +92,23 @@ class ExtensionMarkView extends Component {
     };
 
     dispatch({
-      type: 'extensionMark/fetchLabelData',
+      type: 'videoMark/fetchLabelData',
       payload: params,
     });
   };
 
-  getColumnSearchProps = dataIndex => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-      <div style={{ padding: 8 }}>
-        <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
-               value={selectedKeys[0]}
-               onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-               onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-               style={{ width: 188, marginBottom: 8, display: 'block' }}
-        />
-        <Button
-          type="primary"
-          onClick={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
-          icon="search"
-          size="small"
-          style={{ width: 90, marginRight: 8 }}
-        >
-          搜索
-        </Button>
-        <Button
-          onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}
-        >
-          重置
-        </Button>
-      </div>
-    ),
-    filterIcon: filtered => (<Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />),
-    onFilterDropdownVisibleChange: visible => {
-      if (visible) {
-        setTimeout(() => this.searchInput.select());
-      }
-    },
-    render: text => (this.state.searchedColumn === dataIndex ? (
-      <Highlighter
-        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-        searchWords={[this.state.searchText]}
-        autoEscape
-        textToHighlight={text.toString()}
-      />
-    ) : text),
-  });
+  handleRefreshView = () => {
+    const { dispatch } = this.props;
+    const { pagination, basicInfo } = this.state;
+    const params = {
+      taskId: basicInfo.taskId,
+      currentPage: pagination.current,
+      pageSize: pagination.pageSize,
+    };
 
-  handleSearch = (selectedKeys, confirm, dataIndex) => {
-    confirm();
-
-    this.setState({
-      searchText: selectedKeys[0],
-      searchedColumn: dataIndex,
-    });
-  };
-
-  handleReset = clearFilters => {
-    clearFilters();
-    this.setState({
-      searchText: '',
+    dispatch({
+      type: 'videoMark/fetchLabelData',
+      payload: params,
     });
   };
 
@@ -167,7 +117,7 @@ class ExtensionMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'extensionMark/saveReviewResult',
+      type: 'videoMark/saveReviewResult',
       payload: { dataId, taskId, result: { reviewResult: 'approve', remark }, reviewRounds: basicInfo.rejectTime + 1 },
       callback: () => {
         this.handleRefreshView();
@@ -179,7 +129,7 @@ class ExtensionMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'extensionMark/saveReviewResult',
+      type: 'videoMark/saveReviewResult',
       payload: { dataId, taskId, result: { reviewResult: 'reject', remark }, reviewRounds: basicInfo.rejectTime + 1 },
       callback: () => {
         this.handleRefreshView();
@@ -197,7 +147,7 @@ class ExtensionMarkView extends Component {
     const { dispatch } = this.props;
     const { inputValue } = this.state;
     dispatch({
-      type: 'extensionMark/saveReviewResult',
+      type: 'videoMark/saveReviewResult',
       payload: { dataId, taskId, result: { reviewResult, remark: inputValue } },
       callback: () => {
         this.handleRefreshView();
@@ -206,46 +156,19 @@ class ExtensionMarkView extends Component {
     });
   };
 
-  // 备注模态输入框取消处理函数
   handleRemarkCancel = () => {
     this.setState({ remarkPopoverVisible: {} });
   };
 
-  // 备注模态输入框change处理函数
   handleInputChange = event => {
     this.setState({ inputValue: event.target.value });
-  };
-
-  // 数据变动，刷新页面处理函数
-  handleRefreshView = () => {
-    const { dispatch } = this.props;
-    const { pagination, basicInfo } = this.state;
-    const params = {
-      taskId: basicInfo.taskId,
-      currentPage: pagination.current,
-      pageSize: pagination.pageSize,
-    };
-
-    dispatch({
-      type: 'extensionMark/fetchLabelData',
-      payload: params,
-    });
-  };
-
-  jumpToAnswerMode = () => {
-    const { basicInfo, roleId } = this.state;
-    const { markTool } = this.props;
-    router.push({
-      pathname: '/task-manage/my-task/answer-mode/extension',
-      state: { basicInfo, markTool, roleId },
-    });
   };
 
   submitReview = () => {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'extensionMark/updateStatus',
+      type: 'videoMark/updateStatus',
       payload: { taskId: basicInfo.taskId, status: 'review' },
       callback: () => {
         router.goBack();
@@ -257,7 +180,7 @@ class ExtensionMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'extensionMark/updateStatus',
+      type: 'videoMark/updateStatus',
       payload: { taskId: basicInfo.taskId, status: 'complete' },
       callback: () => {
         router.goBack();
@@ -269,7 +192,7 @@ class ExtensionMarkView extends Component {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
     dispatch({
-      type: 'extensionMark/updateStatus',
+      type: 'videoMark/updateStatus',
       payload: { taskId: basicInfo.taskId, status: 'reject' },
       callback: () => {
         router.goBack();
@@ -279,14 +202,14 @@ class ExtensionMarkView extends Component {
 
   render() {
     const { basicInfo, remarkPopoverVisible, inputValue, roleId } = this.state;
-    const { data, checkRate, passRate, loading } = this.props;
+    const { data, checkRate, passRate, schedule, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]} />
-        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={basicInfo.schedule} suffix="%" />
+        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
       </div>
     );
 
@@ -331,14 +254,14 @@ class ExtensionMarkView extends Component {
 
     const columns = [
       {
-        title: '文本',
+        title: '视频编号',
         dataIndex: 'sentence',
-        ...this.getColumnSearchProps('sentence'),
+        render: val => (val.split('/').length ? val.split('/').slice(-1)[0] : val),
       },
       {
         title: '标注结果',
         dataIndex: 'labelResult',
-        render: val => <Popover trigger="click" content={<List dataSource={val} renderItem={item => <List.Item>{item}</List.Item>} size="small"/>}><a>查看</a></Popover>,
+        render: val => <a>查看</a>,
         filters: labelResultFilters,
         filteredValue: filteredInfo.labelResult || null,
       },
@@ -422,4 +345,4 @@ class ExtensionMarkView extends Component {
   }
 }
 
-export default ExtensionMarkView;
+export default VideoMarkView;

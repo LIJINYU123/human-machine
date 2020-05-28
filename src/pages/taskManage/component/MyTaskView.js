@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Badge, Button, Card, Icon, Input, Progress } from 'antd/lib/index';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import Highlighter from 'react-highlight-words';
-import StandardTable from './StandardTable';
 import { connect } from 'dva/index';
-import ItemData from '../map';
 import router from 'umi/router';
+import StandardTable from './StandardTable';
+import ItemData from '../map';
 
 const { taskStatusMap, taskStatusName, labelTypeName } = ItemData;
 
@@ -139,34 +139,54 @@ class MyTaskView extends Component {
   });
 
   handleJumpToMarkView = task => {
-    if (task.labelType === 'textClassify') {
-      router.push({
-        pathname: '/task-manage/my-task/text-mark',
-        state: {
-          taskInfo: task,
-        },
-      });
-    } else if (task.labelType === 'sequenceLabeling') {
-      router.push({
-        pathname: '/task-manage/my-task/sequence-mark',
-        state: {
-          taskInfo: task,
-        },
-      });
-    } else if (task.labelType === 'textExtension') {
-      router.push({
-        pathname: '/task-manage/my-task/extension-mark',
-        state: {
-          taskInfo: task,
-        },
-      });
-    } else if (task.labelType === 'pictureMark') {
-      router.push({
-        pathname: '/task-manage/my-task/image-mark',
-        state: {
-          taskInfo: task,
-        },
-      });
+    switch (task.labelType) {
+      case 'textClassify':
+        router.push({
+          pathname: '/task-manage/my-task/text-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      case 'sequenceLabeling':
+        router.push({
+          pathname: '/task-manage/my-task/sequence-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      case 'textExtension':
+        router.push({
+          pathname: '/task-manage/my-task/extension-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      case 'pictureMark':
+        router.push({
+          pathname: '/task-manage/my-task/image-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      case 'videoDialogMark':
+        router.push({
+          pathname: '/task-manage/my-task/video-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      default:
+        break;
     }
   };
 

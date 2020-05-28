@@ -224,6 +224,13 @@ export default {
               hideInMenu: true,
             },
             {
+              name: '视频对话标注',
+              icon: 'container',
+              path: '/task-manage/my-task/video-mark',
+              component: './taskManage/component/VideoMarkView',
+              hideInMenu: true,
+            },
+            {
               name: '文本标注',
               icon: 'container',
               path: '/task-manage/my-task/answer-mode/classify',

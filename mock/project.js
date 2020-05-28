@@ -976,6 +976,25 @@ const imageLabelData = [
   },
 ];
 
+const videoLabelData = [
+  {
+    dataId: '1',
+    data: { sentence: 'http://10.89.100.14:8090/p/video123' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+  {
+    dataId: '2',
+    data: { sentence: 'http://10.89.100.14:8090/p/video456' },
+    labelResult: [],
+    reviewResult: 'unreview',
+    remark: '',
+    invalid: false,
+  },
+];
+
 const readingLabelData = [
   {
     dataId: '1',
@@ -1202,6 +1221,8 @@ function getLabelData(req, res, u) {
     dataSource = extensionLabelData;
   } else if (params.taskId.indexOf('image') === 0) {
     dataSource = imageLabelData;
+  } else if (params.taskId.indexOf('video') === 0) {
+    dataSource = videoLabelData;
   } else {
     dataSource = labelMockData;
   }

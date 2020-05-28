@@ -163,6 +163,19 @@ const taskMockData = [
     owner: 'SYECO',
     rejectTime: 0,
   },
+  {
+    projectId: 'video_project1',
+    projectName: '视频对话标注20200528',
+    taskId: 'video11',
+    taskName: '任务11',
+    labelType: 'videoDialogMark',
+    questionNum: 2,
+    schedule: 50,
+    status: 'review',
+    receiveTime: '2020-05-28 10:00:00',
+    owner: 'SYECO',
+    rejectTime: 0,
+  },
 ];
 
 const markToolsMockData = [
