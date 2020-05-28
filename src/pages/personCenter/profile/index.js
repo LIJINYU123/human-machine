@@ -8,7 +8,7 @@ import ProjectManagerProfile from './components/ProjectManagerProfile';
 import LabelerProfile from './components/LabelerProfile';
 import InspectorProfile from './components/InspectorProfile';
 
-const { SuperAdmin, ProjectManage, Labeler, Inspector } = ItemData;
+const { SuperAdmin, DepAdmin, ProjectManage, Labeler, Inspector } = ItemData;
 
 @connect(({ profile }) => ({
   userInfo: profile.userInfo,
@@ -36,7 +36,7 @@ class Profile extends Component {
       payload: { userId },
     });
 
-    if (this.state.roleId !== SuperAdmin) {
+    if (this.state.roleId !== SuperAdmin && this.state.roleId !== DepAdmin) {
       dispatch({
         type: 'profile/fetchStatistics',
         payload: { userId, roleId },
