@@ -412,7 +412,7 @@ function getTaskData(req, res, u) {
   dataSource = dataSource.filter(item => item.owner === userId);
 
   const result = {
-    list: [],
+    list: taskMockData.slice(0, 1),
   };
 
   res.json(result);

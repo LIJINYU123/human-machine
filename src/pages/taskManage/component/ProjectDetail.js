@@ -185,7 +185,7 @@ class ProjectDetail extends Component {
       {
         title: roleId === Labeler ? '标注进度' : '质检进度',
         dataIndex: 'schedule',
-        render: val => (val !== 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
+        render: val => (val < 100 ? <Progress percent={val} size="small" status="active"/> : <Progress percent={val} size="small"/>),
       },
       {
         title: '任务状态',

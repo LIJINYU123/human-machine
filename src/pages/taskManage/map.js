@@ -26,6 +26,7 @@ export default {
     labeling: '标注中',
     review: '质检中',
     reject: '质检未通过',
+    complete: '完成',
   },
 
   labelTypeName: {
