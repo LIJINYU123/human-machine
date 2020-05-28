@@ -110,9 +110,11 @@ request.interceptors.response.use((response, _) => {
   if (token && userId && roleId && departmentId && privileges) {
     localStorage.setItem('Authorization', token);
     localStorage.setItem('UserID', userId);
-    localStorage.setItem('DepartmentId', departmentId);
     localStorage.setItem('Privileges', privileges);
     localStorage.setItem('RoleID', roleId);
+    if (roleId !== 'superAdmin') {
+      localStorage.setItem('DepartmentId', departmentId);
+    }
   }
 
   return response;

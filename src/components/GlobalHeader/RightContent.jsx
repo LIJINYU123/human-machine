@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Dropdown, Icon, Menu } from 'antd';
+import React from 'react';
+import { Icon, Menu } from 'antd';
 import { connect } from 'dva';
 import Avatar from './AvatarDropdown';
 import styles from './index.less';
-import NoticeIconView from './NoticeIconView';
+// import NoticeIconView from './NoticeIconView';
 import HeaderDropdown from '../HeaderDropdown';
 
 const GlobalHeaderRight = props => {
@@ -18,7 +18,7 @@ const GlobalHeaderRight = props => {
     localStorage.setItem('DepartmentId', key);
     dispatch({
       type: 'global/changeAgency',
-      payload: item.props.children,
+      payload: { agencyId: key, agencyName: item.props.children },
     });
   };
 
@@ -38,7 +38,7 @@ const GlobalHeaderRight = props => {
         roleId === 'superAdmin' &&
         <HeaderDropdown overlay={menu}>
         <span className={styles.action}>
-          <span>{currentAgency} <Icon type="down"/></span>
+          <span>{currentAgency.agencyName} <Icon type="down"/></span>
         </span>
         </HeaderDropdown>
       }

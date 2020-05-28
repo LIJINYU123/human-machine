@@ -9,8 +9,9 @@ import styles from './style.less';
 
 const { Tab, UserName, Password, Submit } = LoginComponents;
 
-@connect(({ userAndlogin, loading }) => ({
+@connect(({ userAndlogin, global, loading }) => ({
   userAndlogin,
+  currentAgency: global.currentAgency,
   submitting: loading.effects['userAndlogin/login'],
 }))
 class Login extends Component {
@@ -29,10 +30,15 @@ class Login extends Component {
 
   handleSubmit = (err, values) => {
     if (!err) {
-      const { dispatch } = this.props;
+      const { dispatch, currentAgency } = this.props;
       dispatch({
         type: 'userAndlogin/login',
         payload: { ...values, password: md5(values.password) },
+        callback: roleId => {
+          if (roleId === 'superAdmin') {
+            localStorage.setItem('DepartmentId', currentAgency.agencyId)
+          }
+        },
       });
     }
   };

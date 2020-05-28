@@ -4,7 +4,7 @@ import { message } from 'antd';
 import { fakeAccountLogin, getFakeCaptcha } from './service';
 import { getPageQuery } from './utils/utils';
 import { setAuthority } from '@/utils/authority';
-import { stringify } from "querystring";
+import { stringify } from 'querystring';
 
 const Model = {
   namespace: 'userAndlogin',
@@ -12,7 +12,7 @@ const Model = {
     status: undefined,
   },
   effects: {
-    *login({ payload }, { call, put }) {
+    *login({ payload, callback }, { call, put }) {
       const response = yield call(fakeAccountLogin, payload);
       yield put({
         type: 'changeLoginStatus',
@@ -20,6 +20,8 @@ const Model = {
       }); // Login successfully
 
       if (response.status === 'ok') {
+        callback(response.currentAuthority);
+
         const urlParams = new URL(window.location.href);
         const params = getPageQuery();
         let { redirect } = params;

@@ -6,7 +6,7 @@ const GlobalModel = {
     collapsed: false,
     notices: [],
     agencies: [],
-    currentAgency: '',
+    currentAgency: {},
   },
   effects: {
     *fetchNotices(_, { call, put, select }) {
@@ -33,6 +33,10 @@ const GlobalModel = {
         type: 'saveAgency',
         payload: data,
       });
+      const roleId = localStorage.getItem('RoleID');
+      if (roleId === 'superAdmin') {
+        localStorage.setItem('DepartmentId', data.length ? data[0].departmentId : '')
+      }
     },
 
     * changeAgency({ payload }, { put }) {
@@ -119,7 +123,7 @@ const GlobalModel = {
     },
 
     saveAgency(state, { payload }) {
-      return { ...state, agencies: payload, currentAgency: payload.length ? payload[0].departmentName : '' };
+      return { ...state, agencies: payload, currentAgency: payload.length ? { agencyId: payload[0].departmentId, agencyName: payload[0].departmentName } : {} };
     },
 
     saveCurrentAgency(state, { payload }) {
