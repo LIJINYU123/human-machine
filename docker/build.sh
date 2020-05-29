@@ -2,7 +2,7 @@
 REPO=docker-reg.ecovacs.com/library
 CONTAINER=human-machine
 DATE=`date +%Y%m%d`
-VERSION='0.1.1'
+VERSION='0.2.1'
 
 GIT_HASH=$(git rev-parse --short HEAD)
 if [ "$GIT_HASH" == "" ]; then
