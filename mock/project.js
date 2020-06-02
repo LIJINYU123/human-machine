@@ -980,9 +980,79 @@ const videoLabelData = [
   {
     dataId: '1',
     data: { sentence: 'http://10.89.100.14:8090/p/video123' },
-    labelResult: [],
+    labelResult: [{
+      videoBasicInfo: {
+        videoNo: 'video-1234',
+        area: '北京',
+        outlet: '工商银行南京分行',
+        receptionPerson: 'lily',
+        dialogTime: '2020-05-29 10:00:00',
+        receptionCostTime: '02:10',
+        dialogScene: '银行',
+        dialogTarget: '营销产品',
+      },
+      userInfo: [
+        {
+          userId: 1,
+          sex: '男',
+          age: 25,
+          appearance: [],
+          profession: '服务人员',
+          figure: '佳',
+          entourage: '孩子',
+          userTag: ['有房', '无车', '无理财记录'],
+        },
+        {
+          userId: 2,
+          sex: '女',
+          age: 35,
+          appearance: [],
+          profession: '其他从业人员',
+          figure: '普通',
+          entourage: '朋友',
+          userTag: [],
+        },
+      ],
+      dialogRecord: [
+        {
+          dialogType: '业务',
+          customer: '请问有什么可以帮您',
+          user: '暂时不需要什么帮助',
+          userId: 1,
+          emotionTag: ['中性'],
+          actionTag: ['点头', '抓头发'],
+          dialogTag: [],
+          reverse: false,
+        },
+        {
+          dialogType: '互动',
+          customer: '我可以给你推荐几款理财产品，可以吗？',
+          user: '可以的',
+          userId: 2,
+          emotionTag: ['开心'],
+          actionTag: [],
+          dialogTag: [],
+          reverse: true,
+        },
+      ],
+      topicList: [
+        {
+          topic: '旅游',
+          startIndex: 0,
+          endIndex: 2,
+          tags: ['标签1', '标签2'],
+        },
+        {
+          topic: '天气',
+          startIndex: 0,
+          endIndex: 3,
+          tags: [],
+        },
+      ],
+      receptionEvaluation: '该用户有意向购买理财',
+    }],
     reviewResult: 'unreview',
-    remark: '',
+    remark: '没什么问题',
     invalid: false,
   },
   {
@@ -1297,10 +1367,6 @@ function downloadTemplate(req, res) {
   res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/project/template.xlsx');
 }
 
-function createProject(req, res) {
-  return res.json({ status: 'ok', message: '创建成功' });
-}
-
 function saveStepOneData(req, res, u, b) {
   const body = (b && b.body) || req.body;
   return res.json({ status: 'ok', message: body, projectId: Mock.Random.string(5) });
@@ -1410,6 +1476,8 @@ function getOneTextQuestion(req, res, u) {
     [response] = readingLabelData;
   } else if (params.taskId.indexOf('image') === 0) {
     [response] = imageLabelData;
+  } else if (params.taskId.indexOf('video') === 0) {
+    [response] = videoLabelData;
   } else {
     [response] = labelMockData;
   }

@@ -45,8 +45,9 @@ export default class FooterToolbar extends Component {
         }}
         {...restProps}
       >
-        <div className={styles.left}>{extra}</div>
-        <div className={styles.right}>{children}</div>
+        {/*<div className={styles.left}>{extra}</div>*/}
+        {/*<div className={styles.right}>{children}</div>*/}
+        {children}
       </div>
     );
   }

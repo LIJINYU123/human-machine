@@ -259,6 +259,13 @@ export default {
               hideInMenu: true,
             },
             {
+              name: '视频对话标注',
+              icon: 'container',
+              path: '/task-manage/my-task/answer-mode/video',
+              component: './taskManage/component/VideoAnswerView',
+              hideInMenu: true,
+            },
+            {
               name: '个人中心',
               icon: 'profile',
               path: '/person',

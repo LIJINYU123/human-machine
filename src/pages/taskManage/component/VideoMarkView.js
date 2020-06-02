@@ -200,6 +200,15 @@ class VideoMarkView extends Component {
     });
   };
 
+  jumpToAnswerMode = () => {
+    const { basicInfo, roleId } = this.state;
+    const { markTool } = this.props;
+    router.push({
+      pathname: '/task-manage/my-task/answer-mode/video',
+      state: { basicInfo, markTool, roleId },
+    });
+  };
+
   render() {
     const { basicInfo, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate, schedule, loading } = this.props;

@@ -14,7 +14,7 @@ import {
   ConfigProvider,
   Empty,
   Progress,
-  Tag
+  Tag,
 } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import router from 'umi/router';
