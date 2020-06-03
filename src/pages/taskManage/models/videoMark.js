@@ -1,5 +1,11 @@
 import { message } from 'antd';
-import { queryLabelData, saveReviewResult, updateStatus, queryOneTextQuestion } from '../service';
+import {
+  queryLabelData,
+  saveReviewResult,
+  updateStatus,
+  queryOneTextQuestion,
+  queryNextTextQuestion, queryPrevTextQuestion
+} from '../service';
 
 
 const VideoMark = {
@@ -14,7 +20,6 @@ const VideoMark = {
     questionInfo: {},
     dataId: '',
     labelData: {},
-    labelResult: [],
     reviewResult: '',
     remark: '',
     schedule: {},
@@ -75,6 +80,34 @@ const VideoMark = {
     // 答题模式，获取一道题目
     * fetchQuestion({ payload, callback }, { call, put }) {
       const response = yield call(queryOneTextQuestion, payload);
+      yield put({
+        type: 'saveQuestion',
+        payload: response,
+      });
+      if (callback) {
+        callback();
+      }
+    },
+
+    // 答题模式，获取下一道题目
+    * fetchNext({ payload, callback }, { call, put }) {
+      const response = yield call(queryNextTextQuestion, payload);
+      if (response.dataId === '') {
+        message.warn('已经到最后一题')
+      } else {
+        yield put({
+          type: 'saveQuestion',
+          payload: response,
+        });
+        if (callback) {
+          callback();
+        }
+      }
+    },
+
+    // 答题模式，获取上一道题目
+    * fetchPrev({ payload, callback }, { call, put }) {
+      const response = yield call(queryPrevTextQuestion, payload);
       yield put({
         type: 'saveQuestion',
         payload: response,

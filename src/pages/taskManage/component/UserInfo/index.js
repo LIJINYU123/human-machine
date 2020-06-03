@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Input, InputNumber, Select, Form, Row, Col, TreeSelect } from 'antd';
 import EditAbleTagGroup from '../EditableTagGroup';
 import ItemData from '../../map';
@@ -8,8 +8,14 @@ const { FieldLabels, SexOptions, AppearanceTreeData, ProfessionOptions, Entourag
 
 
 const UserInfo = props => {
-  const { form, user, userId } = props;
+  const { form, index, user, userId } = props;
   const { getFieldDecorator } = form;
+
+  useEffect(() => {
+    getFieldDecorator(`userInfo[${index}].userId`, {
+      initialValue: userId,
+    })(<Input/>);
+  });
 
   const formItemLayout = {
     labelCol: {
@@ -41,7 +47,7 @@ const UserInfo = props => {
         <Col md={8} sm={12}>
           <Form.Item label={FieldLabels.sex}>
             {
-              getFieldDecorator(`sex${userId}`, {
+              getFieldDecorator(`userInfo[${index}].sex`, {
                 rules: [
                   {
                     required: true,
@@ -56,7 +62,7 @@ const UserInfo = props => {
         <Col md={8} sm={12}>
           <Form.Item label={FieldLabels.age}>
             {
-              getFieldDecorator(`age${userId}`, {
+              getFieldDecorator(`userInfo[${index}].age`, {
                 rules: [
                   {
                     required: true,
@@ -71,7 +77,7 @@ const UserInfo = props => {
         <Col md={8} sm={12}>
           <Form.Item label={FieldLabels.appearance}>
             {
-              getFieldDecorator(`appearance${userId}`, {
+              getFieldDecorator(`userInfo[${index}].appearance`, {
                 rules: [
                   {
                     required: true,
@@ -86,7 +92,7 @@ const UserInfo = props => {
         <Col md={8} sm={12}>
           <Form.Item label={FieldLabels.profession}>
             {
-              getFieldDecorator(`profession${userId}`, {
+              getFieldDecorator(`userInfo[${index}].profession`, {
                 rules: [
                   {
                     required: true,
@@ -101,7 +107,7 @@ const UserInfo = props => {
         <Col md={8} sm={12}>
           <Form.Item label={FieldLabels.figure}>
             {
-              getFieldDecorator(`figure${userId}`, {
+              getFieldDecorator(`userInfo[${index}].figure`, {
                 rules: [
                   {
                     required: true,
@@ -116,7 +122,7 @@ const UserInfo = props => {
         <Col md={8} sm={12}>
           <Form.Item label={FieldLabels.entourage}>
             {
-              getFieldDecorator(`entourage${userId}`, {
+              getFieldDecorator(`userInfo[${index}].entourage`, {
                 rules: [
                   {
                     required: 'true',
@@ -133,9 +139,9 @@ const UserInfo = props => {
         <Col>
           <Form.Item label={FieldLabels.userTag} {...formItemLayout2}>
             {
-              getFieldDecorator(`userTag${userId}`, {
+              getFieldDecorator(`userInfo[${index}].userTag`, {
                 initialValue: user.userTag,
-              })(<EditAbleTagGroup form={form} fieldName={`userTag${userId}`} />)
+              })(<EditAbleTagGroup form={form} fieldName={`userInfo[${index}].userTag`} />)
             }
           </Form.Item>
         </Col>

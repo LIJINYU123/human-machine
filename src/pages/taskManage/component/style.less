@@ -82,3 +82,25 @@
 .formItem {
   width: 80%;
 }
+
+.footerForm {
+  :global {
+    .ant-form-item {
+      display: flex;
+      margin-right: 0;
+        > .ant-form-item-label {
+          width: auto;
+          line-height: 32px;
+        }
+
+        .ant-form-item-control {
+          line-height: 32px;
+        }
+      }
+
+      .ant-form-item-control-wrapper {
+        flex: 1;
+      }
+    }
+}
+

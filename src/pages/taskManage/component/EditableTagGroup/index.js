@@ -7,7 +7,7 @@ const EditableGroupTag = props => {
   const [inputValue, setInputValue] = useState('');
   const [tags, setTags] = useState(props.value);
 
-  let inputRef;
+  let inputRef = React.createRef();
 
   useEffect(() => {
     if (inputVisible === true) {
@@ -30,7 +30,7 @@ const EditableGroupTag = props => {
     }
 
     const temp = {};
-    temp[`${fieldName}`] = tags;
+    temp[`${fieldName}`] = [...tags, inputValue];
     setFieldsValue(temp);
   };
 

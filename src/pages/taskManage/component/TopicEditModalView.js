@@ -4,11 +4,11 @@ import EditableTagGroup from './EditableTagGroup';
 
 const { Option } = Select;
 
-const TopicCreateModalView = props => {
-  const { records, visible, onClose, onConfirm, form } = props;
+const TopicEditModalView = props => {
+  const { records, topic, index, visible, onClose, onConfirm, form } = props;
   const { getFieldDecorator } = form;
 
-  const options = records.map((_, index) => <Option value={index}>{`No${index + 1}`}</Option>);
+  const options = records.map((_, i) => <Option value={i}>{`No${i + 1}`}</Option>);
 
   const formItemLayout = {
     labelCol: {
@@ -26,17 +26,15 @@ const TopicCreateModalView = props => {
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        // console.log(values);
-        onConfirm(values);
+        onConfirm(values, index);
         onClose();
       }
     });
   };
 
-
   return (
     <Modal
-      title="关联话题"
+      title="编辑话题"
       maskClosable={false}
       visible={visible}
       onCancel={onClose}
@@ -53,6 +51,7 @@ const TopicCreateModalView = props => {
                   message: '请输入话题名称',
                 },
               ],
+              initialValue: topic.topic,
             })(<Input/>)
           }
         </Form.Item>
@@ -65,6 +64,7 @@ const TopicCreateModalView = props => {
                   message: '请选择开始位置',
                 },
               ],
+              initialValue: topic.startIndex,
             })(<Select>{options}</Select>)
           }
         </Form.Item>
@@ -77,13 +77,14 @@ const TopicCreateModalView = props => {
                   message: '请选择结束位置',
                 },
               ],
+              initialValue: topic.endIndex,
             })(<Select>{options}</Select>)
           }
         </Form.Item>
         <Form.Item label="话题标签">
           {
             getFieldDecorator('tags', {
-              initialValue: [],
+              initialValue: topic.tags,
             })(
               <EditableTagGroup form={form} fieldName="tags"/>)
           }
@@ -93,4 +94,4 @@ const TopicCreateModalView = props => {
   );
 };
 
-export default Form.create()(TopicCreateModalView);
+export default Form.create()(TopicEditModalView);

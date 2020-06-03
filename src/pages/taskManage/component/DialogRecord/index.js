@@ -11,6 +11,12 @@ const DialogRecord = props => {
   const { form, dialog, index, onDelete } = props;
   const { getFieldDecorator } = form;
 
+  useEffect(() => {
+    getFieldDecorator(`dialogRecord[${index}].reverse`, {
+      initialValue: dialog.reverse,
+    })(<Input/>)
+  });
+
   const formItemLayout = {
     labelCol: {
       xs: { span: 24 },
@@ -39,12 +45,12 @@ const DialogRecord = props => {
 
   return (
     <div className={styles.dialogForm}>
-      <h4>No{index}</h4>
+      <h4>No{index + 1}</h4>
       <Form {...formItemLayout}>
         <Row>
           <Form.Item label={FieldLabels.dialogType}>
             {
-              getFieldDecorator(`dialogType${index}`, {
+              getFieldDecorator(`dialogRecord[${index}].dialogType`, {
                 initialValue: dialog.dialogType,
               })(
                 <Radio.Group name="dialogType">
@@ -68,7 +74,7 @@ const DialogRecord = props => {
               <Row>
                 <Form.Item label={FieldLabels.customerServer}>
                   {
-                    getFieldDecorator(`customer${index}`, {
+                    getFieldDecorator(`dialogRecord[${index}].customer`, {
                       initialValue: dialog.customer,
                     })(<Input/>)
                   }
@@ -77,7 +83,7 @@ const DialogRecord = props => {
               <Row>
                 <Form.Item label={`用户${dialog.userId}`}>
                   {
-                    getFieldDecorator(`user${index}`, {
+                    getFieldDecorator(`dialogRecord[${index}].user`, {
                       initialValue: dialog.user,
                     })(<Input/>)
                   }
@@ -88,7 +94,7 @@ const DialogRecord = props => {
               <Row>
                 <Form.Item label={`用户${dialog.userId}`}>
                   {
-                    getFieldDecorator(`user${index}`, {
+                    getFieldDecorator(`dialogRecord[${index}].user`, {
                       initialValue: dialog.user,
                     })(<Input/>)
                   }
@@ -97,7 +103,7 @@ const DialogRecord = props => {
               <Row>
                 <Form.Item label={FieldLabels.customerServer}>
                   {
-                    getFieldDecorator(`customer${index}`, {
+                    getFieldDecorator(`dialogRecord[${index}].customer`, {
                       initialValue: dialog.customer,
                     })(<Input/>)
                   }
@@ -109,27 +115,27 @@ const DialogRecord = props => {
           <Col md={8}>
             <Form.Item label={FieldLabels.textEmotion} {...formItemLayout2}>
               {
-                getFieldDecorator(`emotionTag${index}`, {
+                getFieldDecorator(`dialogRecord[${index}].emotionTag`, {
                   initialValue: dialog.emotionTag,
-                })(<EditAbleTagGroup form={form} fieldName={`emotionTag${index}`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${index}].emotionTag`}/>)
               }
             </Form.Item>
           </Col>
           <Col md={8}>
             <Form.Item label={FieldLabels.action} {...formItemLayout2}>
               {
-                getFieldDecorator(`actionTag${index}`, {
+                getFieldDecorator(`dialogRecord[${index}].actionTag`, {
                   initialValue: dialog.actionTag,
-                })(<EditAbleTagGroup form={form} fieldName={`actionTag${index}`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${index}].actionTag`}/>)
               }
             </Form.Item>
           </Col>
           <Col md={8}>
             <Form.Item label={FieldLabels.tag} {...formItemLayout2}>
               {
-                getFieldDecorator(`dialogTag${index}`, {
+                getFieldDecorator(`dialogRecord[${index}].dialogTag`, {
                   initialValue: dialog.dialogTag,
-                })(<EditAbleTagGroup form={form} fieldName={`dialogTag${index}`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${index}].dialogTag`}/>)
               }
             </Form.Item>
           </Col>

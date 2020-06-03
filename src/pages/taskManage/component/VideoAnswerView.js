@@ -3,11 +3,13 @@ import { Button, Card, Descriptions, Input, Row, Col, Form, Radio, Tag, Progress
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import router from 'umi/router';
 import { connect } from 'dva';
+import moment from 'moment';
 import FooterToolBar from '../../form/advanced-form/components/FooterToolbar';
 import UserInfo from './UserInfo';
 import DialogRecord from './DialogRecord';
 import SelectUserModalView from './SelectUserModalView';
 import TopicCreateModalView from './TopicCreateModalView';
+import TopicEditModalView from './TopicEditModalView';
 import styles from './style.less';
 import ItemData from '../map';
 
@@ -26,12 +28,12 @@ const defaultUserInfo = {
   userTag: [],
   visible: false,
   createVisible: false,
+  editVisible: false,
 };
 
 @connect(({ videoMark }) => ({
   dataId: videoMark.dataId,
   labelData: videoMark.labelData,
-  labelResult: videoMark.labelResult,
   reviewResult: videoMark.reviewResult,
   remark: videoMark.remark,
   schedule: videoMark.schedule,
@@ -52,6 +54,8 @@ class VideoAnswerView extends Component {
     topics: [],
     nextUserIndex: 0,
     width: '100%',
+    topic: {},
+    topicIndex: 0,
   };
 
   componentWillMount() {
@@ -66,7 +70,7 @@ class VideoAnswerView extends Component {
     const { dispatch, form } = this.props;
     const { basicInfo, dataIdQueue } = this.state;
 
-    let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo}/>, key: 'user1' }];
+    let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo} index={0} userId={1}/>, key: 'user1' }];
 
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     this.resizeFooterToolbar();
@@ -82,14 +86,14 @@ class VideoAnswerView extends Component {
         dataIdQueue.push(dataId);
 
         if (userInfo.length) {
-          panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} userId={user.userId}/>, key: `user${user.userId}` }));
+          panes = userInfo.map((user, index) => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} index={index} userId={user.userId}/>, key: `user${user.userId}` }));
         }
 
         this.setState({
           panes,
           records: dialogRecord,
           topics: topicList,
-          activeKey: 'user1',
+          activeKey: userInfo.length ? `user${userInfo.slice(-1)[0].userId}` : 'user1',
           dataIdQueue,
           nextUserIndex: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
         });
@@ -191,6 +195,20 @@ class VideoAnswerView extends Component {
     });
   };
 
+  showEditModal = (topic, index) => {
+    this.setState({
+      editVisible: true,
+      topic,
+      topicIndex: index,
+    });
+  };
+
+  onCloseEditModal = () => {
+    this.setState({
+      editVisible: false,
+    });
+  };
+
   handleAddDialog = userId => {
     const { records } = this.state;
     records.push({
@@ -208,6 +226,22 @@ class VideoAnswerView extends Component {
     });
   };
 
+  handleAddTopic = topic => {
+    const { topics } = this.state;
+    topics.push(topic);
+    this.setState({
+      topics,
+    });
+  };
+
+  handleEditTopic = (topic, index) => {
+    const { topics } = this.state;
+    topics.splice(index, 1, topic);
+    this.setState({
+      topics,
+    });
+  };
+
   handleDeleteDialog = index => {
     const { records } = this.state;
     records.splice(index, 1);
@@ -216,9 +250,115 @@ class VideoAnswerView extends Component {
     });
   };
 
+  handleDeleteTopic = index => {
+    const { topics } = this.state;
+    topics.splice(index, 1);
+    this.setState({
+      topics,
+    });
+  };
+
+  handleNextQuestion = () => {
+    const { basicInfo, roleId, dataIdQueue, topics } = this.state;
+    const { dispatch, dataId, reviewResult, form: { getFieldsValue, validateFieldsAndScroll } } = this.props;
+
+    validateFieldsAndScroll((errors, values) => {
+      if (!errors) {
+        let nextDataId = '';
+        const currentIndex = dataIdQueue.indexOf(dataId);
+        if (currentIndex !== -1 && currentIndex < dataIdQueue.length - 1) {
+          nextDataId = dataIdQueue[currentIndex + 1]
+        }
+
+        // console.log(values);
+        const { videoBasicInfo, ...rest } = values;
+        videoBasicInfo.dialogTime = [videoBasicInfo.dialogTime[0].format('YYYY-MM-DD HH:mm:ss'), videoBasicInfo.dialogTime[1].format('YYYY-MM-DD HH:mm:ss')];
+        videoBasicInfo.receptionCostTime = videoBasicInfo.receptionCostTime.format('HH:mm');
+        console.log({ videoBasicInfo, ...rest, topicList: topics })
+      }
+    });
+
+
+    // dispatch({
+    //   type: 'videoMark/fetchNext',
+    //   payload: {
+    //     projectId: basicInfo.projectId,
+    //     taskId: basicInfo.taskId,
+    //     dataId,
+    //     reviewRounds: basicInfo.rejectTime + 1,
+    //     nextDataId,
+    //     labelResult: [],
+    //     ...values,
+    //   },
+    //   callback: () => {
+    //     // eslint-disable-next-line no-shadow
+    //     const { dataId, userInfo, dialogRecord, topicList, form } = this.props;
+    //
+    //     let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo}/>, key: 'user1' }];
+    //     if (userInfo.length) {
+    //       panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} userId={user.userId}/>, key: `user${user.userId}` }));
+    //     }
+    //
+    //     this.setState({
+    //       panes,
+    //       records: dialogRecord,
+    //       topics: topicList,
+    //       activeKey: 'user1',
+    //       dataIdQueue,
+    //       nextUserIndex: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
+    //     });
+    //
+    //     if (!dataIdQueue.includes(dataId) && dataId !== '') {
+    //       dataIdQueue.push(dataId);
+    //     }
+    //   },
+    // });
+  };
+
+  handlePrevQuestion = () => {
+    const { basicInfo, roleId, dataIdQueue } = this.state;
+    const { dispatch, dataId, form: { setFieldsValue } } = this.props;
+    let prevDataId = '';
+    const currentIndex = dataIdQueue.indexOf(dataId);
+    if (currentIndex !== -1 && currentIndex !== 0) {
+      prevDataId = dataIdQueue[currentIndex - 1];
+    }
+
+    dispatch({
+      type: 'videoMark/fetchPrev',
+      payload: {
+        projectId: basicInfo.projectId,
+        taskId: basicInfo.taskId,
+        prevDataId,
+      },
+      callback: () => {
+        // eslint-disable-next-line no-shadow
+        const { userInfo, dialogRecord, topicList, form } = this.props;
+        let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo} />, key: 'user1' }];
+        if (userInfo.length) {
+          panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} userId={user.userId}/>, key: `user${user.userId}` }));
+        }
+
+        this.setState({
+          panes,
+          records: dialogRecord,
+          topics: topicList,
+          activeKey: 'user1',
+          dataIdQueue,
+          nextUserIndex: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
+        });
+
+        if (!dataIdQueue.includes(dataId) && dataId !== '') {
+          dataIdQueue.push(dataId);
+        }
+      },
+    });
+  };
+
   render() {
-    const { form: { getFieldDecorator }, schedule, receptionEvaluation, remark, reviewResult } = this.props;
-    const { basicInfo, roleId, dataIdQueue, panes, activeKey, records, topics, width, visible, createVisible } = this.state;
+    const { form: { getFieldDecorator }, schedule, receptionEvaluation, remark, reviewResult, dataId, videoBasicInfo } = this.props;
+    const { basicInfo, roleId, dataIdQueue, panes, activeKey, records, topics, width, visible, createVisible, editVisible, topic, topicIndex } = this.state;
+    console.log(records);
 
     const users = panes.map(pane => ({ userId: parseInt(pane.key.replace('user', ''), 0), userName: pane.title }));
 
@@ -269,9 +409,9 @@ class VideoAnswerView extends Component {
         title: '操作',
         render: (_, record, index) => (
           <Fragment>
-            <a>编辑</a>
+            <a onClick={() => this.showEditModal(record, index)}>编辑</a>
             <Divider type="vertical"/>
-            <a>删除</a>
+            <a onClick={() => this.handleDeleteTopic(index)}>删除</a>
           </Fragment>
         ),
         width: 120,
@@ -291,19 +431,25 @@ class VideoAnswerView extends Component {
             <Row>
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.videoNo}>
-                  <Input disabled/>
+                  {
+                    getFieldDecorator('videoBasicInfo.videoNo', {
+                      initialValue: videoBasicInfo.videoNo,
+                    })(
+                      <Input disabled/>)
+                  }
                 </Form.Item>
               </Col>
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.area}>
                   {
-                    getFieldDecorator('area', {
+                    getFieldDecorator('videoBasicInfo.area', {
                       rules: [
                         {
                           required: true,
                           message: '请输入地区',
                         },
                       ],
+                      initialValue: videoBasicInfo.area,
                     })(<Input/>)
                   }
                 </Form.Item>
@@ -311,13 +457,14 @@ class VideoAnswerView extends Component {
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.outlet}>
                   {
-                    getFieldDecorator('outlet', {
+                    getFieldDecorator('videoBasicInfo.outlet', {
                       rules: [
                         {
                           required: true,
                           message: '请输入网点',
                         },
                       ],
+                      initialValue: videoBasicInfo.outlet,
                     })(<Input/>)
                   }
                 </Form.Item>
@@ -325,13 +472,14 @@ class VideoAnswerView extends Component {
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.receptionPerson}>
                   {
-                    getFieldDecorator('receptionPerson', {
+                    getFieldDecorator('videoBasicInfo.receptionPerson', {
                       rules: [
                         {
                           required: true,
                           message: '请输入接待人员',
                         },
                       ],
+                      initialValue: videoBasicInfo.receptionPerson,
                     })(<Input/>)
                   }
                 </Form.Item>
@@ -339,13 +487,14 @@ class VideoAnswerView extends Component {
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.dialogTime}>
                   {
-                    getFieldDecorator('dialogTime', {
+                    getFieldDecorator('videoBasicInfo.dialogTime', {
                       rules: [
                         {
                           required: true,
                           message: '请输入对话时间',
                         },
                       ],
+                      initialValue: videoBasicInfo.hasOwnProperty('dialogTime') ? [moment(videoBasicInfo.dialogTime[0], 'YYYY-MM-DD HH:mm'), moment(videoBasicInfo.dialogTime[1], 'YYYY-MM-DD HH:mm')] : [],
                     })(<RangePicker allowClear={false} showTime={{ format: 'HH:mm' }} format="YYYY-MM-DD HH:mm" placeholder={['开始时间', '结束时间']} style={{ width: '100%' }} />)
                   }
                 </Form.Item>
@@ -353,13 +502,14 @@ class VideoAnswerView extends Component {
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.receptionCostTime}>
                   {
-                    getFieldDecorator('receptionCostTime', {
+                    getFieldDecorator('videoBasicInfo.receptionCostTime', {
                       rules: [
                         {
                           required: true,
                           message: '请输入接待时长',
                         },
                       ],
+                      initialValue: moment(videoBasicInfo.receptionCostTime, 'HH:mm'),
                     })(<TimePicker format="HH:mm" style={{ width: '100%' }} />)
                   }
                 </Form.Item>
@@ -367,13 +517,14 @@ class VideoAnswerView extends Component {
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.dialogScene}>
                   {
-                    getFieldDecorator('dialogScene', {
+                    getFieldDecorator('videoBasicInfo.dialogScene', {
                       rules: [
                         {
                           required: true,
                           message: '请输入对话场景',
                         },
                       ],
+                      initialValue: videoBasicInfo.dialogScene,
                     })(<Input/>)
                   }
                 </Form.Item>
@@ -381,13 +532,14 @@ class VideoAnswerView extends Component {
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.dialogTarget}>
                   {
-                    getFieldDecorator('dialogTarget', {
+                    getFieldDecorator('videoBasicInfo.dialogTarget', {
                       rules: [
                         {
                           required: true,
                           message: '请输入对话目的',
                         },
                       ],
+                      initialValue: videoBasicInfo.dialogTarget,
                     })(<Input/>)
                   }
                 </Form.Item>
@@ -395,7 +547,9 @@ class VideoAnswerView extends Component {
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.remark}>
                   {
-                    getFieldDecorator('remark', {})(<TextArea autoSize/>)
+                    getFieldDecorator('videoBasicInfo.videoRemark', {
+                      initialValue: videoBasicInfo.videoRemark,
+                    })(<TextArea autoSize/>)
                   }
                 </Form.Item>
               </Col>
@@ -405,14 +559,14 @@ class VideoAnswerView extends Component {
         <Card bordered={false} title="用户信息" className={styles.card}>
           {
             <Tabs type="editable-card" onEdit={this.onEditTab} onChange={this.onChange} activeKey={activeKey}>
-              {panes.map(pane => (<TabPane tab={pane.title} key={pane.key}>{pane.content}</TabPane>))}
+              {panes.map(pane => (<TabPane tab={pane.title} key={pane.key} forceRender>{pane.content}</TabPane>))}
             </Tabs>
           }
         </Card>
         <Card bordered={false} title="对话记录">
           <Row gutter={16}>
             <Col span={16}>
-              {records.map((record, index) => <DialogRecord form={this.props.form} dialog={record} index={index + 1} onDelete={() => this.handleDeleteDialog(index)}/>)}
+              {records.map((record, index) => <DialogRecord form={this.props.form} dialog={record} index={index} onDelete={() => this.handleDeleteDialog(index)} key={index}/>)}
             </Col>
             <Col span={8}>
               <Table
@@ -424,22 +578,45 @@ class VideoAnswerView extends Component {
               <Button type="primary" style={{ marginTop: '16px' }} onClick={this.showCreateModal}>关联话题</Button>
             </Col>
           </Row>
-          <Button type="primary" icon="plus" onClick={this.showModal}>问答对</Button>
+          <Row gutter={[16, 32]}>
+            <Col>
+              <Button type="primary" icon="plus" onClick={this.showModal}>问答对</Button>
+            </Col>
+          </Row>
+          <Row gutter={[16, 32]}>
+            <Col>
+              <Button onClick={this.handlePrevQuestion} disabled={dataIdQueue.length === 0 || dataIdQueue.indexOf(dataId) === 0}>上一题</Button>
+              <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
+            </Col>
+          </Row>
         </Card>
         <SelectUserModalView users={users} visible={visible} onClose={this.onClose} onConfirm={this.handleAddDialog}/>
-        {/*<TopicCreateModalView visible={createVisible} onClose={this.onCloseCreateModal}/>*/}
-        <FooterToolBar style={{ width }}>
+        <TopicCreateModalView records={records} visible={createVisible} onClose={this.onCloseCreateModal} onConfirm={this.handleAddTopic}/>
+        <TopicEditModalView records={records} topic={topic} index={topicIndex} visible={editVisible} onClose={this.onCloseEditModal} onConfirm={this.handleEditTopic} />
+        <FooterToolBar style={{ width }} className={styles.footerForm}>
           <Form {...formItemLayout}>
-            <Row>
+            <Row style={{ marginTop: '12px' }} gutter={16}>
               <Col span={8}>
                 <Form.Item label={FieldLabels.receptionEvaluation}>
                   {
                     getFieldDecorator('receptionEvaluation', {
                       initialValue: receptionEvaluation,
-                    })(<TextArea autoSize/>)
+                    })(<TextArea rows={1}/>)
                   }
                 </Form.Item>
               </Col>
+              {
+                roleId === Inspector &&
+                <Col span={8}>
+                  <Form.Item label={FieldLabels.remark}>
+                    {
+                      getFieldDecorator('remark', {
+                        initialValue: remark,
+                      })(<TextArea rows={1}/>)
+                    }
+                  </Form.Item>
+                </Col>
+              }
               {
                 roleId === Inspector &&
                 <Col span={8}>
@@ -452,18 +629,6 @@ class VideoAnswerView extends Component {
                           <Radio.Button value="approve">通过</Radio.Button>
                           <Radio.Button value="reject">拒绝</Radio.Button>
                         </Radio.Group>)
-                    }
-                  </Form.Item>
-                </Col>
-              }
-              {
-                roleId === Inspector &&
-                <Col span={8}>
-                  <Form.Item label={FieldLabels.remark}>
-                    {
-                      getFieldDecorator('remark', {
-                        initialValue: remark,
-                      })(<TextArea autoSize/>)
                     }
                   </Form.Item>
                 </Col>
