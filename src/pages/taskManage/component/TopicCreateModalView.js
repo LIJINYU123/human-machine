@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Modal, Select } from 'antd';
+import { Form, Input, Modal, Select, message } from 'antd';
 import EditableTagGroup from './EditableTagGroup';
 
 const { Option } = Select;
@@ -22,13 +22,15 @@ const TopicCreateModalView = props => {
   };
 
   const handleConfirm = () => {
-    const { validateFieldsAndScroll, getFieldsValue } = form;
-    validateFieldsAndScroll(error => {
-      if (!error) {
-        const values = getFieldsValue();
-        // console.log(values);
-        onConfirm(values);
-        onClose();
+    const { validateFieldsAndScroll } = form;
+    validateFieldsAndScroll((errors, values) => {
+      if (!errors) {
+        if (values.endIndex < values.startIndex) {
+          message.error('结束位置必须大于等于开始位置');
+        } else {
+          onConfirm(values);
+          onClose();
+        }
       }
     });
   };

@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Descriptions, Input, Row, Col, Form, Radio, Tag, Progress, Select, DatePicker, TimePicker, Tabs, Table, Divider } from 'antd';
+import { Button, Card, Descriptions, Input, Row, Col, Form, Radio, Tag, Progress, Select, DatePicker, TimePicker, Tabs, Table, Divider, message } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import router from 'umi/router';
 import { connect } from 'dva';
@@ -179,23 +179,29 @@ class VideoAnswerView extends Component {
 
   remove = targetKey => {
     let { activeKey } = this.state;
-    let lastIndex = 0;
-    this.state.panes.forEach((pane, index) => {
-      if (pane.key === targetKey) {
-        lastIndex = index - 1;
-      }
-    });
 
-    const panes = this.state.panes.filter(pane => pane.key !== targetKey);
-    if (panes.length && activeKey === targetKey) {
-      if (lastIndex >= 0) {
-        activeKey = panes[lastIndex].key;
-      } else {
-        activeKey = panes[0].key;
+    const filterRecords = this.state.records.filter(item => item.userId === parseInt(targetKey.replace('user', ''), 0));
+    if (filterRecords.length) {
+       message.error('该用户存在对话记录，无法删除！');
+    } else {
+      let lastIndex = 0;
+      this.state.panes.forEach((pane, index) => {
+        if (pane.key === targetKey) {
+          lastIndex = index - 1;
+        }
+      });
+
+      const panes = this.state.panes.filter(pane => pane.key !== targetKey);
+      if (panes.length && activeKey === targetKey) {
+        if (lastIndex >= 0) {
+          activeKey = panes[lastIndex].key;
+        } else {
+          activeKey = panes[0].key;
+        }
       }
+
+      this.setState({ panes, activeKey });
     }
-
-    this.setState({ panes, activeKey });
   };
 
   showModal = () => {
@@ -258,10 +264,20 @@ class VideoAnswerView extends Component {
   };
 
   handleDeleteDialog = index => {
-    const { records } = this.state;
+    const { records, topics } = this.state;
+    topics.forEach(topic => {
+      if (index < topic.startIndex) {
+        topic.startIndex -= 1;
+        topic.endIndex -= 1;
+      } else if (index >= topic.startIndex && index <= topic.endIndex) {
+        topic.endIndex -= 1;
+      }
+    });
+
     records.splice(index, 1);
     this.setState({
       records,
+      topics,
     });
   };
 
@@ -290,7 +306,7 @@ class VideoAnswerView extends Component {
   };
 
   handleNextQuestion = () => {
-    const { basicInfo, dataIdQueue } = this.state;
+    const { basicInfo, dataIdQueue, topics } = this.state;
     const { dispatch, dataId, form: { validateFieldsAndScroll } } = this.props;
 
     validateFieldsAndScroll((errors, values) => {
@@ -301,7 +317,7 @@ class VideoAnswerView extends Component {
           nextDataId = dataIdQueue[currentIndex + 1]
         }
 
-        const { videoBasicInfo, dialogRecord, userInfo, topicList, receptionEvaluation, ...rest } = values;
+        const { videoBasicInfo, dialogRecord, userInfo, receptionEvaluation, ...rest } = values;
         videoBasicInfo.dialogTime = [videoBasicInfo.dialogTime[0].format('YYYY-MM-DD HH:mm:ss'), videoBasicInfo.dialogTime[1].format('YYYY-MM-DD HH:mm:ss')];
         videoBasicInfo.receptionCostTime = videoBasicInfo.receptionCostTime.format('HH:mm');
 
@@ -317,7 +333,7 @@ class VideoAnswerView extends Component {
               videoBasicInfo,
               dialogRecord: dialogRecord.filter(item => item && item.hasOwnProperty('user')),
               userInfo: userInfo.filter(item => item && item.hasOwnProperty('age')),
-              topicList,
+              topicList: topics,
               receptionEvaluation,
             }],
             ...rest,
@@ -510,7 +526,7 @@ class VideoAnswerView extends Component {
             <Row>
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.videoNo}>
-                  <Input disabled value={labelData.hasOwnProperty('sentence') ? labelData.sentence.split('/').slice(-1)[0] : labelData.sentence}/>
+                  <a href={labelData.sentence} target="_blank">{labelData.hasOwnProperty('sentence') ? labelData.sentence.split('/').slice(-1)[0] : labelData.sentence}</a>
                 </Form.Item>
               </Col>
               <Col md={8} sm={12}>
