@@ -979,7 +979,7 @@ const imageLabelData = [
 const videoLabelData = [
   {
     dataId: '1',
-    data: { sentence: 'http://10.89.100.14:8090/p/video123' },
+    data: { sentence: 'http://10.89.100.14:8090/p/video-1234' },
     labelResult: [{
       videoBasicInfo: {
         videoNo: 'video-1234',
@@ -994,7 +994,7 @@ const videoLabelData = [
       },
       userInfo: [
         {
-          userId: 2,
+          userId: 1,
           sex: '男',
           age: 25,
           appearance: ['长发'],
@@ -1004,7 +1004,7 @@ const videoLabelData = [
           userTag: ['有房', '无车', '无理财记录'],
         },
         {
-          userId: 3,
+          userId: 2,
           sex: '女',
           age: 35,
           appearance: ['长发'],
@@ -1016,6 +1016,7 @@ const videoLabelData = [
       ],
       dialogRecord: [
         {
+          dialogId: 1,
           dialogType: '业务',
           customer: '请问有什么可以帮您',
           user: '暂时不需要什么帮助',
@@ -1026,6 +1027,7 @@ const videoLabelData = [
           reverse: false,
         },
         {
+          dialogId: 2,
           dialogType: '互动',
           customer: '我可以给你推荐几款理财产品，可以吗？',
           user: '可以的',
@@ -1052,7 +1054,7 @@ const videoLabelData = [
   },
   {
     dataId: '2',
-    data: { sentence: 'http://10.89.100.14:8090/p/video456' },
+    data: { sentence: 'http://10.89.100.14:8090/p/video-456' },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -1499,6 +1501,8 @@ function getNextTextQuestion(req, res, u, b) {
     textMockData = readingLabelData;
   } else if (taskId.indexOf('image') === 0) {
     textMockData = imageLabelData;
+  } else if (taskId.indexOf('video') === 0) {
+    textMockData = videoLabelData;
   } else {
     textMockData = labelMockData;
   }
@@ -1572,6 +1576,8 @@ function getPrevTextQuestion(req, res, u, b) {
     textMockData = readingLabelData;
   } else if (taskId.indexOf('image') === 0) {
     textMockData = imageLabelData;
+  } else if (taskId.indexOf('video') === 0) {
+    textMockData = videoLabelData;
   } else {
     textMockData = labelMockData;
   }

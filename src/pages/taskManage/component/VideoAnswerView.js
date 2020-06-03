@@ -18,18 +18,6 @@ const { TabPane } = Tabs;
 const { TextArea } = Input;
 const { FieldLabels, Labeler, Inspector } = ItemData;
 
-const defaultUserInfo = {
-  sex: undefined,
-  age: undefined,
-  appearance: [],
-  profession: undefined,
-  figure: '',
-  entourage: undefined,
-  userTag: [],
-  visible: false,
-  createVisible: false,
-  editVisible: false,
-};
 
 @connect(({ videoMark }) => ({
   dataId: videoMark.dataId,
@@ -52,7 +40,8 @@ class VideoAnswerView extends Component {
     panes: [],
     records: [],
     topics: [],
-    nextUserIndex: 0,
+    nextUserId: 0,
+    nextDialogId: 0,
     width: '100%',
     topic: {},
     topicIndex: 0,
@@ -70,7 +59,33 @@ class VideoAnswerView extends Component {
     const { dispatch, form } = this.props;
     const { basicInfo, dataIdQueue } = this.state;
 
-    let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo} index={0} userId={1}/>, key: 'user1' }];
+    const defaultUserInfo = {
+      userId: 1,
+      sex: undefined,
+      age: undefined,
+      appearance: [],
+      profession: undefined,
+      figure: '',
+      entourage: undefined,
+      userTag: [],
+      visible: false,
+      createVisible: false,
+      editVisible: false,
+    };
+
+    const defaultDialogInfo = {
+      dialogId: 1,
+      dialogType: '业务',
+      customer: '',
+      user: '',
+      userId: 1,
+      emotionTag: [],
+      actionTag: [],
+      dialogTag: [],
+      reverse: false,
+    };
+
+    let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo}/>, key: 'user1' }];
 
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     this.resizeFooterToolbar();
@@ -86,16 +101,17 @@ class VideoAnswerView extends Component {
         dataIdQueue.push(dataId);
 
         if (userInfo.length) {
-          panes = userInfo.map((user, index) => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} index={index} userId={user.userId}/>, key: `user${user.userId}` }));
+          panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user}/>, key: `user${user.userId}` }));
         }
 
         this.setState({
           panes,
-          records: dialogRecord,
+          records: dialogRecord.length ? dialogRecord : [defaultDialogInfo],
           topics: topicList,
           activeKey: userInfo.length ? `user${userInfo.slice(-1)[0].userId}` : 'user1',
           dataIdQueue,
-          nextUserIndex: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
+          nextUserId: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
+          nextDialogId: dialogRecord.length ? dialogRecord.slice(-1)[0].dialogId + 1 : 2,
         });
       },
     });
@@ -135,18 +151,29 @@ class VideoAnswerView extends Component {
   };
 
   add = () => {
-    const { dispatch, form } = this.props;
-    const { panes, nextUserIndex } = this.state;
-    panes.push({ title: `用户${nextUserIndex}`, content: <UserInfo form={form} user={defaultUserInfo} userId={nextUserIndex}/>, key: `user${nextUserIndex}` })
+    const { form } = this.props;
+    const { panes, nextUserId } = this.state;
 
-    dispatch({
-      type: 'videoMark/addUser',
-      payload: defaultUserInfo,
-    });
+    const defaultUserInfo = {
+      userId: nextUserId,
+      sex: undefined,
+      age: undefined,
+      appearance: [],
+      profession: undefined,
+      figure: '',
+      entourage: undefined,
+      userTag: [],
+      visible: false,
+      createVisible: false,
+      editVisible: false,
+    };
+
+    panes.push({ title: `用户${nextUserId}`, content: <UserInfo form={form} user={defaultUserInfo}/>, key: `user${nextUserId}` });
+
     this.setState({
       panes,
-      activeKey: `user${nextUserIndex}`,
-      nextUserIndex: nextUserIndex + 1,
+      activeKey: `user${nextUserId}`,
+      nextUserId: nextUserId + 1,
     });
   };
 
@@ -210,8 +237,9 @@ class VideoAnswerView extends Component {
   };
 
   handleAddDialog = userId => {
-    const { records } = this.state;
-    records.push({
+    const { records, nextDialogId } = this.state;
+    const defaultDialogInfo = {
+      dialogId: nextDialogId,
       dialogType: '业务',
       customer: '',
       user: '',
@@ -220,7 +248,18 @@ class VideoAnswerView extends Component {
       actionTag: [],
       dialogTag: [],
       reverse: false,
+    };
+
+    records.push(defaultDialogInfo);
+    this.setState({
+      records,
+      nextDialogId: nextDialogId + 1,
     });
+  };
+
+  handleDeleteDialog = index => {
+    const { records } = this.state;
+    records.splice(index, 1);
     this.setState({
       records,
     });
@@ -242,14 +281,6 @@ class VideoAnswerView extends Component {
     });
   };
 
-  handleDeleteDialog = index => {
-    const { records } = this.state;
-    records.splice(index, 1);
-    this.setState({
-      records,
-    });
-  };
-
   handleDeleteTopic = index => {
     const { topics } = this.state;
     topics.splice(index, 1);
@@ -259,8 +290,8 @@ class VideoAnswerView extends Component {
   };
 
   handleNextQuestion = () => {
-    const { basicInfo, roleId, dataIdQueue, topics } = this.state;
-    const { dispatch, dataId, reviewResult, form: { getFieldsValue, validateFieldsAndScroll } } = this.props;
+    const { basicInfo, dataIdQueue } = this.state;
+    const { dispatch, dataId, form: { validateFieldsAndScroll } } = this.props;
 
     validateFieldsAndScroll((errors, values) => {
       if (!errors) {
@@ -270,54 +301,87 @@ class VideoAnswerView extends Component {
           nextDataId = dataIdQueue[currentIndex + 1]
         }
 
-        // console.log(values);
-        const { videoBasicInfo, ...rest } = values;
+        const { videoBasicInfo, dialogRecord, userInfo, topicList, receptionEvaluation, ...rest } = values;
         videoBasicInfo.dialogTime = [videoBasicInfo.dialogTime[0].format('YYYY-MM-DD HH:mm:ss'), videoBasicInfo.dialogTime[1].format('YYYY-MM-DD HH:mm:ss')];
         videoBasicInfo.receptionCostTime = videoBasicInfo.receptionCostTime.format('HH:mm');
-        console.log({ videoBasicInfo, ...rest, topicList: topics })
+
+        dispatch({
+          type: 'videoMark/fetchNext',
+          payload: {
+            projectId: basicInfo.projectId,
+            taskId: basicInfo.taskId,
+            dataId,
+            reviewRounds: basicInfo.rejectTime + 1,
+            nextDataId,
+            labelResult: [{
+              videoBasicInfo,
+              dialogRecord: dialogRecord.filter(item => item && item.hasOwnProperty('user')),
+              userInfo: userInfo.filter(item => item && item.hasOwnProperty('age')),
+              topicList,
+              receptionEvaluation,
+            }],
+            ...rest,
+          },
+          callback: () => {
+            // eslint-disable-next-line no-shadow
+            const { dataId, userInfo, dialogRecord, topicList, form } = this.props;
+
+            if (!dataIdQueue.includes(dataId) && dataId !== '') {
+              dataIdQueue.push(dataId);
+            }
+
+            form.resetFields();
+
+            const defaultUserInfo = {
+              userId: 1,
+              sex: undefined,
+              age: undefined,
+              appearance: [],
+              profession: undefined,
+              figure: '',
+              entourage: undefined,
+              userTag: [],
+              visible: false,
+              createVisible: false,
+              editVisible: false,
+            };
+
+            const defaultDialogInfo = {
+              dialogId: 1,
+              dialogType: '业务',
+              customer: '',
+              user: '',
+              userId: 1,
+              emotionTag: [],
+              actionTag: [],
+              dialogTag: [],
+              reverse: false,
+            };
+
+            let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo}/>, key: 'user1' }];
+
+            if (userInfo.length) {
+              panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user}/>, key: `user${user.userId}` }));
+            }
+
+            this.setState({
+              panes,
+              records: dialogRecord.length ? dialogRecord : [defaultDialogInfo],
+              topics: topicList,
+              activeKey: userInfo.length ? `user${userInfo.slice(-1)[0].userId}` : 'user1',
+              dataIdQueue,
+              nextUserId: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
+              nextDialogId: dialogRecord.length ? dialogRecord.slice(-1)[0].dialogId + 1 : 2,
+            });
+          },
+        });
       }
     });
-
-
-    // dispatch({
-    //   type: 'videoMark/fetchNext',
-    //   payload: {
-    //     projectId: basicInfo.projectId,
-    //     taskId: basicInfo.taskId,
-    //     dataId,
-    //     reviewRounds: basicInfo.rejectTime + 1,
-    //     nextDataId,
-    //     labelResult: [],
-    //     ...values,
-    //   },
-    //   callback: () => {
-    //     // eslint-disable-next-line no-shadow
-    //     const { dataId, userInfo, dialogRecord, topicList, form } = this.props;
-    //
-    //     let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo}/>, key: 'user1' }];
-    //     if (userInfo.length) {
-    //       panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} userId={user.userId}/>, key: `user${user.userId}` }));
-    //     }
-    //
-    //     this.setState({
-    //       panes,
-    //       records: dialogRecord,
-    //       topics: topicList,
-    //       activeKey: 'user1',
-    //       dataIdQueue,
-    //       nextUserIndex: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
-    //     });
-    //
-    //     if (!dataIdQueue.includes(dataId) && dataId !== '') {
-    //       dataIdQueue.push(dataId);
-    //     }
-    //   },
-    // });
   };
 
   handlePrevQuestion = () => {
-    const { basicInfo, roleId, dataIdQueue } = this.state;
-    const { dispatch, dataId, form: { setFieldsValue } } = this.props;
+    const { basicInfo, dataIdQueue } = this.state;
+    const { dispatch, dataId } = this.props;
     let prevDataId = '';
     const currentIndex = dataIdQueue.indexOf(dataId);
     if (currentIndex !== -1 && currentIndex !== 0) {
@@ -334,6 +398,21 @@ class VideoAnswerView extends Component {
       callback: () => {
         // eslint-disable-next-line no-shadow
         const { userInfo, dialogRecord, topicList, form } = this.props;
+
+        const defaultUserInfo = {
+          userId: 1,
+          sex: undefined,
+          age: undefined,
+          appearance: [],
+          profession: undefined,
+          figure: '',
+          entourage: undefined,
+          userTag: [],
+          visible: false,
+          createVisible: false,
+          editVisible: false,
+        };
+
         let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo} />, key: 'user1' }];
         if (userInfo.length) {
           panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} userId={user.userId}/>, key: `user${user.userId}` }));
@@ -343,9 +422,10 @@ class VideoAnswerView extends Component {
           panes,
           records: dialogRecord,
           topics: topicList,
-          activeKey: 'user1',
+          activeKey: userInfo.length ? `user${userInfo[0].userId}` : 'user1',
           dataIdQueue,
-          nextUserIndex: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
+          nextUserId: userInfo.length ? userInfo.slice(-1)[0].userId + 1 : 2,
+          nextDialogId: dialogRecord.length ? dialogRecord.slice(-1)[0].dialogId + 1 : 2,
         });
 
         if (!dataIdQueue.includes(dataId) && dataId !== '') {
@@ -356,9 +436,8 @@ class VideoAnswerView extends Component {
   };
 
   render() {
-    const { form: { getFieldDecorator }, schedule, receptionEvaluation, remark, reviewResult, dataId, videoBasicInfo } = this.props;
+    const { form: { getFieldDecorator }, schedule, receptionEvaluation, remark, reviewResult, dataId, videoBasicInfo, labelData } = this.props;
     const { basicInfo, roleId, dataIdQueue, panes, activeKey, records, topics, width, visible, createVisible, editVisible, topic, topicIndex } = this.state;
-    console.log(records);
 
     const users = panes.map(pane => ({ userId: parseInt(pane.key.replace('user', ''), 0), userName: pane.title }));
 
@@ -431,12 +510,7 @@ class VideoAnswerView extends Component {
             <Row>
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.videoNo}>
-                  {
-                    getFieldDecorator('videoBasicInfo.videoNo', {
-                      initialValue: videoBasicInfo.videoNo,
-                    })(
-                      <Input disabled/>)
-                  }
+                  <Input disabled value={labelData.hasOwnProperty('sentence') ? labelData.sentence.split('/').slice(-1)[0] : labelData.sentence}/>
                 </Form.Item>
               </Col>
               <Col md={8} sm={12}>
@@ -509,7 +583,7 @@ class VideoAnswerView extends Component {
                           message: '请输入接待时长',
                         },
                       ],
-                      initialValue: moment(videoBasicInfo.receptionCostTime, 'HH:mm'),
+                      initialValue: videoBasicInfo.hasOwnProperty('receptionCostTime') ? moment(videoBasicInfo.receptionCostTime, 'HH:mm') : undefined,
                     })(<TimePicker format="HH:mm" style={{ width: '100%' }} />)
                   }
                 </Form.Item>
@@ -566,7 +640,7 @@ class VideoAnswerView extends Component {
         <Card bordered={false} title="对话记录">
           <Row gutter={16}>
             <Col span={16}>
-              {records.map((record, index) => <DialogRecord form={this.props.form} dialog={record} index={index} onDelete={() => this.handleDeleteDialog(index)} key={index}/>)}
+              {records.map((record, index) => <DialogRecord form={this.props.form} dialog={record} index={index} onDelete={() => this.handleDeleteDialog(index)} key={record.dialogId}/>)}
             </Col>
             <Col span={8}>
               <Table

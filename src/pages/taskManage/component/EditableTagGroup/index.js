@@ -13,7 +13,8 @@ const EditableGroupTag = props => {
     if (inputVisible === true) {
       inputRef.focus();
     }
-  }, [inputVisible]);
+    setTags(props.value);
+  }, [inputVisible, props.value]);
 
 
   const handleInputChange = e => {
@@ -24,22 +25,20 @@ const EditableGroupTag = props => {
     const { form: { setFieldsValue }, fieldName } = props;
 
     if (inputValue && tags.indexOf(inputValue) === -1) {
-      setTags([...tags, inputValue]);
       setInputValue('');
       setInputVisible(false);
-    }
 
-    const temp = {};
-    temp[`${fieldName}`] = [...tags, inputValue];
-    setFieldsValue(temp);
+      const temp = {};
+      temp[`${fieldName}`] = [...tags, inputValue];
+      setFieldsValue(temp);
+    }
   };
 
   const handleClose = removedTag => {
     const { form: { setFieldsValue }, fieldName } = props;
-    setTags(tags.filter(tag => tag !== removedTag));
 
     const temp = {};
-    temp[`${fieldName}`] = tags;
+    temp[`${fieldName}`] = tags.filter(tag => tag !== removedTag);
     setFieldsValue(temp);
   };
 
@@ -52,7 +51,6 @@ const EditableGroupTag = props => {
   };
 
   const colorGroups = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
-  // message.info(colorGroups.length);
   return (
     <div>
       {

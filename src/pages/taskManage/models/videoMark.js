@@ -1,10 +1,11 @@
 import { message } from 'antd';
+import moment from 'moment';
 import {
   queryLabelData,
   saveReviewResult,
   updateStatus,
   queryOneTextQuestion,
-  queryNextTextQuestion, queryPrevTextQuestion
+  queryNextTextQuestion, queryPrevTextQuestion,
 } from '../service';
 
 
@@ -132,7 +133,26 @@ const VideoMark = {
         return { ...state, dataId, labelData: data, reviewResult, remark, schedule, videoBasicInfo, userInfo, dialogRecord, topicList, receptionEvaluation };
       }
 
-      return { ...state, dataId, labelData: data, reviewResult, remark, schedule };
+      return {
+        ...state,
+        dataId,
+        labelData: data,
+        reviewResult,
+        remark,
+        schedule,
+        videoBasicInfo: {
+          area: '',
+          outlet: '',
+          receptionPerson: '',
+          dialogScene: '',
+          dialogTarget: '',
+          videoRemark: '',
+        },
+        userInfo: [],
+        dialogRecord: [],
+        topicList: [],
+        receptionEvaluation: '',
+      };
     },
     user(state, action) {
       return { ...state, userInfo: action.payload };

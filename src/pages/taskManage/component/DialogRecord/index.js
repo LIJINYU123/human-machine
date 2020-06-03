@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import { Tag, Input, Form, Row, Col, Radio, Icon, Button } from 'antd';
+import { Input, Form, Row, Col, Radio, Button } from 'antd';
 import EditAbleTagGroup from '../EditableTagGroup';
 import ItemData from '../../map';
 import styles from './style.less';
@@ -12,9 +12,15 @@ const DialogRecord = props => {
   const { getFieldDecorator } = form;
 
   useEffect(() => {
-    getFieldDecorator(`dialogRecord[${index}].reverse`, {
+    getFieldDecorator(`dialogRecord[${dialog.dialogId}].reverse`, {
       initialValue: dialog.reverse,
-    })(<Input/>)
+    })(<Input/>);
+    getFieldDecorator(`dialogRecord[${dialog.dialogId}].dialogId`, {
+      initialValue: dialog.dialogId,
+    })(<Input/>);
+    getFieldDecorator(`dialogRecord[${dialog.dialogId}].userId`, {
+      initialValue: dialog.userId,
+    })(<Input/>);
   });
 
   const formItemLayout = {
@@ -40,7 +46,12 @@ const DialogRecord = props => {
   };
 
   const handleReverse = () => {
+    const { setFieldsValue } = form;
     setReverse(!reverse);
+
+    const temp = {};
+    temp[`dialogRecord[${dialog.dialogId}].reverse`] = !reverse;
+    setFieldsValue(temp);
   };
 
   return (
@@ -50,7 +61,7 @@ const DialogRecord = props => {
         <Row>
           <Form.Item label={FieldLabels.dialogType}>
             {
-              getFieldDecorator(`dialogRecord[${index}].dialogType`, {
+              getFieldDecorator(`dialogRecord[${dialog.dialogId}].dialogType`, {
                 initialValue: dialog.dialogType,
               })(
                 <Radio.Group name="dialogType">
@@ -74,7 +85,7 @@ const DialogRecord = props => {
               <Row>
                 <Form.Item label={FieldLabels.customerServer}>
                   {
-                    getFieldDecorator(`dialogRecord[${index}].customer`, {
+                    getFieldDecorator(`dialogRecord[${dialog.dialogId}].customer`, {
                       initialValue: dialog.customer,
                     })(<Input/>)
                   }
@@ -83,7 +94,7 @@ const DialogRecord = props => {
               <Row>
                 <Form.Item label={`用户${dialog.userId}`}>
                   {
-                    getFieldDecorator(`dialogRecord[${index}].user`, {
+                    getFieldDecorator(`dialogRecord[${dialog.dialogId}].user`, {
                       initialValue: dialog.user,
                     })(<Input/>)
                   }
@@ -94,7 +105,7 @@ const DialogRecord = props => {
               <Row>
                 <Form.Item label={`用户${dialog.userId}`}>
                   {
-                    getFieldDecorator(`dialogRecord[${index}].user`, {
+                    getFieldDecorator(`dialogRecord[${dialog.dialogId}].user`, {
                       initialValue: dialog.user,
                     })(<Input/>)
                   }
@@ -103,7 +114,7 @@ const DialogRecord = props => {
               <Row>
                 <Form.Item label={FieldLabels.customerServer}>
                   {
-                    getFieldDecorator(`dialogRecord[${index}].customer`, {
+                    getFieldDecorator(`dialogRecord[${dialog.dialogId}].customer`, {
                       initialValue: dialog.customer,
                     })(<Input/>)
                   }
@@ -115,27 +126,27 @@ const DialogRecord = props => {
           <Col md={8}>
             <Form.Item label={FieldLabels.textEmotion} {...formItemLayout2}>
               {
-                getFieldDecorator(`dialogRecord[${index}].emotionTag`, {
+                getFieldDecorator(`dialogRecord[${dialog.dialogId}].emotionTag`, {
                   initialValue: dialog.emotionTag,
-                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${index}].emotionTag`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].emotionTag`}/>)
               }
             </Form.Item>
           </Col>
           <Col md={8}>
             <Form.Item label={FieldLabels.action} {...formItemLayout2}>
               {
-                getFieldDecorator(`dialogRecord[${index}].actionTag`, {
+                getFieldDecorator(`dialogRecord[${dialog.dialogId}].actionTag`, {
                   initialValue: dialog.actionTag,
-                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${index}].actionTag`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].actionTag`}/>)
               }
             </Form.Item>
           </Col>
           <Col md={8}>
             <Form.Item label={FieldLabels.tag} {...formItemLayout2}>
               {
-                getFieldDecorator(`dialogRecord[${index}].dialogTag`, {
+                getFieldDecorator(`dialogRecord[${dialog.dialogId}].dialogTag`, {
                   initialValue: dialog.dialogTag,
-                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${index}].dialogTag`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].dialogTag`}/>)
               }
             </Form.Item>
           </Col>
