@@ -75,24 +75,6 @@ class ProjectDetail extends Component {
     });
   };
 
-  handleJumptoInProgress = () => {
-    router.push({
-      pathname: '/task-manage/my-task',
-      state: {
-        status: 'labeling,reject',
-      },
-    });
-  };
-
-  handleJumptoComplete = () => {
-    router.push({
-      pathname: '/task-manage/my-task',
-      state: {
-        status: 'complete',
-      },
-    });
-  };
-
   handleJumpToMarkView = task => {
     switch (task.labelType) {
       case 'textClassify':
@@ -125,6 +107,15 @@ class ProjectDetail extends Component {
       case 'pictureMark':
         router.push({
           pathname: '/task-manage/my-task/image-mark',
+          state: {
+            taskInfo: task,
+          },
+        });
+        break;
+
+      case 'videoDialogMark':
+        router.push({
+          pathname: '/task-manage/my-task/video-mark',
           state: {
             taskInfo: task,
           },

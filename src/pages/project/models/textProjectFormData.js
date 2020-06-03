@@ -108,13 +108,13 @@ const TextProjectFormData = {
         response = yield call(saveStepOneData, { startTime, endTime, labelers: labeler, inspectors: inspector, ...rest });
       }
       if (response.status === 'ok') {
-        if (callback) {
-          callback();
-        }
         yield put({
           type: 'saveStepOne',
           payload: { ...payload, projectId: response.projectId },
         });
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
       }
@@ -162,13 +162,13 @@ const TextProjectFormData = {
 
       const response = yield call(saveStepTwoData, { labelType: labelType.slice(-1)[0], saveTemplate, templateName, setting, projectId: payload.projectId });
       if (response.status === 'ok') {
-        if (callback) {
-          callback();
-        }
         yield put({
           type: 'saveStepTwo',
           payload,
         });
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
       }

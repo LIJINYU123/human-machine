@@ -451,13 +451,75 @@ class VideoAnswerView extends Component {
     });
   };
 
+  submitReview = () => {
+    const { dispatch } = this.props;
+    const { basicInfo, roleId } = this.state;
+    dispatch({
+      type: 'videoMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'review' },
+      callback: () => {
+        router.push({
+          pathname: '/task-manage/my-task',
+          state: {
+            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+          },
+        });
+      },
+    });
+  };
+
+  submitComplete = () => {
+    const { dispatch } = this.props;
+    const { basicInfo, roleId } = this.state;
+    dispatch({
+      type: 'videoMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'complete' },
+      callback: () => {
+        router.push({
+          pathname: '/task-manage/my-task',
+          state: {
+            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+          },
+        });
+      },
+    });
+  };
+
+  submitReject = () => {
+    const { dispatch } = this.props;
+    const { basicInfo, roleId } = this.state;
+    dispatch({
+      type: 'videoMark/updateStatus',
+      payload: { taskId: basicInfo.taskId, status: 'reject' },
+      callback: () => {
+        router.push({
+          pathname: '/task-manage/my-task',
+          state: {
+            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+          },
+        });
+      },
+    });
+  };
+
   render() {
     const { form: { getFieldDecorator }, schedule, receptionEvaluation, remark, reviewResult, dataId, videoBasicInfo, labelData } = this.props;
     const { basicInfo, roleId, dataIdQueue, panes, activeKey, records, topics, width, visible, createVisible, editVisible, topic, topicIndex } = this.state;
 
     const users = panes.map(pane => ({ userId: parseInt(pane.key.replace('user', ''), 0), userName: pane.title }));
 
-    const action = (<Button type="primary" onClick={this.handleGoBack}>返回</Button>);
+    const action = (
+      <Fragment>
+        { roleId === 'labeler' && <Button icon="check" onClick={this.submitReview}>提交质检</Button> }
+        { roleId === 'inspector' &&
+        <Button.Group>
+          <Button icon="close" onClick={this.submitReject}>驳回</Button>
+          <Button icon="check" onClick={this.submitComplete}>通过</Button>
+        </Button.Group>
+        }
+        <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>
+      </Fragment>
+    );
 
     const extra = (
       <div className={styles.moreInfo}>

@@ -1,5 +1,4 @@
 import { message } from 'antd';
-import moment from 'moment';
 import {
   queryLabelData,
   saveReviewResult,
@@ -66,16 +65,6 @@ const VideoMark = {
       } else {
         message.error(response.message);
       }
-    },
-
-    * addUser({ payload }, { put, select }) {
-      const prevUserInfo = yield select(state => state.videoMark.userInfo);
-      prevUserInfo.push(payload);
-
-      yield put({
-        type: 'user',
-        payload: prevUserInfo,
-      });
     },
 
     // 答题模式，获取一道题目
@@ -153,9 +142,6 @@ const VideoMark = {
         topicList: [],
         receptionEvaluation: '',
       };
-    },
-    user(state, action) {
-      return { ...state, userInfo: action.payload };
     },
   },
 };
