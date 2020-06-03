@@ -47,6 +47,25 @@ class Step1 extends Component {
     });
   };
 
+  saveStepData = () => {
+    const { form: { validateFieldsAndScroll, getFieldsValue }, onCancel, dispatch } = this.props;
+    validateFieldsAndScroll(error => {
+      if (!error) {
+        const values = getFieldsValue();
+        const { labeler, inspector } = values;
+        values.labeler = labeler.map(item => ({ userId: item.key, userName: item.label }));
+        values.inspector = inspector.map(item => ({ userId: item.key, userName: item.label }));
+        dispatch({
+          type: 'textProjectFormData/saveStepOneData',
+          payload: values,
+          callback: () => {
+            onCancel();
+          },
+        });
+      }
+    });
+  };
+
   handleRadioClick = () => {
     const { textProjectFormData: { forever }, dispatch } = this.props;
     dispatch({
@@ -265,7 +284,7 @@ class Step1 extends Component {
                 },
               }}
             >
-              <Button>暂存</Button>
+              <Button onClick={this.saveStepData}>暂存</Button>
               <Button style={{ marginLeft: '8px' }} type="primary" onClick={this.onValidateForm}>下一步</Button>
             </Form.Item>
           </Col>

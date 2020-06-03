@@ -88,7 +88,7 @@ const TextProjectFormData = {
       });
     },
 
-    * saveStepOneData({ payload }, { call, put, select }) {
+    * saveStepOneData({ payload, callback }, { call, put, select }) {
       const forever = yield select(state => state.textProjectFormData.forever);
       const projectId = yield select(state => state.textProjectFormData.projectId);
       const { projectPeriod, labeler, inspector, ...rest } = payload;
@@ -112,36 +112,50 @@ const TextProjectFormData = {
           type: 'saveStepOne',
           payload: { ...payload, projectId: response.projectId },
         });
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
       }
     },
 
-    * saveStepTwoData({ payload }, { call, put, select }) {
+    * saveStepTwoData({ payload, callback }, { call, put, select }) {
       const labelType = yield select(state => state.textProjectFormData.labelType);
       const saveTemplate = yield select(state => state.textProjectFormData.saveTemplate);
       const optionData = yield select(state => state.textProjectFormData.optionData);
       let setting = {};
-      if (labelType.slice(-1)[0] === 'textClassify') {
-        setting = {
-          classifyName: payload.classifyName,
-          multiple: payload.multiple,
-          options: optionData,
-        }
-      } else if (labelType.slice(-1)[0] === 'sequenceLabeling') {
-        setting = {
-          classifyName: payload.classifyName,
-          multiple: payload.multiple,
-          options: optionData,
-          saveType: payload.saveType,
-        };
-      } else if (labelType.slice(-1)[0] === 'textExtension') {
-        const minValue = yield select(state => state.textProjectFormData.minValue);
-        const maxValue = yield select(state => state.textProjectFormData.maxValue);
-        setting = {
-          minValue,
-          maxValue,
-        };
+
+      switch (labelType.slice(-1)[0]) {
+        case 'textClassify':
+          setting = {
+            classifyName: payload.classifyName,
+            multiple: payload.multiple,
+            options: optionData,
+          };
+          break;
+        case 'sequenceLabeling':
+          setting = {
+            classifyName: payload.classifyName,
+            multiple: payload.multiple,
+            options: optionData,
+            saveType: payload.saveType,
+          };
+          break;
+        case 'textExtension':
+          setting = {
+            minValue: yield select(state => state.textProjectFormData.minValue),
+            maxValue: yield select(state => state.textProjectFormData.maxValue),
+          };
+          break;
+        case 'pictureMark':
+          setting = {
+            classifyName: payload.classifyName,
+            options: optionData,
+          };
+          break;
+        default:
+          break;
       }
 
       const templateName = payload.hasOwnProperty('templateName') ? payload.templateName : '';
@@ -152,6 +166,9 @@ const TextProjectFormData = {
           type: 'saveStepTwo',
           payload,
         });
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
       }

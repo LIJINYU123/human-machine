@@ -30,6 +30,11 @@ class Step3 extends Component {
     }
   };
 
+  saveStepData = () => {
+    const { onCancel } = this.props;
+    onCancel();
+  };
+
   handleBeforeUpload = file => {
     this.setState({
       fileList: [file],
@@ -173,7 +178,7 @@ class Step3 extends Component {
         <Row gutter={[16, 16]}>
           <Col>
             <Button onClick={this.onPrev}>上一步</Button>
-            <Button style={{ marginLeft: '8px' }}>暂存</Button>
+            <Button style={{ marginLeft: '8px' }} onClick={this.saveStepData}>暂存</Button>
             <Button style={{ marginLeft: '8px' }} type="primary" onClick={this.handleUpload} loading={uploading}>下一步</Button>
           </Col>
         </Row>
