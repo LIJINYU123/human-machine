@@ -39,6 +39,7 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   checkRate: sequenceMark.checkRate,
   passRate: sequenceMark.passRate,
   markTool: sequenceMark.markTool,
+  schedule: sequenceMark.schedule,
   loading: loading.effects['sequenceMark/fetchSequenceData'],
 }))
 class SequenceMarkView extends Component {
@@ -59,11 +60,16 @@ class SequenceMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location } = this.props;
+    const { location, dispatch } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
+    });
+
+    dispatch({
+      type: 'sequenceMark/updateSchedule',
+      payload: { schedule: location.state.taskInfo.schedule },
     });
   }
 
@@ -324,14 +330,14 @@ class SequenceMarkView extends Component {
 
   render() {
     const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue, roleId } = this.state;
-    const { data, checkRate, passRate, loading } = this.props;
+    const { data, checkRate, passRate, schedule, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]} />
-        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={basicInfo.schedule} suffix="%" />
+        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
       </div>
     );
 

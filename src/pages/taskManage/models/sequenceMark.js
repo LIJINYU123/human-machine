@@ -12,6 +12,7 @@ const SequenceMark = {
     passRate: 0,
     markTool: {},
     questionInfo: {},
+    schedule: 0,
   },
 
   effects: {
@@ -90,6 +91,13 @@ const SequenceMark = {
       }
     },
 
+    * updateSchedule({ payload }, { put }) {
+      yield put({
+        type: 'schedule',
+        payload: payload.schedule,
+      });
+    },
+
     // 答题模式，获取一道题目
     * fetchQuestion({ payload, callback }, { call, put }) {
       const response = yield call(queryOneTextQuestion, payload);
@@ -139,6 +147,9 @@ const SequenceMark = {
     },
     saveQuestion(state, action) {
       return { ...state, questionInfo: action.payload };
+    },
+    schedule(state, action) {
+      return { ...state, schedule: action.payload };
     },
   },
 };

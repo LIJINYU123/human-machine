@@ -38,6 +38,7 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   checkRate: imageMark.checkRate,
   passRate: imageMark.passRate,
   markTool: imageMark.markTool,
+  schedule: imageMark.schedule,
   loading: loading.effects['imageMark/fetchLabelData'],
 }))
 class ImageMarkView extends Component {
@@ -51,11 +52,16 @@ class ImageMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location } = this.props;
+    const { location, dispatch } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
+    });
+
+    dispatch({
+      type: 'imageMark/updateSchedule',
+      payload: { schedule: location.state.taskInfo.schedule },
     });
   }
 
@@ -172,12 +178,12 @@ class ImageMarkView extends Component {
     });
   };
 
-  jumpToAnswerMode = () => {
+  jumpToAnswerMode = dataId => {
     const { basicInfo, roleId } = this.state;
     const { markTool } = this.props;
     router.push({
       pathname: '/task-manage/my-task/answer-mode/image',
-      state: { basicInfo, markTool, roleId },
+      state: { basicInfo, markTool, roleId, dataId },
     });
   };
 
@@ -219,14 +225,14 @@ class ImageMarkView extends Component {
 
   render() {
     const { basicInfo, remarkPopoverVisible, inputValue, roleId } = this.state;
-    const { data, checkRate, passRate } = this.props;
+    const { data, checkRate, passRate, schedule } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]} />
-        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={basicInfo.schedule} suffix="%" />
+        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
       </div>
     );
 
@@ -278,7 +284,7 @@ class ImageMarkView extends Component {
       {
         title: '标注结果',
         dataIndex: 'labelResult',
-        render: val => <a>查看</a>,
+        render: (_, record) => <a onClick={() => this.jumpToAnswerMode(record.dataId)}>查看</a>,
         filters: labelResultFilters,
         filteredValue: filteredInfo.labelResult || null,
       },

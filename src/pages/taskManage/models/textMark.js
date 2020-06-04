@@ -79,7 +79,7 @@ const TextMark = {
 
     * updateSchedule({ payload }, { put }) {
       yield put({
-        type: 'saveSchedule',
+        type: 'schedule',
         payload: payload.schedule,
       });
     },
@@ -138,7 +138,7 @@ const TextMark = {
     saveQuestion(state, action) {
       return { ...state, questionInfo: action.payload };
     },
-    saveSchedule(state, action) {
+    schedule(state, action) {
       return { ...state, schedule: action.payload };
     },
   },

@@ -17,7 +17,6 @@ const VideoMark = {
     },
     checkRate: 0,
     passRate: 0,
-    questionInfo: {},
     dataId: '',
     labelData: {},
     reviewResult: '',
@@ -28,6 +27,7 @@ const VideoMark = {
     dialogRecord: [],
     topicList: [],
     receptionEvaluation: '',
+    taskSchedule: 0,
   },
 
   effects: {
@@ -65,6 +65,13 @@ const VideoMark = {
       } else {
         message.error(response.message);
       }
+    },
+
+    * updateSchedule({ payload }, { put }) {
+      yield put({
+        type: 'schedule',
+        payload: payload.schedule,
+      });
     },
 
     // 答题模式，获取一道题目
@@ -130,6 +137,7 @@ const VideoMark = {
         remark,
         schedule,
         videoBasicInfo: {
+          videoNo: '',
           area: '',
           outlet: '',
           receptionPerson: '',
@@ -142,6 +150,9 @@ const VideoMark = {
         topicList: [],
         receptionEvaluation: '',
       };
+    },
+    schedule(state, action) {
+      return { ...state, taskSchedule: action.payload };
     },
   },
 };

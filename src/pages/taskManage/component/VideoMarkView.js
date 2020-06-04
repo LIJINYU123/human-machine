@@ -37,6 +37,7 @@ const labelResultFilters = Object.keys(labelResult).map(key => ({
   data: videoMark.data,
   checkRate: videoMark.checkRate,
   passRate: videoMark.passRate,
+  taskSchedule: videoMark.taskSchedule,
   loading: loading.effects['videoMark/fetchLabelData'],
 }))
 class VideoMarkView extends Component {
@@ -50,11 +51,16 @@ class VideoMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location } = this.props;
+    const { location, dispatch } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
+    });
+
+    dispatch({
+      type: 'videoMark/updateSchedule',
+      payload: { schedule: location.state.taskInfo.schedule },
     });
   }
 
@@ -200,25 +206,24 @@ class VideoMarkView extends Component {
     });
   };
 
-  jumpToAnswerMode = () => {
+  jumpToAnswerMode = dataId => {
     const { basicInfo, roleId } = this.state;
-    const { markTool } = this.props;
     router.push({
       pathname: '/task-manage/my-task/answer-mode/video',
-      state: { basicInfo, markTool, roleId },
+      state: { basicInfo, roleId, dataId },
     });
   };
 
   render() {
     const { basicInfo, remarkPopoverVisible, inputValue, roleId } = this.state;
-    const { data, checkRate, passRate, schedule, loading } = this.props;
+    const { data, checkRate, passRate, taskSchedule, loading } = this.props;
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
 
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]} />
-        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
+        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={taskSchedule} suffix="%" />
       </div>
     );
 
@@ -246,7 +251,7 @@ class VideoMarkView extends Component {
         }
         <Radio.Group defaultValue="overview" style={{ marginRight: '16px' }}>
           <Radio.Button value="overview">概览模式</Radio.Button>
-          <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
+          <Radio.Button value="focus" onClick={() => this.jumpToAnswerMode('')}>答题模式</Radio.Button>
         </Radio.Group>
         {
           roleId === 'labeler' && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
@@ -263,14 +268,13 @@ class VideoMarkView extends Component {
 
     const columns = [
       {
-        title: '视频编号',
+        title: '题目',
         dataIndex: 'sentence',
-        render: val => (val.split('/').length ? val.split('/').slice(-1)[0] : val),
       },
       {
         title: '标注结果',
         dataIndex: 'labelResult',
-        render: val => <a>查看</a>,
+        render: (_, record) => <a onClick={() => this.jumpToAnswerMode(record.dataId)}>查看</a>,
         filters: labelResultFilters,
         filteredValue: filteredInfo.labelResult || null,
       },

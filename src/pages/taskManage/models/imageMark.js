@@ -13,6 +13,7 @@ const ImageMark = {
     passRate: 0,
     markTool: {},
     questionInfo: {},
+    schedule: 0,
   },
 
   effects: {
@@ -66,6 +67,13 @@ const ImageMark = {
       } else {
         message.error(response.message);
       }
+    },
+
+    * updateSchedule({ payload }, { put }) {
+      yield put({
+        type: 'schedule',
+        payload: payload.schedule,
+      });
     },
 
     // 答题模式，获取一道题目
@@ -128,6 +136,9 @@ const ImageMark = {
         ...state,
         questionInfo: action.payload,
       };
+    },
+    schedule(state, action) {
+      return { ...state, schedule: action.payload };
     },
   },
 };

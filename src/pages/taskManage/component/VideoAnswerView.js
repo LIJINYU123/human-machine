@@ -56,7 +56,7 @@ class VideoAnswerView extends Component {
   }
 
   componentDidMount() {
-    const { dispatch, form } = this.props;
+    const { dispatch, form, location } = this.props;
     const { basicInfo, dataIdQueue } = this.state;
 
     const defaultUserInfo = {
@@ -95,8 +95,10 @@ class VideoAnswerView extends Component {
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
+        dataId: location.state.dataId,
       },
       callback: () => {
+        // eslint-disable-next-line no-shadow
         const { dataId, userInfo, dialogRecord, topicList } = this.props;
         dataIdQueue.push(dataId);
 
@@ -503,7 +505,7 @@ class VideoAnswerView extends Component {
   };
 
   render() {
-    const { form: { getFieldDecorator }, schedule, receptionEvaluation, remark, reviewResult, dataId, videoBasicInfo, labelData } = this.props;
+    const { form: { getFieldDecorator }, schedule, receptionEvaluation, remark, reviewResult, dataId, videoBasicInfo } = this.props;
     const { basicInfo, roleId, dataIdQueue, panes, activeKey, records, topics, width, visible, createVisible, editVisible, topic, topicIndex } = this.state;
 
     const users = panes.map(pane => ({ userId: parseInt(pane.key.replace('user', ''), 0), userName: pane.title }));
@@ -588,7 +590,15 @@ class VideoAnswerView extends Component {
             <Row>
               <Col md={8} sm={12}>
                 <Form.Item label={FieldLabels.videoNo}>
-                  <a href={labelData.sentence} target="_blank">{labelData.hasOwnProperty('sentence') ? labelData.sentence.split('/').slice(-1)[0] : labelData.sentence}</a>
+                  {
+                    getFieldDecorator('videoBasicInfo.videoNo', {
+                      rules: [{
+                        required: true,
+                        message: '请输入视频编号',
+                      }],
+                      initialValue: videoBasicInfo.videoNo,
+                    })(<Input/>)
+                  }
                 </Form.Item>
               </Col>
               <Col md={8} sm={12}>

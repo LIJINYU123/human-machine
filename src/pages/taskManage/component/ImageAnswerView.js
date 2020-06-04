@@ -49,13 +49,14 @@ class ImageAnswerView extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, location } = this.props;
     const { basicInfo, dataIdQueue } = this.state;
     dispatch({
       type: 'imageMark/fetchQuestion',
       payload: {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
+        dataId: location.state.dataId,
       },
       callback: () => {
         const { questionInfo } = this.props;
