@@ -76,14 +76,14 @@ class RoleDetailView extends Component {
                   },
                 ],
                 initialValue: roleInfo.roleName,
-              })(<Input/>)
+              })(<Input disabled/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.description}>
             {
               getFieldDecorator('description', {
                 initialValue: roleInfo.description,
-              })(<TextArea rows={3}/>)
+              })(<TextArea rows={3} disabled/>)
             }
           </Form.Item>
           <Divider/>
@@ -91,34 +91,36 @@ class RoleDetailView extends Component {
             {
               getFieldDecorator('projectManage', {
                 initialValue: privileges ? privileges.projectManage : [],
-              })(<Checkbox.Group options={projectManageOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
+              })(<Checkbox.Group options={projectManageOptions} disabled/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.templateManage}>
             {
-              getFieldDecorator('templateManage', {})(
-                <Checkbox.Group options={templateManageOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
+              getFieldDecorator('templateManage', {
+                initialValue: privileges ? privileges.templateManage : [],
+              })(
+                <Checkbox.Group options={templateManageOptions} disabled/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.roleManage}>
             {
               getFieldDecorator('roleManage', {
                 initialValue: privileges ? privileges.roleManage : [],
-              })(<Checkbox.Group options={roleManageOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
+              })(<Checkbox.Group options={roleManageOptions} disabled/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.userManage}>
             {
               getFieldDecorator('userManage', {
                 initialValue: privileges ? privileges.userManage : [],
-              })(<Checkbox.Group options={userManageOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
+              })(<Checkbox.Group options={userManageOptions} disabled/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.dataMark}>
             {
               getFieldDecorator('dataMark', {
                 initialValue: privileges ? privileges.dataMark : [],
-              })(<Checkbox.Group options={dataMarkOptions} disabled={['projectAdmin', 'labeler', 'inspector'].includes(roleInfo.roleId)} />)
+              })(<Checkbox.Group options={dataMarkOptions} disabled/>)
             }
           </Form.Item>
         </Form>

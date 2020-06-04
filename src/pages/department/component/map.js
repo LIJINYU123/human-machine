@@ -67,12 +67,21 @@ export default {
     },
   ],
 
-  PrivilegeMap: {
+  PrivilegeToFirstLevelName: {
     textClassify: '文本',
     sequenceLabeling: '文本',
     textExtension: '文本',
     pictureMark: '图片',
     voiceMark: '音频',
     videoDialogMark: '其他',
+  },
+
+  PrivilegeName: {
+    textClassify: '文本分类',
+    sequenceLabeling: '序列标注',
+    textExtension: '文本扩充',
+    pictureMark: '图片标注',
+    voiceMark: '音频标注',
+    videoDialogMark: '视频对话标注',
   },
 }

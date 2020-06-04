@@ -1,7 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
-import { Button, Card, Divider, Icon, Input, Popconfirm, Table, Tag, Modal } from 'antd';
+import { Button, Card, Divider, Icon, Input, Table, Tag, Modal, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
 import DepCreateView from './component/DepCreateView';
 import DepDetailView from './component/DepDetailView';
@@ -9,7 +9,7 @@ import styles from './style.less';
 import ItemData from './component/map';
 
 const { confirm } = Modal;
-const { PrivilegeMap, DepartmentType } = ItemData;
+const { PrivilegeToFirstLevelName, DepartmentType, PrivilegeName } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -206,14 +206,15 @@ class DepartmentList extends Component {
         title: '机构权限',
         dataIndex: 'privilege',
         render: val => {
-          const names = val.map(item => PrivilegeMap[item]);
+          const names = val.map(item => PrivilegeToFirstLevelName[item]);
+          const title = val.map(item => PrivilegeName[item]);
           const noRepeat = [];
           names.forEach(name => {
             if (!noRepeat.includes(name)) {
               noRepeat.push(name);
             }
           });
-          return noRepeat.map(m => <Tag color="blue">{m}</Tag>)
+          return <Tooltip title={title.join('，')}>{noRepeat.map(m => <Tag color="blue" style={{ cursor: 'pointer' }}>{m}</Tag>)}</Tooltip>
         },
         ellipsis: true,
       },

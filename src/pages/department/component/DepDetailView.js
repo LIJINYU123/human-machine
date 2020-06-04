@@ -26,6 +26,17 @@ class DepDetailView extends Component {
     });
   };
 
+  checkDepName = (rule, value, callback) => {
+    const { departmentList: { data }, departmentInfo } = this.props;
+    if (!value.trim()) {
+      callback('请输入机构名称');
+    } else if (data.filter(department => department.departmentName !== departmentInfo.departmentName && department.departmentName === value).length) {
+      callback('该机构名称已经存在');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     // eslint-disable-next-line max-len
     const { visible, onCancel, departmentInfo, form: { getFieldDecorator }, submitting } = this.props;
@@ -53,10 +64,17 @@ class DepDetailView extends Component {
         confirmLoading={submitting}
         destroyOnClose
       >
-        <Form {...formItemLayout} hideRequiredMark>
+        <Form {...formItemLayout}>
           <Form.Item label={FieldLabels.departmentName}>
             {
               getFieldDecorator('departmentName', {
+                rules: [
+                  {
+                    required: true,
+                    validator: this.checkDepName,
+                    whitespace: true,
+                  },
+                ],
                 initialValue: departmentInfo.departmentName,
               })(<Input/>)
             }
@@ -64,6 +82,12 @@ class DepDetailView extends Component {
           <Form.Item label={FieldLabels.departmentType}>
             {
               getFieldDecorator('departmentType', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择机构类型',
+                  },
+                ],
                 initialValue: departmentInfo.departmentType,
               })(
                 <Select
@@ -76,6 +100,12 @@ class DepDetailView extends Component {
           <Form.Item label={FieldLabels.privilege}>
             {
               getFieldDecorator('privilege', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择机构权限',
+                  },
+                ],
                 initialValue: departmentInfo.privilege,
               })(<TreeSelect treeData={Privileges} treeCheckable treeDefaultExpandAll/>)
             }
@@ -83,6 +113,13 @@ class DepDetailView extends Component {
           <Form.Item label={FieldLabels.administrator}>
             {
               getFieldDecorator('administrator', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入管理员账号',
+                    whitespace: true,
+                  },
+                ],
                 initialValue: departmentInfo.administrator,
               })(<Input />)
             }
@@ -90,6 +127,13 @@ class DepDetailView extends Component {
           <Form.Item label={FieldLabels.dataAddress}>
             {
               getFieldDecorator('dataAddress', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请输入数据存储地址',
+                    whitespace: true,
+                  },
+                ],
                 initialValue: departmentInfo.dataAddress,
               })(<Input/>)
             }

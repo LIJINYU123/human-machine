@@ -270,14 +270,9 @@ const roleMap = {
   inspector: '质检员',
 };
 
-function getUsers(req, res, u) {
+function getUsers(req, res) {
   const departmentId = req.get('DepartmentId');
-  let url = u;
-
-  if (!url || Object.prototype.toString.call(url) !== '[object String]') {
-    // eslint-disable-next-line prefer-destructuring
-    url = req.url;
-  }
+  const { url } = req;
 
   const params = parse(url, true).query;
   let dataSource = mockData.filter(item => item.departmentId === departmentId);

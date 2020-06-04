@@ -5,7 +5,7 @@ import {
   Button,
   Descriptions,
   Statistic,
-  Input, Icon, Table, Radio,
+  Input, Icon, Table,
 } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';

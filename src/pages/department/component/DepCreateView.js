@@ -26,31 +26,12 @@ class DepCreateView extends Component {
     });
   };
 
-  checkDepId = (rule, value, callback) => {
-    const { departmentList: { data } } = this.props;
-    if (!value) {
-      callback('请输入机构唯一标识');
-    } else if (data.filter(department => department.departmentId === value).length) {
-      callback('该机构唯一标识已经存在');
-    } else {
-      callback();
-    }
-  };
-
   checkDepName = (rule, value, callback) => {
     const { departmentList: { data } } = this.props;
-    if (!value) {
+    if (!value.trim()) {
       callback('请输入机构名称');
     } else if (data.filter(department => department.departmentName === value).length) {
       callback('该机构名称已经存在');
-    } else {
-      callback();
-    }
-  };
-
-  checkAdministrator = (rule, value, callback) => {
-    if (!value) {
-      callback('请选择管理员账号');
     } else {
       callback();
     }
@@ -83,13 +64,15 @@ class DepCreateView extends Component {
         confirmLoading={submitting}
         destroyOnClose
       >
-        <Form {...formItenLayout} hideRequiredMark>
+        <Form {...formItenLayout}>
           <Form.Item label={FieldLabels.departmentName}>
             {
               getFieldDecorator('departmentName', {
                 rules: [
                   {
+                    required: true,
                     validator: this.checkDepName,
+                    whitespace: true,
                   },
                 ],
               })(<Input/>)
@@ -98,6 +81,12 @@ class DepCreateView extends Component {
           <Form.Item label={FieldLabels.departmentType}>
             {
               getFieldDecorator('departmentType', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择机构类型',
+                  },
+                ],
                 initialValue: 'operationCenter',
               })(
                 <Select
@@ -124,7 +113,9 @@ class DepCreateView extends Component {
               getFieldDecorator('administrator', {
                 rules: [
                   {
-                    validator: this.checkAdministrator,
+                    required: true,
+                    message: '请输入管理员账号',
+                    whitespace: true,
                   },
                 ],
               })(<Input/>)
@@ -137,6 +128,7 @@ class DepCreateView extends Component {
                   {
                     required: true,
                     message: '请输入数据存储地址',
+                    whitespace: true,
                   },
                 ],
                 initialValue: 'localhost',

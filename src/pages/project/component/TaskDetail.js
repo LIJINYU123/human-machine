@@ -146,7 +146,7 @@ class TaskDetail extends Component {
       type: 'textTaskDetail/deleteLabelData',
       payload: {
         taskId,
-        sentenceIds: [sentenceInfo.sentenceId],
+        dataIds: [sentenceInfo.dataId],
       },
       callback: () => {
         this.setState({
@@ -163,7 +163,7 @@ class TaskDetail extends Component {
       type: 'textTaskDetail/deleteLabelData',
       payload: {
         taskId,
-        sentenceIds: selectedRows.map(row => row.sentenceId),
+        dataIds: selectedRows.map(row => row.dataId),
       },
       callback: () => {
         this.setState({

@@ -137,9 +137,7 @@ class RoleList extends Component {
         title: '操作',
         render: (_, role) => (
           <Fragment>
-            { modifyAuthority && <a onClick={() => this.handleModify(role)}>编辑</a> }
-            { modifyAuthority && deleteAuthority && <Divider type="vertical"/> }
-            { deleteAuthority && <a onClick={() => this.showDeleteConform(role)}>删除</a> }
+            <a onClick={() => this.handleModify(role)}>详情</a>
           </Fragment>
         ),
       },
@@ -147,7 +145,7 @@ class RoleList extends Component {
 
     return (
       <PageHeaderWrapper>
-        <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAdd} disabled={!addAuthority}>新增</Button>
+        {/*<Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAdd} disabled={!addAuthority}>新增</Button>*/}
         <Card bordered={false}>
           <StandardTable
             loading={loading}
