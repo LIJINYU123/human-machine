@@ -40,11 +40,11 @@ class DepartmentList extends Component {
     });
   }
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex, title) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
+               placeholder={`搜索 ${title}`}
                value={selectedKeys[0]}
                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -193,7 +193,7 @@ class DepartmentList extends Component {
       {
         title: '机构名称',
         dataIndex: 'departmentName',
-        ...this.getColumnSearchProps('departmentName'),
+        ...this.getColumnSearchProps('departmentName', '机构名称'),
       },
       {
         title: '机构类型',

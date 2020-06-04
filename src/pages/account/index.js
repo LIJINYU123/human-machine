@@ -224,12 +224,12 @@ class UserManage extends Component {
     });
   };
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex, title) => ({
     // eslint-disable-next-line no-shadow
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
+               placeholder={`搜索 ${title}`}
                value={selectedKeys[0]}
                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -353,12 +353,12 @@ class UserManage extends Component {
       {
         title: '用户名',
         dataIndex: 'userId',
-        ...this.getColumnSearchProps('userId'),
+        ...this.getColumnSearchProps('userId', '用户名'),
       },
       {
         title: '昵称',
         dataIndex: 'name',
-        ...this.getColumnSearchProps('name'),
+        ...this.getColumnSearchProps('name', '昵称'),
         render: val => <a>{val}</a>,
       },
       {

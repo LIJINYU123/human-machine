@@ -96,11 +96,11 @@ class MyTaskView extends Component {
     });
   };
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex, title) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
+               placeholder={`搜索 ${title}`}
                value={selectedKeys[0]}
                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -208,12 +208,12 @@ class MyTaskView extends Component {
       {
         title: '任务名称',
         dataIndex: 'taskName',
-        ...this.getColumnSearchProps('taskName'),
+        ...this.getColumnSearchProps('taskName', '任务名称'),
       },
       {
         title: '所属项目',
         dataIndex: 'projectName',
-        ...this.getColumnSearchProps('projectName'),
+        ...this.getColumnSearchProps('projectName', '所属项目'),
       },
       {
         title: '标注工具',

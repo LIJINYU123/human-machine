@@ -72,7 +72,6 @@ class DepDetailView extends Component {
                   {
                     required: true,
                     validator: this.checkDepName,
-                    whitespace: true,
                   },
                 ],
                 initialValue: departmentInfo.departmentName,

@@ -72,7 +72,6 @@ class DepCreateView extends Component {
                   {
                     required: true,
                     validator: this.checkDepName,
-                    whitespace: true,
                   },
                 ],
               })(<Input/>)

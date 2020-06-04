@@ -29,8 +29,9 @@ const prestColors = ['#F5222D', '#FA541C', '#FA8C16', '#FAAD14', '#FADB14', '#A0
   '#096DD9', '#1D39C4', '#531DAB', '#C41D7F',
 ];
 
-@connect(({ updateTemplate, loading }) => ({
+@connect(({ updateTemplate, templateManage, loading }) => ({
   updateTemplate,
+  templateManage,
   submitting: loading.effects['updateTemplate/updateTemplate'],
 }))
 class TemplateDetailView extends Component {
@@ -155,6 +156,17 @@ class TemplateDetailView extends Component {
     });
   };
 
+  checkTemplateName = (rule, value, callback) => {
+    const { templateManage: { data }, templateInfo } = this.props;
+    if (!value.trim()) {
+      callback('请输入模板名称');
+    } else if (data.filter(item => item.templateName !== templateInfo.templateName && item.templateName === value).length) {
+      callback('该模板名称已经存在');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     const { form: { getFieldDecorator }, visible, onCancel, templateInfo, updateTemplate: { optionData }, submitting } = this.props;
     const { modalVisible, minValue, maxValue, validateStatus, help } = this.state;
@@ -199,7 +211,7 @@ class TemplateDetailView extends Component {
                 rules: [
                   {
                     required: true,
-                    message: '请输入模板名称',
+                    validator: this.checkTemplateName,
                   },
                 ],
                 initialValue: templateInfo.templateName,
@@ -220,6 +232,7 @@ class TemplateDetailView extends Component {
                   {
                     required: true,
                     message: '请输入类别名称',
+                    whitespace: true,
                   },
                 ],
                 initialValue: templateInfo.setting.classifyName,

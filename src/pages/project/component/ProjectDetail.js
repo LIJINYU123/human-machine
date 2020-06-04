@@ -75,11 +75,11 @@ class ProjectDetail extends Component {
     });
   };
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex, title) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
+               placeholder={`搜索 ${title}`}
                value={selectedKeys[0]}
                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -270,7 +270,7 @@ class ProjectDetail extends Component {
       {
         title: '用户名',
         dataIndex: 'userName',
-        ...this.getColumnSearchProps('userName'),
+        ...this.getColumnSearchProps('userName', '用户名'),
       },
       {
         title: '角色名称',

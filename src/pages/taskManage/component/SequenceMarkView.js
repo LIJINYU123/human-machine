@@ -192,11 +192,11 @@ class SequenceMarkView extends Component {
       },
     });
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex, title) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
+               placeholder={`搜索 ${title}`}
                value={selectedKeys[0]}
                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -459,7 +459,7 @@ class SequenceMarkView extends Component {
         dataIndex: 'sentence',
         ellipsis: true,
         onCell: this.handleClickCell,
-        ...this.getColumnSearchProps('sentence'),
+        ...this.getColumnSearchProps('sentence', '文本'),
       });
     } else {
       columns.splice(0, 0, {
@@ -467,7 +467,7 @@ class SequenceMarkView extends Component {
           dataIndex: 'sentence1',
           ellipsis: true,
           onCell: this.handleClickCell,
-          ...this.getColumnSearchProps('sentence1'),
+          ...this.getColumnSearchProps('sentence1', '文本1'),
         });
 
       columns.splice(1, 0, {
@@ -475,7 +475,7 @@ class SequenceMarkView extends Component {
         dataIndex: 'sentence2',
         ellipsis: true,
         onCell: this.handleClickCell,
-        ...this.getColumnSearchProps('sentence2'),
+        ...this.getColumnSearchProps('sentence2', '文本2'),
       });
     }
 

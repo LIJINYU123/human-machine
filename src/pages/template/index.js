@@ -56,11 +56,11 @@ class TemplateManage extends Component {
     });
   };
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex, title) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input ref={node => { this.searchInput = node; }}
-               placeholder="搜索"
+               placeholder={`搜索 ${title}`}
                value={selectedKeys[0]}
                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -225,7 +225,7 @@ class TemplateManage extends Component {
       {
         title: '模板名称',
         dataIndex: 'templateName',
-        ...this.getColumnSearchProps('templateName'),
+        ...this.getColumnSearchProps('templateName', '模板名称'),
       },
       {
         title: '类型',
@@ -243,7 +243,7 @@ class TemplateManage extends Component {
       {
         title: '创建人',
         dataIndex: 'creatorName',
-        ...this.getColumnSearchProps('creatorName'),
+        ...this.getColumnSearchProps('creatorName', '创建人'),
       },
       {
         title: '描述',

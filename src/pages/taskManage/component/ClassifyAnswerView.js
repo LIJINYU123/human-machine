@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Statistic, Progress, Form, Row, Col, Descriptions, Input, Checkbox, Radio, Tag, Icon } from 'antd';
+import { Button, Card, Progress, Form, Row, Col, Descriptions, Input, Checkbox, Radio, Tag, Icon } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import TagSelect from '@/components/TagSelect';
 import router from 'umi/router';

@@ -156,11 +156,11 @@ class TextProjectList extends Component {
     });
   };
 
-  getColumnSearchProps = dataIndex => ({
+  getColumnSearchProps = (dataIndex, title) => ({
     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
       <div style={{ padding: 8 }}>
         <Input ref={node => { this.searchInput = node; }}
-               placeholder={`搜索 ${dataIndex}`}
+               placeholder={`搜索 ${title}`}
                value={selectedKeys[0]}
                onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
                onPressEnter={() => this.handleSearch(selectedKeys, confirm, dataIndex)}
@@ -365,7 +365,7 @@ class TextProjectList extends Component {
       {
         title: '项目名称',
         dataIndex: 'projectName',
-        ...this.getColumnSearchProps('projectName'),
+        ...this.getColumnSearchProps('projectName', '项目名称'),
       },
       {
         title: '负责人',
