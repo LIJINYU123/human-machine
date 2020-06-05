@@ -109,7 +109,7 @@ class Login extends Component {
               自动登录
             </Checkbox>
             <Link className={styles.reset} to="/user/reset">
-              忘记密码
+              修改密码
             </Link>
           </div>
           <Submit loading={submitting}>登录</Submit>

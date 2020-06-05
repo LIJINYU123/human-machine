@@ -17,7 +17,7 @@ const ResetResult = ({ location }) => (
     status="success"
     title={
       <div className={styles.title} >
-        你的账户：{location.state ? location.state.account : 'SY0111'}&nbsp;密码重置成功
+        你的账户：{location.state ? location.state.account : 'SY0111'}&nbsp;密码修改成功
       </div>
     }
     extra={actions}

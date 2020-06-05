@@ -19,22 +19,22 @@ class ManualAddView extends Component {
 
   handleConform = () => {
     const { form: { validateFieldsAndScroll, getFieldsValue }, dispatch, onCancel } = this.props;
-    const { userKeys } = this.state;
     validateFieldsAndScroll(error => {
       if (!error) {
         const values = getFieldsValue();
-        console.log(values);
-        const users = [];
-        userKeys.forEach(key => {
-          users.push({ userId: values[`userId-${key}`], roleId: values[`roleId-${key}`], groupId: typeof values[`groupId-${key}`] !== 'undefined' ? values[`groupId-${key}`] : [] });
-        });
+
         dispatch({
           type: 'userList/manualAddUsers',
-          payload: { users },
+          payload: { users: values.users.filter(item => item) },
           callback: () => {
+            count = 1;
+            this.setState({
+              userKeys: [count],
+            });
+
             dispatch({
               type: 'userList/fetchUsers',
-              payload: { sorter: 'registerTime_descend' },
+              payload: { sorter: 'updatedTime_descend' },
             });
             onCancel();
           },
@@ -71,6 +71,21 @@ class ManualAddView extends Component {
     this.setState({
       userKeys: temKeys,
     });
+  };
+
+  checkUserId = (rule, value, callback) => {
+    const { form: { getFieldsValue } } = this.props;
+    const values = getFieldsValue();
+    const { users } = values;
+    const existUsers = users.filter(user => user.userId === value);
+
+    if (!value.trim()) {
+      callback('请输入用户名');
+    } else if (existUsers.length === 2) {
+      callback('存在重复的用户名，请重新输入');
+    } else {
+      callback();
+    }
   };
 
   render() {
@@ -111,11 +126,11 @@ class ManualAddView extends Component {
                 <Col md={8} sm={24}>
                   <Form.Item label={FieldLabels.userId}>
                     {
-                      getFieldDecorator(`userId-${key}`, {
+                      getFieldDecorator(`users[${key}].userId`, {
                         rules: [
                           {
                             required: true,
-                            message: '请输入账户名',
+                            validator: this.checkUserId,
                           },
                         ],
                         initialValue: '',
@@ -126,7 +141,7 @@ class ManualAddView extends Component {
                 <Col md={8} sm={24}>
                   <Form.Item label={FieldLabels.role}>
                     {
-                      getFieldDecorator(`roleId-${key}`, {
+                      getFieldDecorator(`users[${key}].roleId`, {
                         rules: [
                           {
                             required: true,
@@ -146,7 +161,7 @@ class ManualAddView extends Component {
                 <Col md={8} sm={24}>
                   <Form.Item label={FieldLabels.group}>
                     {
-                      getFieldDecorator(`groupId-${key}`)(
+                      getFieldDecorator(`users[${key}].groupId`)(
                         <Select
                           mode="multiple"
                           dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}

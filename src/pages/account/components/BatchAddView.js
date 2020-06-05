@@ -22,7 +22,7 @@ class BatchAddView extends Component {
           callback: () => {
             dispatch({
               type: 'userList/fetchUsers',
-              payload: { sorter: 'registerTime_descend' },
+              payload: { sorter: 'updatedTime_descend' },
             });
             onCancel();
           },

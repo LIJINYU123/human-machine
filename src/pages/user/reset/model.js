@@ -1,4 +1,5 @@
 import { fakeResetPassword } from './service';
+import { message } from 'antd';
 
 const Model = {
   namespace: 'resetPassword',
@@ -9,13 +10,17 @@ const Model = {
   effects: {
     *submit({ payload, callback }, { call, put }) {
       const response = yield call(fakeResetPassword, payload);
-      yield put({
-        type: 'resetPassHandle',
-        payload: response,
-      });
+      if (response.status === 'ok') {
+        yield put({
+          type: 'resetPassHandle',
+          payload: response,
+        });
 
-      if (callback) {
-        callback();
+        if (callback) {
+          callback();
+        }
+      } else {
+        message.error(response.message);
       }
     },
   },

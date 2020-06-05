@@ -4,6 +4,7 @@ import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { Button, Card, Divider, Icon, Input, Table, Tag, Modal, Tooltip } from 'antd';
 import Highlighter from 'react-highlight-words';
 import DepCreateView from './component/DepCreateView';
+import DepEditView from './component/DepEditView';
 import DepDetailView from './component/DepDetailView';
 import styles from './style.less';
 import ItemData from './component/map';
@@ -26,6 +27,7 @@ class DepartmentList extends Component {
   state = {
     modalVisible: false,
     addModalVisible: false,
+    detailModalVisible: false,
     departmentInfo: {},
     searchText: '',
     searchedColumn: '',
@@ -98,12 +100,6 @@ class DepartmentList extends Component {
     });
   };
 
-  handleCancelModal = () => {
-    this.setState({
-      modalVisible: false,
-    });
-  };
-
   handleDelete = department => {
     const { dispatch } = this.props;
     dispatch({
@@ -131,22 +127,38 @@ class DepartmentList extends Component {
     });
   };
 
+  handleCancelAddModal = () => {
+    this.setState({
+      addModalVisible: false,
+    });
+  };
+
   handleModify = department => {
     const { departmentList: { data } } = this.props;
 
     const result = data.filter(item => item.departmentId === department.departmentId);
     this.setState({
       departmentInfo: result[0],
-    });
-
-    this.setState({
       modalVisible: true,
     });
   };
 
-  handleCancelAddModal = () => {
+  handleCancelModal = () => {
     this.setState({
-      addModalVisible: false,
+      modalVisible: false,
+    });
+  };
+
+  handleDetail = department => {
+    this.setState({
+      departmentInfo: department,
+      detailModalVisible: true,
+    });
+  };
+
+  handleCancelDetailModal = () => {
+    this.setState({
+      detailModalVisible: false,
     });
   };
 
@@ -238,6 +250,8 @@ class DepartmentList extends Component {
           <Fragment>
             <a onClick={() => this.handleModify(department)}>编辑</a>
             <Divider type="vertical" />
+            <a onClick={() => this.handleDetail(department)}>详情</a>
+            <Divider type="vertical"/>
             <a onClick={() => this.showDeleteConform(department)}>删除</a>
           </Fragment>
         ),
@@ -258,7 +272,8 @@ class DepartmentList extends Component {
           />
         </Card>
         {/* eslint-disable-next-line max-len */}
-        <DepDetailView visible={this.state.modalVisible} onCancel={this.handleCancelModal} departmentInfo={this.state.departmentInfo} noDepAccounts={accounts} />
+        <DepEditView visible={this.state.modalVisible} onCancel={this.handleCancelModal} departmentInfo={this.state.departmentInfo} noDepAccounts={accounts} />
+        <DepDetailView visible={this.state.detailModalVisible} onCancel={this.handleCancelDetailModal} departmentInfo={this.state.departmentInfo}/>
         {/* eslint-disable-next-line max-len */}
         <DepCreateView visible={this.state.addModalVisible} onCancel={this.handleCancelAddModal} noDepAccounts={accounts} />
       </PageHeaderWrapper>

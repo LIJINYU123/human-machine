@@ -25,7 +25,7 @@ class ResetPassword extends Component {
 
   jumpToResult = () => {
     const { resetPassword, form } = this.props;
-    const account = form.getFieldValue('jobNumber');
+    const account = form.getFieldValue('userId');
 
     if (resetPassword.status === 'ok') {
       router.push({
@@ -50,7 +50,7 @@ class ResetPassword extends Component {
         if (!err) {
           dispatch({
             type: 'resetPassword/submit',
-            payload: { ...values, password: md5(values.password), confirm: md5(values.confirm) },
+            payload: { ...values, oldPassword: md5(values.oldPassword), password: md5(values.password), confirm: md5(values.confirm) },
             callback: this.jumpToResult,
           });
         }
@@ -58,16 +58,10 @@ class ResetPassword extends Component {
     );
   };
 
-  checkUserId = (_, value, callback) => {
-    if (!value) {
-      callback('请输入用户名');
-    } else {
-      callback();
-    }
-  };
-
   checkPassword = (_, value, callback) => {
     const { popVisible, confirmDirty } = this.state;
+    const { form: { getFieldsValue } } = this.props;
+    const values = getFieldsValue();
 
     if (!value) {
       this.setState({
@@ -87,6 +81,11 @@ class ResetPassword extends Component {
       }
 
       if (value.length < 6) {
+        callback('error');
+      } else if (value === values.oldPassword) {
+        this.setState({
+          help: '新密码与旧密码一致，请重新输入',
+        });
         callback('error');
       } else {
         const { form } = this.props;
@@ -147,7 +146,7 @@ class ResetPassword extends Component {
 
     return (
       <div className={styles.main}>
-        <h3>重置密码</h3>
+        <h3>修改密码</h3>
         <Form onSubmit={this.handleSubmit}>
           <Form.Item>
             {getFieldDecorator('userId', {
@@ -160,14 +159,14 @@ class ResetPassword extends Component {
             })(<Input size="large" placeholder="用户名" />)}
           </Form.Item>
           <Form.Item>
-            {getFieldDecorator('name', {
+            {getFieldDecorator('oldPassword', {
               rules: [
                 {
                   required: true,
-                  message: '请输入昵称',
+                  message: '请输入旧密码',
                 },
               ],
-            })(<Input size="large" placeholder="昵称" />)}
+            })(<Input size="large" type="password" placeholder="旧密码" />)}
           </Form.Item>
           <Form.Item help={help}>
             <Popover

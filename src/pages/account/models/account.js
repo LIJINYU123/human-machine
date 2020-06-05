@@ -25,12 +25,11 @@ const Account = {
       const response = yield call(deleteUser, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
 
@@ -38,12 +37,11 @@ const Account = {
       const response = yield call(manualAddUsers, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
 
@@ -51,12 +49,11 @@ const Account = {
       const response = yield call(batchAddUsers, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
 
