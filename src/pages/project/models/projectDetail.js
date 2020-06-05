@@ -28,21 +28,15 @@ const ProjectDetail = {
       });
     },
 
-    * deleteTaskData({ payload, callback }, { call, put }) {
+    * deleteTaskData({ payload, callback }, { call }) {
       const response = yield call(deleteTaskData, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryTaskData, { projectId: payload.projectId });
-        yield put({
-          type: 'taskData',
-          payload: result,
-        });
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
   },

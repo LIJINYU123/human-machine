@@ -90,35 +90,6 @@ class Step3 extends Component {
         type: 'textProjectFormData/saveStepThreeData',
       });
     }
-
-    // formData.append('projectName', projectName);
-    // formData.append('labelType', labelType.pop());
-    // formData.append('passRate', passRate);
-    // formData.append('checkRate', checkRate);
-    // labeler.forEach(item => {
-    //   formData.append('labeler', item);
-    // });
-    //
-    // inspector.forEach(item => {
-    //   formData.append('inspector', item);
-    // });
-    //
-    // formData.append('questionNum', questionNum);
-    // if (forever) {
-    //   formData.append('startTime', '');
-    //   formData.append('endTime', '');
-    // } else {
-    //   formData.append('startTime', projectPeriod[0].format('YYYY-MM-DD HH:mm:ss'));
-    //   formData.append('endTime', projectPeriod[1].format('YYYY-MM-DD HH:mm:ss'));
-    // }
-    // formData.append('description', description);
-    // formData.append('saveTemplate', saveTemplate);
-    // if (saveTemplate) {
-    //   const { templateName } = stepTwo;
-    //   formData.append('template', JSON.stringify({ templateName, setting: { classifyName, multiple, options: optionData } }));
-    // } else {
-    //   formData.append('template', JSON.stringify({ templateName: '', setting: { classifyName, multiple, options: optionData } }));
-    // }
   };
 
   onPrev = () => {
@@ -129,26 +100,21 @@ class Step3 extends Component {
   };
 
   handleDownload = () => {
-    const { stepOne } = this.props;
-    const { labelType } = stepOne;
-    fetch('/api/project/download-template', {
-      method: 'POST',
-      body: JSON.stringify({ labelType }),
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-        Authorization: localStorage.getItem('Authorization'),
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'project/downloadTemplate',
+      callback: blob => {
+        const link = document.createElement('a');
+        link.download = 'template.xlsx';
+        link.style.display = 'none';
+        link.href = URL.createObjectURL(blob);
+        document.body.appendChild(link);
+        link.click();
+        // 释放的 URL 对象以及移除 a 标签
+        URL.revokeObjectURL(link.href);
+        document.body.removeChild(link);
       },
-    }).then(response => response.blob().then(blob => {
-      const link = document.createElement('a');
-      link.download = 'template.xlsx';
-      link.style.display = 'none';
-      link.href = URL.createObjectURL(blob);
-      document.body.appendChild(link);
-      link.click();
-      // 释放的 URL 对象以及移除 a 标签
-      URL.revokeObjectURL(link.href);
-      document.body.removeChild(link);
-    }));
+    });
   };
 
   render() {

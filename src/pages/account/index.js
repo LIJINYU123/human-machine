@@ -10,6 +10,7 @@ import BatchAddView from './components/BatchAddView';
 import ManualAddView from './components/ManualAddView';
 import GroupManage from './components/GroupManage';
 import md5 from 'md5';
+import router from 'umi/router';
 
 const { confirm } = Modal;
 
@@ -300,9 +301,16 @@ class UserManage extends Component {
     }
   };
 
+  jumpToMemberProfile = (userId, roleId) => {
+    router.push({
+      pathname: '/agency/account/detail',
+      state: { userId, roleId },
+    });
+  };
+
   render() {
     const { userList: { data, roleInfos, accounts }, groupList: { groups }, loading } = this.props;
-    const { selectedRows, userInfo, addAuthority, modifyAuthority, deleteAuthority, activeTabKey, modalVisible, addModalVisible, manualAddVisible } = this.state;
+    const { selectedRows, userInfo, modifyAuthority, deleteAuthority, activeTabKey, modalVisible, addModalVisible, manualAddVisible } = this.state;
     const roleFilters = roleInfos.map(info => ({
       text: info.roleName,
       value: info.roleId,
@@ -354,12 +362,12 @@ class UserManage extends Component {
         title: '用户名',
         dataIndex: 'userId',
         ...this.getColumnSearchProps('userId', '用户名'),
+        render: (val, user) => <a onClick={() => this.jumpToMemberProfile(val, user.roleId)}>{val}</a>,
       },
       {
         title: '昵称',
         dataIndex: 'name',
         ...this.getColumnSearchProps('name', '昵称'),
-        render: val => <a>{val}</a>,
       },
       {
         title: '角色名称',

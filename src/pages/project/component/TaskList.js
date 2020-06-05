@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
-import { Button, Card, Progress, Badge, Table, Modal, Divider, Popconfirm } from 'antd';
+import { Button, Card, Progress, Badge, Modal, Divider, Popconfirm, message } from 'antd';
 import { connect } from 'dva';
-import Link from 'umi/link';
 import router from 'umi/router';
 import StandardTable from './StandardTable';
 import ItemData from '../map';
@@ -83,37 +82,51 @@ class TaskList extends Component {
   };
 
   handleDelete = taskInfo => {
-    const { dispatch } = this.props;
-    const { projectId } = this.state;
-    dispatch({
-      type: 'projectDetail/deleteTaskData',
-      payload: {
-        projectId,
-        taskIds: [taskInfo.taskId],
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
-    });
+    const { dispatch, projectId } = this.props;
+
+    if (taskInfo.status !== 'initial') {
+      message.error(`任务状态：${taskStatusName[taskInfo.status]}，无法删除！`);
+    } else {
+      dispatch({
+        type: 'projectDetail/deleteTaskData',
+        payload: {
+          projectId,
+          taskIds: [taskInfo.taskId],
+        },
+        callback: () => {
+          dispatch({
+            type: 'projectDetail/fetchTaskData',
+            payload: { projectId },
+          });
+        },
+      });
+    }
   };
 
   handleBatchDelete = () => {
-    const { dispatch } = this.props;
-    const { projectId, selectedRows } = this.state;
-    dispatch({
-      type: 'projectDetail/deleteTaskData',
-      payload: {
-        projectId,
-        taskIds: selectedRows.map(row => row.taskId),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
-    });
+    const { dispatch, projectId } = this.props;
+    const { selectedRows } = this.state;
+
+    if (selectedRows.filter(row => row.status !== 'initial').length) {
+      message.error('批量删除失败，只能删除未开始状态的任务！')
+    } else {
+      dispatch({
+        type: 'projectDetail/deleteTaskData',
+        payload: {
+          projectId,
+          taskIds: selectedRows.map(row => row.taskId),
+        },
+        callback: () => {
+          dispatch({
+            type: 'projectDetail/fetchTaskData',
+            payload: { projectId },
+          });
+          this.setState({
+            selectedRows: [],
+          });
+        },
+      });
+    }
   };
 
   showDeleteConfirm = () => {
@@ -127,12 +140,10 @@ class TaskList extends Component {
   };
 
   handleReviewDetails = task => {
-    const { projectId } = this.state;
     router.push({
       pathname: '/project/task-detail',
       state: {
         taskId: task.taskId,
-        projectId,
       },
     });
   };
@@ -212,7 +223,7 @@ class TaskList extends Component {
           <Fragment>
             <a onClick={() => this.handleReviewDetails(task)}>详情</a>
             <Divider type="vertical"/>
-            <Popconfirm title="确认删除吗？" placement="top" okText="确认" cancelText="取消" onConfirm={() => this.handleDelete(task)}>
+            <Popconfirm title="确认删除吗？" placement="top" okText="删除" cancelText="取消" onConfirm={() => this.handleDelete(task)}>
               <a>删除</a>
             </Popconfirm>
           </Fragment>

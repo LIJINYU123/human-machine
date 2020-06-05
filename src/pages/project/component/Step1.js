@@ -110,6 +110,7 @@ class Step1 extends Component {
                     {
                       required: true,
                       message: '请输入项目名称',
+                      whitespace: true,
                     },
                   ],
                   initialValue: projectName,

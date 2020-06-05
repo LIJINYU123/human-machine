@@ -72,6 +72,17 @@ class GroupAddView extends Component {
     this.setState({ targetKeys: collectKeys });
   };
 
+  checkGroupName = (rule, value, callback) => {
+    const { groupList: { groups } } = this.props;
+    if (!value.trim()) {
+      callback('请输入组别名称');
+    } else if (groups.filter(group => group.groupName === value).length) {
+      callback('该组别名称已经存在');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     const { visible, onCancel, form: { getFieldDecorator }, submitting } = this.props;
     const { targetKeys, treeData } = this.state;
@@ -104,7 +115,7 @@ class GroupAddView extends Component {
                 rules: [
                   {
                     required: true,
-                    message: '请输入组别名称',
+                    validator: this.checkGroupName,
                   },
                 ],
               })(<Input />)

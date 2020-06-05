@@ -20,7 +20,17 @@ class DepCreateView extends Component {
         dispatch({
           type: 'departmentList/createDepartment',
           payload: values,
-          callback: onCancel,
+          callback: () => {
+            dispatch({
+              type: 'departmentList/fetchDepartment',
+              payload: { sorter: 'updatedTime_descend' },
+            });
+
+            dispatch({
+              type: 'global/fetchAgency',
+            });
+            onCancel()
+          },
         });
       }
     });

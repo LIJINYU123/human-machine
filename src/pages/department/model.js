@@ -17,21 +17,15 @@ const Model = {
       });
     },
 
-    * createDepartment({ payload, callback }, { call, put }) {
+    * createDepartment({ payload, callback }, { call }) {
       const response = yield call(createDepartment, payload);
       if (response.status) {
         message.success(response.message);
-        const result = yield call(queryDepList);
-        yield put({
-          type: 'department',
-          payload: result,
-        });
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
 

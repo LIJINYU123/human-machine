@@ -1622,6 +1622,8 @@ function saveReviewResult(req, res, u, b) {
 
 function exportResult(req, res) {
   res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/project/template.xlsx');
+
+
 }
 
 export default {
@@ -1644,7 +1646,7 @@ export default {
   'GET /api/project/task-detail/:taskId': getTaskDetail,
   'GET /api/project/label-data': getLabelData,
   'DELETE /api/project/label-data': deleteLabelData,
-  'POST /api/project/download-template': downloadTemplate,
+  'GET /api/project/download-template': downloadTemplate,
 
   'POST /api/project/label-result': saveTextMarkResult,
   'DELETE /api/project/label-result': deleteTextMarkResult,

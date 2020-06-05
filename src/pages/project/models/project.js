@@ -1,4 +1,4 @@
-import { queryProjectList, updateProjectStatus, deleteProjectList, exportResult } from '../service';
+import { queryProjectList, updateProjectStatus, deleteProjectList, exportResult, downloadTemplateFile } from '../service';
 import { message } from 'antd/lib/index';
 
 const Project = {
@@ -51,6 +51,13 @@ const Project = {
 
     * exportResult({ payload, callback }, { call }) {
       const response = yield call(exportResult, payload);
+      if (callback) {
+        callback(response);
+      }
+    },
+
+    * downloadTemplate({ callback }, { call }) {
+      const response = yield call(downloadTemplateFile);
       if (callback) {
         callback(response);
       }

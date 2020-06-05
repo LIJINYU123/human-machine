@@ -4,6 +4,7 @@ import { Form, Input, Modal, Select, TreeSelect } from 'antd';
 import ItemData from './map';
 
 const { Option } = Select;
+const { confirm } = Modal;
 const { FieldLabels, Privileges, DepartmentType } = ItemData;
 
 @connect(({ departmentList, loading }) => ({
@@ -23,8 +24,20 @@ class DepEditView extends Component {
             payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
             callback: onCancel,
           });
+        } else {
+          confirm({
+            title: '修改后，原管理员账号将删除，是否继续？',
+            okText: '确定',
+            cancelText: '取消',
+            onOk: () => {
+              dispatch({
+                type: 'departmentList/updateDepartment',
+                payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
+                callback: onCancel,
+              });
+            },
+          });
         }
-
       }
     });
   };

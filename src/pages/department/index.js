@@ -21,7 +21,7 @@ const departmentTypeFilters = DepartmentType.map(d => ({
 
 @connect(({ departmentList, loading }) => ({
   departmentList,
-  loading: loading.models.departmentList,
+  loading: loading.effects['departmentList/fetchDepartment'],
 }))
 class DepartmentList extends Component {
   state = {

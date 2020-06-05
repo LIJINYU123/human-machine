@@ -15,7 +15,7 @@ import {
   Badge,
   Input,
   Icon,
-  Popconfirm, Dropdown, Menu,
+  Popconfirm, Dropdown, Menu, Modal,
 } from 'antd';
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
@@ -24,6 +24,7 @@ import ProjectEditView from './component/ProjectEditView';
 import ItemData from './map';
 
 const { RangePicker } = DatePicker;
+const { confirm } = Modal;
 
 const { statusMap, statusName, labelTypeName, projectTypes } = ItemData;
 
@@ -231,31 +232,49 @@ class TextProjectList extends Component {
   };
 
   handleDelete = projectId => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'project/deleteProject',
-      payload: {
-        projectIds: [projectId],
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
+    confirm({
+      title: '确定删除该项目吗？',
+      content: <div><span style={{ color: 'red' }}>项目删除后，不可恢复</span><br/><br/><span>你还要继续吗？</span></div>,
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: () => {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'project/deleteProject',
+          payload: {
+            projectIds: [projectId],
+          },
+          callback: () => {
+            this.setState({
+              selectedRows: [],
+            });
+          },
         });
       },
     });
   };
 
   handleBatchDelete = () => {
-    const { dispatch } = this.props;
-    const { selectedRows } = this.state;
-    dispatch({
-      type: 'project/deleteProject',
-      payload: {
-        projectIds: selectedRows.map(row => row.projectId),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
+    confirm({
+      title: '确定删除这些项目吗？',
+      content: <div><span style={{ color: 'red' }}>项目删除后，不可恢复</span><br/><br/><span>你还要继续吗？</span></div>,
+      okText: '删除',
+      okType: 'danger',
+      cancelText: '取消',
+      onOk: () => {
+        const { dispatch } = this.props;
+        const { selectedRows } = this.state;
+        dispatch({
+          type: 'project/deleteProject',
+          payload: {
+            projectIds: selectedRows.map(row => row.projectId),
+          },
+          callback: () => {
+            this.setState({
+              selectedRows: [],
+            });
+          },
         });
       },
     });
@@ -280,30 +299,6 @@ class TextProjectList extends Component {
       });
     });
   };
-
-  renderForm() {
-    const { form: { getFieldDecorator } } = this.props;
-    return (
-      <Form onSubmit={this.handleFormReset} layout="inline">
-        <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
-          <Col md={8} sm={24}>
-            <Form.Item label="创建时间">
-              {
-                getFieldDecorator('createdTime')(
-                  <RangePicker style={{ width: '100%' }} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
-              }
-            </Form.Item>
-          </Col>
-          <Col md={8} sm={24}>
-            <Button type="primary" onClick={this.handleFormSearch}>
-              查询
-            </Button>
-            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
-          </Col>
-        </Row>
-      </Form>
-    );
-  }
 
   handleSuspend = projectId => {
     const { dispatch } = this.props;
@@ -332,6 +327,30 @@ class TextProjectList extends Component {
       },
     });
   };
+
+  renderForm() {
+    const { form: { getFieldDecorator } } = this.props;
+    return (
+      <Form onSubmit={this.handleFormReset} layout="inline">
+        <Row gutter={{ md: 8, lg: 16, xl: 24 }}>
+          <Col md={8} sm={24}>
+            <Form.Item label="创建时间">
+              {
+                getFieldDecorator('createdTime')(
+                  <RangePicker style={{ width: '100%' }} allowClear={false} placeholder={['开始时间', '结束时间']}/>)
+              }
+            </Form.Item>
+          </Col>
+          <Col md={8} sm={24}>
+            <Button type="primary" onClick={this.handleFormSearch}>
+              查询
+            </Button>
+            <Button style={{ marginLeft: 8 }} onClick={this.handleFormReset}>重置</Button>
+          </Col>
+        </Row>
+      </Form>
+    );
+  }
 
   render() {
     const { data, loading } = this.props;

@@ -161,6 +161,12 @@ export default {
               authority: ['superAdmin', 'depAdmin'],
             },
             {
+              name: '个人资料',
+              path: '/agency/account/detail',
+              component: './personCenter/team/components/MemberProfile',
+              hideInMenu: true,
+            },
+            {
               name: '组别详情',
               icon: 'container',
               path: '/agency/account/group-detail',

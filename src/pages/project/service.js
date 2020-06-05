@@ -50,6 +50,13 @@ export async function exportResult(params) {
   });
 }
 
+export async function downloadTemplateFile() {
+  return request('/api/project/download-template', {
+    method: 'GET',
+    responseType: 'blob',
+  });
+}
+
 // 创建项目第一步获取标注员和质检员名单
 export async function queryMembers() {
   return request('/api/project/members');

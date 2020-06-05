@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import { connect } from 'dva';
-import { Input, Button, Icon, Statistic, Descriptions, Card, Steps, Tag } from 'antd';
+import { Input, Button, Icon, Statistic, Descriptions, Card, Steps, Tag, message } from 'antd';
+import Highlighter from 'react-highlight-words';
+import router from 'umi/router';
 import StandardTable from './StandardTable';
 import styles from './style.less';
-import Highlighter from 'react-highlight-words';
 import ItemData from '../map';
-import router from 'umi/router';
 
 const { Step } = Steps;
 
@@ -33,20 +33,23 @@ class TaskDetail extends Component {
     searchedColumn: '',
   };
 
+  componentWillMount() {
+    const { location } = this.props;
+    this.setState({
+      taskId: location.state.taskId,
+    });
+  }
+
   componentDidMount() {
-    const { dispatch, location } = this.props;
+    const { dispatch } = this.props;
     dispatch({
       type: 'textTaskDetail/fetchDetail',
-      payload: location.state.taskId,
+      payload: this.state.taskId,
     });
 
     dispatch({
       type: 'textTaskDetail/fetchLabelData',
-      payload: { taskId: location.state.taskId },
-    });
-
-    this.setState({
-      taskId: location.state.taskId,
+      payload: { taskId: this.state.taskId },
     });
   }
 
@@ -140,37 +143,47 @@ class TaskDetail extends Component {
   };
 
   handleDelete = sentenceInfo => {
-    const { dispatch } = this.props;
+    const { dispatch, basicInfo } = this.props;
     const { taskId } = this.state;
-    dispatch({
-      type: 'textTaskDetail/deleteLabelData',
-      payload: {
-        taskId,
-        dataIds: [sentenceInfo.dataId],
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
-    });
+
+    if (basicInfo.status !== 'initial') {
+      message.error(`任务状态：${taskStatusName[basicInfo.status]}，无法删除！`);
+    } else {
+      dispatch({
+        type: 'textTaskDetail/deleteLabelData',
+        payload: {
+          taskId,
+          dataIds: [sentenceInfo.dataId],
+        },
+        callback: () => {
+          this.setState({
+            selectedRows: [],
+          });
+        },
+      });
+    }
   };
 
   handleBatchDelete = () => {
-    const { dispatch } = this.props;
+    const { dispatch, basicInfo } = this.props;
     const { taskId, selectedRows } = this.state;
-    dispatch({
-      type: 'textTaskDetail/deleteLabelData',
-      payload: {
-        taskId,
-        dataIds: selectedRows.map(row => row.dataId),
-      },
-      callback: () => {
-        this.setState({
-          selectedRows: [],
-        });
-      },
-    });
+
+    if (basicInfo.status !== 'initial') {
+      message.error(`任务状态：${taskStatusName[basicInfo.status]}，无法删除！`);
+    } else {
+      dispatch({
+        type: 'textTaskDetail/deleteLabelData',
+        payload: {
+          taskId,
+          dataIds: selectedRows.map(row => row.dataId),
+        },
+        callback: () => {
+          this.setState({
+            selectedRows: [],
+          });
+        },
+      });
+    }
   };
 
   handleGoBack = () => {

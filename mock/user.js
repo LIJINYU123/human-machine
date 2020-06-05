@@ -129,6 +129,12 @@ export default {
           component: './account',
         },
         {
+          name: '个人资料',
+          path: '/agency/account/detail',
+          component: './personCenter/team/components/MemberProfile',
+          hideInMenu: true,
+        },
+        {
           name: '组别详情',
           icon: 'container',
           path: '/agency/account/group-detail',
@@ -282,6 +288,12 @@ export default {
           icon: 'user',
           path: '/agency/account',
           component: './account',
+        },
+        {
+          name: '个人资料',
+          path: '/agency/account/detail',
+          component: './personCenter/team/components/MemberProfile',
+          hideInMenu: true,
         },
         {
           name: '组别详情',
