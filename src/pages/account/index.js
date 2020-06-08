@@ -161,7 +161,7 @@ class UserManage extends Component {
     const { dispatch } = this.props;
     dispatch({
       type: 'userList/resetPassword',
-      payload: { userId: user.userId, name: user.name, password: md5('eco@1234'), confirm: md5('eco@1234') },
+      payload: { userId: user.userId },
     });
   };
 

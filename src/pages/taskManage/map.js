@@ -1,6 +1,5 @@
 export default {
   statusMap: {
-    initial: 'default',
     inProgress: 'processing',
     suspend: 'warning',
     expired: 'error',
@@ -8,10 +7,8 @@ export default {
   },
 
   statusName: {
-    initial: '未开始',
     inProgress: '进行中',
     suspend: '暂停中',
-    complete: '完成',
   },
 
   taskStatusMap: {

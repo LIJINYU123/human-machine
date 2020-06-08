@@ -90,13 +90,13 @@ let groupData = [
     userInfo: [
       {
         userId: 'SY0123',
-        name: Mock.Random.cname(),
+        name: Mock.Random.string(30),
         roleId: 'inspector',
         roleName: '质检员',
       },
       {
         userId: 'SY0124',
-        name: Mock.Random.cname(),
+        name: Mock.Random.string(30),
         roleId: 'labeler',
         roleName: '标注员',
       },
@@ -243,24 +243,7 @@ let groupData = [
 ];
 
 const ungroupedUsers = [
-  {
-    userId: 'SY0123',
-    name: Mock.Random.cname(),
-    roleId: 'inspector',
-    roleName: '质检员',
-  },
-  {
-    userId: 'SY0124',
-    name: Mock.Random.cname(),
-    roleId: 'labeler',
-    roleName: '标注员',
-  },
-  {
-    userId: 'SY0125',
-    name: Mock.Random.cname(),
-    roleId: 'inspector',
-    roleName: '质检员',
-  },
+
 ];
 
 const roleMap = {
@@ -538,6 +521,10 @@ function deleteUserInfo(req, res, u, b) {
   return res.json({ message: '删除成功', status: 'ok' });
 }
 
+function initialPassword(req, res) {
+  return res.json({ status: 'ok', message: '重置密码成功' })
+}
+
 export default {
   'GET /api/users': getUsers,
   'GET /api/user/detail': getUserDetail,
@@ -554,4 +541,5 @@ export default {
   'POST /api/groups': modifyGroup,
   'GET /api/user-info': getUserInfo,
   'DELETE /api/user-info': deleteUserInfo,
+  'POST /api/password/initial': initialPassword,
 };

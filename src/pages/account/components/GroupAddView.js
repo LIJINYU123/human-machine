@@ -59,6 +59,14 @@ class GroupAddView extends Component {
     });
   };
 
+  handleCancel = () => {
+    const { onCancel } = this.props;
+    this.setState({
+      targetKeys: [],
+    });
+    onCancel();
+  };
+
   handleTreeTransferChange = targetKeys => {
     const { treeMap, groupIds } = this.state;
     let collectKeys = [];
@@ -74,7 +82,8 @@ class GroupAddView extends Component {
 
   checkGroupName = (rule, value, callback) => {
     const { groupList: { groups } } = this.props;
-    if (!value.trim()) {
+
+    if (typeof value === 'undefined' || !value.trim()) {
       callback('请输入组别名称');
     } else if (groups.filter(group => group.groupName === value).length) {
       callback('该组别名称已经存在');
@@ -84,7 +93,7 @@ class GroupAddView extends Component {
   };
 
   render() {
-    const { visible, onCancel, form: { getFieldDecorator }, submitting } = this.props;
+    const { visible, form: { getFieldDecorator }, submitting } = this.props;
     const { targetKeys, treeData } = this.state;
 
     const formItemLayout = {
@@ -103,10 +112,11 @@ class GroupAddView extends Component {
         title="创建组别"
         maskClosable={false}
         visible={visible}
-        onCancel={onCancel}
+        onCancel={this.handleCancel}
         onOk={this.handleConfirm}
         confirmLoading={submitting}
         destroyOnClose
+        style={{ minWidth: '600px' }}
       >
         <Form {...formItemLayout}>
           <Form.Item label={FieldLabels.groupName}>

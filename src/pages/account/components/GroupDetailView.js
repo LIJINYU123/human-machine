@@ -7,6 +7,7 @@ import ItemData from './map';
 const { FieldLabels } = ItemData;
 
 @connect(({ groupList, loading }) => ({
+  groups: groupList.groups,
   ungroupedUsers: groupList.ungroupedUsers,
   targetKeys: groupList.targetKeys,
   submitting: loading.effects['groupList/modifyGroup'],
@@ -72,6 +73,17 @@ class GroupDetailView extends Component {
     });
   };
 
+  checkGroupName = (rule, value, callback) => {
+    const { groups } = this.props;
+    if (!value.trim()) {
+      callback('请输入组别名称');
+    } else if (groups.filter(group => group.groupName === value).length) {
+      callback('该组别名称已经存在');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     const { visible, onCancel, form: { getFieldDecorator }, inputDisabled, currentGroup, targetKeys, submitting } = this.props;
     const { treeData } = this.state;
@@ -103,7 +115,7 @@ class GroupDetailView extends Component {
                 rules: [
                   {
                     required: true,
-                    message: '请输入组别名称',
+                    validator: this.checkGroupName,
                   },
                 ],
                 initialValue: currentGroup.groupName,

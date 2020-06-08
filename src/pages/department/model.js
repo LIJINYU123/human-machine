@@ -55,21 +55,15 @@ const Model = {
       }
     },
 
-    * updateDepartment({ payload, callback }, { call, put }) {
+    * updateDepartment({ payload, callback }, { call }) {
       const response = yield call(updateDepartment, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        const result = yield call(queryDepList);
-        yield put({
-          type: 'department',
-          payload: result,
-        });
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
   },

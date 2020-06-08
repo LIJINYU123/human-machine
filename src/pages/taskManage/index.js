@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'dva/index';
-import { Card, Row, Col, Radio, Input, Button, Icon, Badge } from 'antd/lib/index';
+import { Card, Row, Col, Radio, Input, Button, Icon, Badge, message } from 'antd/lib/index';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import StandardTable from './component/StandardTable';
 import styles from './style.less';
@@ -145,13 +145,17 @@ class TaskCenter extends Component {
   };
 
   handleReviewDetails = project => {
-    router.push({
-      pathname: '/task-manage/project-detail',
-      state: {
-        projectId: project.projectId,
-        roleId: this.state.roleId,
-      },
-    });
+    if (project.status === 'suspend') {
+      message.warn('该项目暂停中，无法进入');
+    } else {
+      router.push({
+        pathname: '/task-manage/project-detail',
+        state: {
+          projectId: project.projectId,
+          roleId: this.state.roleId,
+        },
+      });
+    }
   };
 
   handleJumptoInProgress = () => {

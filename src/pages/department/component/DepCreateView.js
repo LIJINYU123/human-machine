@@ -38,7 +38,7 @@ class DepCreateView extends Component {
 
   checkDepName = (rule, value, callback) => {
     const { departmentList: { data } } = this.props;
-    if (!value.trim()) {
+    if (typeof value === 'undefined' || !value.trim()) {
       callback('请输入机构名称');
     } else if (data.filter(department => department.departmentName === value).length) {
       callback('该机构名称已经存在');

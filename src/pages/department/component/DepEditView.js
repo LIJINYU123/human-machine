@@ -22,7 +22,13 @@ class DepEditView extends Component {
           dispatch({
             type: 'departmentList/updateDepartment',
             payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
-            callback: onCancel,
+            callback: () => {
+              dispatch({
+                type: 'departmentList/fetchDepartment',
+                payload: { sorter: 'updatedTime_descend' },
+              });
+              onCancel();
+            },
           });
         } else {
           confirm({
@@ -33,7 +39,13 @@ class DepEditView extends Component {
               dispatch({
                 type: 'departmentList/updateDepartment',
                 payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
-                callback: onCancel,
+                callback: () => {
+                  dispatch({
+                    type: 'departmentList/fetchDepartment',
+                    payload: { sorter: 'updatedTime_descend' },
+                  });
+                  onCancel();
+                },
               });
             },
           });

@@ -34,7 +34,7 @@ export async function updateUserStatus(params) {
 }
 
 export async function resetPassword(params) {
-  return request('/api/reset/password', {
+  return request('/api/password/initial', {
     method: 'POST',
     data: params,
   });
