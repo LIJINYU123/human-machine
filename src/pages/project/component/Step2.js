@@ -97,6 +97,19 @@ class Step2 extends Component {
       const { options } = filterTemplates[0].setting;
       setFieldsValue({ classifyName: filterTemplates[0].setting.classifyName });
       setFieldsValue({ multiple: filterTemplates[0].setting.multiple });
+      if (filterTemplates[0].setting.hasOwnProperty('saveType')) {
+        setFieldsValue({ saveType: filterTemplates[0].setting.saveType });
+      }
+      if (filterTemplates[0].setting.hasOwnProperty('minValue')) {
+        dispatch({
+          type: 'textProjectFormData/saveMinValue',
+          payload: filterTemplates[0].setting.minValue,
+        });
+        dispatch({
+          type: 'textProjectFormData/saveMaxValue',
+          payload: filterTemplates[0].setting.maxValue,
+        });
+      }
       dispatch({
         type: 'textProjectFormData/saveOptions',
         payload: options,
@@ -223,7 +236,7 @@ class Step2 extends Component {
           }
         </Form.Item>
         {
-          labelType.length > 0 && !['textExtension', 'videoDialogMark'].includes(labelType.slice(-1)[0]) &&
+          labelType.length > 0 && labelType.slice(-1)[0] !== 'videoDialogMark' &&
           <Form.Item label={FieldLabels.defaultTool} {...formItemLayout}>
             {
               getFieldDecorator('defaultTool', {
