@@ -230,10 +230,10 @@ class TextMarkView extends Component {
 
   handleRemarkConfirm = (dataId, taskId, reviewResult) => {
     const { dispatch } = this.props;
-    const { inputValue } = this.state;
+    const { inputValue, basicInfo } = this.state;
     dispatch({
       type: 'textMark/saveReviewResult',
-      payload: { dataId, taskId, result: { reviewResult, remark: inputValue } },
+      payload: { dataId, taskId, result: { reviewResult, remark: inputValue }, reviewRounds: basicInfo.rejectTime + 1 },
       callback: () => {
         this.handleRefreshView();
         this.setState({ remarkPopoverVisible: {} });
