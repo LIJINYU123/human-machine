@@ -91,6 +91,9 @@ const ImageMark = {
     // 答题模式，获取下一道题目
     * fetchNext({ payload, callback }, { call, put }) {
       const response = yield call(queryNextTextQuestion, payload);
+      if (response.schedule.restNum === 0) {
+        message.warn('已经到最后一题!')
+      }
       yield put({
         type: 'saveQuestion',
         payload: response,

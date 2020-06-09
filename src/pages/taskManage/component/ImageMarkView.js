@@ -260,7 +260,7 @@ class ImageMarkView extends Component {
         }
         <Radio.Group defaultValue="overview" style={{ marginRight: '16px' }}>
           <Radio.Button value="overview">概览模式</Radio.Button>
-          <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
+          <Radio.Button value="focus" onClick={() => this.jumpToAnswerMode('')}>答题模式</Radio.Button>
         </Radio.Group>
         {
           roleId === 'labeler' && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>

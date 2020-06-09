@@ -532,8 +532,13 @@ class VideoAnswerView extends Component {
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{schedule ? schedule.completeNum : ''}</Descriptions.Item>
-        <Descriptions.Item label="剩余题数">{schedule ? schedule.restNum : ''}</Descriptions.Item>
-        <Descriptions.Item label="无效题数">{schedule ? schedule.invalidNum : ''}</Descriptions.Item>
+        {
+          roleId === Labeler &&
+          <Fragment>
+            <Descriptions.Item label="剩余题数">{schedule ? schedule.restNum : ''}</Descriptions.Item>
+            <Descriptions.Item label="无效题数">{schedule ? schedule.invalidNum : ''}</Descriptions.Item>
+          </Fragment>
+        }
       </Descriptions>
     );
 

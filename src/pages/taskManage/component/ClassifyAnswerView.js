@@ -8,7 +8,7 @@ import styles from './style.less';
 import ItemData from '../map';
 
 const { TextArea } = Input;
-const { AnswerModeLabels } = ItemData;
+const { AnswerModeLabels, Labeler, Inspector } = ItemData;
 
 @connect(({ textMark }) => ({
   questionInfo: textMark.questionInfo,
@@ -83,12 +83,12 @@ class ClassifyAnswerView extends Component {
       callback: () => {
         // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
-        if (roleId === 'labeler') {
+        if (roleId === Labeler) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             invalid: questionInfo.invalid,
           });
-        } else if (roleId === 'inspector') {
+        } else if (roleId === Inspector) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             reviewResult: questionInfo.reviewResult,
@@ -121,12 +121,12 @@ class ClassifyAnswerView extends Component {
       callback: () => {
         // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
-        if (roleId === 'labeler') {
+        if (roleId === Labeler) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             invalid: questionInfo.invalid,
           });
-        } else if (roleId === 'inspector') {
+        } else if (roleId === Inspector) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             reviewResult: questionInfo.reviewResult,
@@ -147,7 +147,7 @@ class ClassifyAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
@@ -164,7 +164,7 @@ class ClassifyAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
@@ -181,7 +181,7 @@ class ClassifyAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
@@ -193,8 +193,8 @@ class ClassifyAnswerView extends Component {
     const { basicInfo, markTool, roleId, dataIdQueue } = this.state;
     const action = (
       <Fragment>
-        { roleId === 'labeler' && <Button icon="check" onClick={this.submitReview}>提交质检</Button> }
-        { roleId === 'inspector' &&
+        { roleId === Labeler && <Button icon="check" onClick={this.submitReview}>提交质检</Button> }
+        { roleId === Inspector &&
           <Button.Group>
             <Button icon="close" onClick={this.submitReject}>驳回</Button>
             <Button icon="check" onClick={this.submitComplete}>通过</Button>
@@ -213,8 +213,13 @@ class ClassifyAnswerView extends Component {
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
-        <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
-        <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
+        {
+          roleId === Labeler &&
+          <Fragment>
+            <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
+            <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
+          </Fragment>
+        }
       </Descriptions>
     );
 
@@ -279,7 +284,7 @@ class ClassifyAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label={AnswerModeLabels.reviewResult}>
                       {
                         getFieldDecorator('reviewResult', {
@@ -295,7 +300,7 @@ class ClassifyAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label={AnswerModeLabels.remark}>
                       {
                         getFieldDecorator('remark', {
@@ -307,7 +312,7 @@ class ClassifyAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label={AnswerModeLabels.valid}>
                       {
                         questionInfo.invalid === true ? <Tag color="#f5222d">无效</Tag> : <Tag color="#52c41a">有效</Tag>
@@ -331,7 +336,7 @@ class ClassifyAnswerView extends Component {
                     <Button onClick={this.handlePrevQuestion} disabled={dataIdQueue.length === 0 || dataIdQueue.indexOf(questionInfo.dataId) === 0}>上一题</Button>
                     <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
                     {
-                      roleId === 'labeler' &&
+                      roleId === Labeler &&
                       getFieldDecorator('invalid', {
                         initialValue: questionInfo.invalid,
                         valuePropName: 'checked',

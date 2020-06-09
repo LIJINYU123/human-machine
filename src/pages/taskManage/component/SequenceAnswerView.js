@@ -8,7 +8,7 @@ import styles from './style.less';
 import ItemData from '../map';
 
 const { TextArea } = Input;
-const { AnswerModeLabels } = ItemData;
+const { AnswerModeLabels, Labeler, Inspector } = ItemData;
 
 @connect(({ sequenceMark }) => ({
   questionInfo: sequenceMark.questionInfo,
@@ -82,12 +82,12 @@ class SequenceAnswerView extends Component {
       callback: () => {
         // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
-        if (roleId === 'labeler') {
+        if (roleId === Labeler) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             invalid: questionInfo.invalid,
           });
-        } else if (roleId === 'inspector') {
+        } else if (roleId === Inspector) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             reviewResult: questionInfo.reviewResult,
@@ -299,8 +299,13 @@ class SequenceAnswerView extends Component {
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
-        <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
-        <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
+        {
+          roleId === Labeler &&
+          <Fragment>
+            <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
+            <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
+          </Fragment>
+        }
       </Descriptions>
     );
 
@@ -422,7 +427,7 @@ class SequenceAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label={AnswerModeLabels.reviewResult}>
                       {
                         getFieldDecorator('reviewResult', {
@@ -438,7 +443,7 @@ class SequenceAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label={AnswerModeLabels.remark}>
                       {
                         getFieldDecorator('remark', {
@@ -450,7 +455,7 @@ class SequenceAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label={AnswerModeLabels.valid}>
                       {
                         questionInfo.invalid === true ? <Tag color="#f5222d">无效</Tag> : <Tag color="#52c41a">有效</Tag>
@@ -474,7 +479,7 @@ class SequenceAnswerView extends Component {
                     <Button onClick={this.handlePrevQuestion} disabled={dataIdQueue.length === 0 || dataIdQueue.indexOf(questionInfo.dataId) === 0}>上一题</Button>
                     <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
                     {
-                      roleId === 'labeler' &&
+                      roleId === Labeler &&
                       getFieldDecorator('invalid', {
                         initialValue: questionInfo.invalid,
                         valuePropName: 'checked',

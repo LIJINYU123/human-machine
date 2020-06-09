@@ -24,7 +24,7 @@ import styles from './style.less';
 import ItemData from '../map';
 
 const { TextArea } = Input;
-const { AnswerModeLabels } = ItemData;
+const { AnswerModeLabels, Labeler, Inspector } = ItemData;
 
 @connect(({ imageMark }) => ({
   questionInfo: imageMark.questionInfo,
@@ -310,8 +310,13 @@ class ImageAnswerView extends Component {
     const description = (
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
-        <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
-        <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
+        {
+          roleId === Labeler &&
+          <Fragment>
+            <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
+            <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
+          </Fragment>
+        }
       </Descriptions>
     );
 
