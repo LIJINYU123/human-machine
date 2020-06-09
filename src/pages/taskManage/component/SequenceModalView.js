@@ -92,8 +92,9 @@ class SequenceModalView extends Component {
     let wordEntryOptions = [];
     if (selectOptionName !== '' && markTool.saveType === 'dict') {
       const filterOptions = markTool.options.filter(option => option.optionName === selectOptionName);
-      // eslint-disable-next-line max-len
-      wordEntryOptions = filterOptions[0].extraInfo.map(wordEntry => <Option key={wordEntry}>{wordEntry}</Option>);
+      if (filterOptions.length && filterOptions[0].hasOwnProperty('extraInfo')) {
+        wordEntryOptions = filterOptions[0].extraInfo.map(wordEntry => <Option key={wordEntry}>{wordEntry}</Option>);
+      }
     }
 
     const formItemLayout = {
