@@ -64,8 +64,8 @@ class WordEntryModalView extends Component {
     const { saveType, addWordEntry } = this.state;
     const filterOptions = markTool.options.filter(option => option.optionName === optionName);
     let wordEntryOptions = [];
-    if (markTool.saveType === 'dict') {
-      wordEntryOptions = filterOptions.length ? filterOptions[0].extraInfo.map(wordEntry => <Option key={wordEntry}>{wordEntry}</Option>) : [];
+    if (markTool.saveType === 'dict' && filterOptions.length) {
+      wordEntryOptions = filterOptions[0].hasOwnProperty('extraInfo') ? filterOptions[0].extraInfo.map(wordEntry => <Option key={wordEntry}>{wordEntry}</Option>) : [];
     }
 
     const formItemLayout = {

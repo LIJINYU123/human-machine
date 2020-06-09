@@ -214,11 +214,10 @@ class ClassifyAnswerView extends Component {
       <Descriptions className={styles.headerList} size="small" column={6}>
         <Descriptions.Item label="已答题数">{questionInfo.schedule ? questionInfo.schedule.completeNum : ''}</Descriptions.Item>
         {
-          roleId === Labeler &&
-          <Fragment>
-            <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
-            <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
-          </Fragment>
+          roleId === Labeler && <Descriptions.Item label="剩余题数">{questionInfo.schedule ? questionInfo.schedule.restNum : ''}</Descriptions.Item>
+        }
+        {
+          roleId === Labeler && <Descriptions.Item label="无效题数">{questionInfo.schedule ? questionInfo.schedule.invalidNum : ''}</Descriptions.Item>
         }
       </Descriptions>
     );

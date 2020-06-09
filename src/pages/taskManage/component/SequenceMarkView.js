@@ -271,12 +271,13 @@ class SequenceMarkView extends Component {
     });
   };
 
-  handleCloseTag = (index, dataId) => {
+  handleCloseTag = (index, dataId, result) => {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
+    const filterResult = result.filter((_, i) => i !== index);
     dispatch({
-      type: 'sequenceMark/deleteTextMarkResult',
-      payload: { taskId: basicInfo.taskId, dataId, index },
+      type: 'sequenceMark/saveTextMarkResult',
+      payload: { taskId: basicInfo.taskId, dataId, labelResult: filterResult },
       callback: () => {
         this.handleRefreshView();
       },
@@ -388,7 +389,7 @@ class SequenceMarkView extends Component {
         render: (val, record) => {
           if (val.length) {
             const labelValues = val.map(v => (v.hasOwnProperty('wordEntry') ? `${v.word}: ${v.optionName}.${v.wordEntry}` : `${v.word}: ${v.optionName}`));
-            return labelValues.map((value, index) => (<Tag color="blue" closable onClose={() => this.handleCloseTag(index, record.dataId)}>{value}</Tag>));
+            return labelValues.map((value, index) => (<Tag color="blue" closable onClose={() => this.handleCloseTag(index, record.dataId, val)}>{value}</Tag>));
           }
           return '';
         },

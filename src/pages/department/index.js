@@ -74,14 +74,6 @@ class DepartmentList extends Component {
         setTimeout(() => this.searchInput.select());
       }
     },
-    render: text => (this.state.searchedColumn === dataIndex ? (
-      <Highlighter
-        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-        searchWords={[this.state.searchText]}
-        autoEscape
-        textToHighlight={text.toString()}
-      />
-    ) : text),
   });
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -206,6 +198,14 @@ class DepartmentList extends Component {
         title: '机构名称',
         dataIndex: 'departmentName',
         ...this.getColumnSearchProps('departmentName', '机构名称'),
+        render: (text, department) => (this.state.searchedColumn === 'departmentName' ? (
+          <a onClick={() => this.handleDetail(department)}><Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[this.state.searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          /></a>
+        ) : <a onClick={() => this.handleDetail(department)}>{text}</a>),
       },
       {
         title: '机构类型',

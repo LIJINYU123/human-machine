@@ -189,14 +189,6 @@ class TextProjectList extends Component {
         setTimeout(() => this.searchInput.select());
       }
     },
-    render: text => (this.state.searchedColumn === dataIndex ? (
-      <Highlighter
-        highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-        searchWords={[this.state.searchText]}
-        autoEscape
-        textToHighlight={text.toString()}
-      />
-    ) : text),
   });
 
   handleSearch = (selectedKeys, confirm, dataIndex) => {
@@ -286,8 +278,8 @@ class TextProjectList extends Component {
     form.validateFields((err, fieldValues) => {
       if (err) return;
       const values = {
-        createdStartTime: fieldValues.createdTime && fieldValues.createdTime[0].format('YYYY-MM-DD HH:mm:ss'),
-        createdEndTime: fieldValues.createdTime && fieldValues.createdTime[1].format('YYYY-MM-DD HH:mm:ss'),
+        createdStartTime: fieldValues.createdTime && fieldValues.createdTime[0].format('YYYY-MM-DD 00:00:00'),
+        createdEndTime: fieldValues.createdTime && fieldValues.createdTime[1].format('YYYY-MM-DD 23:59:59'),
       };
       this.setState({
         formValues: values,
@@ -385,6 +377,14 @@ class TextProjectList extends Component {
         title: '项目名称',
         dataIndex: 'projectName',
         ...this.getColumnSearchProps('projectName', '项目名称'),
+        render: (text, project) => (this.state.searchedColumn === 'projectName' ? (
+          <a onClick={() => this.handleReviewDetails(project)}><Highlighter
+            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+            searchWords={[this.state.searchText]}
+            autoEscape
+            textToHighlight={text.toString()}
+          /></a>
+        ) : <a onClick={() => this.handleReviewDetails(project)}>{text}</a>),
       },
       {
         title: '负责人',

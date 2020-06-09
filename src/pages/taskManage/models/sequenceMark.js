@@ -43,13 +43,12 @@ const SequenceMark = {
     * saveTextMarkResult({ payload, callback }, { call }) {
       const response = yield call(saveTextMarkResult, payload);
       if (response.status === 'ok') {
-        message.success(response.message);
+        if (callback) {
+          callback();
+        }
+        // message.success(response.message);
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
 
