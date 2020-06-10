@@ -268,7 +268,7 @@ class ProjectDetail extends Component {
 
     const columns = [
       {
-        title: '用户名',
+        title: '昵称',
         dataIndex: 'userName',
         ...this.getColumnSearchProps('userName', '用户名'),
       },

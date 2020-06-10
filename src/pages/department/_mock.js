@@ -3,18 +3,6 @@ import { parse } from 'url';
 
 let mockData = [
   {
-    departmentId: 'development',
-    departmentName: '研发部门',
-    departmentType: 'operationCenter',
-    privilege: ['textClassify', 'pictureMark'],
-    administrator: 'SYDEV',
-    adminName: '研发部管理员',
-    dataAddress: 'localhost',
-    userAmount: 10,
-    createdTime: '2020-01-08 00:00:00',
-    updatedTime: '2020-01-08 00:00:00',
-  },
-  {
     departmentId: 'operation',
     departmentName: '运营部门',
     departmentType: 'customer',
@@ -26,7 +14,18 @@ let mockData = [
     createdTime: '2020-01-06 00:00:00',
     updatedTime: '2020-01-06 00:00:00',
   },
-
+  {
+    departmentId: 'development',
+    departmentName: '研发部门',
+    departmentType: 'operationCenter',
+    privilege: ['textClassify', 'pictureMark'],
+    administrator: 'SYDEV',
+    adminName: '研发部管理员',
+    dataAddress: 'localhost',
+    userAmount: 10,
+    createdTime: '2020-01-08 00:00:00',
+    updatedTime: '2020-01-08 00:00:00',
+  },
 ];
 
 const mockAccounts = [

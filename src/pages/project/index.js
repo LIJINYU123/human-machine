@@ -15,7 +15,7 @@ import {
   Badge,
   Input,
   Icon,
-  Popconfirm, Dropdown, Menu, Modal,
+  Dropdown, Menu, Modal,
 } from 'antd';
 import styles from './style.less';
 import StandardTable from './component/StandardTable';
@@ -26,17 +26,12 @@ import ItemData from './map';
 const { RangePicker } = DatePicker;
 const { confirm } = Modal;
 
-const { statusMap, statusName, labelTypeName, projectTypes } = ItemData;
+const { statusMap, statusName, projectTypes } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
 const statusFilters = Object.keys(statusName).map(key => ({
   text: statusName[key],
-  value: key,
-}));
-
-const labelTypeFilters = Object.keys(labelTypeName).map(key => ({
-  text: labelTypeName[key],
   value: key,
 }));
 
@@ -57,6 +52,7 @@ class TextProjectList extends Component {
     searchText: '',
     searchedColumn: '',
     projectId: '',
+    status: 'unPublish',
     addModalVisible: false,
     modalVisible: false,
   };
@@ -114,10 +110,11 @@ class TextProjectList extends Component {
     });
   };
 
-  handleEdit = projectId => {
+  handleEdit = (projectId, status) => {
     this.setState({
       modalVisible: true,
       projectId,
+      status,
     });
   };
 
@@ -346,7 +343,7 @@ class TextProjectList extends Component {
 
   render() {
     const { data, loading } = this.props;
-    const { selectedRows, addModalVisible, modalVisible, projectId } = this.state;
+    const { selectedRows, addModalVisible, modalVisible, projectId, status } = this.state;
 
     let { filteredInfo } = this.state;
     filteredInfo = filteredInfo || {};
@@ -419,7 +416,7 @@ class TextProjectList extends Component {
         title: '操作',
         render: (_, project) => (
           <Fragment>
-            <a onClick={() => this.handleEdit(project.projectId)}>编辑</a>
+            <a onClick={() => this.handleEdit(project.projectId, project.status)}>编辑</a>
             <Divider type="vertical"/>
             <a onClick={() => this.handleReviewDetails(project)}>详情</a>
             <Divider type="vertical"/>
@@ -447,7 +444,7 @@ class TextProjectList extends Component {
           />
         </Card>
         <ProjectCreateView visible={addModalVisible} onCancel={this.handleCancelAddModal} />
-        <ProjectEditView visible={modalVisible} onCancel={this.handleCancelEditModal} projectId={projectId} />
+        <ProjectEditView visible={modalVisible} onCancel={this.handleCancelEditModal} projectId={projectId} status={status} />
       </PageHeaderWrapper>
     );
   }

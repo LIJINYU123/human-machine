@@ -91,9 +91,10 @@ const ExtensionMark = {
     },
 
     // 答题模式，获取下一道题目
-    * fetchNext({ payload, callback }, { call, put }) {
+    * fetchNext({ payload, callback }, { call, put, select }) {
       const response = yield call(queryNextTextQuestion, payload);
-      if (response.schedule.restNum === 0) {
+      const questionInfo = yield select(state => state.extensionMark.questionInfo);
+      if (response.schedule.restNum === 0 && response.dataId === questionInfo.dataId) {
         message.warn('已经到最后一题!')
       }
       yield put({

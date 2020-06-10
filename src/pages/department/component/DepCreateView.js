@@ -42,6 +42,8 @@ class DepCreateView extends Component {
       callback('请输入机构名称');
     } else if (data.filter(department => department.departmentName === value).length) {
       callback('该机构名称已经存在');
+    } else if (value.trim().length > 60) {
+      callback('机构名称长度不能超过60个字符');
     } else {
       callback();
     }

@@ -33,6 +33,18 @@ class UserDetailView extends Component {
     });
   };
 
+  checkUserId = (rule, value, callback) => {
+    if (typeof value === 'undefined' && !value.trim()) {
+      callback('请输入用户名');
+    } else if (!/^\w+$/.test(value.trim())) {
+      callback('用户名只能包含字母、数字和下划线');
+    } else if (value.trim().length < 5 || value.trim().length > 20) {
+      callback('用户名长度范围在5~20之间');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     // eslint-disable-next-line max-len
     const { visible, onCancel, userInfo, roleInfos, groupInfos, form: { getFieldDecorator }, submitting } = this.props;
@@ -66,6 +78,12 @@ class UserDetailView extends Component {
           <Form.Item label={FieldLabels.userId}>
             {
               getFieldDecorator('userId', {
+                rules: [
+                  {
+                    required: true,
+                    validator: this.checkUserId,
+                  },
+                ],
                 initialValue: userInfo.userId,
               })(<Input />)
             }
@@ -73,6 +91,12 @@ class UserDetailView extends Component {
           <Form.Item label={FieldLabels.roleName}>
             {
               getFieldDecorator('roleId', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择角色',
+                  },
+                ],
                 initialValue: userInfo.roleId,
               })(
                 <Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }}>
@@ -83,6 +107,12 @@ class UserDetailView extends Component {
           <Form.Item label={FieldLabels.group}>
             {
               getFieldDecorator('groupId', {
+                rules: [
+                  {
+                    required: true,
+                    message: '请选择组别',
+                  },
+                ],
                 initialValue: userInfo.groupId,
               })(<Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} mode="multiple">{groupSelects}</Select>)
             }

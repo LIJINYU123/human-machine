@@ -79,10 +79,14 @@ class ManualAddView extends Component {
     const { users } = values;
     const existUsers = users.filter(user => user.userId === value);
 
-    if (!value.trim()) {
+    if (typeof value === 'undefined' && !value.trim()) {
       callback('请输入用户名');
     } else if (existUsers.length === 2) {
       callback('存在重复的用户名，请重新输入');
+    } else if (!/^\w+$/.test(value.trim())) {
+      callback('用户名只能包含字母、数字和下划线');
+    } else if (value.trim().length < 5 || value.trim().length > 20) {
+      callback('用户名长度范围在5~20之间');
     } else {
       callback();
     }

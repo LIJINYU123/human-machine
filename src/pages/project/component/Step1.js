@@ -76,7 +76,7 @@ class Step1 extends Component {
 
   render() {
     // eslint-disable-next-line max-len
-    const { form: { getFieldDecorator }, textProjectFormData: { stepOne, members, forever } } = this.props;
+    const { form: { getFieldDecorator }, textProjectFormData: { stepOne, members, forever }, status } = this.props;
     const { projectName, projectType, passRate, checkRate, labeler, inspector, questionNum, projectPeriod, description } = stepOne;
 
     const { labelers, inspectors } = members;
@@ -133,7 +133,7 @@ class Step1 extends Component {
                   <Select dropdownMenuStyle={{
                   maxHeight: 400,
                   overflow: 'auto',
-                }} style={{ width: '80%' }}>{projectTypeOptions}</Select>)
+                }} style={{ width: '80%' }} disabled={status !== 'unPublish'}>{projectTypeOptions}</Select>)
               }
             </Form.Item>
           </Col>
@@ -150,7 +150,7 @@ class Step1 extends Component {
                     },
                   ],
                   initialValue: passRate,
-                })(<InputNumber min={0} max={100} formatter={value => `${value}%`}
+                })(<InputNumber min={0} max={100} formatter={value => `${value}%`} disabled={status !== 'unPublish'}
                                 parser={value => value.replace('%', '')}
                                 style={{ width: '80%' }}/>)
               }
@@ -167,7 +167,7 @@ class Step1 extends Component {
                     },
                   ],
                   initialValue: checkRate,
-                })(<InputNumber min={0} max={100} formatter={value => `${value}%`}
+                })(<InputNumber min={0} max={100} formatter={value => `${value}%`} disabled={status !== 'unPublish'}
                                 parser={value => value.replace('%', '')}
                                 style={{ width: '80%' }}/>)
               }
@@ -193,6 +193,7 @@ class Step1 extends Component {
                     overflow: 'auto',
                   }} style={{ width: '80%' }}
                   mode="multiple"
+                  disabled={status !== 'unPublish'}
                 >
                   {labelerOptions}
                 </Select>)
@@ -217,6 +218,7 @@ class Step1 extends Component {
                     overflow: 'auto',
                   }} style={{ width: '80%' }}
                   mode="multiple"
+                  disabled={status !== 'unPublish'}
                 >
                   {inspectorOptions}
                 </Select>)
@@ -236,7 +238,7 @@ class Step1 extends Component {
                     },
                   ],
                   initialValue: questionNum,
-                })(<InputNumber style={{ width: '80%' }}/>)
+                })(<InputNumber style={{ width: '80%' }} disabled={status !== 'unPublish'}/>)
               }
             </Form.Item>
           </Col>

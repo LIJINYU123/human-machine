@@ -18,37 +18,45 @@ class DepEditView extends Component {
       if (!error) {
         const values = getFieldsValue();
 
-        if (departmentInfo.administrator === values.administrator) {
-          dispatch({
-            type: 'departmentList/updateDepartment',
-            payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
-            callback: () => {
-              dispatch({
-                type: 'departmentList/fetchDepartment',
-                payload: { sorter: 'updatedTime_descend' },
-              });
-              onCancel();
-            },
-          });
+        if (departmentInfo.departmentName === values.departmentName &&
+            departmentInfo.departmentType === values.departmentType &&
+            departmentInfo.privilege === values.privilege &&
+            departmentInfo.administrator === values.administrator &&
+            departmentInfo.dataAddress === values.dataAddress) {
+          onCancel();
         } else {
-          confirm({
-            title: '修改后，原管理员账号将删除，是否继续？',
-            okText: '确定',
-            cancelText: '取消',
-            onOk: () => {
-              dispatch({
-                type: 'departmentList/updateDepartment',
-                payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
-                callback: () => {
-                  dispatch({
-                    type: 'departmentList/fetchDepartment',
-                    payload: { sorter: 'updatedTime_descend' },
-                  });
-                  onCancel();
-                },
-              });
-            },
-          });
+          if (departmentInfo.administrator === values.administrator) {
+            dispatch({
+              type: 'departmentList/updateDepartment',
+              payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
+              callback: () => {
+                dispatch({
+                  type: 'departmentList/fetchDepartment',
+                  payload: { sorter: 'updatedTime_descend' },
+                });
+                onCancel();
+              },
+            });
+          } else {
+            confirm({
+              title: '修改后，原管理员账号将删除，是否继续？',
+              okText: '确定',
+              cancelText: '取消',
+              onOk: () => {
+                dispatch({
+                  type: 'departmentList/updateDepartment',
+                  payload: { departmentId: departmentInfo.departmentId, oldAdministrator: departmentInfo.administrator, ...values },
+                  callback: () => {
+                    dispatch({
+                      type: 'departmentList/fetchDepartment',
+                      payload: { sorter: 'updatedTime_descend' },
+                    });
+                    onCancel();
+                  },
+                });
+              },
+            });
+          }
         }
       }
     });
@@ -60,6 +68,8 @@ class DepEditView extends Component {
       callback('请输入机构名称');
     } else if (data.filter(department => department.departmentName !== departmentInfo.departmentName && department.departmentName === value).length) {
       callback('该机构名称已经存在');
+    } else if (value.trim().length > 60) {
+      callback('机构名称长度不能超过60个字符');
     } else {
       callback();
     }

@@ -198,7 +198,7 @@ class Step2 extends Component {
   };
 
   render() {
-    const { textProjectFormData: { templates, labelType, optionData, saveTemplate, minValue, maxValue, stepTwo }, form: { getFieldDecorator }, submitting } = this.props;
+    const { textProjectFormData: { templates, labelType, optionData, saveTemplate, minValue, maxValue, stepTwo }, status, form: { getFieldDecorator }, submitting } = this.props;
     const { templateName, classifyName, defaultTool, multiple, saveType } = stepTwo;
     const { modalVisible, validateStatus, help } = this.state;
     // eslint-disable-next-line max-len
@@ -212,11 +212,11 @@ class Step2 extends Component {
       {
         title: '颜色',
         dataIndex: 'color',
-        render: (val, record) => <Popover trigger="click" content={<SketchPicker presetColors={prestColors} color={val} onChange={this.handleChange}/>}><div className={styles.colorPicker} onClick={() => this.handleClickDiv(record)}><div className={styles.color} style={{ background: `${val}` }}></div></div></Popover>,
+        render: (val, record) => (status === 'unPublish' ? <Popover trigger="click" content={<SketchPicker presetColors={prestColors} color={val} onChange={this.handleChange}/>}><div className={styles.colorPicker} onClick={() => this.handleClickDiv(record)}><div className={styles.color} style={{ background: `${val}` }}></div></div></Popover> : <div className={styles.colorPicker} onClick={() => this.handleClickDiv(record)}><div className={styles.color} style={{ background: `${val}` }}></div></div>),
       },
       {
         title: '操作',
-        render: (_, record) => (<a onClick={() => this.handleDeleteOption(record.optionName)}>删除</a>),
+        render: (_, record) => (status === 'unPublish' ? <a onClick={() => this.handleDeleteOption(record.optionName)}>删除</a> : ''),
       },
     ];
 
@@ -232,7 +232,7 @@ class Step2 extends Component {
                 },
               ],
               initialValue: labelType,
-            })(<Cascader options={labelTypes} onChange={this.handleCascaderChange} style={{ width: '50%' }}/>)
+            })(<Cascader options={labelTypes} onChange={this.handleCascaderChange} style={{ width: '50%' }} disabled={status !== 'unPublish'}/>)
           }
         </Form.Item>
         {
@@ -254,7 +254,7 @@ class Step2 extends Component {
                 </Select>)
             }
             {
-              <Checkbox style={{ marginLeft: '16px' }} onChange={this.handleCheckboxChange} checked={saveTemplate}>保存模板</Checkbox>
+              <Checkbox style={{ marginLeft: '16px' }} onChange={this.handleCheckboxChange} checked={saveTemplate} disabled={status !== 'unPublish'}>保存模板</Checkbox>
             }
           </Form.Item>
         }
@@ -270,7 +270,7 @@ class Step2 extends Component {
                   },
                 ],
                 initialValue: templateName,
-              })(<Input style={{ width: '50%' }} />)
+              })(<Input style={{ width: '50%' }} disabled={status !== 'unPublish'}/>)
             }
           </Form.Item>
         }
@@ -286,7 +286,7 @@ class Step2 extends Component {
                   },
                 ],
                 initialValue: classifyName,
-              })(<Input style={{ width: '50%' }} />)
+              })(<Input style={{ width: '50%' }} disabled={status !== 'unPublish'}/>)
             }
           </Form.Item>
         }
@@ -297,7 +297,7 @@ class Step2 extends Component {
               getFieldDecorator('saveType', {
                 initialValue: saveType,
               })(
-                <Radio.Group name="saveType">
+                <Radio.Group name="saveType" disabled={status !== 'unPublish'}>
                   <Radio value="nomal">普通</Radio>
                   <Radio value="dict">词典</Radio>
                 </Radio.Group>)
@@ -326,7 +326,7 @@ class Step2 extends Component {
               getFieldDecorator('multiple', {
                 initialValue: multiple,
               })(
-                <Radio.Group name="multiple">
+                <Radio.Group name="multiple" disabled={status !== 'unPublish'}>
                   <Radio value>是</Radio>
                   <Radio value={false}>否</Radio>
                 </Radio.Group>)
@@ -336,7 +336,7 @@ class Step2 extends Component {
         {
           labelType.length > 0 && !['textExtension', 'videoDialogMark'].includes(labelType.slice(-1)[0]) &&
           <Fragment>
-            <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAddOption}>选项</Button>
+            <Button className={styles.tableListOperator} icon="plus" type="primary" onClick={this.handleAddOption} disabled={status !== 'unPublish'}>选项</Button>
             <DragSortingTable
               data={optionData}
               columns={columns}

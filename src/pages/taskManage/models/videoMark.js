@@ -87,9 +87,10 @@ const VideoMark = {
     },
 
     // 答题模式，获取下一道题目
-    * fetchNext({ payload, callback }, { call, put }) {
+    * fetchNext({ payload, callback }, { call, put, select }) {
       const response = yield call(queryNextTextQuestion, payload);
-      if (response.schedule.restNum === 0) {
+      const dataId = yield select(state => state.videoMark.dataId);
+      if (response.schedule.restNum === 0 && response.dataId === dataId) {
         message.warn('已经到最后一题!')
       }
       yield put({

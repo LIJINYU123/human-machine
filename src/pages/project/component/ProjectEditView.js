@@ -25,16 +25,16 @@ class ProjectEditView extends Component {
   }
 
   render() {
-    const { visible, onCancel, current } = this.props;
+    const { visible, onCancel, status, current } = this.props;
     let stepComponent;
     if (current === 0) {
-      stepComponent = <Step1 onCancel={onCancel}/>
+      stepComponent = <Step1 status={status} onCancel={onCancel}/>
     } else if (current === 1) {
-      stepComponent = <Step2 onCancel={onCancel}/>
+      stepComponent = <Step2 status={status} onCancel={onCancel}/>
     } else if (current === 2) {
-      stepComponent = <Step3 onCancel={onCancel}/>
+      stepComponent = <Step3 status={status} onCancel={onCancel}/>
     } else if (current === 3) {
-      stepComponent = <Step4 onCancel={onCancel}/>
+      stepComponent = <Step4 status={status} onCancel={onCancel}/>
     }
 
     return (
