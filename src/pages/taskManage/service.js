@@ -52,6 +52,13 @@ export async function saveTextMarkResult(params) {
   });
 }
 
+export async function saveDataValidity(params) {
+  return request('/api/project/data-validity', {
+    method: 'POST',
+    data: params,
+  });
+}
+
 export async function saveReviewResult(params) {
   return request('/api/project/review-result', {
     method: 'POST',

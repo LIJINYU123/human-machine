@@ -502,10 +502,10 @@ function getMyTask(req, res, u) {
 }
 
 function getMyTaskNumber(req, res) {
-  const userId = req.header('UserID');
+  // const userId = req.header('UserID');
   const roleId = req.header('RoleID');
   let filterDataSource;
-  const dataSource = taskMockData.filter(item => item.owner === userId);
+  const dataSource = taskMockData;
   if (roleId === 'labeler') {
     filterDataSource = dataSource.filter(item => ['labeling', 'reject'].includes(item.status));
   } else {

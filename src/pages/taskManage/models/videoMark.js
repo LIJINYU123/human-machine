@@ -90,7 +90,7 @@ const VideoMark = {
     * fetchNext({ payload, callback }, { call, put, select }) {
       const response = yield call(queryNextTextQuestion, payload);
       const dataId = yield select(state => state.videoMark.dataId);
-      if (response.schedule.restNum === 0 && response.dataId === dataId) {
+      if (response.dataId === dataId) {
         message.warn('已经到最后一题!')
       }
       yield put({

@@ -1427,6 +1427,57 @@ function saveTextMarkResult(req, res, u, b) {
   return res.json({ status: 'ok', message: '标注成功' });
 }
 
+function saveDataValidity(req, res, u, b) {
+  const body = (b && b.body) || req.body;
+  const { taskId, dataId, invalid } = body;
+
+  if (taskId.indexOf('ner') === 0) {
+    nerLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.invalid = invalid;
+      }
+    });
+  } else if (taskId.indexOf('match') === 0) {
+    matchLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.invalid = invalid;
+      }
+    });
+  } else if (taskId.indexOf('split') === 0) {
+    splitLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.invalid = invalid;
+      }
+    });
+  } else if (taskId.indexOf('reading') === 0) {
+    readingLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.invalid = invalid;
+      }
+    });
+  } else if (taskId.indexOf('extension') === 0) {
+    extensionLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.invalid = invalid;
+      }
+    });
+  } else if (taskId.indexOf('image') === 0) {
+    imageLabelData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.invalid = invalid;
+      }
+    });
+  } else {
+    labelMockData.forEach(item => {
+      if (item.dataId === dataId) {
+        item.invalid = invalid;
+      }
+    });
+  }
+
+  return res.json({ status: 'ok', message: '操作成功' });
+}
+
 function deleteTextMarkResult(req, res, u, b) {
   const body = (b && b.body) || req.body;
   const { taskId, dataId } = body;
@@ -1649,6 +1700,7 @@ export default {
   'GET /api/project/download-template': downloadTemplate,
 
   'POST /api/project/label-result': saveTextMarkResult,
+  'POST /api/project/data-validity': saveDataValidity,
   'DELETE /api/project/label-result': deleteTextMarkResult,
   'GET /api/task-manage/one-question': getOneTextQuestion,
   'POST /api/task-manage/next-question': getNextTextQuestion,

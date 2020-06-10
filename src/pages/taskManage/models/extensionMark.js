@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult, updateStatus } from '../service';
+import { queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult, saveDataValidity, updateStatus } from '../service';
 
 
 const ExtensionMark = {
@@ -37,6 +37,18 @@ const ExtensionMark = {
 
     * saveMarkResult({ payload, callback }, { call }) {
       const response = yield call(saveTextMarkResult, payload);
+      if (response.status === 'ok') {
+        message.success(response.message);
+        if (callback) {
+          callback();
+        }
+      } else {
+        message.error(response.message);
+      }
+    },
+
+    * saveDataValidity({ payload, callback }, { call }) {
+      const response = yield call(saveDataValidity, payload);
       if (response.status === 'ok') {
         message.success(response.message);
         if (callback) {
@@ -94,7 +106,7 @@ const ExtensionMark = {
     * fetchNext({ payload, callback }, { call, put, select }) {
       const response = yield call(queryNextTextQuestion, payload);
       const questionInfo = yield select(state => state.extensionMark.questionInfo);
-      if (response.schedule.restNum === 0 && response.dataId === questionInfo.dataId) {
+      if (response.dataId === questionInfo.dataId) {
         message.warn('已经到最后一题!')
       }
       yield put({

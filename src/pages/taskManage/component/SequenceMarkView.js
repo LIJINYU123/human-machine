@@ -9,7 +9,7 @@ import {
   Tag,
   Popover,
   Row,
-  Col, Divider, Radio,
+  Col, Divider, Radio, Switch,
 } from 'antd/lib/index';
 import { connect } from 'dva/index';
 import Highlighter from 'react-highlight-words';
@@ -20,7 +20,7 @@ import SequenceModalView from './SequenceModalView';
 import ItemData from '../map';
 import styles from './style.less';
 
-const { labelTypeName, taskStatusName, reviewLabel, labelResult } = ItemData;
+const { labelTypeName, taskStatusName, reviewLabel, labelResult, Labeler, Inspector } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -317,6 +317,17 @@ class SequenceMarkView extends Component {
     });
   };
 
+  handleSwitchClick = (invalid, record) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'sequenceMark/saveDataValidity',
+      payload: { taskId: this.state.basicInfo.taskId, dataId: record.dataId, invalid: !invalid },
+      callback: () => {
+        this.handleRefreshView();
+      },
+    });
+  };
+
   submitReject = () => {
     const { dispatch } = this.props;
     const { basicInfo } = this.state;
@@ -338,7 +349,7 @@ class SequenceMarkView extends Component {
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]} />
-        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
+        <Statistic title={roleId === Labeler ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
       </div>
     );
 
@@ -358,7 +369,7 @@ class SequenceMarkView extends Component {
     const extraContent = (
       <Fragment>
         {
-          roleId === 'inspector' &&
+          roleId === Inspector &&
           <Fragment>
             <span style={{ marginRight: '16px' }}>质检率：{`${checkRate}%`}</span>
             <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
@@ -369,10 +380,10 @@ class SequenceMarkView extends Component {
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
         {
-          roleId === 'labeler' && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
+          roleId === Labeler && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
         }
         {
-          roleId === 'inspector' &&
+          roleId === Inspector &&
           <Button.Group>
             <Button icon="close" onClick={this.submitReject}>驳回</Button>
             <Button icon="check" onClick={this.submitComplete}>通过</Button>
@@ -397,9 +408,14 @@ class SequenceMarkView extends Component {
         filteredValue: filteredInfo.labelResult || null,
       },
       {
+        title: '数据有效性',
+        dataIndex: 'invalid',
+        render: (val, record) => <Switch checkedChildren="有效" unCheckedChildren="无效" onClick={() => this.handleSwitchClick(val, record)} checked={!val} disabled={roleId !== Labeler}/>,
+      },
+      {
         title: '质检结果',
         dataIndex: 'reviewResult',
-        render: roleId === 'inspector' ? (val, info) => {
+        render: roleId === Inspector ? (val, info) => {
           let renderItem;
           if (val === 'approve') {
             renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
@@ -430,7 +446,7 @@ class SequenceMarkView extends Component {
       {
         title: '备注',
         dataIndex: 'remark',
-        render: roleId === 'inspector' ? (val, info) => {
+        render: roleId === Inspector ? (val, info) => {
           let renderItem;
           if (val === '') {
             renderItem = <a>备注</a>;

@@ -107,12 +107,6 @@ class UserDetailView extends Component {
           <Form.Item label={FieldLabels.group}>
             {
               getFieldDecorator('groupId', {
-                rules: [
-                  {
-                    required: true,
-                    message: '请选择组别',
-                  },
-                ],
                 initialValue: userInfo.groupId,
               })(<Select dropdownMenuStyle={{ maxHeight: 400, overflow: 'auto' }} mode="multiple">{groupSelects}</Select>)
             }

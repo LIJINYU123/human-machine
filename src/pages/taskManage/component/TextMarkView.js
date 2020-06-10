@@ -9,7 +9,7 @@ import {
   Popover,
   Tag,
   Divider,
-  Row, Col, Radio,
+  Row, Col, Radio, Switch,
 } from 'antd';
 import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import styles from './style.less';
@@ -20,7 +20,7 @@ import StandardTable from './StandardTable';
 import PopoverView from './PopoverView';
 import Highlighter from 'react-highlight-words';
 
-const { labelTypeName, taskStatusName, reviewLabel, labelResult } = ItemData;
+const { labelTypeName, taskStatusName, reviewLabel, labelResult, Labeler, Inspector } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -294,6 +294,17 @@ class TextMarkView extends Component {
     });
   };
 
+  handleSwitchClick = (invalid, record) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textMark/saveDataValidity',
+      payload: { taskId: this.state.basicInfo.taskId, dataId: record.dataId, invalid: !invalid },
+      callback: () => {
+        this.handleRefreshView();
+      },
+    });
+  };
+
   render() {
     const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate, markTool, schedule, loading } = this.props;
@@ -303,7 +314,7 @@ class TextMarkView extends Component {
     const extra = (
       <div className={styles.moreInfo}>
         <Statistic title="状态" value={taskStatusName[basicInfo.status]} />
-        <Statistic title={roleId === 'labeler' ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
+        <Statistic title={roleId === Labeler ? '标注进度' : '质检进度'} value={schedule} suffix="%" />
       </div>
     );
 
@@ -323,7 +334,7 @@ class TextMarkView extends Component {
     const extraContent = (
       <Fragment>
         {
-          roleId === 'inspector' &&
+          roleId === Inspector &&
           <Fragment>
             <span style={{ marginRight: '16px' }}>质检率：{`${checkRate}%`}</span>
             <span style={{ marginRight: '16px' }}>合格率：{`${passRate}%`}</span>
@@ -334,10 +345,10 @@ class TextMarkView extends Component {
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
         {
-          roleId === 'labeler' && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
+          roleId === Labeler && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
         }
         {
-          roleId === 'inspector' &&
+          roleId === Inspector &&
             <Button.Group>
               <Button icon="close" onClick={this.submitReject}>驳回</Button>
               <Button icon="check" onClick={this.submitComplete}>通过</Button>
@@ -359,17 +370,15 @@ class TextMarkView extends Component {
         filters: labelResultFilters,
         filteredValue: filteredInfo.labelResult || null,
       },
-      // {
-      //   title: '数据有效性',
-      //   dataIndex: 'invalid',
-      //   render: val => (val === false ? '有效' : '无效'),
-      //   filters: validFilters,
-      //   filteredValue: filteredInfo.invalid || null,
-      // },
+      {
+        title: '数据有效性',
+        dataIndex: 'invalid',
+        render: (val, record) => <Switch checkedChildren="有效" unCheckedChildren="无效" onClick={() => this.handleSwitchClick(val, record)} checked={!val} disabled={roleId !== Labeler}/>,
+      },
       {
         title: '质检结果',
         dataIndex: 'reviewResult',
-        render: roleId === 'inspector' ? (val, info) => {
+        render: roleId === Inspector ? (val, info) => {
           let renderItem;
           if (val === 'approve') {
             renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
@@ -400,7 +409,7 @@ class TextMarkView extends Component {
       {
         title: '备注',
         dataIndex: 'remark',
-        render: roleId === 'inspector' ? (val, info) => {
+        render: roleId === Inspector ? (val, info) => {
           let renderItem;
           if (val === '') {
             renderItem = <a>备注</a>;
