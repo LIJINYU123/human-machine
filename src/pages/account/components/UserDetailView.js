@@ -85,7 +85,7 @@ class UserDetailView extends Component {
                   },
                 ],
                 initialValue: userInfo.userId,
-              })(<Input />)
+              })(<Input disabled/>)
             }
           </Form.Item>
           <Form.Item label={FieldLabels.roleName}>

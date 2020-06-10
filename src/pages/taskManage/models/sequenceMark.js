@@ -40,22 +40,30 @@ const SequenceMark = {
       });
     },
 
-    * saveTextMarkResult({ payload, callback }, { call }) {
+    * saveTextMarkResult({ payload, callback }, { call, put }) {
       const response = yield call(saveTextMarkResult, payload);
       if (response.status === 'ok') {
+        message.success(response.message);
+        yield put({
+          type: 'schedule',
+          payload: response.labelSchedule,
+        });
         if (callback) {
           callback();
         }
-        // message.success(response.message);
       } else {
         message.error(response.message);
       }
     },
 
-    * saveDataValidity({ payload, callback }, { call }) {
+    * saveDataValidity({ payload, callback }, { call, put }) {
       const response = yield call(saveDataValidity, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        yield put({
+          type: 'schedule',
+          payload: response.labelSchedule,
+        });
         if (callback) {
           callback();
         }
@@ -64,10 +72,14 @@ const SequenceMark = {
       }
     },
 
-    * saveReviewResult({ payload, callback }, { call }) {
+    * saveReviewResult({ payload, callback }, { call, put }) {
       const response = yield call(saveReviewResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        yield put({
+          type: 'schedule',
+          payload: response.reviewSchedule,
+        });
       } else {
         message.error(response.message);
       }
@@ -161,7 +173,7 @@ const SequenceMark = {
       return { ...state, markTool: action.payload };
     },
     saveQuestion(state, action) {
-      return { ...state, questionInfo: action.payload };
+      return { ...state, questionInfo: action.payload, schedule: action.payload.schedule.completeRate };
     },
     schedule(state, action) {
       return { ...state, schedule: action.payload };

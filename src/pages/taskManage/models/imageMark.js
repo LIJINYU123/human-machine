@@ -45,10 +45,14 @@ const ImageMark = {
       }
     },
 
-    * saveDataValidity({ payload, callback }, { call }) {
+    * saveDataValidity({ payload, callback }, { call, put }) {
       const response = yield call(saveDataValidity, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        yield put({
+          type: 'schedule',
+          payload: response.labelSchedule,
+        });
         if (callback) {
           callback();
         }
@@ -57,10 +61,14 @@ const ImageMark = {
       }
     },
 
-    * saveReviewResult({ payload, callback }, { call }) {
+    * saveReviewResult({ payload, callback }, { call, put }) {
       const response = yield call(saveReviewResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        yield put({
+          type: 'schedule',
+          payload: response.reviewSchedule,
+        });
       } else {
         message.error(response.message);
       }
@@ -151,6 +159,7 @@ const ImageMark = {
       return {
         ...state,
         questionInfo: action.payload,
+        schedule: action.payload.schedule.completeRate,
       };
     },
     schedule(state, action) {

@@ -1424,7 +1424,7 @@ function saveTextMarkResult(req, res, u, b) {
     });
   }
 
-  return res.json({ status: 'ok', message: '标注成功' });
+  return res.json({ status: 'ok', message: '标注成功', labelSchedule: 10 });
 }
 
 function saveDataValidity(req, res, u, b) {
@@ -1475,7 +1475,7 @@ function saveDataValidity(req, res, u, b) {
     });
   }
 
-  return res.json({ status: 'ok', message: '操作成功' });
+  return res.json({ status: 'ok', message: '操作成功', labelSchedule: 10 });
 }
 
 function deleteTextMarkResult(req, res, u, b) {
@@ -1668,7 +1668,7 @@ function saveReviewResult(req, res, u, b) {
       item.remark = result.remark;
     }
   });
-  return res.json({ status: 'ok', message: '保存成功' });
+  return res.json({ status: 'ok', message: '保存成功', reviewSchedule: 20 });
 }
 
 function exportResult(req, res) {

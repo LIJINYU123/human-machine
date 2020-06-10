@@ -51,17 +51,19 @@ class VideoMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location, dispatch } = this.props;
+    const { location, dispatch, taskSchedule } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
     });
 
-    dispatch({
-      type: 'videoMark/updateSchedule',
-      payload: { schedule: location.state.taskInfo.schedule },
-    });
+    if (taskSchedule === 0) {
+      dispatch({
+        type: 'videoMark/updateSchedule',
+        payload: { schedule: location.state.taskInfo.schedule },
+      });
+    }
   }
 
   componentDidMount() {

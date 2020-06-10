@@ -150,10 +150,9 @@ class ProjectDetail extends Component {
       <Descriptions className={styles.headerList} size="small" column={3}>
         <Descriptions.Item label="标注类型">{labelTypeName[basicInfo.labelType]}</Descriptions.Item>
         <Descriptions.Item label="创建时间">{basicInfo.createdTime}</Descriptions.Item>
-        <Descriptions.Item label="项目周期">{basicInfo.endTime}</Descriptions.Item>
-        <Descriptions.Item label="标注工具">{basicInfo.markTool ? basicInfo.markTool.toolName : ''}</Descriptions.Item>
+        <Descriptions.Item label="项目周期" span={2}>{basicInfo.startTime === '' ? '永久' : `${basicInfo.startTime} - ${basicInfo.endTime}`}</Descriptions.Item>
         <Descriptions.Item label="合格率">{basicInfo.passRate}%</Descriptions.Item>
-        <Descriptions.Item label="质检率">{basicInfo.checkRate}%</Descriptions.Item>
+        <Descriptions.Item label="质检率" span={2}>{basicInfo.checkRate}%</Descriptions.Item>
         <Descriptions.Item label="项目描述">{basicInfo.description}</Descriptions.Item>
       </Descriptions>
     );

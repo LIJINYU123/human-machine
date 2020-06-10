@@ -54,17 +54,19 @@ class ExtensionMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location, dispatch } = this.props;
+    const { location, dispatch, schedule } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
     });
 
-    dispatch({
-      type: 'extensionMark/updateSchedule',
-      payload: { schedule: location.state.taskInfo.schedule },
-    });
+    if (schedule === 0) {
+      dispatch({
+        type: 'extensionMark/updateSchedule',
+        payload: { schedule: location.state.taskInfo.schedule },
+      });
+    }
   }
 
   componentDidMount() {
