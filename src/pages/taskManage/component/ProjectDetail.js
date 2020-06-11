@@ -7,7 +7,7 @@ import { connect } from 'dva/index';
 import router from 'umi/router';
 import ItemData from '../map';
 
-const { taskStatusMap, taskStatusName, labelTypeName, Labeler, Inspector } = ItemData;
+const { taskStatusMap, taskStatusName, labelTypeName, Labeler, Inspector, Labeling, Reject, Review } = ItemData;
 
 @connect(({ detail, loading }) => ({
   data: detail.data,
@@ -143,6 +143,18 @@ class ProjectDetail extends Component {
     return false;
   };
 
+  showOperateName = (roleId, status) => {
+    if (roleId === Labeler && [Labeling, Reject].includes(status)) {
+      return '标注';
+    }
+
+    if (roleId === Inspector && status === Review) {
+      return '质检';
+    }
+
+    return '查看'
+  };
+
   render() {
     const { data, basicInfo, loading } = this.props;
     const { roleId } = this.state;
@@ -188,17 +200,9 @@ class ProjectDetail extends Component {
       },
       {
         title: '操作',
-        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{ task.status === 'complete' ? '查看' : (roleId === Labeler ? '标注' : '质检') }</a>,
+        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{this.showOperateName(roleId, task.status)}</a>,
       },
     ];
-
-    const Info = ({ title, value, onClick, bordered }) => (
-      <div className={styles.headerInfo}>
-        <span>{title}</span>
-        <p><a onClick={onClick}>{value}</a></p>
-        {bordered && <em />}
-      </div>
-    );
 
     const extraContent = <Button type="primary" disabled={isReceiveTask} onClick={this.handleReceiveTask}>领取新任务</Button>;
 
