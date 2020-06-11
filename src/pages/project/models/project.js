@@ -22,12 +22,11 @@ const Project = {
       const response = yield call(updateProjectStatus, payload);
       if (response.status === 'ok') {
         message.success(response.message);
+        if (callback) {
+          callback();
+        }
       } else {
         message.error(response.message);
-      }
-
-      if (callback) {
-        callback();
       }
     },
 

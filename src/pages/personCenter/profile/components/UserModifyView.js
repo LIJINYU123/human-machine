@@ -66,6 +66,7 @@ const UserModifyView = props => {
                 {
                   required: true,
                   message: '请输入昵称',
+                  whitespace: true,
                 },
               ],
               initialValue: userInfo.userName,

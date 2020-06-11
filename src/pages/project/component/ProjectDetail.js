@@ -5,7 +5,7 @@ import {
   Button,
   Descriptions,
   Statistic,
-  Input, Icon, Table,
+  Input, Icon, Table, message
 } from 'antd';
 import router from 'umi/router';
 import { connect } from 'dva';
@@ -179,12 +179,22 @@ class ProjectDetail extends Component {
   };
 
   handleCompleteProject = () => {
-    const { dispatch } = this.props;
+    const { dispatch, basicInfo } = this.props;
     const { projectId } = this.state;
-    dispatch({
-      type: 'project/updateProjectStatus',
-      payload: { projectId, status: 'complete' },
-    });
+    if (basicInfo.labelSchedule === 100 && basicInfo.reviewSchedule === 100) {
+      dispatch({
+        type: 'project/updateProjectStatus',
+        payload: { projectId, status: 'complete' },
+        callback: () => {
+          dispatch({
+            type: 'projectDetail/fetchDetail',
+            payload: projectId,
+          });
+        },
+      });
+    } else {
+      message.error('存在未完成的任务包！');
+    }
   };
 
   exportResult = () => {
