@@ -20,7 +20,7 @@ import SequenceModalView from './SequenceModalView';
 import ItemData from '../map';
 import styles from './style.less';
 
-const { labelTypeName, taskStatusName, reviewLabel, labelResult, Labeler, Inspector } = ItemData;
+const { labelTypeName, taskStatusName, reviewLabel, labelResult, Labeler, Inspector, Labeling, Review, Reject } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -342,6 +342,26 @@ class SequenceMarkView extends Component {
     });
   };
 
+  judgeDisabled = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    if (roleId === Inspector) {
+      return status !== Review;
+    }
+
+    return true;
+  };
+
+  judgeDisabled2 = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    return true;
+  };
+
   render() {
     const { basicInfo, modalVisible, word, startIndex, endIndex, dataId, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate, schedule, loading } = this.props;
@@ -382,13 +402,13 @@ class SequenceMarkView extends Component {
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
         {
-          roleId === Labeler && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
+          roleId === Labeler && <Button type="primary" icon="check" onClick={this.submitReview} disabled={this.judgeDisabled(roleId, basicInfo.status)}>提交质检</Button>
         }
         {
           roleId === Inspector &&
           <Button.Group>
-            <Button icon="close" onClick={this.submitReject}>驳回</Button>
-            <Button icon="check" onClick={this.submitComplete}>通过</Button>
+            <Button icon="close" onClick={this.submitReject} disabled={this.judgeDisabled(roleId, basicInfo.status)}>驳回</Button>
+            <Button icon="check" onClick={this.submitComplete} disabled={this.judgeDisabled(roleId, basicInfo.status)}>通过</Button>
           </Button.Group>
         }
       </Fragment>
@@ -412,12 +432,12 @@ class SequenceMarkView extends Component {
       {
         title: '数据有效性',
         dataIndex: 'invalid',
-        render: (val, record) => <Switch checkedChildren="有效" unCheckedChildren="无效" onClick={() => this.handleSwitchClick(val, record)} checked={!val} disabled={roleId !== Labeler}/>,
+        render: (val, record) => <Switch checkedChildren="有效" unCheckedChildren="无效" onClick={() => this.handleSwitchClick(val, record)} checked={!val} disabled={this.judgeDisabled2(roleId, basicInfo.status)}/>,
       },
       {
         title: '质检结果',
         dataIndex: 'reviewResult',
-        render: roleId === Inspector ? (val, info) => {
+        render: roleId === Inspector && basicInfo.status === Review ? (val, info) => {
           let renderItem;
           if (val === 'approve') {
             renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
@@ -448,7 +468,7 @@ class SequenceMarkView extends Component {
       {
         title: '备注',
         dataIndex: 'remark',
-        render: roleId === Inspector ? (val, info) => {
+        render: roleId === Inspector && basicInfo.status === Review ? (val, info) => {
           let renderItem;
           if (val === '') {
             renderItem = <a>备注</a>;
@@ -477,7 +497,7 @@ class SequenceMarkView extends Component {
         title: '文本',
         dataIndex: 'sentence',
         ellipsis: true,
-        onCell: this.handleClickCell,
+        onCell: this.judgeDisabled(roleId, basicInfo.status) ? () => {} : this.handleClickCell,
         ...this.getColumnSearchProps('sentence', '文本'),
       });
     } else {
@@ -485,7 +505,7 @@ class SequenceMarkView extends Component {
           title: '文本1',
           dataIndex: 'sentence1',
           ellipsis: true,
-          onCell: this.handleClickCell,
+          onCell: this.judgeDisabled(roleId, basicInfo.status) ? () => {} : this.handleClickCell,
           ...this.getColumnSearchProps('sentence1', '文本1'),
         });
 
@@ -493,7 +513,7 @@ class SequenceMarkView extends Component {
         title: '文本2',
         dataIndex: 'sentence2',
         ellipsis: true,
-        onCell: this.handleClickCell,
+        onCell: this.judgeDisabled(roleId, basicInfo.status) ? () => {} : this.handleClickCell,
         ...this.getColumnSearchProps('sentence2', '文本2'),
       });
     }

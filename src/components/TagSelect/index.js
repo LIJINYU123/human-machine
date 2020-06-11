@@ -114,7 +114,7 @@ class TagSelect extends Component {
 
   render() {
     const { value, expand } = this.state;
-    const { children, className, style, expandable } = this.props;
+    const { children, className, style, expandable, disabled = false } = this.props;
     const cls = classNames(styles.tagSelect, className, {
       [styles.hasExpandTag]: expandable,
       [styles.expanded]: expand,
@@ -129,7 +129,7 @@ class TagSelect extends Component {
               key: `tag-select-${child.props.value}`,
               value: child.props.value,
               checked: value.indexOf(child.props.value) > -1,
-              onChange: this.handleTagChange,
+              onChange: !disabled ? this.handleTagChange : () => {},
             });
           }
 

@@ -213,4 +213,9 @@ export default {
 
   Labeler: 'labeler',
   Inspector: 'inspector',
+
+  Labeling: 'labeling',
+  Reject: 'reject',
+  Review: 'review',
+  Complete: 'complete',
 }

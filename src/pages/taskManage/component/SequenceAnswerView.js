@@ -8,7 +8,7 @@ import styles from './style.less';
 import ItemData from '../map';
 
 const { TextArea } = Input;
-const { AnswerModeLabels, Labeler, Inspector } = ItemData;
+const { AnswerModeLabels, Labeler, Inspector, Labeling, Reject, Review } = ItemData;
 
 @connect(({ sequenceMark }) => ({
   questionInfo: sequenceMark.questionInfo,
@@ -273,17 +273,29 @@ class SequenceAnswerView extends Component {
     });
   };
 
+  judgeDisabled = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    if (roleId === Inspector) {
+      return status !== Review;
+    }
+
+    return true;
+  };
+
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
     const { basicInfo, markTool, popoverVisible, modalVisible, optionName, roleId, dataIdQueue } = this.state;
 
     const action = (
       <Fragment>
-        { roleId === 'labeler' && <Button icon="check" onClick={this.submitReview}>提交质检</Button> }
+        { roleId === 'labeler' && <Button icon="check" onClick={this.submitReview} disabled={this.judgeDisabled(roleId, basicInfo.status)}>提交质检</Button> }
         { roleId === 'inspector' &&
           <Button.Group>
-            <Button icon="close" onClick={this.submitReject}>驳回</Button>
-            <Button icon="check" onClick={this.submitComplete}>通过</Button>
+            <Button icon="close" onClick={this.submitReject} disabled={this.judgeDisabled(roleId, basicInfo.status)}>驳回</Button>
+            <Button icon="check" onClick={this.submitComplete} disabled={this.judgeDisabled(roleId, basicInfo.status)}>通过</Button>
           </Button.Group>
         }
         <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>
@@ -333,8 +345,7 @@ class SequenceAnswerView extends Component {
       {
         title: '操作',
         width: 50,
-        render: (_, record, index) => (
-          <a onClick={() => this.handleDelete(index)}>删除</a>
+        render: this.judgeDisabled(roleId, basicInfo.status) ? '' : (_, record, index) => (<a onClick={() => this.handleDelete(index)}>删除</a>
         ),
       },
     ];
@@ -367,14 +378,12 @@ class SequenceAnswerView extends Component {
       {
         title: '操作',
         width: 50,
-        render: (_, record, index) => (
-          <a onClick={() => this.handleDelete(index)}>删除</a>
-        ),
+        render: this.judgeDisabled(roleId, basicInfo.status) ? '' : (_, record, index) => <a onClick={() => this.handleDelete(index)}>删除</a>,
       },
     ];
 
     const popoverContent = (
-      markTool.options.map(option => <Tag color={option.color} style={{ cursor: 'pointer' }} onClick={() => this.handleClickTag(option.optionName)}>{option.optionName}</Tag>)
+      markTool.options.map(option => <Tag color={option.color} style={{ cursor: 'pointer' }} onClick={this.judgeDisabled(roleId, basicInfo.status) ? () => {} : () => this.handleClickTag(option.optionName)}>{option.optionName}</Tag>)
     );
 
     return (
@@ -432,7 +441,7 @@ class SequenceAnswerView extends Component {
                         getFieldDecorator('reviewResult', {
                           initialValue: questionInfo.reviewResult,
                         })(
-                          <Radio.Group>
+                          <Radio.Group disabled={this.judgeDisabled(roleId, basicInfo.status)}>
                             <Radio.Button value="approve">通过</Radio.Button>
                             <Radio.Button value="reject">拒绝</Radio.Button>
                           </Radio.Group>)
@@ -447,7 +456,7 @@ class SequenceAnswerView extends Component {
                       {
                         getFieldDecorator('remark', {
                           initialValue: questionInfo.remark,
-                        })(<TextArea style={{ width: '80%' }} autoSize/>)
+                        })(<TextArea style={{ width: '80%' }} autoSize disabled={this.judgeDisabled(roleId, basicInfo.status)}/>)
                       }
                     </Form.Item>
                   }
@@ -483,7 +492,7 @@ class SequenceAnswerView extends Component {
                         initialValue: questionInfo.invalid,
                         valuePropName: 'checked',
                       })(
-                        <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>)
+                        <Checkbox style={{ marginLeft: '16px' }} disabled={this.judgeDisabled(roleId, basicInfo.status)}>无效数据</Checkbox>)
                     }
                   </Form.Item>
                 </Row>

@@ -20,7 +20,7 @@ import StandardTable from './StandardTable';
 import PopoverView from './PopoverView';
 import Highlighter from 'react-highlight-words';
 
-const { labelTypeName, taskStatusName, reviewLabel, labelResult, Labeler, Inspector } = ItemData;
+const { labelTypeName, taskStatusName, reviewLabel, labelResult, Labeler, Inspector, Review, Labeling, Reject } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -307,6 +307,26 @@ class TextMarkView extends Component {
     });
   };
 
+  judgeDisabled = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    if (roleId === Inspector) {
+      return status !== Review;
+    }
+
+    return true;
+  };
+
+  judgeDisabled2 = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    return true;
+  };
+
   render() {
     const { basicInfo, popoverVisible, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate, markTool, schedule, loading } = this.props;
@@ -347,13 +367,13 @@ class TextMarkView extends Component {
           <Radio.Button value="focus" onClick={this.jumpToAnswerMode}>答题模式</Radio.Button>
         </Radio.Group>
         {
-          roleId === Labeler && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
+          roleId === Labeler && <Button type="primary" icon="check" onClick={this.submitReview} disabled={this.judgeDisabled(roleId, basicInfo.status)}>提交质检</Button>
         }
         {
           roleId === Inspector &&
             <Button.Group>
-              <Button icon="close" onClick={this.submitReject}>驳回</Button>
-              <Button icon="check" onClick={this.submitComplete}>通过</Button>
+              <Button icon="close" onClick={this.submitReject} disabled={this.judgeDisabled(roleId, basicInfo.status)}>驳回</Button>
+              <Button icon="check" onClick={this.submitComplete} disabled={this.judgeDisabled(roleId, basicInfo.status)}>通过</Button>
             </Button.Group>
         }
       </Fragment>
@@ -365,9 +385,9 @@ class TextMarkView extends Component {
         dataIndex: 'labelResult',
         render: (val, info) => {
           if (val.length) {
-            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={val} />} placement="top">{val.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
+            return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} status={basicInfo.status} roleId={roleId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={val} />} placement="top">{val.map(value => (<Tag color="blue">{value}</Tag>))}</Popover>
           }
-          return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={[]} />} placement="top"><a>标注</a></Popover>
+          return <Popover visible={popoverVisible.hasOwnProperty(`${info.dataId}`)} onVisibleChange={() => this.handleVisibleChange(info.dataId)} trigger="click" content={<PopoverView taskId={basicInfo.taskId} labelType={basicInfo.labelType} dataId={info.dataId} status={basicInfo.status} roleId={roleId} markTool={markTool} onClose={this.handleClose} onRefresh={this.handleRefreshView} labelValues={[]} />} placement="top"><a>标注</a></Popover>
         },
         filters: labelResultFilters,
         filteredValue: filteredInfo.labelResult || null,
@@ -375,12 +395,12 @@ class TextMarkView extends Component {
       {
         title: '数据有效性',
         dataIndex: 'invalid',
-        render: (val, record) => <Switch checkedChildren="有效" unCheckedChildren="无效" onClick={() => this.handleSwitchClick(val, record)} checked={!val} disabled={roleId !== Labeler}/>,
+        render: (val, record) => <Switch checkedChildren="有效" unCheckedChildren="无效" onClick={() => this.handleSwitchClick(val, record)} checked={!val} disabled={this.judgeDisabled2(roleId, basicInfo.status)}/>,
       },
       {
         title: '质检结果',
         dataIndex: 'reviewResult',
-        render: roleId === Inspector ? (val, info) => {
+        render: roleId === Inspector && basicInfo.status === Review ? (val, info) => {
           let renderItem;
           if (val === 'approve') {
             renderItem = <span style={{ color: '#52c41a', cursor: 'pointer' }}>{reviewLabel[val]}</span>;
@@ -411,7 +431,7 @@ class TextMarkView extends Component {
       {
         title: '备注',
         dataIndex: 'remark',
-        render: roleId === Inspector ? (val, info) => {
+        render: roleId === Inspector && basicInfo.status === Review ? (val, info) => {
           let renderItem;
           if (val === '') {
             renderItem = <a>备注</a>;

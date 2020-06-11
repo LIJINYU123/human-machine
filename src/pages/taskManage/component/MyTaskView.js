@@ -7,7 +7,7 @@ import router from 'umi/router';
 import StandardTable from './StandardTable';
 import ItemData from '../map';
 
-const { taskStatusMap, taskStatusName, labelTypeName } = ItemData;
+const { taskStatusMap, taskStatusName, labelTypeName, Labeler, Inspector, Labeling, Reject, Review } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -194,6 +194,18 @@ class MyTaskView extends Component {
     router.goBack();
   };
 
+  showOperateName = (roleId, status) => {
+    if (roleId === Labeler && [Labeling, Reject].includes(status)) {
+      return '标注';
+    }
+
+    if (roleId === Inspector && status === Review) {
+      return '质检';
+    }
+
+    return '查看'
+  };
+
   render() {
     const { data, loading } = this.props;
     const { roleId } = this.state;
@@ -246,7 +258,7 @@ class MyTaskView extends Component {
       },
       {
         title: '操作',
-        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{ roleId === 'labeler' ? '标注' : '质检' }</a>,
+        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{this.showOperateName(roleId, task.status)}</a>,
       },
     ];
     return (

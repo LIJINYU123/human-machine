@@ -160,6 +160,8 @@ class TemplateDetailView extends Component {
     const { templateManage: { data }, templateInfo } = this.props;
     if (!value.trim()) {
       callback('请输入模板名称');
+    } else if (/(^\s+)|(\s+$)/.test(value)) {
+      callback('模板名称包含空白字符');
     } else if (data.filter(item => item.templateName !== templateInfo.templateName && item.templateName === value).length) {
       callback('该模板名称已经存在');
     } else {

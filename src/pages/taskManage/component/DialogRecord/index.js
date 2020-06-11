@@ -8,7 +8,7 @@ const { FieldLabels } = ItemData;
 
 const DialogRecord = props => {
   const [reverse, setReverse] = useState(props.dialog.reverse);
-  const { form, dialog, index, onDelete } = props;
+  const { form, dialog, index, onDelete, disabled } = props;
   const { getFieldDecorator } = form;
 
   useEffect(() => {
@@ -64,7 +64,7 @@ const DialogRecord = props => {
               getFieldDecorator(`dialogRecord[${dialog.dialogId}].dialogType`, {
                 initialValue: dialog.dialogType,
               })(
-                <Radio.Group name="dialogType">
+                <Radio.Group name="dialogType" disabled={disabled}>
                   <Radio value="业务">业务</Radio>
                   <Radio value="互动">互动</Radio>
                   <Radio value="推荐">推荐</Radio>
@@ -73,8 +73,8 @@ const DialogRecord = props => {
             }
             {
               <Fragment>
-                <Button type="link" style={{ float: 'right' }} icon="sync" onClick={handleReverse}/>
-                <Button type="link" style={{ float: 'right', color: 'red', marginRight: '16px' }} icon="delete" onClick={() => { onDelete() }}/>
+                <Button type="link" style={{ float: 'right' }} icon="sync" onClick={handleReverse} disabled={disabled}/>
+                <Button type="link" style={{ float: 'right', color: 'red', marginRight: '16px' }} icon="delete" onClick={() => { onDelete() }} disabled={disabled}/>
               </Fragment>
             }
           </Form.Item>
@@ -87,7 +87,7 @@ const DialogRecord = props => {
                   {
                     getFieldDecorator(`dialogRecord[${dialog.dialogId}].customer`, {
                       initialValue: dialog.customer,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Row>
@@ -96,7 +96,7 @@ const DialogRecord = props => {
                   {
                     getFieldDecorator(`dialogRecord[${dialog.dialogId}].user`, {
                       initialValue: dialog.user,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Row>
@@ -107,7 +107,7 @@ const DialogRecord = props => {
                   {
                     getFieldDecorator(`dialogRecord[${dialog.dialogId}].user`, {
                       initialValue: dialog.user,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Row>
@@ -116,7 +116,7 @@ const DialogRecord = props => {
                   {
                     getFieldDecorator(`dialogRecord[${dialog.dialogId}].customer`, {
                       initialValue: dialog.customer,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Row>
@@ -128,7 +128,7 @@ const DialogRecord = props => {
               {
                 getFieldDecorator(`dialogRecord[${dialog.dialogId}].emotionTag`, {
                   initialValue: dialog.emotionTag,
-                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].emotionTag`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].emotionTag`} disabled={disabled}/>)
               }
             </Form.Item>
           </Col>
@@ -137,7 +137,7 @@ const DialogRecord = props => {
               {
                 getFieldDecorator(`dialogRecord[${dialog.dialogId}].actionTag`, {
                   initialValue: dialog.actionTag,
-                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].actionTag`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].actionTag`} disabled={disabled}/>)
               }
             </Form.Item>
           </Col>
@@ -146,7 +146,7 @@ const DialogRecord = props => {
               {
                 getFieldDecorator(`dialogRecord[${dialog.dialogId}].dialogTag`, {
                   initialValue: dialog.dialogTag,
-                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].dialogTag`}/>)
+                })(<EditAbleTagGroup form={form} fieldName={`dialogRecord[${dialog.dialogId}].dialogTag`} disabled={disabled}/>)
               }
             </Form.Item>
           </Col>

@@ -23,7 +23,7 @@ import styles from './style.less';
 import ItemData from '../map';
 
 const { TextArea } = Input;
-const { AnswerModeLabels, Labeler, Inspector } = ItemData;
+const { AnswerModeLabels, Labeler, Inspector, Labeling, Review, Reject } = ItemData;
 
 @connect(({ extensionMark }) => ({
   questionInfo: extensionMark.questionInfo,
@@ -219,16 +219,28 @@ class ExtensionAnswerView extends Component {
     });
   };
 
+  judgeDisabled = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    if (roleId === Inspector) {
+      return status !== Review;
+    }
+
+    return true;
+  };
+
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
     const { basicInfo, markTool, roleId, dataIdQueue } = this.state;
     const action = (
       <Fragment>
-        { roleId === Labeler && <Button icon="check" onClick={this.submitReview}>提交质检</Button> }
+        { roleId === Labeler && <Button icon="check" onClick={this.submitReview} disabled={this.judgeDisabled(roleId, basicInfo.status)}>提交质检</Button> }
         { roleId === Inspector &&
           <Button.Group>
-            <Button icon="close" onClick={this.submitReject}>驳回</Button>
-            <Button icon="check" onClick={this.submitComplete}>通过</Button>
+            <Button icon="close" onClick={this.submitReject} disabled={this.judgeDisabled(roleId, basicInfo.status)}>驳回</Button>
+            <Button icon="check" onClick={this.submitComplete} disabled={this.judgeDisabled(roleId, basicInfo.status)}>通过</Button>
           </Button.Group>
         }
         <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>
@@ -271,10 +283,9 @@ class ExtensionAnswerView extends Component {
       },
       {
         title: '操作',
+        dataIndex: 'operate',
         width: 50,
-        render: (_, record, index) => (
-          <a onClick={() => this.handleDelete(index)}>删除</a>
-        ),
+        render: this.judgeDisabled(roleId, basicInfo.status) ? '' : (_, record, index) => (<a onClick={() => this.handleDelete(index)}>删除</a>),
       },
     ];
 
@@ -308,7 +319,7 @@ class ExtensionAnswerView extends Component {
                   <Form.Item label={AnswerModeLabels.extension}>
                     {
                       getFieldDecorator('extensionText')(
-                        <Input onPressEnter={this.onPressEnter} placeholder="回车确认" suffix={<Icon type="enter" />} style={{ width: '80%' }}/>)
+                        <Input onPressEnter={this.judgeDisabled(roleId, basicInfo.status) ? () => {} : this.onPressEnter} placeholder="回车确认" suffix={<Icon type="enter" />} style={{ width: '80%' }}/>)
                     }
                   </Form.Item>
                 </Row>
@@ -320,7 +331,7 @@ class ExtensionAnswerView extends Component {
                         getFieldDecorator('reviewResult', {
                           initialValue: questionInfo.reviewResult,
                         })(
-                          <Radio.Group>
+                          <Radio.Group disabled={this.judgeDisabled(roleId, basicInfo.status)}>
                             <Radio.Button value="approve">通过</Radio.Button>
                             <Radio.Button value="reject">拒绝</Radio.Button>
                           </Radio.Group>)
@@ -335,7 +346,7 @@ class ExtensionAnswerView extends Component {
                       {
                         getFieldDecorator('remark', {
                           initialValue: questionInfo.remark,
-                        })(<TextArea style={{ width: '80%' }} autoSize/>)
+                        })(<TextArea style={{ width: '80%' }} autoSize disabled={this.judgeDisabled(roleId, basicInfo.status)}/>)
                       }
                     </Form.Item>
                   }
@@ -370,8 +381,7 @@ class ExtensionAnswerView extends Component {
                       getFieldDecorator('invalid', {
                         initialValue: questionInfo.invalid,
                         valuePropName: 'checked',
-                      })(
-                        <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>)
+                      })(<Checkbox style={{ marginLeft: '16px' }} disabled={this.judgeDisabled(roleId, basicInfo.status)}>无效数据</Checkbox>)
                     }
                   </Form.Item>
                 </Row>

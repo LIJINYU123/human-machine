@@ -8,7 +8,7 @@ import styles from './style.less';
 import ItemData from '../map';
 
 const { TextArea } = Input;
-const { AnswerModeLabels, Labeler, Inspector } = ItemData;
+const { AnswerModeLabels, Labeler, Inspector, Review, Reject, Labeling } = ItemData;
 
 @connect(({ textMark }) => ({
   questionInfo: textMark.questionInfo,
@@ -188,16 +188,28 @@ class ClassifyAnswerView extends Component {
     });
   };
 
+  judgeDisabled = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    if (roleId === Inspector) {
+      return status !== Review;
+    }
+
+    return true;
+  };
+
   render() {
     const { form: { getFieldDecorator, getFieldsValue }, questionInfo } = this.props;
     const { basicInfo, markTool, roleId, dataIdQueue } = this.state;
     const action = (
       <Fragment>
-        { roleId === Labeler && <Button icon="check" onClick={this.submitReview}>提交质检</Button> }
+        { roleId === Labeler && <Button icon="check" onClick={this.submitReview} disabled={this.judgeDisabled(roleId, basicInfo.status)}>提交质检</Button> }
         { roleId === Inspector &&
           <Button.Group>
-            <Button icon="close" onClick={this.submitReject}>驳回</Button>
-            <Button icon="check" onClick={this.submitComplete}>通过</Button>
+            <Button icon="close" onClick={this.submitReject} disabled={this.judgeDisabled(roleId, basicInfo.status)}>驳回</Button>
+            <Button icon="check" onClick={this.submitComplete} disabled={this.judgeDisabled(roleId, basicInfo.status)}>通过</Button>
           </Button.Group>
         }
         <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>
@@ -275,7 +287,7 @@ class ClassifyAnswerView extends Component {
                       getFieldDecorator('labelResult', {
                         initialValue: questionInfo.labelResult,
                       })(
-                        <TagSelect expandable multiple={markTool.multiple} onChange={this.handleTagChange}>
+                        <TagSelect expandable multiple={markTool.multiple} onChange={this.handleTagChange} disabled={this.judgeDisabled(roleId, basicInfo.status)}>
                           {markTool.options.map(option => <TagSelect.Option value={option.optionName}>{option.optionName}</TagSelect.Option>)}
                         </TagSelect>)
                     }
@@ -289,7 +301,7 @@ class ClassifyAnswerView extends Component {
                         getFieldDecorator('reviewResult', {
                           initialValue: questionInfo.reviewResult,
                         })(
-                          <Radio.Group>
+                          <Radio.Group disabled={this.judgeDisabled(roleId, basicInfo.status)}>
                             <Radio.Button value="approve">通过</Radio.Button>
                             <Radio.Button value="reject">拒绝</Radio.Button>
                           </Radio.Group>)
@@ -304,7 +316,7 @@ class ClassifyAnswerView extends Component {
                       {
                         getFieldDecorator('remark', {
                           initialValue: questionInfo.remark,
-                        })(<TextArea style={{ width: '80%' }} autoSize/>)
+                        })(<TextArea style={{ width: '80%' }} autoSize disabled={this.judgeDisabled(roleId, basicInfo.status)}/>)
                       }
                     </Form.Item>
                   }
@@ -340,7 +352,7 @@ class ClassifyAnswerView extends Component {
                         initialValue: questionInfo.invalid,
                         valuePropName: 'checked',
                       })(
-                        <Checkbox style={{ marginLeft: '16px' }}>无效数据</Checkbox>)
+                        <Checkbox style={{ marginLeft: '16px' }} disabled={this.judgeDisabled(roleId, basicInfo.status)}>无效数据</Checkbox>)
                     }
                   </Form.Item>
                 </Row>

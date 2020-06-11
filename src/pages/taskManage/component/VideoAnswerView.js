@@ -16,7 +16,7 @@ import ItemData from '../map';
 const { RangePicker } = DatePicker;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
-const { FieldLabels, Labeler, Inspector } = ItemData;
+const { FieldLabels, Labeler, Inspector, Labeling, Review, Reject } = ItemData;
 
 
 @connect(({ videoMark }) => ({
@@ -57,7 +57,7 @@ class VideoAnswerView extends Component {
 
   componentDidMount() {
     const { dispatch, form, location } = this.props;
-    const { basicInfo, dataIdQueue } = this.state;
+    const { basicInfo, dataIdQueue, roleId } = this.state;
 
     const defaultUserInfo = {
       userId: 1,
@@ -85,7 +85,7 @@ class VideoAnswerView extends Component {
       reverse: false,
     };
 
-    let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo}/>, key: 'user1' }];
+    let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo} disabled={this.judgeDisabled(roleId, basicInfo.status)}/>, key: 'user1' }];
 
     window.addEventListener('resize', this.resizeFooterToolbar, { passive: true });
     this.resizeFooterToolbar();
@@ -103,7 +103,7 @@ class VideoAnswerView extends Component {
         dataIdQueue.push(dataId);
 
         if (userInfo.length) {
-          panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user}/>, key: `user${user.userId}` }));
+          panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} disabled={this.judgeDisabled(roleId, basicInfo.status)}/>, key: `user${user.userId}` }));
         }
 
         this.setState({
@@ -308,7 +308,7 @@ class VideoAnswerView extends Component {
   };
 
   handleNextQuestion = () => {
-    const { basicInfo, dataIdQueue, topics } = this.state;
+    const { basicInfo, dataIdQueue, topics, roleId } = this.state;
     const { dispatch, dataId, form: { validateFieldsAndScroll } } = this.props;
 
     validateFieldsAndScroll((errors, values) => {
@@ -376,10 +376,12 @@ class VideoAnswerView extends Component {
               reverse: false,
             };
 
-            let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo}/>, key: 'user1' }];
+            const disabled = this.judgeDisabled(roleId, basicInfo.status);
+
+            let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo} disabled={disabled}/>, key: 'user1' }];
 
             if (userInfo.length) {
-              panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user}/>, key: `user${user.userId}` }));
+              panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} disabled={disabled}/>, key: `user${user.userId}` }));
             }
 
             this.setState({
@@ -398,7 +400,7 @@ class VideoAnswerView extends Component {
   };
 
   handlePrevQuestion = () => {
-    const { basicInfo, dataIdQueue } = this.state;
+    const { basicInfo, dataIdQueue, roleId } = this.state;
     const { dispatch, dataId } = this.props;
     let prevDataId = '';
     const currentIndex = dataIdQueue.indexOf(dataId);
@@ -431,9 +433,10 @@ class VideoAnswerView extends Component {
           editVisible: false,
         };
 
-        let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo} />, key: 'user1' }];
+        const disabled = this.judgeDisabled(roleId, basicInfo.status);
+        let panes = [{ title: '用户1', content: <UserInfo form={form} user={defaultUserInfo} disabled={disabled}/>, key: 'user1' }];
         if (userInfo.length) {
-          panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} userId={user.userId}/>, key: `user${user.userId}` }));
+          panes = userInfo.map(user => ({ title: `用户${user.userId}`, content: <UserInfo form={form} user={user} userId={user.userId} disabled={disabled}/>, key: `user${user.userId}` }));
         }
 
         this.setState({
@@ -463,7 +466,7 @@ class VideoAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
@@ -480,7 +483,7 @@ class VideoAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
@@ -497,11 +500,41 @@ class VideoAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
     });
+  };
+
+  judgeDisabled = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    if (roleId === Inspector) {
+      return status !== Review;
+    }
+
+    return true;
+  };
+
+  renderOperate = (roleId, status) => {
+    const disabled = this.judgeDisabled(roleId, status);
+    if (roleId === Labeler) {
+      return <Button icon="check" onClick={this.submitReview} disabled={disabled}>提交质检</Button>
+    }
+
+    if (roleId === Inspector) {
+      return (
+        <Button.Group>
+          <Button icon="close" onClick={this.submitReject} disabled={disabled}>驳回</Button>
+          <Button icon="check" onClick={this.submitComplete} disabled={disabled}>通过</Button>
+        </Button.Group>
+      );
+    }
+
+    return null;
   };
 
   render() {
@@ -510,14 +543,12 @@ class VideoAnswerView extends Component {
 
     const users = panes.map(pane => ({ userId: parseInt(pane.key.replace('user', ''), 0), userName: pane.title }));
 
+    const disabled = this.judgeDisabled(roleId, basicInfo.status);
+
     const action = (
       <Fragment>
-        { roleId === 'labeler' && <Button icon="check" onClick={this.submitReview}>提交质检</Button> }
-        { roleId === 'inspector' &&
-        <Button.Group>
-          <Button icon="close" onClick={this.submitReject}>驳回</Button>
-          <Button icon="check" onClick={this.submitComplete}>通过</Button>
-        </Button.Group>
+        {
+          this.renderOperate(roleId, basicInfo.status)
         }
         <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleGoBack}>返回</Button>
       </Fragment>
@@ -570,14 +601,14 @@ class VideoAnswerView extends Component {
       },
       {
         title: '操作',
-        render: (_, record, index) => (
+        width: 120,
+        render: disabled ? '' : (_, record, index) => (
           <Fragment>
             <a onClick={() => this.showEditModal(record, index)}>编辑</a>
             <Divider type="vertical"/>
             <a onClick={() => this.handleDeleteTopic(index)}>删除</a>
           </Fragment>
         ),
-        width: 120,
       },
     ];
 
@@ -601,7 +632,7 @@ class VideoAnswerView extends Component {
                         message: '请输入视频编号',
                       }],
                       initialValue: videoBasicInfo.videoNo,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -616,7 +647,7 @@ class VideoAnswerView extends Component {
                         },
                       ],
                       initialValue: videoBasicInfo.area,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -631,7 +662,7 @@ class VideoAnswerView extends Component {
                         },
                       ],
                       initialValue: videoBasicInfo.outlet,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -646,7 +677,7 @@ class VideoAnswerView extends Component {
                         },
                       ],
                       initialValue: videoBasicInfo.receptionPerson,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -661,7 +692,7 @@ class VideoAnswerView extends Component {
                         },
                       ],
                       initialValue: videoBasicInfo.hasOwnProperty('dialogTime') ? [moment(videoBasicInfo.dialogTime[0], 'YYYY-MM-DD HH:mm'), moment(videoBasicInfo.dialogTime[1], 'YYYY-MM-DD HH:mm')] : [],
-                    })(<RangePicker allowClear={false} showTime={{ format: 'HH:mm' }} format="YYYY-MM-DD HH:mm" placeholder={['开始时间', '结束时间']} style={{ width: '100%' }} />)
+                    })(<RangePicker allowClear={false} showTime={{ format: 'HH:mm' }} format="YYYY-MM-DD HH:mm" placeholder={['开始时间', '结束时间']} style={{ width: '100%' }} disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -676,7 +707,7 @@ class VideoAnswerView extends Component {
                         },
                       ],
                       initialValue: videoBasicInfo.hasOwnProperty('receptionCostTime') ? moment(videoBasicInfo.receptionCostTime, 'HH:mm') : undefined,
-                    })(<TimePicker format="HH:mm" style={{ width: '100%' }} />)
+                    })(<TimePicker format="HH:mm" style={{ width: '100%' }} disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -691,7 +722,7 @@ class VideoAnswerView extends Component {
                         },
                       ],
                       initialValue: videoBasicInfo.dialogScene,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -706,7 +737,7 @@ class VideoAnswerView extends Component {
                         },
                       ],
                       initialValue: videoBasicInfo.dialogTarget,
-                    })(<Input/>)
+                    })(<Input disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -715,7 +746,7 @@ class VideoAnswerView extends Component {
                   {
                     getFieldDecorator('videoBasicInfo.videoRemark', {
                       initialValue: videoBasicInfo.videoRemark,
-                    })(<TextArea autoSize/>)
+                    })(<TextArea autoSize disabled={disabled}/>)
                   }
                 </Form.Item>
               </Col>
@@ -724,7 +755,7 @@ class VideoAnswerView extends Component {
         </Card>
         <Card bordered={false} title="用户信息" className={styles.card}>
           {
-            <Tabs type="editable-card" onEdit={this.onEditTab} onChange={this.onChange} activeKey={activeKey}>
+            <Tabs type="editable-card" onEdit={disabled ? () => {} : this.onEditTab} onChange={this.onChange} activeKey={activeKey}>
               {panes.map(pane => (<TabPane tab={pane.title} key={pane.key} forceRender>{pane.content}</TabPane>))}
             </Tabs>
           }
@@ -732,7 +763,7 @@ class VideoAnswerView extends Component {
         <Card bordered={false} title="对话记录">
           <Row gutter={16}>
             <Col span={16}>
-              {records.map((record, index) => <DialogRecord form={this.props.form} dialog={record} index={index} onDelete={() => this.handleDeleteDialog(index)} key={record.dialogId}/>)}
+              {records.map((record, index) => <DialogRecord form={this.props.form} dialog={record} index={index} onDelete={() => this.handleDeleteDialog(index)} key={record.dialogId} disabled={disabled}/>)}
             </Col>
             <Col span={8}>
               <Table
@@ -741,12 +772,12 @@ class VideoAnswerView extends Component {
                 pagination={false}
                 bordered
               />
-              <Button type="primary" style={{ marginTop: '16px' }} onClick={this.showCreateModal}>关联话题</Button>
+              <Button type="primary" style={{ marginTop: '16px' }} onClick={this.showCreateModal} disabled={disabled}>关联话题</Button>
             </Col>
           </Row>
           <Row gutter={[16, 32]}>
             <Col>
-              <Button type="primary" icon="plus" onClick={this.showModal}>问答对</Button>
+              <Button type="primary" icon="plus" onClick={this.showModal} disabled={disabled}>问答对</Button>
             </Col>
           </Row>
           <Row gutter={[16, 32]}>

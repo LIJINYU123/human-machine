@@ -188,7 +188,7 @@ class ProjectDetail extends Component {
       },
       {
         title: '操作',
-        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{roleId === Labeler ? '标注' : '质检'}</a>,
+        render: (_, task) => <a onClick={() => this.handleJumpToMarkView(task)}>{ task.status === 'complete' ? '查看' : (roleId === Labeler ? '标注' : '质检') }</a>,
       },
     ];
 

@@ -74,6 +74,16 @@ class Step1 extends Component {
     });
   };
 
+  checkProjectName = (rule, value, callback) => {
+    if (!value.trim()) {
+      callback('请输入项目名称');
+    } else if (/(^\s+)|(\s+$)/.test(value)) {
+      callback('项目名称包含空白字符');
+    } else {
+      callback();
+    }
+  };
+
   render() {
     // eslint-disable-next-line max-len
     const { form: { getFieldDecorator }, textProjectFormData: { stepOne, members, forever }, status } = this.props;
@@ -109,8 +119,7 @@ class Step1 extends Component {
                   rules: [
                     {
                       required: true,
-                      message: '请输入项目名称',
-                      whitespace: true,
+                      validator: this.checkProjectName,
                     },
                   ],
                   initialValue: projectName,

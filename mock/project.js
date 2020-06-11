@@ -699,7 +699,15 @@ const nerLabelData = [
   {
     dataId: '1',
     data: { sentence: '我想要听王菲的传奇' },
-    labelResult: [],
+    labelResult: [{
+      word: '王菲',
+      optionName: '歌手',
+      startIndex: 4,
+      endIndex: 6,
+      saveType: 'wordEntry',
+      wordEntry: '',
+      newWordEntry: '',
+    }],
     reviewResult: 'unreview',
     remark: '',
     invalid: false,

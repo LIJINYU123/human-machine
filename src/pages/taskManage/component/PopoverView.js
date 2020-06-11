@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Button, Form } from 'antd';
 import TagSelect from '@/components/TagSelect';
 import { connect } from 'dva';
+import ItemData from '../map';
+
+const { Labeler, Inspector, Complete, Review, Labeling, Reject } = ItemData;
 
 @connect(({ textMark }) => ({
   textMark,
@@ -26,8 +29,20 @@ class PopoverView extends Component {
     });
   };
 
+  judgeDisabled = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    if (roleId === Inspector) {
+      return status !== Review;
+    }
+
+    return true;
+  };
+
   render() {
-    const { markTool, onClose, labelValues, form: { getFieldDecorator } } = this.props;
+    const { markTool, status, roleId, onClose, labelValues, form: { getFieldDecorator } } = this.props;
 
     const formItemLayout = {
       labelCol: {
@@ -67,7 +82,7 @@ class PopoverView extends Component {
             },
           }} label=""
         >
-          <Button type="primary" size="small" onClick={this.onValidateForm}>确定</Button>
+          <Button type="primary" size="small" onClick={this.onValidateForm} disabled={this.judgeDisabled(roleId, status)}>确定</Button>
           <Button size="small" style={{ marginLeft: '8px' }} onClick={onClose}>取消</Button>
         </Form.Item>
       </Form>

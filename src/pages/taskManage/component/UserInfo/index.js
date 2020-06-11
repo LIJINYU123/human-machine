@@ -8,7 +8,7 @@ const { FieldLabels, SexOptions, AppearanceTreeData, ProfessionOptions, Entourag
 
 
 const UserInfo = props => {
-  const { form, user } = props;
+  const { form, user, disabled } = props;
   const { getFieldDecorator } = form;
 
   useEffect(() => {
@@ -40,6 +40,7 @@ const UserInfo = props => {
   };
 
   const dropdownStyle = { maxHeight: '400px', overflow: 'auto' };
+  const colorGroups = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple'];
 
   return (
     <Form {...formItemLayout}>
@@ -55,7 +56,7 @@ const UserInfo = props => {
                   },
                 ],
                 initialValue: user.sex,
-              })(<Select dropdownMenuStyle={dropdownStyle}>{SexOptions.map(option => <Option key={option.key} value={option.value}>{option.value}</Option>)}</Select>)
+              })(<Select dropdownMenuStyle={dropdownStyle} disabled={disabled}>{SexOptions.map(option => <Option key={option.key} value={option.value}>{option.value}</Option>)}</Select>)
             }
           </Form.Item>
         </Col>
@@ -70,7 +71,7 @@ const UserInfo = props => {
                   },
                 ],
                 initialValue: user.age,
-              })(<InputNumber min={0} style={{ width: '100%' }}/>)
+              })(<InputNumber min={0} style={{ width: '100%' }} disabled={disabled}/>)
             }
           </Form.Item>
         </Col>
@@ -85,7 +86,7 @@ const UserInfo = props => {
                   },
                 ],
                 initialValue: user.appearance,
-              })(<TreeSelect treeData={AppearanceTreeData} multiple allowClear/>)
+              })(<TreeSelect treeData={AppearanceTreeData} multiple allowClear disabled={disabled}/>)
             }
           </Form.Item>
         </Col>
@@ -100,7 +101,7 @@ const UserInfo = props => {
                   },
                 ],
                 initialValue: user.profession,
-              })(<Select dropdownMenuStyle={dropdownStyle}>{ProfessionOptions.map(option => <Option key={option.key} value={option.value}>{option.value}</Option>)}</Select>)
+              })(<Select dropdownMenuStyle={dropdownStyle} disabled={disabled}>{ProfessionOptions.map(option => <Option key={option.key} value={option.value}>{option.value}</Option>)}</Select>)
             }
           </Form.Item>
         </Col>
@@ -115,7 +116,7 @@ const UserInfo = props => {
                   },
                 ],
                 initialValue: user.figure,
-              })(<Input/>)
+              })(<Input disabled={disabled}/>)
             }
           </Form.Item>
         </Col>
@@ -130,7 +131,7 @@ const UserInfo = props => {
                   },
                 ],
                 initialValue: user.entourage,
-              })(<Select dropdownMenuStyle={dropdownStyle}>{EntourageOptions.map(option => <Option key={option.key} value={option.value}>{option.value}</Option>)}</Select>)
+              })(<Select dropdownMenuStyle={dropdownStyle} disabled={disabled}>{EntourageOptions.map(option => <Option key={option.key} value={option.value}>{option.value}</Option>)}</Select>)
             }
           </Form.Item>
         </Col>
@@ -141,7 +142,7 @@ const UserInfo = props => {
             {
               getFieldDecorator(`userInfo[${user.userId}].userTag`, {
                 initialValue: user.userTag,
-              })(<EditAbleTagGroup form={form} fieldName={`userInfo[${user.userId}].userTag`} />)
+              })(<EditAbleTagGroup form={form} fieldName={`userInfo[${user.userId}].userTag`} disabled={disabled}/>)
             }
           </Form.Item>
         </Col>

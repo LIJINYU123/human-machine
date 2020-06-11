@@ -7,6 +7,8 @@ const EditableGroupTag = props => {
   const [inputValue, setInputValue] = useState('');
   const [tags, setTags] = useState(props.value);
 
+  const { disabled = false } = props;
+
   let inputRef = React.createRef();
 
   useEffect(() => {
@@ -55,17 +57,17 @@ const EditableGroupTag = props => {
     <div>
       {
         // eslint-disable-next-line max-len
-        tags.map((tag, index) => <Tag key={tag} closable color={colorGroups[index % colorGroups.length]}
+        tags.map((tag, index) => <Tag key={tag} closable={!disabled} color={colorGroups[index % colorGroups.length]}
                                       onClose={() => handleClose(tag)}>{tag}</Tag>)
       }
-      {inputVisible && (
+      {!disabled && inputVisible && (
         <Input ref={saveInputRef} type="text" size="small" style={{ width: 78 }}
                value={inputValue} onChange={handleInputChange}
                onBlur={handleInputConfirm}
                onPressEnter={handleInputConfirm}/>
       )}
       {
-        !inputVisible && (<Tag onClick={showInput} style={{
+        !disabled && !inputVisible && (<Tag onClick={showInput} style={{
           background: '#fff',
           borderStyle: 'dashed',
         }}><Icon type="plus"/>新标签</Tag>)

@@ -52,6 +52,9 @@ class GroupAddView extends Component {
               type: 'groupList/fetchGroups',
               payload: { sorter: 'updatedTime_descend' },
             });
+            this.setState({
+              targetKeys: [],
+            });
             onCancel();
           },
         });

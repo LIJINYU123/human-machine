@@ -18,7 +18,7 @@ import StandardTable from './StandardTable';
 import ItemData from '../map';
 import styles from './style.less';
 
-const { reviewLabel, taskStatusName, labelTypeName, labelResult } = ItemData;
+const { reviewLabel, taskStatusName, labelTypeName, labelResult, Labeler, Inspector, Labeling, Reject, Review } = ItemData;
 
 const getValue = obj => (obj ? obj.join(',') : []);
 
@@ -216,6 +216,36 @@ class VideoMarkView extends Component {
     });
   };
 
+  judgeDisabled = (roleId, status) => {
+    if (roleId === Labeler) {
+      return ![Labeling, Reject].includes(status);
+    }
+
+    if (roleId === Inspector) {
+      return status !== Review;
+    }
+
+    return true;
+  };
+
+  renderOperate = (roleId, status) => {
+    const disabled = this.judgeDisabled(roleId, status);
+    if (roleId === Labeler) {
+      return <Button type="primary" icon="check" onClick={this.submitReview} disabled={disabled}>提交质检</Button>
+    }
+
+    if (roleId === Inspector) {
+      return (
+        <Button.Group>
+          <Button icon="close" onClick={this.submitReject} disabled={disabled}>驳回</Button>
+          <Button icon="check" onClick={this.submitComplete} disabled={disabled}>通过</Button>
+        </Button.Group>
+      );
+    }
+
+    return null;
+  };
+
   render() {
     const { basicInfo, remarkPopoverVisible, inputValue, roleId } = this.state;
     const { data, checkRate, passRate, taskSchedule, loading } = this.props;
@@ -256,14 +286,7 @@ class VideoMarkView extends Component {
           <Radio.Button value="focus" onClick={() => this.jumpToAnswerMode('')}>答题模式</Radio.Button>
         </Radio.Group>
         {
-          roleId === 'labeler' && <Button type="primary" icon="check" onClick={this.submitReview}>提交质检</Button>
-        }
-        {
-          roleId === 'inspector' &&
-          <Button.Group>
-            <Button icon="close" onClick={this.submitReject}>驳回</Button>
-            <Button icon="check" onClick={this.submitComplete}>通过</Button>
-          </Button.Group>
+          this.renderOperate(roleId, basicInfo.status)
         }
       </Fragment>
     );
