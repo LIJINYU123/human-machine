@@ -19,7 +19,7 @@ const Model = {
 
     * createDepartment({ payload, callback }, { call }) {
       const response = yield call(createDepartment, payload);
-      if (response.status) {
+      if (response.status === 'ok') {
         message.success(response.message);
         if (callback) {
           callback();
