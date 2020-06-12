@@ -91,7 +91,7 @@ const TextProjectFormData = {
     * saveStepOneData({ payload, callback }, { call, put, select }) {
       const forever = yield select(state => state.textProjectFormData.forever);
       const projectId = yield select(state => state.textProjectFormData.projectId);
-      const { projectName, projectPeriod, labeler, inspector, ...rest } = payload;
+      const { projectPeriod, labeler, inspector, ...rest } = payload;
       let startTime = '';
       let endTime = '';
       if (!forever) {
