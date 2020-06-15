@@ -134,10 +134,10 @@ class ProjectDetail extends Component {
   canReceiveTask = () => {
     const { data } = this.props;
     const { roleId } = this.state;
-    if (roleId === Labeler && data.list.filter(item => item.status === 'labeling').length > 0) {
+    if (roleId === Labeler && data.list.filter(item => item.status === Labeling || item.status === Reject).length > 0) {
       return true;
     }
-    if (roleId === Inspector && data.list.filter(item => item.status === 'review').length > 0) {
+    if (roleId === Inspector && data.list.filter(item => item.status === Review).length > 0) {
       return true;
     }
     return false;

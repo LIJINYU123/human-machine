@@ -145,7 +145,7 @@ const taskMockData = [
     labelType: 'pictureMark',
     questionNum: 100,
     schedule: 100,
-    status: 'complete',
+    status: 'labeling',
     receiveTime: '2020-04-24 10:00:00',
     owner: 'SYECO',
     rejectTime: 0,
@@ -306,11 +306,11 @@ const imageMarkToolsMockData = [
     options: [
       {
         optionName: '家电',
-        color: '#52c41a',
+        color: '#13c2c2',
       },
       {
         optionName: '家具',
-        color: '#13c2c2',
+        color: '#52c41a',
       },
       {
         optionName: '人物',

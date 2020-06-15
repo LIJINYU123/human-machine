@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Button, Row, Col, Upload, Icon, message } from 'antd';
+import { Button, Row, Col, Upload, Icon, message, Typography } from 'antd';
 import { connect } from 'dva';
 import reqwest from 'reqwest';
 
 const { Dragger } = Upload;
+const { Paragraph } = Typography;
 
 @connect(({ textProjectFormData }) => ({
   stepOne: textProjectFormData.stepOne,
@@ -74,6 +75,7 @@ class Step3 extends Component {
             // fileList: [],
             uploading: false,
           });
+          message.success('文件上传成功');
           dispatch({
             type: 'textProjectFormData/saveStepThreeData',
           });
@@ -124,6 +126,7 @@ class Step3 extends Component {
         <Row gutter={[16, 16]}>
           <Col>
             <a onClick={this.handleDownload}><Icon type="download"/>下载模板文件</a>
+            <Paragraph copyable={{ text: this.props.projectId }} style={{ float: 'right' }}>点击复制项目ID</Paragraph>
           </Col>
         </Row>
         <Row gutter={[16, 16]}>

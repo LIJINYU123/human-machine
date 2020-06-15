@@ -89,6 +89,13 @@ class SequenceMarkView extends Component {
   }
 
   handleGoback = () => {
+    // 更新schedule
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'sequenceMark/updateSchedule',
+      payload: { schedule: 0 },
+    });
+
     router.goBack()
   };
 

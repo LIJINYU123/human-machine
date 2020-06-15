@@ -81,6 +81,13 @@ class ImageMarkView extends Component {
   }
 
   handleGoBack = () => {
+    // 更新schedule
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'imageMark/updateSchedule',
+      payload: { schedule: 0 },
+    });
+
     router.goBack();
   };
 
@@ -312,7 +319,8 @@ class ImageMarkView extends Component {
       {
         title: '图片名称',
         dataIndex: 'data',
-        render: val => <Popover content={<Card style={{ width: 240 }} cover={<img alt="example" src={val.url} />} hoverable><Meta description="http://10.89.100.14/img/0002fdafdf.png"/></Card>} placement="top"><a>{val.sentence}</a></Popover>,
+        render: val => val.sentence,
+        // render: val => <Popover content={<Card style={{ width: 240 }} cover={<img alt="example" src={val.url} />} hoverable><Meta description="http://10.89.100.14/img/0002fdafdf.png"/></Card>} placement="top"><a>{val.sentence}</a></Popover>,
       },
       {
         title: '标注结果',

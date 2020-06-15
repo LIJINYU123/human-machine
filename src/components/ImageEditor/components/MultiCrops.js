@@ -57,7 +57,7 @@ class MultiCrops extends Component {
 
 
   handleMouseMove = e => {
-    const { onDraw, onChange, coordinates } = this.props;
+    const { onDraw, onChange, coordinates, color } = this.props;
     const { pointA } = this;
     if (isValidPoint(pointA)) {
       const pointB = this.getCursorPosition(e);
@@ -68,8 +68,10 @@ class MultiCrops extends Component {
         y: Math.min(pointA.y, pointB.y),
         width: Math.abs(pointA.x - pointB.x),
         height: Math.abs(pointA.y - pointB.y),
+        color,
         id: this.id,
       };
+
       const nextCoordinates = clone(coordinates);
       nextCoordinates[this.drawingIndex] = coordinate;
       if (is(Function, onDraw)) {
@@ -124,6 +126,7 @@ const {
 MultiCrops.propTypes = {
   coordinates: arrayOf(coordinateType),
   src: string,
+  color: string,
   width: number,
   height: number,
   onDraw: func,
@@ -134,6 +137,7 @@ MultiCrops.propTypes = {
 MultiCrops.defaultProps = {
   coordinates: [],
   src: '',
+  color: '',
 };
 
 export default MultiCrops;

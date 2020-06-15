@@ -76,6 +76,13 @@ class VideoMarkView extends Component {
   }
 
   handleGoBack = () => {
+    // 更新schedule
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'videoMark/updateSchedule',
+      payload: { schedule: 0 },
+    });
+
     router.goBack();
   };
 

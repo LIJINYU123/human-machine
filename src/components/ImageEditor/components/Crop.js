@@ -7,7 +7,7 @@ import { DeleteIcon, NumberIcon } from './Icons'
 class Crop extends Component {
   static cropStyle = coordinate => {
     const {
-      x, y, width, height,
+      x, y, width, height, color,
     } = coordinate;
 
     return {
@@ -22,7 +22,7 @@ class Crop extends Component {
 
 
       // boxShadow: '0 0 6px #000',
-      border: '3px solid #52c41a',
+      border: `3px solid ${color}`,
       // background: '#8c8c8c',
       // opacity: 0.6,
     }
@@ -132,6 +132,7 @@ export const coordinateType = PropTypes.shape({
   y: PropTypes.number.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  color: PropTypes.string.isRequired,
 });
 
 Crop.propTypes = {

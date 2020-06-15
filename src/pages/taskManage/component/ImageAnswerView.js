@@ -36,6 +36,7 @@ class ImageAnswerView extends Component {
     roleId: '',
     coordinates: [],
     dataIdQueue: [],
+    color: '#52c41a',
   };
 
 
@@ -45,6 +46,7 @@ class ImageAnswerView extends Component {
       basicInfo: location.state.basicInfo,
       markTool: location.state.markTool,
       roleId: location.state.roleId,
+      color: location.state.markTool.options.length ? location.state.markTool.options[0].color : '#52c41a',
     });
   }
 
@@ -57,6 +59,7 @@ class ImageAnswerView extends Component {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
         dataId: location.state.dataId,
+        labelType: basicInfo.labelType,
       },
       callback: () => {
         const { questionInfo } = this.props;
@@ -91,26 +94,27 @@ class ImageAnswerView extends Component {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
         dataId: questionInfo.dataId,
+        labelType: basicInfo.labelType,
         reviewRounds: basicInfo.rejectTime + 1,
         nextDataId,
-        ...values,
+        labelResult: values.labelResult,
       },
       callback: () => {
         // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
         const { labelResult } = questionInfo;
-        if (roleId === 'labeler') {
+        if (roleId === Labeler) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             invalid: questionInfo.invalid,
-            optionName: markTool.options.length ? markTool.options[0].optionName : '',
+            optionName: markTool.options.length ? [markTool.options[0].optionName] : [],
           });
-        } else if (roleId === 'inspector') {
+        } else if (roleId === Inspector) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             reviewResult: questionInfo.reviewResult,
             remark: questionInfo.remark,
-            optionName: markTool.options.length ? markTool.options[0].optionName : '',
+            optionName: markTool.options.length ? [markTool.options[0].optionName] : [],
           });
         }
         if (!dataIdQueue.includes(questionInfo.dataId) && questionInfo.dataId !== '') {
@@ -118,6 +122,7 @@ class ImageAnswerView extends Component {
         }
         this.setState({
           coordinates: labelResult,
+          color: markTool.options.length ? markTool.options[0].color : '#52c41a',
         });
       },
     });
@@ -138,27 +143,29 @@ class ImageAnswerView extends Component {
         projectId: basicInfo.projectId,
         taskId: basicInfo.taskId,
         prevDataId,
+        labelType: basicInfo.labelType,
       },
       callback: () => {
         // eslint-disable-next-line no-shadow
         const { questionInfo } = this.props;
         const { labelResult } = questionInfo;
-        if (roleId === 'labeler') {
+        if (roleId === Labeler) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             invalid: questionInfo.invalid,
-            optionName: markTool.options.length ? markTool.options[0].optionName : '',
+            optionName: markTool.options.length ? [markTool.options[0].optionName] : [],
           });
-        } else if (roleId === 'inspector') {
+        } else if (roleId === Inspector) {
           setFieldsValue({
             labelResult: questionInfo.labelResult,
             reviewResult: questionInfo.reviewResult,
             remark: questionInfo.remark,
-            optionName: markTool.options.length ? markTool.options[0].optionName : '',
+            optionName: markTool.options.length ? [markTool.options[0].optionName] : [],
           });
         }
         this.setState({
           coordinates: labelResult,
+          color: markTool.options.length ? markTool.options[0].color : '#52c41a',
         });
       },
     });
@@ -166,9 +173,17 @@ class ImageAnswerView extends Component {
 
   handleTagChange = value => {
     const { form: { setFieldsValue } } = this.props;
+    const { markTool } = this.state;
     setFieldsValue({
       classifyName: value,
     });
+
+    const filterItems = markTool.options.filter(item => item.optionName === value[0]);
+    if (filterItems.length) {
+      this.setState({
+        color: filterItems[0].color,
+      });
+    }
   };
 
   handleDelete = index => {
@@ -191,12 +206,13 @@ class ImageAnswerView extends Component {
     const { markTool } = this.state;
     const values = getFieldsValue();
     const prevLabelResult = values.labelResult;
+
     if (prevLabelResult.length < coordinates.length) {
       prevLabelResult.push({
         ...coordinate,
         right: coordinate.x + coordinate.width,
         bottom: coordinate.y + coordinate.height,
-        optionName: values.optionName,
+        optionName: values.optionName[0],
         color: markTool.options.filter(item => item.optionName === values.optionName[0])[0].color });
     } else {
       prevLabelResult.forEach(item => {
@@ -243,7 +259,7 @@ class ImageAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
@@ -260,7 +276,7 @@ class ImageAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
@@ -277,7 +293,7 @@ class ImageAnswerView extends Component {
         router.push({
           pathname: '/task-manage/my-task',
           state: {
-            status: roleId === 'labeler' ? 'labeling,reject' : 'review',
+            status: roleId === Labeler ? 'labeling,reject' : 'review',
           },
         });
       },
@@ -298,12 +314,12 @@ class ImageAnswerView extends Component {
 
   render() {
     const { form: { getFieldDecorator }, questionInfo } = this.props;
-    const { basicInfo, markTool, roleId, dataIdQueue } = this.state;
+    const { basicInfo, markTool, color, roleId, dataIdQueue } = this.state;
 
     const action = (
       <Fragment>
-        { roleId === 'labeler' && <Button icon="check" onClick={this.submitReview} disabled={this.judgeDisabled(roleId, basicInfo.status)}>提交质检</Button> }
-        { roleId === 'inspector' &&
+        { roleId === Labeler && <Button icon="check" onClick={this.submitReview} disabled={this.judgeDisabled(roleId, basicInfo.status)}>提交质检</Button> }
+        { roleId === Inspector &&
         <Button.Group>
           <Button icon="close" onClick={this.submitReject} disabled={this.judgeDisabled(roleId, basicInfo.status)}>驳回</Button>
           <Button icon="check" onClick={this.submitComplete} disabled={this.judgeDisabled(roleId, basicInfo.status)}>通过</Button>
@@ -394,6 +410,7 @@ class ImageAnswerView extends Component {
                       coordinates={this.state.coordinates}
                       onChange={this.judgeDisabled(roleId, basicInfo.status) ? () => {} : this.changeCoordinate}
                       onDelete={this.judgeDisabled(roleId, basicInfo.status) ? () => {} : this.deleteCoordinate}
+                      color={color}
                     />
                   </Col>
                 </Row>
@@ -415,7 +432,7 @@ class ImageAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label="质检">
                       {
                         getFieldDecorator('reviewResult', {
@@ -431,7 +448,7 @@ class ImageAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label={AnswerModeLabels.remark}>
                       {
                         getFieldDecorator('remark', {
@@ -443,7 +460,7 @@ class ImageAnswerView extends Component {
                 </Row>
                 <Row>
                   {
-                    roleId === 'inspector' &&
+                    roleId === Inspector &&
                     <Form.Item label={AnswerModeLabels.valid}>
                       {
                         questionInfo.invalid === true ? <Tag color="#f5222d">无效</Tag> : <Tag color="#52c41a">有效</Tag>
@@ -467,7 +484,7 @@ class ImageAnswerView extends Component {
                     <Button onClick={this.handlePrevQuestion} disabled={dataIdQueue.length === 0 || dataIdQueue.indexOf(questionInfo.dataId) === 0}>上一题</Button>
                     <Button type="primary" style={{ marginLeft: '16px' }} onClick={this.handleNextQuestion}>下一题</Button>
                     {
-                      roleId === 'labeler' &&
+                      roleId === Labeler &&
                       getFieldDecorator('invalid', {
                         initialValue: questionInfo.invalid,
                         valuePropName: 'checked',

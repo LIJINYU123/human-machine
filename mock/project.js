@@ -904,7 +904,7 @@ const extensionLabelData = [
 const imageLabelData = [
   {
     dataId: '1',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://t8.baidu.com/it/u=1484500186,1503043093&fm=79&app=86&size=h300&n=0&g=4n&f=jpeg?sec=1588315105&t=ed577b96f4f9a0b688d569c4b4789268' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -912,7 +912,7 @@ const imageLabelData = [
   },
   {
     dataId: '2',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -920,7 +920,7 @@ const imageLabelData = [
   },
   {
     dataId: '3',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2972732503,3430499099&fm=11&gp=0.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -928,7 +928,7 @@ const imageLabelData = [
   },
   {
     dataId: '4',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1587967009871&di=f45c97b34d614a7e59e4316bd058507e&imgtype=0&src=http%3A%2F%2Fp2.so.qhimgs1.com%2Ft01dfcbc38578dac4c2.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -936,7 +936,7 @@ const imageLabelData = [
   },
   {
     dataId: '5',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2514691225,3720567992&fm=26&gp=0.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -944,7 +944,7 @@ const imageLabelData = [
   },
   {
     dataId: '6',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -952,7 +952,7 @@ const imageLabelData = [
   },
   {
     dataId: '7',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -960,7 +960,7 @@ const imageLabelData = [
   },
   {
     dataId: '8',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -968,7 +968,7 @@ const imageLabelData = [
   },
   {
     dataId: '9',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -976,7 +976,7 @@ const imageLabelData = [
   },
   {
     dataId: '10',
-    data: { sentence: `${Mock.Random.string('lower', 10)}.png`, url: 'https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=3252521864,872614242&fm=26&gp=0.jpg' },
+    data: { sentence: `${Mock.Random.string('lower', 10)}.png` },
     labelResult: [],
     reviewResult: 'unreview',
     remark: '',
@@ -1681,8 +1681,6 @@ function saveReviewResult(req, res, u, b) {
 
 function exportResult(req, res) {
   res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/project/template.xlsx');
-
-
 }
 
 export default {

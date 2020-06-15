@@ -83,6 +83,13 @@ class ExtensionMarkView extends Component {
   }
 
   handleGoBack = () => {
+    // 更新schedule
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'extensionMark/updateSchedule',
+      payload: { schedule: 0 },
+    });
+
     router.goBack();
   };
 

@@ -85,6 +85,13 @@ class TextMarkView extends Component {
   }
 
   handleGoBack = () => {
+    // 更新schedule
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'textMark/updateSchedule',
+      payload: { schedule: 0 },
+    });
+
     router.goBack();
   };
 
