@@ -138,6 +138,11 @@ class TextProjectList extends Component {
     const { dispatch } = this.props;
 
     dispatch({
+      type: 'project/fetchProject',
+      payload: { sorter: 'createdTime_descend' },
+    });
+
+    dispatch({
       type: 'textProjectFormData/resetStepData',
     });
     this.setState({

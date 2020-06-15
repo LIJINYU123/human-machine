@@ -45,7 +45,7 @@ class Step4 extends Component {
       if (!error) {
         const values = getFieldsValue();
         dispatch({
-          type: 'textProjectFormData/sveStepFourData',
+          type: 'textProjectFormData/saveStepFourData',
           payload: { explain: values.content.toHTML(), projectId },
           callback: () => {
             onCancel();

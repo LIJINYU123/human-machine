@@ -175,7 +175,7 @@ const TextProjectFormData = {
       }
     },
 
-    * sveStepFourData({ payload, callback }, { call }) {
+    * saveStepFourData({ payload, callback }, { call }) {
       const response = yield call(saveStepFourData, payload);
       if (response.status === 'ok') {
         message.success(response.message);

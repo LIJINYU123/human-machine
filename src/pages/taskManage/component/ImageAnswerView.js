@@ -406,7 +406,7 @@ class ImageAnswerView extends Component {
                 <Row>
                   <Col md={{ span: formItemLayout.wrapperCol.sm.span, offset: formItemLayout.labelCol.sm.span }} sm={24}>
                     <MultiCrops
-                      src={questionInfo.data ? questionInfo.data.url : ''}
+                      src={questionInfo.data ? questionInfo.data : ''}
                       coordinates={this.state.coordinates}
                       onChange={this.judgeDisabled(roleId, basicInfo.status) ? () => {} : this.changeCoordinate}
                       onDelete={this.judgeDisabled(roleId, basicInfo.status) ? () => {} : this.deleteCoordinate}
