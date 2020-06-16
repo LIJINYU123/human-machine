@@ -80,6 +80,12 @@ export async function deleteTextMarkResult(params) {
   });
 }
 
+export async function queryTaskSchedule(params) {
+  return request('/api/project/task-schedule', {
+    params,
+  })
+}
+
 export async function queryOneTextQuestion(params) {
   return request('/api/task-manage/one-question', {
     params,

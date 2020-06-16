@@ -51,19 +51,12 @@ class VideoMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location, dispatch, taskSchedule } = this.props;
+    const { location } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
     });
-
-    if (taskSchedule === 0) {
-      dispatch({
-        type: 'videoMark/updateSchedule',
-        payload: { schedule: location.state.taskInfo.schedule },
-      });
-    }
   }
 
   componentDidMount() {
@@ -73,16 +66,14 @@ class VideoMarkView extends Component {
       type: 'videoMark/fetchLabelData',
       payload: { taskId: basicInfo.taskId },
     });
+
+    dispatch({
+      type: 'videoMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
+    });
   }
 
   handleGoBack = () => {
-    // 更新schedule
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'videoMark/updateSchedule',
-      payload: { schedule: 0 },
-    });
-
     router.goBack();
   };
 
@@ -124,6 +115,11 @@ class VideoMarkView extends Component {
     dispatch({
       type: 'videoMark/fetchLabelData',
       payload: params,
+    });
+
+    dispatch({
+      type: 'videoMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
     });
   };
 

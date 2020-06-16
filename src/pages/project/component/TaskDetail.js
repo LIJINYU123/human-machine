@@ -248,7 +248,7 @@ class TaskDetail extends Component {
         title: '标注结果',
         dataIndex: 'labelResult',
         render: val => {
-          if (val.length) {
+          if (val.length && basicInfo.labelType === 'textClassify') {
             return val.map(value => (<Tag color="blue">{value}</Tag>));
           }
           return '';

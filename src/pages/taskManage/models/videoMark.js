@@ -4,7 +4,7 @@ import {
   saveReviewResult,
   updateStatus,
   queryOneTextQuestion,
-  queryNextTextQuestion, queryPrevTextQuestion,
+  queryNextTextQuestion, queryPrevTextQuestion, queryTaskSchedule
 } from '../service';
 
 
@@ -42,14 +42,14 @@ const VideoMark = {
       });
     },
 
-    * saveReviewResult({ payload, callback }, { call, put }) {
+    * saveReviewResult({ payload, callback }, { call }) {
       const response = yield call(saveReviewResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        yield put({
-          type: 'schedule',
-          payload: response.reviewSchedule,
-        });
+        // yield put({
+        //   type: 'schedule',
+        //   payload: response.reviewSchedule,
+        // });
       } else {
         message.error(response.message);
       }
@@ -71,10 +71,11 @@ const VideoMark = {
       }
     },
 
-    * updateSchedule({ payload }, { put }) {
+    * updateSchedule({ payload }, { call, put }) {
+      const response = yield call(queryTaskSchedule, payload);
       yield put({
         type: 'schedule',
-        payload: payload.schedule,
+        payload: response,
       });
     },
 
@@ -121,16 +122,13 @@ const VideoMark = {
 
   reducers: {
     labelData(state, action) {
-      const data = action.payload;
-      const checkNum = data.list.filter(item => item.reviewResult !== 'unreview').length;
-      const passNum = data.list.filter(item => item.reviewResult === 'approve').length;
-      return { ...state, data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: checkNum !== 0 ? parseInt(passNum / checkNum * 100, 0) : 0 };
+      return { ...state, data: action.payload };
     },
     saveQuestion(state, action) {
       const { dataId, data, labelResult, reviewResult, remark, schedule } = action.payload;
       if (labelResult.length) {
         const { videoBasicInfo, userInfo, dialogRecord, topicList, receptionEvaluation } = labelResult[0];
-        return { ...state, dataId, labelData: data, reviewResult, remark, schedule, videoBasicInfo, userInfo, dialogRecord, topicList, receptionEvaluation, taskSchedule: schedule.completeRate };
+        return { ...state, dataId, labelData: data, reviewResult, remark, schedule, videoBasicInfo, userInfo, dialogRecord, topicList, receptionEvaluation };
       }
 
       return {
@@ -156,7 +154,7 @@ const VideoMark = {
       };
     },
     schedule(state, action) {
-      return { ...state, taskSchedule: action.payload };
+      return { ...state, taskSchedule: action.payload.schedule, checkRate: action.payload.checkRate, passRate: action.payload.passRate };
     },
   },
 };

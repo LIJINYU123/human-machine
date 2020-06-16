@@ -1,5 +1,5 @@
 import { message } from 'antd/lib/index';
-import { queryLabelData, queryMarkTool, saveTextMarkResult, saveDataValidity, saveReviewResult, updateStatus, queryOneTextQuestion, queryNextTextQuestion, queryPrevTextQuestion } from '../service';
+import { queryLabelData, queryMarkTool, saveTextMarkResult, saveDataValidity, saveReviewResult, updateStatus, queryOneTextQuestion, queryNextTextQuestion, queryPrevTextQuestion, queryTaskSchedule } from '../service';
 
 const TextMark = {
   namespace: 'textMark',
@@ -40,14 +40,14 @@ const TextMark = {
       });
     },
 
-    * saveTextMarkResult({ payload, callback }, { call, put }) {
+    * saveTextMarkResult({ payload, callback }, { call }) {
       const response = yield call(saveTextMarkResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        yield put({
-          type: 'schedule',
-          payload: response.labelSchedule,
-        });
+        // yield put({
+        //   type: 'schedule',
+        //   payload: response.labelSchedule,
+        // });
         if (callback) {
           callback();
         }
@@ -72,14 +72,14 @@ const TextMark = {
       }
     },
 
-    * saveReviewResult({ payload, callback }, { call, put }) {
+    * saveReviewResult({ payload, callback }, { call }) {
       const response = yield call(saveReviewResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        yield put({
-          type: 'schedule',
-          payload: response.reviewSchedule,
-        });
+        // yield put({
+        //   type: 'schedule',
+        //   payload: response.reviewSchedule,
+        // });
       } else {
         message.error(response.message);
       }
@@ -101,10 +101,11 @@ const TextMark = {
       }
     },
 
-    * updateSchedule({ payload }, { put }) {
+    * updateSchedule({ payload }, { call, put }) {
+      const response = yield call(queryTaskSchedule, payload);
       yield put({
         type: 'schedule',
-        payload: payload.schedule,
+        payload: response,
       });
     },
 
@@ -151,19 +152,16 @@ const TextMark = {
 
   reducers: {
     labelData(state, action) {
-      const data = action.payload;
-      const checkNum = data.list.filter(item => item.reviewResult !== 'unreview').length;
-      const passNum = data.list.filter(item => item.reviewResult === 'approve').length;
-      return { ...state, data, checkRate: parseInt(checkNum / data.pagination.total * 100, 0), passRate: checkNum !== 0 ? parseInt(passNum / checkNum * 100, 0) : 0 };
+      return { ...state, data: action.payload };
     },
     saveTool(state, action) {
       return { ...state, markTool: action.payload };
     },
     saveQuestion(state, action) {
-      return { ...state, questionInfo: action.payload, schedule: action.payload.schedule.completeRate };
+      return { ...state, questionInfo: action.payload };
     },
     schedule(state, action) {
-      return { ...state, schedule: action.payload };
+      return { ...state, schedule: action.payload.schedule, checkRate: action.payload.checkRate, passRate: action.payload.passRate };
     },
   },
 };

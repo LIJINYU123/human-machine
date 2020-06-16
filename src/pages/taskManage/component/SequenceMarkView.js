@@ -60,19 +60,12 @@ class SequenceMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location, dispatch, schedule } = this.props;
+    const { location } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
     });
-
-    if (schedule === 0) {
-      dispatch({
-        type: 'sequenceMark/updateSchedule',
-        payload: { schedule: location.state.taskInfo.schedule },
-      });
-    }
   }
 
   componentDidMount() {
@@ -83,19 +76,16 @@ class SequenceMarkView extends Component {
       payload: { taskId: basicInfo.taskId },
     });
     dispatch({
+      type: 'sequenceMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
+    });
+    dispatch({
       type: 'sequenceMark/fetchMarkTool',
       payload: { projectId: basicInfo.projectId },
     });
   }
 
   handleGoback = () => {
-    // 更新schedule
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'sequenceMark/updateSchedule',
-      payload: { schedule: 0 },
-    });
-
     router.goBack()
   };
 
@@ -271,6 +261,11 @@ class SequenceMarkView extends Component {
     dispatch({
       type: 'sequenceMark/fetchSequenceData',
       payload: params,
+    });
+
+    dispatch({
+      type: 'sequenceMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
     });
   };
 

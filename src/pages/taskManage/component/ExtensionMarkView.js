@@ -54,19 +54,12 @@ class ExtensionMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location, dispatch, schedule } = this.props;
+    const { location } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
     });
-
-    if (schedule === 0) {
-      dispatch({
-        type: 'extensionMark/updateSchedule',
-        payload: { schedule: location.state.taskInfo.schedule },
-      });
-    }
   }
 
   componentDidMount() {
@@ -77,19 +70,17 @@ class ExtensionMarkView extends Component {
       payload: { taskId: basicInfo.taskId },
     });
     dispatch({
+      type: 'extensionMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
+    });
+
+    dispatch({
       type: 'extensionMark/fetchMarkTool',
       payload: { projectId: basicInfo.projectId },
     });
   }
 
   handleGoBack = () => {
-    // 更新schedule
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'extensionMark/updateSchedule',
-      payload: { schedule: 0 },
-    });
-
     router.goBack();
   };
 
@@ -244,6 +235,11 @@ class ExtensionMarkView extends Component {
     dispatch({
       type: 'extensionMark/fetchLabelData',
       payload: params,
+    });
+
+    dispatch({
+      type: 'extensionMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
     });
   };
 

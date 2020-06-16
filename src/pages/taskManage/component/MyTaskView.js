@@ -191,7 +191,9 @@ class MyTaskView extends Component {
   };
 
   handleGoback = () => {
-    router.goBack();
+    router.push({
+      pathname: '/task-manage',
+    });
   };
 
   showOperateName = (roleId, status) => {

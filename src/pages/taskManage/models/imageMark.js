@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult, saveDataValidity, updateStatus } from '../service';
+import { queryLabelData, queryMarkTool, queryNextTextQuestion, queryOneTextQuestion, queryPrevTextQuestion, saveReviewResult, saveTextMarkResult, saveDataValidity, updateStatus, queryTaskSchedule } from '../service';
 
 
 const ImageMark = {
@@ -61,14 +61,14 @@ const ImageMark = {
       }
     },
 
-    * saveReviewResult({ payload, callback }, { call, put }) {
+    * saveReviewResult({ payload, callback }, { call }) {
       const response = yield call(saveReviewResult, payload);
       if (response.status === 'ok') {
         message.success(response.message);
-        yield put({
-          type: 'schedule',
-          payload: response.reviewSchedule,
-        });
+        // yield put({
+        //   type: 'schedule',
+        //   payload: response.reviewSchedule,
+        // });
       } else {
         message.error(response.message);
       }
@@ -89,10 +89,11 @@ const ImageMark = {
       }
     },
 
-    * updateSchedule({ payload }, { put }) {
+    * updateSchedule({ payload }, { call, put }) {
+      const response = yield call(queryTaskSchedule, payload);
       yield put({
         type: 'schedule',
-        payload: payload.schedule,
+        payload: response,
       });
     },
 
@@ -139,31 +140,16 @@ const ImageMark = {
 
   reducers: {
     labelData(state, action) {
-      const data = action.payload;
-      const checkNum = data.list.filter(item => item.reviewResult !== 'unreview').length;
-      const passNum = data.list.filter(item => item.reviewResult === 'approve').length;
-      return {
-        ...state,
-        data,
-        checkRate: parseInt(checkNum / data.pagination.total * 100, 0),
-        passRate: checkNum !== 0 ? parseInt(passNum / checkNum * 100, 0) : 0,
-      };
+      return { ...state, data: action.payload };
     },
     saveTool(state, action) {
-      return {
-        ...state,
-        markTool: action.payload,
-      };
+      return { ...state, markTool: action.payload };
     },
     saveQuestion(state, action) {
-      return {
-        ...state,
-        questionInfo: action.payload,
-        schedule: action.payload.schedule.completeRate,
-      };
+      return { ...state, questionInfo: action.payload };
     },
     schedule(state, action) {
-      return { ...state, schedule: action.payload };
+      return { ...state, schedule: action.payload.schedule, checkRate: action.payload.checkRate, passRate: action.payload.passRate };
     },
   },
 };

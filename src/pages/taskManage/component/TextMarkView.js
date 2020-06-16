@@ -56,19 +56,12 @@ class TextMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location, dispatch, schedule } = this.props;
+    const { location } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
     });
-
-    if (schedule === 0) {
-      dispatch({
-        type: 'textMark/updateSchedule',
-        payload: { schedule: location.state.taskInfo.schedule },
-      });
-    }
   }
 
   componentDidMount() {
@@ -79,19 +72,17 @@ class TextMarkView extends Component {
       payload: { taskId: basicInfo.taskId },
     });
     dispatch({
+      type: 'textMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
+    });
+
+    dispatch({
       type: 'textMark/fetchMarkTool',
       payload: { projectId: basicInfo.projectId },
     });
   }
 
   handleGoBack = () => {
-    // 更新schedule
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'textMark/updateSchedule',
-      payload: { schedule: 0 },
-    });
-
     router.goBack();
   };
 
@@ -197,6 +188,11 @@ class TextMarkView extends Component {
     dispatch({
       type: 'textMark/fetchLabelData',
       payload: params,
+    });
+
+    dispatch({
+      type: 'textMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
     });
   };
 

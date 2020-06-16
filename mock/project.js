@@ -252,6 +252,7 @@ let taskMockData = [
     invalidNum: 0,
     reviewNum: 0,
     status: 'initial',
+    labelType: 'textClassify',
   },
   {
     projectId: Mock.Random.string(5),
@@ -268,6 +269,7 @@ let taskMockData = [
     invalidNum: 0,
     reviewNum: 0,
     status: 'labeling',
+    labelType: 'textClassify',
   },
   {
     projectId: Mock.Random.string(5),
@@ -284,6 +286,7 @@ let taskMockData = [
     invalidNum: 0,
     reviewNum: 10,
     status: 'review',
+    labelType: 'textClassify',
   },
   {
     projectId: Mock.Random.string(5),
@@ -300,6 +303,7 @@ let taskMockData = [
     invalidNum: 0,
     reviewNum: 10,
     status: 'reject',
+    labelType: 'textClassify',
   },
   {
     projectId: Mock.Random.string(5),
@@ -316,6 +320,7 @@ let taskMockData = [
     invalidNum: 0,
     reviewNum: 20,
     status: 'complete',
+    labelType: 'textClassify',
   },
 ];
 
@@ -1372,6 +1377,10 @@ function downloadTemplate(req, res) {
   res.sendFile('/Users/mac/Documents/work/prj/react/human-machine/src/pages/project/template.xlsx');
 }
 
+function getTaskSchedule(req, res) {
+  return res.json({ schedule: 90, checkRate: 60, passRate: 80 });
+}
+
 function saveStepOneData(req, res, u, b) {
   const body = (b && b.body) || req.body;
   return res.json({ status: 'ok', message: body, projectId: Mock.Random.string(5) });
@@ -1704,6 +1713,7 @@ export default {
   'GET /api/project/label-data': getLabelData,
   'DELETE /api/project/label-data': deleteLabelData,
   'GET /api/project/download-template': downloadTemplate,
+  'GET /api/project/task-schedule': getTaskSchedule,
 
   'POST /api/project/label-result': saveTextMarkResult,
   'POST /api/project/data-validity': saveDataValidity,

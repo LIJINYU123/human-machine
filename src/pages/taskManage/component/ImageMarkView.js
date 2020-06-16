@@ -52,19 +52,12 @@ class ImageMarkView extends Component {
   };
 
   componentWillMount() {
-    const { location, dispatch, schedule } = this.props;
+    const { location } = this.props;
     const roleId = localStorage.getItem('RoleID');
     this.setState({
       basicInfo: location.state.taskInfo,
       roleId,
     });
-
-    if (schedule === 0) {
-      dispatch({
-        type: 'imageMark/updateSchedule',
-        payload: { schedule: location.state.taskInfo.schedule },
-      });
-    }
   }
 
   componentDidMount() {
@@ -75,19 +68,17 @@ class ImageMarkView extends Component {
       payload: { taskId: basicInfo.taskId },
     });
     dispatch({
+      type: 'imageMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
+    });
+
+    dispatch({
       type: 'imageMark/fetchMarkTool',
       payload: { projectId: basicInfo.projectId },
     });
   }
 
   handleGoBack = () => {
-    // 更新schedule
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'imageMark/updateSchedule',
-      payload: { schedule: 0 },
-    });
-
     router.goBack();
   };
 
@@ -184,6 +175,11 @@ class ImageMarkView extends Component {
     dispatch({
       type: 'imageMark/fetchLabelData',
       payload: params,
+    });
+
+    dispatch({
+      type: 'imageMark/updateSchedule',
+      payload: { projectId: basicInfo.projectId, taskId: basicInfo.taskId },
     });
   };
 
